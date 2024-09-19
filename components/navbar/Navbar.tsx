@@ -1,0 +1,627 @@
+"use client";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+
+import React, { useState, useEffect, useRef } from "react";
+import StorageIcon from "@mui/icons-material/Storage";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
+import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
+import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
+import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
+import NotificationsSharpIcon from "@mui/icons-material/NotificationsSharp";
+import HelpSharpIcon from "@mui/icons-material/HelpSharp";
+import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import styles from "./styles.module.scss";
+import Image from "next/image";
+import logo from "/public/images/logo-light.svg";
+import { Button, IconButton, Stack, Tab, Tabs, TextField } from "@mui/material";
+import Modal from "../../components/Modal";
+import useModal from "../../utils/useModal";
+import Confirm from "../Confirm";
+import CmdTool from "../../app/(auth)/_cmd-tool/CmdTool";
+import useAuthStore from "../../utils/useAuthStore";
+import useNetworkMonitor from "../../utils/useNetworkMonitorStore";
+import useOnlineStatus from "../../src/hooks/useOnlineStatus";
+
+const rootMenus = [
+  { name: "Server", href: "/server", icon: () => <StorageIcon /> },
+  {
+    name: "Account",
+    href: "/account",
+    icon: () => <PeopleAltOutlinedIcon />,
+  },
+];
+const adminMenus = [
+  {
+    name: "Model",
+    href: "/model/admin",
+    icon: () => <WidgetsOutlinedIcon />,
+  },
+  {
+    name: "Device",
+    href: "/device",
+    icon: () => <TrackChangesOutlinedIcon />,
+  },
+  {
+    name: "Account",
+    href: "/account",
+    icon: () => <PeopleAltOutlinedIcon />,
+  },
+  { name: "CMD Tool", icon: () => <TerminalOutlinedIcon /> },
+];
+const customerMenus = [
+  {
+    name: "Device",
+    href: "/device",
+    icon: () => <TrackChangesOutlinedIcon />,
+  },
+  {
+    name: "Account",
+    href: "/account",
+    icon: () => <PeopleAltOutlinedIcon />,
+  },
+  { name: "CMD Tool", icon: () => <TerminalOutlinedIcon /> },
+];
+const guestMenus = [
+  {
+    name: "Device",
+    href: "/device",
+    icon: () => <TrackChangesOutlinedIcon />,
+  },
+  { name: "CMD Tool", icon: () => <TerminalOutlinedIcon /> },
+];
+
+export default function Navbar() {
+  const pathname = usePathname();
+  const { userRole } = useAuthStore();
+
+  const [cmdModal, cmdModalToggle] = useModal();
+  const [networkModal, networkModalToggle] = useModal();
+
+  const { isOnline } = useNetworkMonitor();
+  useOnlineStatus();
+
+  const navLinkes =
+    userRole && userRole === "ROOT"
+      ? rootMenus
+      : userRole === "ADMIN"
+      ? adminMenus
+      : userRole === "CUSTOMER"
+      ? customerMenus
+      : guestMenus;
+
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [notificationModal, setNotificationModal] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const handleSearchClick = (e) => {
+    e.preventDefault();
+    networkModalToggle();
+  };
+
+  const handleToggleNetwork = (isOfflineToOnline: boolean) => {
+    Confirm({
+      title: "Confirm",
+      text: `Are you sure you want to switch to ${
+        isOfflineToOnline ? "online" : "offline"
+      } usage?`,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            payload: isOfflineToOnline ? "online" : "offline",
+          });
+        }
+      }
+    });
+  };
+
+  const replaceFirstLetterToUppercase = (str: string) => {
+    return str?.charAt(0).toUpperCase() + str?.toLowerCase().slice(1);
+  };
+
+  return (
+    mounted && (
+      <nav className={styles.nav}>
+        <div className={styles.left}>
+          <Link href={"/"} className={styles.logo}>
+            <Image src={logo} alt="synctrack" />
+            <div className={styles.role}>{`${replaceFirstLetterToUppercase(
+              userRole
+            )}`}</div>
+          </Link>
+          <ul className={styles.mainMenu}>
+            {navLinkes.map((link) => {
+              if (link.href) {
+                return (
+                  <li
+                    key={link.name}
+                    className={
+                      pathname.startsWith(link.href) ? styles.active : undefined
+                    }
+                  >
+                    <Link href={link.href}>
+                      <link.icon />
+                      <span>{link.name}</span>
+                    </Link>
+                  </li>
+                );
+              } else {
+                return (
+                  <li
+                    key={link.name}
+                    className={
+                      pathname.startsWith(link.href) ? styles.active : undefined
+                    }
+                  >
+                    <button onClick={cmdModalToggle}>
+                      <link.icon />
+                      <span>{link.name}</span>
+                    </button>
+                  </li>
+                );
+              }
+            })}
+          </ul>
+        </div>
+
+        <div className={styles.right}>
+          <ul className={styles.subMenu}>
+            <li>
+              <button onClick={() => setNotificationModal(!notificationModal)}>
+                <NotificationsSharpIcon />
+              </button>
+            </li>
+            <li>
+              <Link href="/settings">
+                <SettingsSharpIcon />
+              </Link>
+            </li>
+            <li>
+              <Link href="/info">
+                <HelpSharpIcon />
+              </Link>
+            </li>
+            <li>
+              <Link href="/support">
+                <HeadsetMicIcon />
+              </Link>
+            </li>
+          </ul>
+
+          <TextField
+            variant="outlined"
+            size="small"
+            placeholder="Search..."
+            id="search"
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                paddingRight: 0,
+                color: "var(--grey5)",
+              },
+              backgroundColor: "var(--black)",
+            }}
+            InputProps={{
+              endAdornment: (
+                <IconButton type="submit">
+                  <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                </IconButton>
+              ),
+            }}
+            onClick={handleSearchClick}
+            inputProps={{ readOnly: true }}
+          />
+
+          <div
+            className={
+              isOnline
+                ? `${styles.toggle} ${styles.active}`
+                : `${styles.toggle} ${styles.offline}`
+            }
+          >
+            <div onClick={() => isOnline && handleToggleNetwork(false)}>
+              Offline
+            </div>
+            <div
+              onClick={() =>
+                !isOnline && navigator.onLine && handleToggleNetwork(true)
+              }
+            >
+              Online
+            </div>
+          </div>
+        </div>
+
+        <Modal
+          closeButton
+          open={cmdModal}
+          toggleOpen={cmdModalToggle}
+          confirm={() => {}}
+          confirmButtonText="Add"
+          width="1240px"
+        >
+          <CmdModal />
+        </Modal>
+
+        <Modal
+          closeButton
+          open={networkModal}
+          toggleOpen={networkModalToggle}
+          confirm={() => {}}
+          confirmButtonText="Add"
+          width="720px"
+        >
+          <SearchModal />
+        </Modal>
+
+        {notificationModal && (
+          <NotificationModal setNotificationModal={setNotificationModal} />
+        )}
+      </nav>
+    )
+  );
+}
+
+function SearchModal() {
+  const searchRef = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, []);
+
+  return (
+    <Stack className={styles.search}>
+      <Stack
+        direction="row"
+        sx={{
+          width: "calc(100% + 40px)",
+          padding: "20px 60px 20px 20px",
+          transform: "translate(-20px, 0)",
+          borderBottom: "1px solid var(--grey4)",
+        }}
+      >
+        <TextField
+          inputRef={searchRef}
+          fullWidth
+          InputProps={{
+            endAdornment: (
+              <Stack direction="row">
+                <IconButton sx={{ width: 28, height: 28 }}>
+                  <CancelOutlinedIcon />
+                </IconButton>
+                <IconButton sx={{ width: 28, height: 28 }}>
+                  <SearchOutlinedIcon />
+                </IconButton>
+              </Stack>
+            ),
+          }}
+        />
+      </Stack>
+      <Stack py={2} alignItems="flex-end" gap="16px">
+        <Stack width="100%">
+          <div className={styles.title}>Sections</div>
+          <ul className={styles.list}>
+            <li>
+              <div className={styles.subTitle}>System &gt; GNSS settings</div>
+              <div className={styles.description}>
+                Select global navigation stelite systems, whitch are used for
+                the device operation.
+              </div>
+            </li>
+            <li>
+              <div className={styles.subTitle}>System &gt; GNSS settings</div>
+              <div className={styles.description}>
+                Select global navigation stelite systems, whitch are used for
+                the device operation.
+              </div>
+            </li>
+            <li>
+              <div className={styles.subTitle}>System &gt; GNSS settings</div>
+              <div className={styles.description}>
+                Select global navigation stelite systems, whitch are used for
+                the device operation.
+              </div>
+            </li>
+          </ul>
+        </Stack>
+        <Button color="secondary" sx={{ textDecoration: "underline" }}>
+          Show all result
+        </Button>
+      </Stack>
+      <Stack py={2} alignItems="flex-end" gap="16px">
+        <Stack width="100%">
+          <div className={styles.title}>Parameters</div>
+          <ul className={styles.list}>
+            <li>
+              <div className={styles.subTitle}>Device Status &gt; GNSS</div>
+              <div className={styles.description}>
+                Select global navigation stelite systems, whitch are used for
+                the device operation.
+              </div>
+            </li>
+            <li>
+              <div className={styles.subTitle}>Device Status &gt; GNSS</div>
+              <div className={styles.description}>
+                Select global navigation stelite systems, whitch are used for
+                the device operation.
+              </div>
+            </li>
+            <li>
+              <div className={styles.subTitle}>Device Status &gt; GNSS</div>
+              <div className={styles.description}>
+                Select global navigation stelite systems, whitch are used for
+                the device operation.
+              </div>
+            </li>
+          </ul>
+        </Stack>
+        <Button color="secondary" sx={{ textDecoration: "underline" }}>
+          Show all result
+        </Button>
+      </Stack>
+    </Stack>
+  );
+}
+
+function CmdModal() {
+  const searchRef = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, []);
+
+  return <CmdTool />;
+}
+
+function NotificationModal({ setNotificationModal }) {
+  const modalRef = useRef(null);
+
+  const handleClickOutside = (event) => {
+    if (modalRef.current && !modalRef.current.contains(event.target)) {
+      setNotificationModal(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const [value, setValue] = useState("new");
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+  return (
+    <div className={styles.notificationModal} ref={modalRef}>
+      <div className={styles.notiTitle}>Notifications</div>
+      <IconButton
+        onClick={() => setNotificationModal(false)}
+        sx={{
+          position: "absolute",
+          right: "6px",
+          top: "6px",
+          zIndex: 30,
+        }}
+      >
+        <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
+      </IconButton>
+      <Stack className={styles.notification}>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="notification"
+          sx={{
+            borderBottom: "1px solid var(--grey4)",
+          }}
+        >
+          <Tab value="new" label={`New (${3})`} sx={{ width: "50%" }} />
+          <Tab value="all" label={`All (${100})`} sx={{ width: "50%" }} />
+        </Tabs>
+        {value === "new" ? (
+          <Stack width="100%" className={styles.notificationListWrap}>
+            <ul className={styles.list}>
+              <li className={styles.active}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li className={styles.active}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li className={styles.active}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li className={styles.active}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      sx={{ marginTop: 1, width: 100 }}
+                    >
+                      Upload
+                    </Button>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+            </ul>
+          </Stack>
+        ) : (
+          <Stack width="100%" className={styles.notificationListWrap}>
+            <ul className={styles.list}>
+              <li>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+              <li>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems="center"
+                >
+                  <Stack>
+                    <div className={styles.subTitle}>
+                      SyncMaster update is available
+                    </div>
+                    <div className={styles.description}>
+                      SyncMaster update is available
+                    </div>
+                  </Stack>
+                  <Stack>
+                    <span className={styles.date}>Jan/19/2024 18:08</span>
+                  </Stack>
+                </Stack>
+              </li>
+            </ul>
+          </Stack>
+        )}
+      </Stack>
+    </div>
+  );
+}

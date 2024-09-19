@@ -1,0 +1,21 @@
+:root {
+    --white: #fff;
+    --grey1: #FAFAFB;
+    --grey2: #F2F2F2;
+    --grey3: #EAEAEC;
+    --grey4: #D7D8DC;
+    --grey5: #9798A0;
+    --grey6: #686873;
+    --grey7: #4D4D56;
+    --black: #2F2F37;
+    --black-medium: #202027;
+    --black-deep: #18181D;
+    --primary: #FF6100;
+    --primary-gradient: linear-gradient(90deg, rgb(255, 120, 36) 0%, rgb(255, 94, 0) 100%);
+    --primary-dark: #C94C00;
+    --primary-medium: #FDC7A5;
+    --primary-light: #FBF2EC;
+    --success: #07C76B;
+    --error: #FB4343;
+    --error-light: #FFB9B2;
+}

@@ -1,0 +1,95 @@
+import { IconButton } from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+
+type ModalProps = {
+  closeButton?: boolean;
+  title?: string;
+  children?: React.ReactNode;
+  confirm?(): void;
+  confirmButtonText?: string;
+  open: boolean;
+  toggleOpen: () => void;
+  width: string;
+};
+
+export default function Modal({
+  closeButton = false,
+  children,
+  confirm,
+  confirmButtonText = "확인",
+  title,
+  open,
+  toggleOpen,
+  width,
+}: ModalProps) {
+
+  const onClose = (_e, reason) => reason !== 'backdropClick' && open && toggleOpen();
+
+  return (
+    <>
+      <Dialog
+        open={open}
+        onClose={onClose}
+        fullWidth
+        maxWidth={"sm"}
+        sx={{
+          "& .MuiDialog-paper": {
+            width,
+          },
+        }}
+      >
+        {title && (
+          <DialogTitle
+            sx={{
+              position: "relative",
+            }}
+          >
+            <span>{title}</span>
+          </DialogTitle>
+        )}
+        {closeButton && (
+          <IconButton
+            onClick={toggleOpen}
+            sx={{
+              position: "absolute",
+              right: "6px",
+              top: "6px",
+              zIndex:30,
+            }}
+          >
+            <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
+          </IconButton>
+        )}
+        <DialogContent sx={{ lineHeight: 1.6 }}>{children}</DialogContent>
+        {!closeButton && (
+          <DialogActions>
+            {!!confirm && (
+              <Button
+                variant="outlined"
+                sx={{ width: 80, height: 32, fontSize: 13 }}
+                onClick={toggleOpen}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              variant="contained"
+              sx={{ width: 80, height: 32, fontSize: 13 }}
+              onClick={() => {
+                confirm && confirm();
+                toggleOpen();
+              }}
+            >
+              {confirm ? confirmButtonText : "닫기"}
+            </Button>
+          </DialogActions>
+        )}
+      </Dialog>
+    </>
+  );
+}

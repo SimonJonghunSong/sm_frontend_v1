@@ -1,0 +1,76 @@
+import "../styles/variable.css";
+import "../styles/reset.css";
+import "../styles/global.css";
+import { Noto_Sans } from "next/font/google";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { ThemeProvider } from "@mui/material";
+import theme from "../src/theme";
+import Hydration from "../utils/hydration";
+import { Metadata } from "next/types";
+
+/**적용하고자 하는 font*/
+const notoSans = Noto_Sans({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"],
+});
+
+const APP_NAME = "Next.js";
+const APP_DEFAULT_TITLE = "Next.js";
+const APP_TITLE_TEMPLATE = "%s - Next.js";
+const APP_DESCRIPTION = "Next.js!";
+
+export const metadata: Metadata = {
+  applicationName: APP_NAME,
+  title: {
+    default: APP_DEFAULT_TITLE,
+    template: APP_TITLE_TEMPLATE,
+  },
+  description: APP_DESCRIPTION,
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: APP_DEFAULT_TITLE,
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: APP_NAME,
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: {
+      default: APP_DEFAULT_TITLE,
+      template: APP_TITLE_TEMPLATE,
+    },
+    description: APP_DESCRIPTION,
+  },
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body
+        className={notoSans.className}
+        style={{ backgroundColor: "#F3F3F3" }}
+      >
+        <Hydration />
+        <AppRouterCacheProvider>
+          <ThemeProvider theme={theme}>
+            <>{children}</>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
+      </body>
+    </html>
+  );
+}

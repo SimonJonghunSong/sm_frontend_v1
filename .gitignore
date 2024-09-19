@@ -1,0 +1,8 @@
+.next
+node_modules
+.env
+.vscode
+.DS_Store
+
+public/sw*
+public/swe-worker*
