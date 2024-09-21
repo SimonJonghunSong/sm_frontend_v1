@@ -25,6 +25,7 @@ const DELAY_MS = 300;
 const useSerial = () => {
   const jsonPacketBufferRef = useRef(new Map());
   const jsonPacketBufferCountRef = useRef(new Map());
+  const callbackRef = useRef(new Map());
   const csvBufferRef = useRef(new Map());
   const {
     portList,
@@ -79,6 +80,13 @@ const useSerial = () => {
       // Serial 선택 후 GetPort
       console.log("Serial 선택 후 GetPort");
       getPorts();
+    }
+  };
+
+  const executeCallback = (imei: string) => {
+    if (callbackRef.current.get(imei)) {
+      callbackRef.current.get(imei)();
+      callbackRef.current.set(imei, undefined);
     }
   };
 
@@ -139,6 +147,7 @@ const useSerial = () => {
             const dataField = value.trim().split(";")[2];
 
             if (value.includes("$PST;Rdy") && dataField === "UP") {
+              executeCallback(port.imei);
               write({
                 data: AT_GET_IMEI,
                 port,
@@ -252,6 +261,8 @@ const useSerial = () => {
             }
           } else if (value.includes("RPR") || value.includes("USP")) {
             // return;
+          } else if (value.includes("ERR")) {
+            console.log("12312332131231");
           } else {
             console.log(value);
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
@@ -290,7 +301,7 @@ const useSerial = () => {
                 imei: currentImei,
                 payload: jsonPacketBufferRef.current.get(currentImei),
               });
-
+              executeCallback(port.imei);
               // 버퍼와 카운트 재설정
               jsonPacketBufferRef.current.set(currentImei, "");
               jsonPacketBufferCountRef.current.set(currentImei, 0);
@@ -315,14 +326,19 @@ const useSerial = () => {
     data,
     port,
     writer,
+    callback,
   }: {
     data: string;
     port: SerialPort;
     writer: WritableStreamDefaultWriter<string>;
+    callback?: () => void;
   }) => {
     if (port && port.writable) {
       try {
         await writer.write(data + SUFFIX); // Uint8Array 전송
+        if (callback) {
+          callbackRef.current.set(port.imei, callback);
+        }
         return true;
       } catch (e) {
         console.error("Error writing command:", e);

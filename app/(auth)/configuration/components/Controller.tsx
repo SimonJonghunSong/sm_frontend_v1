@@ -9,7 +9,9 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import React, { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
@@ -75,7 +77,6 @@ export default function Controller() {
   };
   const handleRefreshJsonPacket = async () => {
     currentPort.port.grpNo = currentPort.jsonPackageCount;
-    console.log("click refresh");
     setPackageFetchingStart({ imei: currentPort.port.imei });
 
     const commands = Array.from(
@@ -90,6 +91,11 @@ export default function Controller() {
         data: command,
         port: currentPort.port,
         writer: currentPort.writer,
+        callback: () => {
+          toast("done", {
+            position: "bottom-center",
+          });
+        },
       });
     }
   };
@@ -122,6 +128,7 @@ export default function Controller() {
       pb="24px"
       borderBottom="1px solid var(--grey4)"
     >
+      <ToastContainer />
       <Stack
         direction="row"
         gap="8px"
@@ -138,6 +145,9 @@ export default function Controller() {
             fontSize: "18px",
             fontWeight: 700,
             marginRight: 16,
+          }}
+          onClick={() => {
+            toast("dododndohd");
           }}
         >
           Profile
