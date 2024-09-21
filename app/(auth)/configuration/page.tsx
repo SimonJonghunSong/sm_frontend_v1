@@ -27,7 +27,7 @@ export default function page() {
     ({ port }) => port.imei === searchParams.get("imei")
   );
 
-  const { formData, getFormFields, resetData, isDirty } =
+  const { formData, getFormFields, resetData, getEditDataForPage } =
     useTransformedConfigData({
       data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
         .packageToJson.synctrak,
@@ -79,6 +79,12 @@ export default function page() {
       "" as string
     );
     console.log(`${AT_EDIT_PREFIX}${imei};${tabId};${params}`);
+
+    getEditDataForPage(tab).forEach((item) => {
+      console.log("item >>>>", item);
+    });
+    console.log("params >>>>", params);
+
     write({
       data: `${AT_EDIT_PREFIX}${imei};${tabId};${params}`,
       port: currentPort.port,
@@ -93,7 +99,11 @@ export default function page() {
       <Stack direction="row" justifyContent="space-between">
         <div className="pageTitle">{pageData?.tabName || ""}</div>
         {true && (
-          <Button variant="contained" onClick={() => handleSaveSettings()}>
+          <Button
+            variant="contained"
+            disabled={!getEditDataForPage(tab).length}
+            onClick={() => handleSaveSettings()}
+          >
             Save Settings
           </Button>
         )}
@@ -141,6 +151,14 @@ export default function page() {
         </Stack>
       </Stack>
       <Button onClick={resetData}>Reset Test</Button>
+      <Button
+        onClick={() => {
+          console.log("editData >>>>", getEditDataForPage(tab));
+        }}
+        disabled={!getEditDataForPage(tab).length}
+      >
+        Save Test
+      </Button>
     </form>
   );
 }

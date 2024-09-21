@@ -17,6 +17,7 @@ import {
 import { tabNameToHref } from "./components/FieldRenderer";
 import useSerial from "../../../src/hooks/useSerial";
 import SideMenu from "../../../components/sidemenu/SideMenu";
+import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
 
 // 탭 형식 레이아웃
 interface IConfigurationPageContext {
@@ -44,7 +45,10 @@ const ConfigurationLayout = ({ children }) => {
 
   if (!portList?.length) {
     redirect("/404");
-  } else if (!searchParams.get("imei")) {
+  } else if (
+    !searchParams.get("imei") ||
+    !portList.find(({ port }) => port.imei === imei).packageToJson
+  ) {
     redirect("/device");
   }
 
@@ -88,20 +92,27 @@ const ConfigurationLayout = ({ children }) => {
         <SideMenu
           queries={{ imei }}
           configuration
-          sideMenuItems={[...originData, { Geofence: {} }]
-            .map((item) => {
-              const [key] = Object.entries(item)[0];
+          sideMenuItems={[
+            ...originData
+              .map((item) => {
+                const [key] = Object.entries(item)[0];
 
-              return {
-                name: key as unknown as string,
-                href: `/configuration/${tabNameToHref(
-                  key as unknown as string
-                )}`,
-                isActive: tab === key,
-                onClick: handleTabClick,
-              };
-            })
-            .filter((item) => item.name !== "info")}
+                return {
+                  name: key as unknown as string,
+                  href: `/configuration/${tabNameToHref(
+                    key as unknown as string
+                  )}`,
+                  isActive: tab === key,
+                  onClick: handleTabClick,
+                };
+              })
+              .filter((item) => item.name !== "info"),
+            {
+              name: "Geofence",
+              href: `/configuration/geofence?imei=${imei}`,
+              icon: () => <HexagonOutlinedIcon />,
+            },
+          ]}
         />
         {children}
       </div>
