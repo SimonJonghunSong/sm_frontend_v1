@@ -12,6 +12,7 @@ import Controller from "./components/Controller";
 import { useContext, useMemo } from "react";
 import { configurationPageContext } from "./layout";
 import { AT_EDIT_PREFIX } from "../../../src/hooks/useSerial/constant";
+import useSerialStore from "../../../src/stores/useSerialStore";
 
 export default function page() {
   const searchParams = useSearchParams();
@@ -22,12 +23,13 @@ export default function page() {
     state: { portList },
     func: { write },
   } = useSerial();
+  const { setJsonPackageOfSerialPortForUpdate } = useSerialStore();
 
   const currentPort = portList.find(
     ({ port }) => port.imei === searchParams.get("imei")
   );
 
-  const { formData, getFormFields, resetData, getEditDataForPage } =
+  const { originData, formData, getFormFields, resetData, getEditDataForPage } =
     useTransformedConfigData({
       data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
         .packageToJson.synctrak,
@@ -38,18 +40,23 @@ export default function page() {
     return (formData || []).find((item) => item.tabName === tab);
   }, [formData, tab]);
 
+  const isSaveDisabled = useMemo(
+    () => !getEditDataForPage(tab).length,
+    [getEditDataForPage]
+  );
+
   const handleSaveSettings = () => {
     const imei = searchParams.get("imei");
 
     getEditDataForPage(tab).forEach((item) => {
-      console.log(">>>>>>", `${AT_EDIT_PREFIX}${imei};${item}`);
-
       write({
         data: `${AT_EDIT_PREFIX}${imei};${item}`,
         port: currentPort.port,
         writer: currentPort.writer,
       });
     });
+
+    setJsonPackageOfSerialPortForUpdate({ imei, payload: originData });
   };
 
   return (
@@ -61,7 +68,7 @@ export default function page() {
         {true && (
           <Button
             variant="contained"
-            disabled={!getEditDataForPage(tab).length}
+            disabled={isSaveDisabled}
             onClick={() => handleSaveSettings()}
           >
             Save Settings

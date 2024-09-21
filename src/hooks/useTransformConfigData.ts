@@ -329,7 +329,7 @@ export function useTransformedConfigData({
 
       return { value, onChange, isChange };
     },
-    [formData]
+    [formData, data]
   );
 
   const resetData = useCallback(() => {
@@ -397,9 +397,9 @@ export function useTransformedConfigData({
           break;
         default:
           // 수정 된 값만 처리
-          const editedData = pageData.fields.filter(
-            (item) => getFormFields(pageData.tabName, item.fieldName).isChange
-          );
+          const editedData = pageData.fields.filter((item) => {
+            return getFormFields(pageData.tabName, item.fieldName).isChange;
+          });
           const editStrings: string[] = editedData.reduce((acc, cur) => {
             return [...acc, fieldToEditString(cur)];
           }, [] as string[]);
@@ -419,7 +419,7 @@ export function useTransformedConfigData({
 
       return result;
     },
-    [formData]
+    [formData, getFormFields]
   );
 
   const getAllEditData = useCallback(() => {
