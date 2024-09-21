@@ -196,12 +196,6 @@ function fieldToEditString(fieldData: Field): string {
 
         return `${optionId}#${editValue}`;
       }
-    case "edit+button":
-      if (fieldData.AssignList) {
-        const assignList = parseAssignList(fieldData.AssignList);
-        return "";
-      }
-      return "";
     case "alert_id":
       const checked = `0${fieldData.value}`;
       const hexValue =
@@ -213,6 +207,7 @@ function fieldToEditString(fieldData: Field): string {
     case "mAssign":
     case "lAssign":
       return `${optionId}#0${fieldData.value}`;
+    case "edit+button":
     case "edit":
     case "ip":
     case "any":
