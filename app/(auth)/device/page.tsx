@@ -110,7 +110,7 @@ function Ing({
     timeoutIdRef.current = setTimeout(() => {
       setUiState("error");
       setStep("FAILED");
-    }, 10000);
+    }, 20000);
 
     return () => {
       clearTimeout(timeoutIdRef.current);

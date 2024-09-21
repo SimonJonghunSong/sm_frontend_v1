@@ -4,6 +4,7 @@ export const AT_GET_MODEL_INFO = "AT^$PSTVer;1234";
 export const AT_GET_JSON_PACKAGE_COUNT_COMMAND = "AT^$PSTGetJson";
 export const AT_GET_JSON = "AT^$ReqJsonPk;No;";
 export const AT_GET_CSV = "AT^$PSTGetCsv";
+export const AT_EDIT_PREFIX = "AT^PRG;";
 
 export const STX = String.fromCharCode(0x02); // Start of Text
 export const ETX = String.fromCharCode(0x03); // End of Text

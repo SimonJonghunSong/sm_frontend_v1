@@ -2,12 +2,16 @@
 
 import { useSearchParams } from "next/navigation";
 import useSerial from "../../../src/hooks/useSerial";
-import { useTransformedConfigData } from "../../../src/hooks/useTransformConfigData";
+import {
+  Field,
+  useTransformedConfigData,
+} from "../../../src/hooks/useTransformConfigData";
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
 import { useContext, useMemo } from "react";
 import { configurationPageContext } from "./layout";
+import { AT_EDIT_PREFIX } from "../../../src/hooks/useSerial/constant";
 
 export default function page() {
   const searchParams = useSearchParams();
@@ -16,25 +20,84 @@ export default function page() {
   // data
   const {
     state: { portList },
+    func: { write },
   } = useSerial();
 
-  const { formData, getFormFields, resetData } = useTransformedConfigData({
-    data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
-      .packageToJson.synctrak,
-    blacklist: ["info"],
-  });
+  const currentPort = portList.find(
+    ({ port }) => port.imei === searchParams.get("imei")
+  );
+
+  const { formData, getFormFields, resetData, isDirty } =
+    useTransformedConfigData({
+      data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
+        .packageToJson.synctrak,
+      blacklist: ["info"],
+    });
 
   const pageData = useMemo(() => {
     return (formData || []).find((item) => item.tabName === tab);
   }, [formData, tab]);
 
-  // usePrompt(isDirty);
+  const handleSaveSettings = () => {
+    const imei = searchParams.get("imei");
+    const tabId = pageData.info.tab_id;
+
+    const params = (pageData.fields as Field[]).reduce(
+      (previousValue, currentValue) => {
+        const cur = currentValue;
+        let fieldId;
+        let value = "";
+        if (Number(cur.ID) < 10) {
+          fieldId = `0${cur.ID}`;
+        } else {
+          fieldId = cur.ID;
+        }
+
+        if (currentValue.type === "combo" && currentValue.value) {
+          value = currentValue.options.find(
+            (opt) => opt.value === currentValue.value
+          ).realValue;
+          if (
+            Number(
+              currentValue.options.find(
+                (opt) => opt.value === currentValue.value
+              ).realValue
+            ) < 10
+          ) {
+            value = `0${
+              currentValue.options.find(
+                (opt) => opt.value === currentValue.value
+              ).realValue
+            }`;
+          }
+        } else {
+          value = currentValue.value;
+        }
+
+        return `${previousValue}${fieldId}#${value};`;
+      },
+      "" as string
+    );
+    console.log(`${AT_EDIT_PREFIX}${imei};${tabId};${params}`);
+    write({
+      data: `${AT_EDIT_PREFIX}${imei};${tabId};${params}`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
 
   return (
     <form className="contentWrap">
       <Controller />
 
-      <div className="pageTitle">{pageData?.tabName || ""}</div>
+      <Stack direction="row" justifyContent="space-between">
+        <div className="pageTitle">{pageData?.tabName || ""}</div>
+        {true && (
+          <Button variant="contained" onClick={() => handleSaveSettings()}>
+            Save Settings
+          </Button>
+        )}
+      </Stack>
       <Stack direction="row" gap="40px" mb="56px">
         <Stack sx={{ width: "50%" }}>
           {(pageData?.fields || [])

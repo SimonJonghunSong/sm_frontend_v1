@@ -106,6 +106,7 @@ interface FieldOption {
   value: string; // 원본 데이터 문자열
   max?: number; // range 타입일 때 최대 값(num3)
   type: "string" | "range" | "none"; // combo 타입 (0: string, 1: range, 2: none)
+  realValue: string;
 }
 
 interface AssignOption {
@@ -121,6 +122,7 @@ function parseComboList(
       const [realValue, label, num3, num4] = value.split(";");
 
       return {
+        realValue,
         value: label, // 원본 데이터 문자열
         label, // 실제 사용되는 인덱스 값
         max: num4 === "1" ? parseInt(num3, 10) : undefined, // range 타입일 경우 최대 값

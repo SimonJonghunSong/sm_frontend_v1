@@ -126,8 +126,6 @@ export default function Page() {
   };
   return (
     <div className="pageWrap">
-      <SideMenu configuration sideMenuItems={sideMenuItems} />
-
       <article className="contentWrap">
         <Controller />
 
@@ -173,7 +171,11 @@ export default function Page() {
                 <MenuItem value={"Guest"}>Guest</MenuItem>
               </Select>
 
-              <Button variant="contained" color="secondary" href="/configuration/geofence/add">
+              <Button
+                variant="contained"
+                color="secondary"
+                href="/configuration/geofence/add"
+              >
                 Add
               </Button>
             </Stack>
@@ -182,7 +184,11 @@ export default function Page() {
               disablePagination
               rows={rows}
               columns={columns}
-              footerButton={<Button variant="text" color="info">Delete</Button>}
+              footerButton={
+                <Button variant="text" color="info">
+                  Delete
+                </Button>
+              }
             />
           </Stack>
 

@@ -75,7 +75,7 @@ export default function Controller() {
   };
   const handleRefreshJsonPacket = async () => {
     currentPort.port.grpNo = currentPort.jsonPackageCount;
-
+    console.log("click refresh");
     setPackageFetchingStart({ imei: currentPort.port.imei });
 
     const commands = Array.from(
@@ -85,7 +85,7 @@ export default function Controller() {
 
     for (const command of commands) {
       await delayPromise(300); // 300ms 지연
-
+      console.log("command is ", command);
       write({
         data: command,
         port: currentPort.port,

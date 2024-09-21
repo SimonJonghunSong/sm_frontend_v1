@@ -51,7 +51,7 @@ const ConfigurationLayout = ({ children }) => {
   const { originData } = useTransformedConfigData({
     data: portList.find(({ port }) => port.imei === imei).packageToJson
       .synctrak,
-    blacklist: ["info"],
+    blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
   });
 
   // state
@@ -65,6 +65,8 @@ const ConfigurationLayout = ({ children }) => {
   const handleTabClick = (name: string) => {
     if (pathname !== "/configuration") {
       router.push(`/configuration?imei=${imei}`);
+    } else if (name === "Geofence") {
+      router.replace(`/configuration/geofence?imei=${imei}`);
     } else {
       router.replace(`/configuration?tab=${name}&imei=${imei}`);
     }
@@ -86,7 +88,7 @@ const ConfigurationLayout = ({ children }) => {
         <SideMenu
           queries={{ imei }}
           configuration
-          sideMenuItems={originData
+          sideMenuItems={[...originData, { Geofence: {} }]
             .map((item) => {
               const [key] = Object.entries(item)[0];
 

@@ -250,7 +250,10 @@ const useSerial = () => {
               fileDownload(blob, `${port.imei}.profile`);
               csvBufferRef.current.set(port.imei, undefined);
             }
+          } else if (value.includes("RPR")) {
+            return;
           } else {
+            console.log(value);
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
 
             // '\u0003'에 매치되는 부분을 찾고, 패킷 버퍼 카운트를 업데이트
@@ -271,7 +274,6 @@ const useSerial = () => {
 
             // 값에서 특정 문자를 제거하고 버퍼 업데이트
             const cleanedValue = value
-              .trim()
               .replaceAll("\u0002", "")
               .replace(excludePattern, "");
             jsonPacketBufferRef.current.set(
@@ -318,6 +320,7 @@ const useSerial = () => {
     port: SerialPort;
     writer: WritableStreamDefaultWriter<string>;
   }) => {
+    console.log("write 중");
     if (port && port.writable) {
       try {
         await writer.write(data + SUFFIX); // Uint8Array 전송
