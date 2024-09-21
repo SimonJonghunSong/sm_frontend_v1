@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { splitArrayIntoChunks } from "../functions";
+import { useSearchParams } from "next/navigation";
 interface BaseField {
   fieldName: string;
   options?: FieldOption[];
@@ -220,6 +221,8 @@ export function useTransformedConfigData({
   data,
   blacklist = [],
 }: UseTransformedConfigDataProps) {
+  const searchParams = useSearchParams();
+
   const [isDirty, setIsDirty] = useState(false);
   const [originData, setOriginData] = useState(data || []);
   const formData = useMemo(
@@ -329,7 +332,7 @@ export function useTransformedConfigData({
 
       return { value, onChange, isChange };
     },
-    [formData, data]
+    [formData, data, searchParams.get("tab")]
   );
 
   const resetData = useCallback(() => {
