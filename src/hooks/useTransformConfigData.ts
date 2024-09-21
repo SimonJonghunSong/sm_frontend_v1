@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { splitArrayIntoChunks } from "../functions";
+import { useSearchParams } from "next/navigation";
 interface BaseField {
   fieldName: string;
   options?: FieldOption[];
@@ -220,6 +221,8 @@ export function useTransformedConfigData({
   data,
   blacklist = [],
 }: UseTransformedConfigDataProps) {
+  const searchParams = useSearchParams();
+
   const [isDirty, setIsDirty] = useState(false);
   const [originData, setOriginData] = useState(data || []);
   const formData = useMemo(
@@ -329,7 +332,7 @@ export function useTransformedConfigData({
 
       return { value, onChange, isChange };
     },
-    [formData]
+    [formData, data, searchParams.get("tab")]
   );
 
   const resetData = useCallback(() => {
@@ -397,9 +400,9 @@ export function useTransformedConfigData({
           break;
         default:
           // 수정 된 값만 처리
-          const editedData = pageData.fields.filter(
-            (item) => getFormFields(pageData.tabName, item.fieldName).isChange
-          );
+          const editedData = pageData.fields.filter((item) => {
+            return getFormFields(pageData.tabName, item.fieldName).isChange;
+          });
           const editStrings: string[] = editedData.reduce((acc, cur) => {
             return [...acc, fieldToEditString(cur)];
           }, [] as string[]);
@@ -419,7 +422,7 @@ export function useTransformedConfigData({
 
       return result;
     },
-    [formData]
+    [formData, getFormFields]
   );
 
   const getAllEditData = useCallback(() => {

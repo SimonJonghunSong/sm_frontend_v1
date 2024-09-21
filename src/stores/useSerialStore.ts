@@ -38,6 +38,13 @@ type SerialPortAction = {
     imei: string;
     payload: string;
   }) => void;
+  setJsonPackageOfSerialPortForUpdate: ({
+    imei,
+    payload,
+  }: {
+    imei: string;
+    payload: any[];
+  }) => void;
 };
 
 export const parse = (str) => {
@@ -125,6 +132,16 @@ const useSerialStore = create(
                   }
                 : prevPort
             ),
+          };
+        }),
+      setJsonPackageOfSerialPortForUpdate: ({ imei, payload }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, packageToJson: { synctrak: payload } }
+                : item;
+            }),
           };
         }),
     }),
