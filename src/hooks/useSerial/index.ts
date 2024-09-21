@@ -10,6 +10,7 @@ import {
 } from "./constant";
 import useSerialStore from "../../stores/useSerialStore";
 import { fileDownload } from "../../../utils/fileDownload";
+import { toast } from "react-toastify";
 
 const options = {
   baudRate: 115200,
@@ -83,13 +84,6 @@ const useSerial = () => {
     }
   };
 
-  const executeCallback = (imei: string) => {
-    if (callbackRef.current.get(imei)) {
-      callbackRef.current.get(imei)();
-      callbackRef.current.set(imei, undefined);
-    }
-  };
-
   const addPortToState = async (port: SerialPort) => {
     try {
       const textDecoder = new TextDecoderStream();
@@ -139,7 +133,6 @@ const useSerial = () => {
     try {
       while (true) {
         const { value, done } = await reader.read();
-        console.log(value);
 
         if (value) {
           // HEALTH CHECK & MODEL INFO
@@ -147,7 +140,6 @@ const useSerial = () => {
             const dataField = value.trim().split(";")[2];
 
             if (value.includes("$PST;Rdy") && dataField === "UP") {
-              executeCallback(port.imei);
               write({
                 data: AT_GET_IMEI,
                 port,
@@ -207,6 +199,7 @@ const useSerial = () => {
                   imei: dataField,
                   packageToJson: undefined,
                   isPackageError: false,
+                  shouldRefetchPackage: false,
                 });
 
                 write({
@@ -260,11 +253,12 @@ const useSerial = () => {
               csvBufferRef.current.set(port.imei, undefined);
             }
           } else if (value.includes("RPR") || value.includes("USP")) {
-            // return;
+            toast("Success!", { type: "info" });
           } else if (value.includes("ERR")) {
-            console.log("12312332131231");
+            port.onprev();
+            toast("Error", { type: "error" });
+            port.onprev = null;
           } else {
-            console.log(value);
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
 
             // '\u0003'에 매치되는 부분을 찾고, 패킷 버퍼 카운트를 업데이트
@@ -301,7 +295,6 @@ const useSerial = () => {
                 imei: currentImei,
                 payload: jsonPacketBufferRef.current.get(currentImei),
               });
-              executeCallback(port.imei);
               // 버퍼와 카운트 재설정
               jsonPacketBufferRef.current.set(currentImei, "");
               jsonPacketBufferCountRef.current.set(currentImei, 0);
@@ -335,10 +328,10 @@ const useSerial = () => {
   }) => {
     if (port && port.writable) {
       try {
-        await writer.write(data + SUFFIX); // Uint8Array 전송
         if (callback) {
           callbackRef.current.set(port.imei, callback);
         }
+        await writer.write(data + SUFFIX); // Uint8Array 전송
         return true;
       } catch (e) {
         console.error("Error writing command:", e);

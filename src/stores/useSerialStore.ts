@@ -17,6 +17,7 @@ export type SerialPortState = {
   imei: string;
   packageToJson: { synctrak: any[] };
   isPackageError: boolean;
+  shouldRefetchPackage: boolean;
 };
 
 type SerialPortAction = {

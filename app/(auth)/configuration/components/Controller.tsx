@@ -9,7 +9,7 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -86,7 +86,7 @@ export default function Controller() {
 
     for (const command of commands) {
       await delayPromise(300); // 300ms 지연
-      console.log("command is ", command);
+
       write({
         data: command,
         port: currentPort.port,
@@ -99,6 +99,7 @@ export default function Controller() {
       });
     }
   };
+
   const handleCsvDownload = () => {
     write({
       data: AT_GET_CSV,
@@ -119,6 +120,10 @@ export default function Controller() {
     setPath(e.target.files[0]);
   };
 
+  useEffect(() => {
+    console.log("i am a perfect");
+  }, []);
+
   return (
     <Stack
       direction="row"
@@ -128,7 +133,6 @@ export default function Controller() {
       pb="24px"
       borderBottom="1px solid var(--grey4)"
     >
-      <ToastContainer />
       <Stack
         direction="row"
         gap="8px"

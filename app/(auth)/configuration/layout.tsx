@@ -18,6 +18,7 @@ import { tabNameToHref } from "./components/FieldRenderer";
 import useSerial from "../../../src/hooks/useSerial";
 import SideMenu from "../../../components/sidemenu/SideMenu";
 import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
+import { ToastContainer } from "react-toastify";
 
 // 탭 형식 레이아웃
 interface IConfigurationPageContext {
@@ -116,6 +117,7 @@ const ConfigurationLayout = ({ children }) => {
         />
         {children}
       </div>
+      <ToastContainer />
     </configurationPageContext.Provider>
   );
 };

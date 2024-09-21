@@ -20,6 +20,7 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  onprev: any;
   grpNo: number;
   imei: string;
   forget(): unknown;

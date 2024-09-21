@@ -1,20 +1,23 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import useSerial from "../../../src/hooks/useSerial";
-import {
-  Field,
-  useTransformedConfigData,
-} from "../../../src/hooks/useTransformConfigData";
+import useSerial, { delayPromise } from "../../../src/hooks/useSerial";
+import { useTransformedConfigData } from "../../../src/hooks/useTransformConfigData";
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
 import { useContext, useMemo } from "react";
+import { toast } from "react-toastify";
 import { configurationPageContext } from "./layout";
-import { AT_EDIT_PREFIX } from "../../../src/hooks/useSerial/constant";
+import {
+  AT_EDIT_PREFIX,
+  AT_GET_JSON,
+} from "../../../src/hooks/useSerial/constant";
+import useSerialStore from "../../../src/stores/useSerialStore";
 
 export default function page() {
   const searchParams = useSearchParams();
+  const { setPackageFetchingStart } = useSerialStore();
   const { tab } = useContext(configurationPageContext);
 
   // data
@@ -27,6 +30,8 @@ export default function page() {
     ({ port }) => port.imei === searchParams.get("imei")
   );
 
+  console.log(currentPort.isPackageFetching, ": currentPort.isPackageFetching");
+
   const { formData, getFormFields, resetData, getEditDataForPage } =
     useTransformedConfigData({
       data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
@@ -38,8 +43,32 @@ export default function page() {
     return (formData || []).find((item) => item.tabName === tab);
   }, [formData, tab]);
 
-  const handleSaveSettings = () => {
+  const getJsonPacket = async () => {
+    currentPort.port.grpNo = currentPort.jsonPackageCount;
+    setPackageFetchingStart({ imei: currentPort.port.imei });
+
+    const commands = Array.from(
+      { length: currentPort.jsonPackageCount },
+      (_, i) => `${AT_GET_JSON}${i + 1}`
+    );
+
+    for (const command of commands) {
+      await delayPromise(300); // 300ms 지연
+
+      write({
+        data: command,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    }
+  };
+
+  const handleSaveSettings = async () => {
     const imei = searchParams.get("imei");
+
+    currentPort.port.onprev = () => {
+      console.log("onprev");
+    };
 
     getEditDataForPage(tab).forEach((item) => {
       console.log(">>>>>>", `${AT_EDIT_PREFIX}${imei};${item}`);
@@ -61,7 +90,7 @@ export default function page() {
         {true && (
           <Button
             variant="contained"
-            disabled={!getEditDataForPage(tab).length}
+            // disabled={!getEditDataForPage(tab).length}
             onClick={() => handleSaveSettings()}
           >
             Save Settings
