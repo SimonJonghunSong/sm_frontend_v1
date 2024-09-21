@@ -228,9 +228,11 @@ export default function Controller() {
           <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
         </IconButton>
         <Select value={modelName} onChange={handleChange} sx={{ width: 168 }}>
-          {portList.map(({ modelVersion, imei }) => {
+          {portList.map(({ modelVersion, imei }, idx) => {
             return (
-              <MenuItem value={imei}>{modelVersion.split("_")[0]}</MenuItem>
+              <MenuItem key={idx.toString()} value={imei}>
+                {modelVersion?.split("_")[0]}
+              </MenuItem>
             );
           })}
         </Select>

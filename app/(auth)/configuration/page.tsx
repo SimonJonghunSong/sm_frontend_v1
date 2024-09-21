@@ -27,7 +27,7 @@ export default function page() {
     ({ port }) => port.imei === searchParams.get("imei")
   );
 
-  const { formData, getFormFields, resetData, isDirty } =
+  const { formData, getFormFields, resetData, getEditDataForPage } =
     useTransformedConfigData({
       data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
         .packageToJson.synctrak,
@@ -40,49 +40,15 @@ export default function page() {
 
   const handleSaveSettings = () => {
     const imei = searchParams.get("imei");
-    const tabId = pageData.info.tab_id;
 
-    const params = (pageData.fields as Field[]).reduce(
-      (previousValue, currentValue) => {
-        const cur = currentValue;
-        let fieldId;
-        let value = "";
-        if (Number(cur.ID) < 10) {
-          fieldId = `0${cur.ID}`;
-        } else {
-          fieldId = cur.ID;
-        }
+    getEditDataForPage(tab).forEach((item) => {
+      console.log(">>>>>>", `${AT_EDIT_PREFIX}${imei};${item}`);
 
-        if (currentValue.type === "combo" && currentValue.value) {
-          value = currentValue.options.find(
-            (opt) => opt.value === currentValue.value
-          ).realValue;
-          if (
-            Number(
-              currentValue.options.find(
-                (opt) => opt.value === currentValue.value
-              ).realValue
-            ) < 10
-          ) {
-            value = `0${
-              currentValue.options.find(
-                (opt) => opt.value === currentValue.value
-              ).realValue
-            }`;
-          }
-        } else {
-          value = currentValue.value;
-        }
-
-        return `${previousValue}${fieldId}#${value};`;
-      },
-      "" as string
-    );
-    console.log(`${AT_EDIT_PREFIX}${imei};${tabId};${params}`);
-    write({
-      data: `${AT_EDIT_PREFIX}${imei};${tabId};${params}`,
-      port: currentPort.port,
-      writer: currentPort.writer,
+      write({
+        data: `${AT_EDIT_PREFIX}${imei};${item}`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
     });
   };
 
@@ -93,7 +59,11 @@ export default function page() {
       <Stack direction="row" justifyContent="space-between">
         <div className="pageTitle">{pageData?.tabName || ""}</div>
         {true && (
-          <Button variant="contained" onClick={() => handleSaveSettings()}>
+          <Button
+            variant="contained"
+            disabled={!getEditDataForPage(tab).length}
+            onClick={() => handleSaveSettings()}
+          >
             Save Settings
           </Button>
         )}
@@ -141,6 +111,14 @@ export default function page() {
         </Stack>
       </Stack>
       <Button onClick={resetData}>Reset Test</Button>
+      <Button
+        onClick={() => {
+          console.log("editData >>>>", getEditDataForPage(tab));
+        }}
+        disabled={!getEditDataForPage(tab).length}
+      >
+        Save Test
+      </Button>
     </form>
   );
 }

@@ -10,12 +10,11 @@ import {
 } from "@mui/material";
 import { Field } from "../../../../src/hooks/useTransformConfigData";
 import InputBox from "../../../../components/inputbox/InputBox";
-import { SwitchPrimary } from "../../../../components/switches";
 
 interface FieldRendererProps {
   field: Field;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string, options?: Partial<Field>) => void;
   isChange: boolean;
 }
 
@@ -30,16 +29,12 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   isChange,
 }) => {
   const fieldName = field.fieldName;
-  let defaultValue = field.value;
 
   console.log("isChange >>>", isChange);
 
   switch (field.type) {
     case "combo":
       const options = field.options || [];
-      defaultValue = options.find(
-        (option) => option.label === field.value || option.value === field.value
-      )?.value;
 
       return (
         <InputBox>
@@ -54,7 +49,6 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
           </InputBox.Head>
           <InputBox.Body>
             <Select
-              defaultValue={defaultValue}
               value={value}
               onChange={(e) => {
                 onChange(e.target.value);
@@ -87,7 +81,6 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               type="password"
               inputProps={{ maxLength: field.max }}
               fullWidth
-              defaultValue={defaultValue}
               value={value}
               onChange={(e) => {
                 onChange(e.target.value);
@@ -114,7 +107,6 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
             <TextField
               inputProps={{ maxLength: field.max }}
               fullWidth
-              defaultValue={defaultValue}
               value={value}
               onChange={(e) => {
                 onChange(e.target.value);
@@ -139,7 +131,6 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
             <TextField
               inputProps={{ maxLength: field.max }}
               fullWidth
-              defaultValue={defaultValue}
               value={value}
               onChange={(e) => {
                 onChange(e.target.value);
@@ -263,13 +254,20 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
             sx={{ marginBottom: "12px" }}
           >
             <Checkbox
-              defaultChecked={Number(defaultValue) === 1}
               checked={Number(value) === 1}
               onChange={(e) => {
                 onChange(e.target.checked ? "1" : "0");
               }}
             />
-            <TextField sx={{ width: 50 }} defaultValue="00" />
+            <TextField
+              sx={{ width: 50 }}
+              value={field.alert_id}
+              onChange={(e) => {
+                onChange(field.value, {
+                  alert_id: e.target.value,
+                });
+              }}
+            />
           </Stack>
           <InputBox.Head>
             <InputBox.Title>
@@ -298,11 +296,16 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
                 <i>*</i>
               </InputBox.Title>
               <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>1055</InputBox.Number>
+              {/* <InputBox.Number>1055</InputBox.Number> */}
               {isChange && <span className="notification" />}
             </InputBox.Head>
             <InputBox.Body>
-              <SwitchPrimary />
+              <Checkbox
+                checked={Number(value) === 1}
+                onChange={(e) => {
+                  onChange(e.target.checked ? "1" : "0");
+                }}
+              />
             </InputBox.Body>
           </Stack>
         </InputBox>
@@ -317,7 +320,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
           borderBottom="1px solid var(--grey3)"
         >
           <div className="list-title">{fieldName}</div>
-          <div>{defaultValue}</div>
+          <div>{value}</div>
         </Stack>
       );
   }
