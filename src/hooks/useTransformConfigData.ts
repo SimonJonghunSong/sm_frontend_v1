@@ -351,9 +351,9 @@ export function useTransformedConfigData({
 
       const tabType = pageData.info.type;
       const tabId =
-        Number(pageData.info.id) < 10
-          ? `0${pageData.info.id}`
-          : pageData.info.id;
+        Number(pageData.info.tab_id) < 10
+          ? `0${pageData.info.tab_id}`
+          : pageData.info.tab_id;
 
       let result: string[] = [];
 
@@ -373,7 +373,7 @@ export function useTransformedConfigData({
             .toString(16)
             .toUpperCase();
 
-          const fullDataEditString = `${mapIdPrefix};${mapIdSuffix};${new Array(
+          const fullDataEditString = `${mapIdPrefix};${mapIdSuffix}#${new Array(
             8 - string16Data.length
           )
             .fill(0)
