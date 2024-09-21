@@ -131,7 +131,7 @@ const useSerial = () => {
     try {
       while (true) {
         const { value, done } = await reader.read();
-        // TODO NORMAL POWER DOWN / RDY / APP RDY 걸러내기
+        console.log(value);
 
         if (value) {
           // HEALTH CHECK & MODEL INFO
@@ -250,8 +250,8 @@ const useSerial = () => {
               fileDownload(blob, `${port.imei}.profile`);
               csvBufferRef.current.set(port.imei, undefined);
             }
-          } else if (value.includes("RPR")) {
-            return;
+          } else if (value.includes("RPR") || value.includes("USP")) {
+            // return;
           } else {
             console.log(value);
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
@@ -320,7 +320,6 @@ const useSerial = () => {
     port: SerialPort;
     writer: WritableStreamDefaultWriter<string>;
   }) => {
-    console.log("write 중");
     if (port && port.writable) {
       try {
         await writer.write(data + SUFFIX); // Uint8Array 전송
