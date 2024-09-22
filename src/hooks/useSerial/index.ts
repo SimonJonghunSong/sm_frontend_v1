@@ -137,7 +137,6 @@ const useSerial = () => {
       while (true) {
         const { value, done } = await reader.read();
         console.log(value);
-        // IM_Fell_French_Canon()
         if (value) {
           // HEALTH CHECK & MODEL INFO
           if (value.includes("$PST;Rdy") || value.includes("$PST;Ver;")) {
@@ -270,24 +269,28 @@ const useSerial = () => {
             toast("Success!", { type: "info" });
             port.oneditsuccess = null;
           } else if (value.includes("ERR")) {
+            console.log(value);
             port.onprev?.();
-            toast("Error", { type: "error" });
+            toast(value, { type: "error" });
             port.onprev = null;
           } else if (port.ispolygonfetching) {
             port.polygongeofence = (port.polygongeofence || "") + value;
 
-            if (value.includes(CR)) {
-              port.polygonfetchcount = (port.polygonfetchcount ?? 0) + 1;
+            if (value.includes("#")) {
+              const hashCount = value.split("#").length - 1;
+              port.polygonfetchcount =
+                (port.polygonfetchcount ?? 0) + hashCount;
+            }
 
-              if (port.polygonfetchcount === 2) {
-                console.log(getGeofenceData(port.polygongeofence));
-
-                setPolygonGeofence({
-                  payload: getGeofenceData(port.polygongeofence),
-                  imei: port.imei,
-                });
-                port.onafterpolygongeofence();
-              }
+            if (
+              port.polygonfetchcount === port.polygonmax &&
+              value.includes(CR)
+            ) {
+              setPolygonGeofence({
+                payload: getGeofenceData(port.polygongeofence),
+                imei: port.imei,
+              });
+              port.onafterpolygongeofence();
             }
           } else if (port.iscircularfetching) {
             port.circulargeofence = (port.circulargeofence || "") + value;
@@ -298,7 +301,10 @@ const useSerial = () => {
                 (port.circularfetchcount ?? 0) + hashCount;
             }
 
-            if (port.circularfetchcount === 999 && value.includes(CR)) {
+            if (
+              port.circularfetchcount === port.circlemax &&
+              value.includes(CR)
+            ) {
               setCircularGeofence({
                 payload: getGeofenceData(port.circulargeofence),
                 imei: port.imei,

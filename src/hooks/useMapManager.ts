@@ -1,11 +1,11 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useRef, useState } from "react";
 
 type LatLng = {
   lat: number;
   lng: number;
 };
 
-type PolygonData = {
+export type PolygonData = {
   id: number;
   path: LatLng[];
 };
@@ -28,13 +28,13 @@ type MapManagerHook = {
   updateCircleCenter: (
     circleId: number,
     newLat: number,
-    newLng: number,
+    newLng: number
   ) => void;
   updatePolygonPoint: (
     polygonId: number,
     pointIndex: number,
     newLat: number,
-    newLng: number,
+    newLng: number
   ) => void;
   updateCircleRadius: (circleId: number, newRadius: number) => void;
   completeOverlay: (e: google.maps.drawing.OverlayCompleteEvent) => void;
@@ -43,7 +43,7 @@ type MapManagerHook = {
   setCircles: (circleData: CircleData[]) => void;
 };
 
-export const useMapManager = (_mapId: string): MapManagerHook => {
+export const useMapManager = (_mapId?: string): MapManagerHook => {
   const shapesRef = useRef<google.maps.drawing.OverlayCompleteEvent[]>([]);
   const [polygons, setPolygons] = useState<PolygonData[]>([]);
   const [circles, setCircles] = useState<CircleData[]>([]);
@@ -61,7 +61,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
     if (circle) {
       circle.setMap(null);
       setCircles((prevCircles) =>
-        prevCircles.filter((prevCircle) => prevCircle.id !== circleId),
+        prevCircles.filter((prevCircle) => prevCircle.id !== circleId)
       );
       delete shapesRef.current[circleId];
     }
@@ -73,7 +73,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
     if (polygon) {
       polygon.setMap(null);
       setPolygons((prevPolygons) =>
-        prevPolygons.filter(({ id }) => id !== polygonId),
+        prevPolygons.filter(({ id }) => id !== polygonId)
       );
       delete shapesRef.current[polygonId];
     }
@@ -84,8 +84,8 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
       const newPoints = polygon.path.filter((_, i) => i !== index);
       setPolygons((prevPolygons) =>
         prevPolygons.map((p) =>
-          p.id === polygon.id ? { ...p, path: newPoints } : p,
-        ),
+          p.id === polygon.id ? { ...p, path: newPoints } : p
+        )
       );
       const polygonShape = shapesRef.current[polygon.id]
         ?.overlay as google.maps.Polygon;
@@ -97,13 +97,13 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
         }
       }
     },
-    [],
+    []
   );
 
   const updateCircleCenter = (
     circleId: number,
     newLat: number,
-    newLng: number,
+    newLng: number
   ) => {
     if (circleId >= shapesRef.current.length) return;
 
@@ -113,7 +113,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
           return { ...c, center: { lat: newLat, lng: newLng } };
         }
         return c;
-      }),
+      })
     );
 
     const circleShape = shapesRef.current[circleId]
@@ -132,7 +132,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
           return { ...c, radius: newRadius };
         }
         return c;
-      }),
+      })
     );
 
     const circleShape = shapesRef.current[circleId]
@@ -146,7 +146,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
     polygonId: number,
     pointIndex: number,
     newLat: number,
-    newLng: number,
+    newLng: number
   ) => {
     if (polygonId >= shapesRef.current.length) return;
 
@@ -162,7 +162,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
           return { ...polygon, path: newPath };
         }
         return polygon;
-      }),
+      })
     );
 
     const polygonShape = shapesRef.current[polygonId]
@@ -180,93 +180,93 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
           const polygon = shape.overlay as google.maps.Polygon;
           const path = polygon.getPath();
 
-          path.addListener('set_at', () => {
+          path.addListener("set_at", () => {
             const newPath = path.getArray().map((latLng) => ({
               lat: latLng.lat(),
               lng: latLng.lng(),
             }));
             setPolygons((prevPolygons) =>
               prevPolygons.map((p) =>
-                p.id === index ? { ...p, path: newPath } : p,
-              ),
+                p.id === index ? { ...p, path: newPath } : p
+              )
             );
           });
 
-          path.addListener('insert_at', () => {
+          path.addListener("insert_at", () => {
             const newPath = path.getArray().map((latLng) => ({
               lat: latLng.lat(),
               lng: latLng.lng(),
             }));
             setPolygons((prevPolygons) =>
               prevPolygons.map((p) =>
-                p.id === index ? { ...p, path: newPath } : p,
-              ),
+                p.id === index ? { ...p, path: newPath } : p
+              )
             );
           });
 
-          path.addListener('remove_at', () => {
+          path.addListener("remove_at", () => {
             const newPath = path.getArray().map((latLng) => ({
               lat: latLng.lat(),
               lng: latLng.lng(),
             }));
             setPolygons((prevPolygons) =>
               prevPolygons.map((p) =>
-                p.id === index ? { ...p, path: newPath } : p,
-              ),
+                p.id === index ? { ...p, path: newPath } : p
+              )
             );
           });
         } else if (shape.type === google.maps.drawing.OverlayType.POLYLINE) {
           const polyline = shape.overlay as google.maps.Polyline;
           const path = polyline.getPath();
 
-          path.addListener('set_at', () => {
+          path.addListener("set_at", () => {
             const newPath = path.getArray().map((latLng) => ({
               lat: latLng.lat(),
               lng: latLng.lng(),
             }));
             setPolygons((prevPolygons) =>
               prevPolygons.map((p) =>
-                p.id === index ? { ...p, path: newPath } : p,
-              ),
+                p.id === index ? { ...p, path: newPath } : p
+              )
             );
           });
 
-          path.addListener('insert_at', () => {
+          path.addListener("insert_at", () => {
             const newPath = path.getArray().map((latLng) => ({
               lat: latLng.lat(),
               lng: latLng.lng(),
             }));
             setPolygons((prevPolygons) =>
               prevPolygons.map((p) =>
-                p.id === index ? { ...p, path: newPath } : p,
-              ),
+                p.id === index ? { ...p, path: newPath } : p
+              )
             );
           });
 
-          path.addListener('remove_at', () => {
+          path.addListener("remove_at", () => {
             const newPath = path.getArray().map((latLng) => ({
               lat: latLng.lat(),
               lng: latLng.lng(),
             }));
             setPolygons((prevPolygons) =>
               prevPolygons.map((p) =>
-                p.id === index ? { ...p, path: newPath } : p,
-              ),
+                p.id === index ? { ...p, path: newPath } : p
+              )
             );
           });
         } else if (shape.type === google.maps.drawing.OverlayType.CIRCLE) {
           const circle = shape.overlay as google.maps.Circle;
 
-          circle.addListener('radius_changed', () => {
+          circle.addListener("radius_changed", () => {
             const newRadius = circle.getRadius();
             setCircles((prevCircles) =>
               prevCircles.map((c) =>
-                c.id === index ? { ...c, radius: newRadius } : c,
-              ),
+                c.id === index ? { ...c, radius: newRadius } : c
+              )
             );
           });
 
-          circle.addListener('center_changed', () => {
+          circle.addListener("center_changed", () => {
             const newCenter = circle.getCenter();
             if (newCenter) {
               setCircles((prevCircles) =>
@@ -276,8 +276,8 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
                         ...c,
                         center: { lat: newCenter.lat(), lng: newCenter.lng() },
                       }
-                    : c,
-                ),
+                    : c
+                )
               );
             }
           });
@@ -316,7 +316,7 @@ export const useMapManager = (_mapId: string): MapManagerHook => {
       }
       registerEditableHandlers();
     },
-    [],
+    []
   );
 
   return {

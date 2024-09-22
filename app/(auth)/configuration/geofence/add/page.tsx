@@ -1,7 +1,4 @@
 "use client";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import sampleMap from "/public/images/sample-map2.png";
-import sampleMap3 from "/public/images/sample-map3.png";
 
 import {
   Box,
@@ -9,18 +6,131 @@ import {
   IconButton,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import Maps from "../../../../../components/Map";
+import React, { useEffect, useState } from "react";
 import Controller from "../../components/Controller";
 import InputBox from "../../../../../components/inputbox/InputBox";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../../../../components/dataTable";
-import Image from "next/image";
+import {
+  PolygonData,
+  useMapManager,
+} from "../../../../../src/hooks/useMapManager";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { useTransformedConfigData } from "../../../../../src/hooks/useTransformConfigData";
+import { useSearchParams } from "next/navigation";
+import useSerial from "../../../../../src/hooks/useSerial";
+import {
+  getPolygonGeofenceData,
+  getCircularGeofenceData,
+} from "../../../../../src/hooks/useSerial/utils";
+import {
+  AT_EDIT_PREFIX,
+  POLYGON_GEOFENCE_POINTS,
+} from "../../../../../src/hooks/useSerial/constant";
+import { convertCoordinatesToHexString } from "../../../../../utils/coordinateToHex";
+import { toast } from "react-toastify";
 
 export default function Page() {
   const [type, setType] = useState("circular");
+  const [groupId, setGroupId] = useState<number>(undefined);
+  const [
+    isReadyToRequestSecondePolygonAdd,
+    setIsReadyToRequestSecondePolygonAdd,
+  ] = useState(false);
+  const mapManager = useMapManager();
+  const searchParams = useSearchParams();
+  const {
+    state: { portList },
+    func: { write },
+  } = useSerial();
+
+  const currentPort = portList.find(
+    ({ port }) => port.imei === searchParams.get("imei")
+  );
+
+  const polygonList = currentPort.polygonGeofenceData;
+  const circularList = currentPort.circularGeofenceData;
+
+  const polygonData = getPolygonGeofenceData(polygonList);
+  const circularData = getCircularGeofenceData(circularList);
+
+  const { originData, formData, getFormFields, resetData, getEditDataForPage } =
+    useTransformedConfigData({
+      data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
+        .packageToJson.synctrak,
+      blacklist: ["info"],
+    });
+
+  const polygonGeofenceMax = formData.find(({ info }) => info.tab_id === "53")
+    ?.info.max;
+  const circularGeofenceMax = formData.find(({ info }) => info.tab_id === "50")
+    ?.info.max;
+
+  const handleTypeChange = (e: SelectChangeEvent<string>) => {
+    const paramsType = e.target.value;
+    if (paramsType === "circular") {
+      const polygonId = mapManager.polygons[0]?.id;
+
+      if (mapManager.polygons.length > 0) {
+        mapManager.removePolygon(polygonId);
+      }
+    } else {
+      const circleId = mapManager.circles[0]?.id;
+
+      if (mapManager.circles.length > 0) {
+        mapManager.removeCircle(circleId);
+      }
+    }
+
+    setType(paramsType);
+  };
+  console.log(mapManager.polygons);
+  console.log(groupId);
+
+  const handleAdd = () => {
+    if (type === "polygon") {
+      const pointId = POLYGON_GEOFENCE_POINTS[groupId - 1];
+      const coordinateToHexString = convertCoordinatesToHexString(
+        mapManager.polygons[0].path
+      );
+      const imei = currentPort.port.imei;
+      currentPort.port.oneditsuccess = () => {
+        console.log("suc");
+        addPolygonData();
+      };
+      console.log(
+        `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`
+      );
+      write({
+        data: `${AT_EDIT_PREFIX};${imei};${pointId};${coordinateToHexString}`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    } else {
+    }
+  };
+
+  const addPolygonData = () => {
+    const imei = currentPort.port.imei;
+    currentPort.port.oneditsuccess = () => {
+      toast("Save Success");
+    };
+    write({
+      data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
+        2,
+        "0"
+      )};${mapManager.polygons[0].path.length
+        .toString(16)
+        .padStart(2, "0")}010100000000`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
 
   return (
     <div className="pageWrap">
@@ -42,34 +152,81 @@ export default function Page() {
                 <Select
                   value={type}
                   sx={{ width: "100%" }}
-                  onChange={(e) => setType(e.target.value)}
+                  onChange={handleTypeChange}
                 >
                   <MenuItem value={"circular"}>Circular</MenuItem>
                   <MenuItem value={"polygon"}>Polygon</MenuItem>
                 </Select>
               </InputBox.Body>
             </InputBox>
-            {type === "circular" ? <CircularType /> : <PolygonType />}
+            {type === "circular" ? (
+              <CircularType
+                max={circularGeofenceMax ? Number(circularGeofenceMax) : 0}
+                excludeGroupId={circularData.map(({ groupId }) => groupId)}
+                id={
+                  mapManager.circles.length > 0
+                    ? mapManager.circles[0].id
+                    : undefined
+                }
+                updateCircleRadius={mapManager.updateCircleRadius}
+                updateCircleCenter={mapManager.updateCircleCenter}
+                lat={
+                  mapManager.circles.length > 0
+                    ? mapManager.circles[0].center.lat
+                    : undefined
+                }
+                long={
+                  mapManager.circles.length > 0
+                    ? mapManager.circles[0].center.lng
+                    : undefined
+                }
+                radius={
+                  mapManager.circles.length > 0
+                    ? mapManager.circles[0].radius
+                    : undefined
+                }
+                groupId={groupId}
+                onChangeGroupId={(id: number) => setGroupId(id)}
+              />
+            ) : (
+              <PolygonType
+                max={polygonGeofenceMax ? Number(polygonGeofenceMax) : 0}
+                removePolygonPoint={mapManager.removePolygonPoint}
+                excludeGroupId={polygonData.map(({ groupId }) => groupId)}
+                polygon={
+                  mapManager.polygons.length > 0
+                    ? mapManager.polygons[0]
+                    : undefined
+                }
+                groupId={groupId}
+                onChangeGroupId={(id: number) => setGroupId(id)}
+              />
+            )}
           </Stack>
 
-          <Stack gap="20px" sx={{ width: "50%" }}>
-            {type === "circular" ? (
-              <Box>
-                <Image
-                  src={sampleMap}
-                  alt="sampleMap"
-                  style={{ display: "block", width: "100%", height: "auto" }}
-                />
-              </Box>
-            ) : (
-              <Box>
-                <Image
-                  src={sampleMap3}
-                  alt="sampleMap"
-                  style={{ display: "block", width: "100%", height: "auto" }}
-                />
-              </Box>
-            )}
+          <Stack gap="20px" sx={{ width: "50%", height: "500px" }}>
+            <Box flex={1}>
+              <Maps
+                apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
+                zoom={13}
+                center={{
+                  lat: 37.564823,
+                  lng: 126.976951,
+                }}
+                drawingModes={
+                  (type === "circular"
+                    ? ["circle"]
+                    : ["polygon"]) as google.maps.drawing.OverlayType[]
+                }
+                onOverlayComplete={mapManager.completeOverlay}
+                editableDrawing
+                disableDrawing={
+                  type === "circular"
+                    ? mapManager.circles.length > 0
+                    : mapManager.polygons.length > 0
+                }
+              />
+            </Box>
           </Stack>
         </Stack>
         <Stack
@@ -81,7 +238,16 @@ export default function Page() {
           <Button variant="outlined" color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleAdd}
+            disabled={
+              type === "polygon"
+                ? (mapManager.polygons[0]?.path.length || 0) < 3
+                : mapManager.circles.length === 0
+            }
+          >
             Add
           </Button>
         </Stack>
@@ -90,7 +256,43 @@ export default function Page() {
   );
 }
 
-function CircularType() {
+function CircularType({
+  id,
+  lat,
+  long,
+  radius,
+  updateCircleCenter,
+  updateCircleRadius,
+  max,
+  excludeGroupId = [],
+  groupId,
+  onChangeGroupId,
+}: {
+  id?: number;
+  lat?: number;
+  long?: number;
+  radius?: number;
+  max: number;
+  excludeGroupId?: number[];
+  updateCircleCenter?: (
+    circleId: number,
+    newLat: number,
+    newLng: number
+  ) => void;
+  updateCircleRadius?: (circleId: number, newRadius: number) => void;
+  groupId?: number;
+  onChangeGroupId: (id: number) => void;
+}) {
+  const allOptions = Array.from({ length: max }, (_, i) => i + 1);
+
+  const filteredOptions = allOptions.filter(
+    (number) => !excludeGroupId.includes(number)
+  );
+
+  useEffect(() => {
+    onChangeGroupId(filteredOptions[0]);
+  }, []);
+
   return (
     <>
       <InputBox>
@@ -100,11 +302,16 @@ function CircularType() {
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
           <InputBox.Number>2300</InputBox.Number>
-          {/* <span className="notification"/> */}
         </InputBox.Head>
         <InputBox.Body>
-          <Select value={"select-1"} sx={{ width: "100%" }}>
-            <MenuItem value={"select-1"}>1</MenuItem>
+          <Select
+            value={groupId || filteredOptions[0]}
+            onChange={(e) => onChangeGroupId(Number(e.target.value))}
+            sx={{ width: "100%" }}
+          >
+            {filteredOptions.map((grpId) => {
+              return <MenuItem value={`${grpId}`}>{grpId}</MenuItem>;
+            })}
           </Select>
         </InputBox.Body>
       </InputBox>
@@ -116,10 +323,16 @@ function CircularType() {
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
           <InputBox.Number>2300</InputBox.Number>
-          {/* <span className="notification"/> */}
         </InputBox.Head>
         <InputBox.Body>
-          <TextField fullWidth defaultValue="13.85056" />
+          <TextField
+            fullWidth
+            value={lat}
+            disabled={id === undefined}
+            onChange={(e) =>
+              updateCircleCenter(id, Number(e.target.value), long)
+            }
+          />
         </InputBox.Body>
       </InputBox>
 
@@ -130,10 +343,16 @@ function CircularType() {
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
           <InputBox.Number>2300</InputBox.Number>
-          {/* <span className="notification"/> */}
         </InputBox.Head>
         <InputBox.Body>
-          <TextField fullWidth defaultValue="-4.31968" />
+          <TextField
+            fullWidth
+            value={long}
+            disabled={id === undefined}
+            onChange={(e) =>
+              updateCircleCenter(id, lat, Number(e.target.value))
+            }
+          />
         </InputBox.Body>
       </InputBox>
 
@@ -144,17 +363,57 @@ function CircularType() {
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
           <InputBox.Number>2300</InputBox.Number>
-          {/* <span className="notification"/> */}
         </InputBox.Head>
         <InputBox.Body>
-          <TextField fullWidth defaultValue="250000" />
+          <TextField
+            fullWidth
+            value={radius}
+            disabled={id === undefined}
+            onChange={(e) => updateCircleRadius(id, Number(e.target.value))}
+          />
         </InputBox.Body>
       </InputBox>
     </>
   );
 }
 
-function PolygonType() {
+function PolygonType({
+  polygon,
+  removePolygonPoint,
+  max,
+  excludeGroupId = [],
+  groupId,
+  onChangeGroupId,
+}: {
+  polygon?: PolygonData;
+  removePolygonPoint?: (polygon: PolygonData, index: number) => void;
+  max: number;
+  excludeGroupId?: number[];
+  groupId?: number;
+  onChangeGroupId: (id: number) => void;
+}) {
+  const rows = polygon
+    ? polygon.path.map(({ lat, lng }, index) => ({
+        id: index,
+        lat,
+        long: lng,
+        delete: {
+          id: index,
+          onDelete: () => removePolygonPoint?.(polygon, index),
+        },
+      }))
+    : [];
+
+  const allOptions = Array.from({ length: max }, (_, i) => i + 1);
+
+  const filteredOptions = allOptions.filter(
+    (number) => !excludeGroupId.includes(number)
+  );
+
+  useEffect(() => {
+    onChangeGroupId(filteredOptions[0]);
+  }, []);
+
   return (
     <>
       <InputBox>
@@ -164,11 +423,16 @@ function PolygonType() {
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
           <InputBox.Number>2300</InputBox.Number>
-          {/* <span className="notification"/> */}
         </InputBox.Head>
         <InputBox.Body>
-          <Select value={"select-1"} sx={{ width: "100%" }}>
-            <MenuItem value={"select-1"}>1</MenuItem>
+          <Select
+            value={groupId}
+            onChange={(e) => onChangeGroupId(Number(e.target.value))}
+            sx={{ width: "100%" }}
+          >
+            {filteredOptions.map((grpId) => {
+              return <MenuItem value={`${grpId}`}>{grpId}</MenuItem>;
+            })}
           </Select>
         </InputBox.Body>
       </InputBox>
@@ -186,62 +450,33 @@ function PolygonType() {
 
 const columns: GridColDef[] = [
   {
-    field: "col1",
+    field: "lat",
     headerName: "Latitude",
     flex: 1,
     headerAlign: "center",
     align: "center",
   },
   {
-    field: "col2",
+    field: "long",
     headerName: "Longitude",
     flex: 1,
     headerAlign: "center",
     align: "center",
   },
   {
-    field: "col3",
+    field: "delete",
     headerName: "Delete",
     width: 80,
     headerAlign: "center",
     align: "center",
-    renderCell: () => (
-      <IconButton onClick={(e) => e.stopPropagation()}>
+    renderCell: (event) => (
+      <IconButton
+        onClick={() => {
+          event.value.onDelete();
+        }}
+      >
         <DeleteForeverOutlinedIcon />
       </IconButton>
     ),
-  },
-];
-
-const rows = [
-  {
-    id: 0,
-    col1: "85.155732",
-    col2: "-178.493874",
-    col3: { id: "1" },
-  },
-  {
-    id: 1,
-    col1: "85.155732",
-    col2: "-178.493874",
-    col3: { id: "1" },
-  },
-  {
-    id: 2,
-    col1: "85.155732",
-    col2: "-178.493874",
-    col3: { id: "1" },
-  },
-  {
-    id: 3,
-    col1: "85.155732",
-    col2: "-178.493874",
-    col3: { id: "1" },
-  },
-  {
-    id: 4,
-    col1: "85.155732",
-    col2: "-178.493874",
-    col3: { id: "1" },
   },
 ];

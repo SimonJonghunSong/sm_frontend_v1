@@ -20,6 +20,8 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  circlemax: number;
+  polygonmax: number;
   circulargeofence: string;
   polygongeofence: string;
   onaftercirculargeofence: () => void;

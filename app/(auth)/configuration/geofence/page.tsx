@@ -11,13 +11,7 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import Controller from "../components/Controller";
 import InputBox from "../../../../components/inputbox/InputBox";
 import { SwitchPrimary } from "../../../../components/switches";
@@ -86,49 +80,6 @@ const columns: GridColDef[] = [
   },
 ];
 
-// const rows = [
-//   {
-//     id: 0,
-//     col1: "1",
-//     col2: "Circular",
-//     col3: "1",
-//     col8: { id: "1" },
-//     col9: { id: "1" },
-//   },
-//   {
-//     id: 1,
-//     col1: "2",
-//     col2: "Polygon",
-//     col3: "2",
-//     col8: { id: "1" },
-//     col9: { id: "1" },
-//   },
-//   {
-//     id: 2,
-//     col1: "3",
-//     col2: "Polygon",
-//     col3: "3",
-//     col8: { id: "1" },
-//     col9: { id: "1" },
-//   },
-//   {
-//     id: 3,
-//     col1: "4",
-//     col2: "Circular",
-//     col3: "4",
-//     col8: { id: "1" },
-//     col9: { id: "1" },
-//   },
-//   {
-//     id: 4,
-//     col1: "5",
-//     col2: "Circular",
-//     col3: "5",
-//     col8: { id: "1" },
-//     col9: { id: "1" },
-//   },
-// ];
-
 export default function Page() {
   const searchParams = useSearchParams();
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
@@ -173,6 +124,7 @@ export default function Page() {
 
     currentPort.port.polygonfetchcount = 0;
     currentPort.port.ispolygonfetching = true;
+    currentPort.port.polygonmax = Number(polygonGeofenceMax);
     currentPort.port.onafterpolygongeofence = () => {
       currentPort.port.ispolygonfetching = false;
       toast("fetch 완료");
@@ -200,6 +152,7 @@ export default function Page() {
 
     currentPort.port.circularfetchcount = 0;
     currentPort.port.iscircularfetching = true;
+    currentPort.port.circlemax = Number(circularGeofenceMax);
     currentPort.port.onaftercirculargeofence = () => {
       currentPort.port.iscircularfetching = false;
       toast("circular geofence fetch 완료");
@@ -224,8 +177,6 @@ export default function Page() {
 
   const polygonData = getPolygonGeofenceData(polygonList);
   const circularData = getCircularGeofenceData(circularList);
-
-  console.log([...polygonData, ...circularData]);
 
   const rows = [...polygonData, ...circularData].map(
     ({ type, groupId }, index) => {

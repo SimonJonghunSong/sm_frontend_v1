@@ -1,3 +1,5 @@
+import { POLYGON_GEOFENCE_POINTS } from "./constant";
+
 const regex = /(\d{2}#\w+)/g;
 
 type PolygonGeofenceDataType = {
@@ -7,44 +9,49 @@ type PolygonGeofenceDataType = {
   outAlert: "Disabled" | "Enabled";
   polygonSpeedLimit: number;
   type: string;
+  polygonPointId: number;
 };
 
 export const getGeofenceData = (data: string) => {
   const matches = data.match(regex);
-  return matches;
+  return matches || [];
 };
 
 export const getPolygonGeofenceData = (
   inputArray: string[]
 ): PolygonGeofenceDataType[] => {
-  return inputArray.reduce((acc: PolygonGeofenceDataType[], item: string) => {
-    const [number, value] = item.split("#");
+  return inputArray.reduce(
+    (acc: PolygonGeofenceDataType[], item: string, index: number) => {
+      const [number, value] = item.split("#");
 
-    // '00000000000000' 값을 가지는 항목은 무시
-    if (value === "00000000000000") return acc;
+      // '00000000000000' 값을 가지는 항목은 무시
+      if (value === "00000000000000") return acc;
 
-    // 필요한 데이터 추출 및 변환
-    const groupId = parseInt(number, 10) + 1;
-    const polygonCount = parseInt(value.substring(0, 2), 16);
-    const inAlert: "Disabled" | "Enabled" =
-      value.substring(2, 4) === "00" ? "Disabled" : "Enabled";
-    const outAlert: "Disabled" | "Enabled" =
-      value.substring(4, 6) === "00" ? "Disabled" : "Enabled";
-    const polygonSpeedLimit = parseInt(value.substring(6), 16) / 1000000;
-    const type = "polygon";
+      // 필요한 데이터 추출 및 변환
+      const groupId = parseInt(number, 10) + 1;
+      const polygonCount = parseInt(value.substring(0, 2), 16);
+      const inAlert: "Disabled" | "Enabled" =
+        value.substring(2, 4) === "00" ? "Disabled" : "Enabled";
+      const outAlert: "Disabled" | "Enabled" =
+        value.substring(4, 6) === "00" ? "Disabled" : "Enabled";
+      const polygonSpeedLimit = parseInt(value.substring(6), 16) / 1000000;
+      const type = "polygon";
+      const polygonPointId = POLYGON_GEOFENCE_POINTS[index];
+      // 변환된 데이터 객체를 accumulator에 추가
+      acc.push({
+        groupId,
+        polygonCount,
+        inAlert,
+        outAlert,
+        polygonSpeedLimit,
+        type,
+        polygonPointId,
+      });
 
-    // 변환된 데이터 객체를 accumulator에 추가
-    acc.push({
-      groupId,
-      polygonCount,
-      inAlert,
-      outAlert,
-      polygonSpeedLimit,
-      type,
-    });
-
-    return acc;
-  }, []);
+      return acc;
+    },
+    []
+  );
 };
 
 type CircularGeofenceDataType = {

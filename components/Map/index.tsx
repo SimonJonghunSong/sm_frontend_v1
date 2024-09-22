@@ -28,6 +28,7 @@ interface MapComponentProps extends GoogleMapProps {
   drawingModes?: google.maps.drawing.OverlayType[];
   drawingControl?: boolean;
   editableDrawing?: boolean;
+  disableDrawing?: boolean;
 }
 
 const libraries = ["drawing"] as const;
@@ -61,6 +62,7 @@ const MapComponent: React.FC<MapComponentProps> = ({
     "polygon",
     "polyline",
   ] as google.maps.drawing.OverlayType[],
+  disableDrawing = false,
 }) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: apiKey,
@@ -141,24 +143,26 @@ const MapComponent: React.FC<MapComponentProps> = ({
           }}
         />
       ))}
-      <DrawingManager
-        options={{
-          drawingControl,
-          polygonOptions: {
-            editable: editableDrawing,
-          },
-          circleOptions: {
-            editable: editableDrawing,
-          },
-          polylineOptions: {
-            editable: editableDrawing,
-          },
-          drawingControlOptions: {
-            drawingModes,
-          },
-        }}
-        onOverlayComplete={onOverlayComplete}
-      />
+      {!disableDrawing && (
+        <DrawingManager
+          options={{
+            drawingControl,
+            polygonOptions: {
+              editable: editableDrawing,
+            },
+            circleOptions: {
+              editable: editableDrawing,
+            },
+            polylineOptions: {
+              editable: editableDrawing,
+            },
+            drawingControlOptions: {
+              drawingModes,
+            },
+          }}
+          onOverlayComplete={onOverlayComplete}
+        />
+      )}
     </GoogleMap>
   );
 };
