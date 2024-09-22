@@ -13,8 +13,6 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import SideMenu from "../../../../../components/sidemenu/SideMenu";
-import { sideMenuItems } from "../../sideMenuItems";
 import Controller from "../../components/Controller";
 import InputBox from "../../../../../components/inputbox/InputBox";
 import { GridColDef } from "@mui/x-data-grid";
@@ -26,8 +24,6 @@ export default function Page() {
 
   return (
     <div className="pageWrap">
-      <SideMenu configuration sideMenuItems={sideMenuItems} />
-
       <article className="contentWrap">
         <Controller />
         <div className="pageTitle">Add New</div>
@@ -41,7 +37,6 @@ export default function Page() {
                 </InputBox.Title>
                 <InputBox.Info tooltipText="tooptip example" />
                 <InputBox.Number>50/60</InputBox.Number>
-                {/* <span className="notification"/> */}
               </InputBox.Head>
               <InputBox.Body>
                 <Select

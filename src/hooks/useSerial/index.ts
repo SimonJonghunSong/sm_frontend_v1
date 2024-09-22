@@ -11,6 +11,7 @@ import {
 import useSerialStore from "../../stores/useSerialStore";
 import { fileDownload } from "../../../utils/fileDownload";
 import { toast } from "react-toastify";
+import { getGeofenceData } from "./utils";
 
 const options = {
   baudRate: 115200,
@@ -35,6 +36,8 @@ const useSerial = () => {
     editSerialPort,
     setJsonPackageOfSerialPort,
     setPackageFetchingStart,
+    setCircularGeofence,
+    setPolygonGeofence,
   } = useSerialStore();
 
   const killAllPort = () => {
@@ -133,13 +136,21 @@ const useSerial = () => {
     try {
       while (true) {
         const { value, done } = await reader.read();
-
+        console.log(value);
+        // IM_Fell_French_Canon()
         if (value) {
           // HEALTH CHECK & MODEL INFO
           if (value.includes("$PST;Rdy") || value.includes("$PST;Ver;")) {
             const dataField = value.trim().split(";")[2];
 
             if (value.includes("$PST;Rdy") && dataField === "UP") {
+              // 신경써야 하는 부분
+              // write({
+              //   data: AT_GET_MODEL_INFO,
+              //   port,
+              //   writer,
+              // });
+
               write({
                 data: AT_GET_IMEI,
                 port,
@@ -200,6 +211,8 @@ const useSerial = () => {
                   packageToJson: undefined,
                   isPackageError: false,
                   shouldRefetchPackage: false,
+                  polygonGeofenceData: [],
+                  circularGeofenceData: [],
                 });
 
                 write({
@@ -253,11 +266,45 @@ const useSerial = () => {
               csvBufferRef.current.set(port.imei, undefined);
             }
           } else if (value.includes("RPR") || value.includes("USP")) {
+            port.oneditsuccess?.();
             toast("Success!", { type: "info" });
+            port.oneditsuccess = null;
           } else if (value.includes("ERR")) {
-            port.onprev();
+            port.onprev?.();
             toast("Error", { type: "error" });
             port.onprev = null;
+          } else if (port.ispolygonfetching) {
+            port.polygongeofence = (port.polygongeofence || "") + value;
+
+            if (value.includes(CR)) {
+              port.polygonfetchcount = (port.polygonfetchcount ?? 0) + 1;
+
+              if (port.polygonfetchcount === 2) {
+                console.log(getGeofenceData(port.polygongeofence));
+
+                setPolygonGeofence({
+                  payload: getGeofenceData(port.polygongeofence),
+                  imei: port.imei,
+                });
+                port.onafterpolygongeofence();
+              }
+            }
+          } else if (port.iscircularfetching) {
+            port.circulargeofence = (port.circulargeofence || "") + value;
+
+            if (value.includes("#")) {
+              const hashCount = value.split("#").length - 1;
+              port.circularfetchcount =
+                (port.circularfetchcount ?? 0) + hashCount;
+            }
+
+            if (port.circularfetchcount === 999 && value.includes(CR)) {
+              setCircularGeofence({
+                payload: getGeofenceData(port.circulargeofence),
+                imei: port.imei,
+              });
+              port.onaftercirculargeofence();
+            }
           } else {
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
 

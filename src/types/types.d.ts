@@ -20,6 +20,15 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  circulargeofence: string;
+  polygongeofence: string;
+  onaftercirculargeofence: () => void;
+  iscircularfetching: boolean;
+  circularfetchcount: number;
+  polygonfetchcount: any;
+  ispolygonfetching: boolean;
+  onafterpolygongeofence: () => void;
+  oneditsuccess: () => void;
   onprev: any;
   grpNo: number;
   imei: string;

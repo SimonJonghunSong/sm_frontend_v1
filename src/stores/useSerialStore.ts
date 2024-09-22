@@ -18,6 +18,8 @@ export type SerialPortState = {
   packageToJson: { synctrak: any[] };
   isPackageError: boolean;
   shouldRefetchPackage: boolean;
+  circularGeofenceData: string[];
+  polygonGeofenceData: string[];
 };
 
 type SerialPortAction = {
@@ -44,6 +46,20 @@ type SerialPortAction = {
   }: {
     imei: string;
     payload: any[];
+  }) => void;
+  setCircularGeofence: ({
+    imei,
+    payload,
+  }: {
+    imei: string;
+    payload: string[];
+  }) => void;
+  setPolygonGeofence: ({
+    imei,
+    payload,
+  }: {
+    imei: string;
+    payload: string[];
   }) => void;
 };
 
@@ -134,12 +150,34 @@ const useSerialStore = create(
             ),
           };
         }),
+
       setJsonPackageOfSerialPortForUpdate: ({ imei, payload }) =>
         set(() => {
           return {
             portList: get().portList.map((item) => {
               return item.imei === imei
                 ? { ...item, packageToJson: { synctrak: payload } }
+                : item;
+            }),
+          };
+        }),
+
+      setCircularGeofence: ({ imei, payload }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, circularGeofenceData: payload }
+                : item;
+            }),
+          };
+        }),
+      setPolygonGeofence: ({ imei, payload }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, polygonGeofenceData: payload }
                 : item;
             }),
           };
