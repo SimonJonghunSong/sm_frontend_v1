@@ -29,3 +29,32 @@ export const convertCoordinatesToHexString = (
     })
     .join(";"); // 각 결과를 ;로 이어붙인 후 마지막에도 ; 추가
 };
+
+export const convertCircleCoordinatesToHexString = ({
+  lat,
+  lng,
+  radius,
+}: {
+  lat: number;
+  lng: number;
+  radius: number;
+}): string => {
+  // lat, lng 소수점 6자리로 자르고 1000000 곱한 후 16진수로 변환 (8자리 유지)
+  const latHex = Math.round(lat * 1000000)
+    .toString(16)
+    .padStart(8, "0")
+    .toUpperCase();
+  const lngHex = Math.round(lng * 1000000)
+    .toString(16)
+    .padStart(8, "0")
+    .toUpperCase();
+
+  // radius는 정수로 변환 후 16진수로 변환 (4자리 유지)
+  const radiusHex = Math.round(radius)
+    .toString(16)
+    .padStart(4, "0")
+    .toUpperCase();
+
+  // lat, lng, radius를 연결해서 반환
+  return `${latHex}${lngHex}${radiusHex}`;
+};

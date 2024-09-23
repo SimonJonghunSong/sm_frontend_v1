@@ -99,6 +99,8 @@ const modalRows = [
   },
 ];
 
+const DELAY_MS = 100;
+
 export default function DeviceList() {
   const {
     state: { portList },
@@ -238,7 +240,7 @@ export default function DeviceList() {
                 );
 
                 for (const command of commands) {
-                  await delayPromise(300); // 300ms 지연
+                  await delayPromise(DELAY_MS); // 300ms 지연
 
                   write({
                     data: command,

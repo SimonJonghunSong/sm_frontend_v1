@@ -27,6 +27,8 @@ import {
   AT_GET_JSON,
 } from "../../../../src/hooks/useSerial/constant";
 
+const DELAY_MS = 100;
+
 export default function Controller() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -85,7 +87,7 @@ export default function Controller() {
     );
 
     for (const command of commands) {
-      await delayPromise(300); // 300ms 지연
+      await delayPromise(DELAY_MS); // 200ms 지연
 
       write({
         data: command,

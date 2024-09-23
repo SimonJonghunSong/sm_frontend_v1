@@ -22,7 +22,7 @@ const SUFFIX = "\n";
 export const delayPromise = (ms) =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-const DELAY_MS = 300;
+const DELAY_MS = 100;
 
 const useSerial = () => {
   const jsonPacketBufferRef = useRef(new Map());
@@ -136,7 +136,6 @@ const useSerial = () => {
     try {
       while (true) {
         const { value, done } = await reader.read();
-        console.log(value);
         if (value) {
           // HEALTH CHECK & MODEL INFO
           if (value.includes("$PST;Rdy") || value.includes("$PST;Ver;")) {
@@ -144,40 +143,28 @@ const useSerial = () => {
 
             if (value.includes("$PST;Rdy") && dataField === "UP") {
               // 신경써야 하는 부분
-              // write({
-              //   data: AT_GET_MODEL_INFO,
-              //   port,
-              //   writer,
-              // });
-
               write({
-                data: AT_GET_IMEI,
+                data: AT_GET_MODEL_INFO,
                 port,
                 writer,
               });
             }
 
             if (value.includes("$PST;Ver;")) {
-              editSerialPort({
-                payload: {
-                  modelVersion: dataField,
-                },
-                imei: port.imei,
-              });
-
+              port.modelinfo = dataField;
               write({
-                data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
+                data: AT_GET_IMEI,
                 port,
                 writer,
               });
             }
           } else if (value.includes("RES;")) {
-            const dataField = value.trim().split(";")[1];
+            const currentImei = value.trim().split(";")[1];
             const alreadyInGlobalData = portList.some(
-              ({ imei }) => imei === dataField
+              ({ imei }) => imei === currentImei
             );
-            if (dataField) {
-              port.imei = dataField;
+            if (currentImei) {
+              port.imei = currentImei;
               if (alreadyInGlobalData) {
                 console.log("already in store, edit Serial Port");
                 // imei로 매칭된 기기가 존재하면 port stream과 reader, writer만 할당, 나머지는 기존의 데이터 사용
@@ -189,7 +176,7 @@ const useSerial = () => {
                     writer,
                     reader,
                   },
-                  imei: dataField,
+                  imei: currentImei,
                 });
               } else {
                 console.log("add new Serial Port");
@@ -201,12 +188,12 @@ const useSerial = () => {
                   writableStreamClosed,
                   writer,
                   isReadyUp: true,
-                  modelVersion: undefined,
+                  modelVersion: port.modelinfo,
                   jsonPackageCount: undefined,
                   rawPackage: "",
                   jsonPackage: [],
                   isPackageFetching: false,
-                  imei: dataField,
+                  imei: currentImei,
                   packageToJson: undefined,
                   isPackageError: false,
                   shouldRefetchPackage: false,
@@ -215,7 +202,7 @@ const useSerial = () => {
                 });
 
                 write({
-                  data: AT_GET_MODEL_INFO,
+                  data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
                   port,
                   writer,
                 });
@@ -240,7 +227,7 @@ const useSerial = () => {
 
             // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
             for (const command of commands) {
-              await delayPromise(DELAY_MS); // 300ms 지연
+              await delayPromise(DELAY_MS); // 100ms 지연
 
               write({
                 data: command,
@@ -311,6 +298,10 @@ const useSerial = () => {
               });
               port.onaftercirculargeofence();
             }
+          } else if (port.ispolygonpointfetching) {
+            port.polygonhandler(value);
+          } else if (port.iscircularpointfetching) {
+            port.circlehandler(value);
           } else {
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
 
@@ -360,6 +351,7 @@ const useSerial = () => {
         }
       }
     } catch (error) {
+      toast(error, { type: "error" });
       console.log(error);
     } finally {
       reader.releaseLock();
@@ -384,6 +376,7 @@ const useSerial = () => {
         if (callback) {
           callbackRef.current.set(port.imei, callback);
         }
+        console.log(data, ":::cmd data");
         await writer.write(data + SUFFIX); // Uint8Array 전송
         return true;
       } catch (e) {

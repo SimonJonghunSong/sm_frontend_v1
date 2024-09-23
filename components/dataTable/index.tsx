@@ -1,19 +1,41 @@
-import { Box, Button, Pagination, PaginationItem, Stack } from '@mui/material'
-import { DataGrid, GridColDef, GridFooter, GridFooterContainer, gridPageCountSelector, gridPageSelector, useGridApiContext, useGridSelector } from '@mui/x-data-grid'
-import React from 'react'
+import { Box, Button, Pagination, PaginationItem, Stack } from "@mui/material";
+import {
+  DataGrid,
+  GridColDef,
+  GridEventListener,
+  GridFooter,
+  GridFooterContainer,
+  gridPageCountSelector,
+  gridPageSelector,
+  useGridApiContext,
+  useGridSelector,
+} from "@mui/x-data-grid";
+import React from "react";
 
 type DataTableProps = {
+  onRowClick?: GridEventListener<"rowClick">;
   disableResize?: boolean;
   disableRowClick?: boolean;
   disablePagination?: boolean;
-    checkbox?: boolean;
-    rows: any;
-    columns: GridColDef[];
-    rowHeight?: number;
-    footerButton?: React.ReactNode;
-    noDataMessage?: string; 
-}
-export default function DataTable({disableResize = false, disableRowClick = true, disablePagination = false, checkbox = true, rows, columns, rowHeight, footerButton, noDataMessage = "No Data"}:DataTableProps) {
+  checkbox?: boolean;
+  rows: any;
+  columns: GridColDef[];
+  rowHeight?: number;
+  footerButton?: React.ReactNode;
+  noDataMessage?: string;
+};
+export default function DataTable({
+  disableResize = false,
+  disableRowClick = true,
+  disablePagination = false,
+  checkbox = true,
+  rows,
+  columns,
+  rowHeight,
+  footerButton,
+  noDataMessage = "No Data",
+  onRowClick = () => {},
+}: DataTableProps) {
   return (
     <Box sx={{ display: "grid", gridTemplateColumns: "1fr" }}>
       <DataGrid
@@ -29,6 +51,7 @@ export default function DataTable({disableResize = false, disableRowClick = true
         hideFooterSelectedRowCount
         hideFooterPagination={disablePagination}
         hideFooter={disablePagination && !footerButton}
+        onRowClick={onRowClick}
         slots={{
           pagination: CustomPagination,
           footer: () => CustomFooter(footerButton),
@@ -44,14 +67,14 @@ export default function DataTable({disableResize = false, disableRowClick = true
           ),
           noResultsOverlay: () => (
             <Stack
-            height="100%"
-            alignItems="center"
-            justifyContent="center"
-            color="var(--grey5)"
-          >
-            {noDataMessage}
-          </Stack>
-          )
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+              color="var(--grey5)"
+            >
+              {noDataMessage}
+            </Stack>
+          ),
         }}
         initialState={{
           pagination: {
@@ -87,45 +110,53 @@ export default function DataTable({disableResize = false, disableRowClick = true
   );
 }
 
-
-
-function CustomFooter (footerButton: React.ReactNode) {
-    return (
-      <GridFooterContainer>
-        <Stack direction="column" width="100%">
-          <Stack direction="row" justifyContent="flex-start" width="100%" mt="12px">
-            {footerButton}
-          </Stack>
-          <Stack width="100%" mt="24px">
-            <GridFooter
-              sx={{
-                border: "none",
-              }}
-            />
-          </Stack>
+function CustomFooter(footerButton: React.ReactNode) {
+  return (
+    <GridFooterContainer>
+      <Stack direction="column" width="100%">
+        <Stack
+          direction="row"
+          justifyContent="flex-start"
+          width="100%"
+          mt="12px"
+        >
+          {footerButton}
         </Stack>
-      </GridFooterContainer>
-    );
-  }
-  
-  export function CustomPagination() {
-    const apiRef = useGridApiContext();
-    const page = useGridSelector(apiRef, gridPageSelector);
-    const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-  
-    return (
-      <Pagination
-        color="primary"
-        variant="outlined"
-        shape="rounded"
-        page={page + 1}
-        count={pageCount}
+        <Stack width="100%" mt="24px">
+          <GridFooter
+            sx={{
+              border: "none",
+            }}
+          />
+        </Stack>
+      </Stack>
+    </GridFooterContainer>
+  );
+}
+
+export function CustomPagination() {
+  const apiRef = useGridApiContext();
+  const page = useGridSelector(apiRef, gridPageSelector);
+  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
+
+  return (
+    <Pagination
+      color="primary"
+      variant="outlined"
+      shape="rounded"
+      page={page + 1}
+      count={pageCount}
+      renderItem={(props2) => (
         // @ts-expect-error
-        renderItem={(props2) => <PaginationItem {...props2} disableRipple sx={{minWidth: 21, width: 21, height: 21, padding: 0, fontSize: 12}}/>}
-        onChange={(event: React.ChangeEvent<unknown>, value: number) =>
-          apiRef.current.setPage(value - 1)
-        }
-      />
-    );
-  }
-  
+        <PaginationItem
+          {...props2}
+          disableRipple
+          sx={{ minWidth: 21, width: 21, height: 21, padding: 0, fontSize: 12 }}
+        />
+      )}
+      onChange={(event: React.ChangeEvent<unknown>, value: number) =>
+        apiRef.current.setPage(value - 1)
+      }
+    />
+  );
+}

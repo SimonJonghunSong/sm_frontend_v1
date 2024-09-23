@@ -1,5 +1,8 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -11,7 +14,6 @@ import {
   TextField,
 } from "@mui/material";
 import Maps from "../../../../../components/Map";
-import React, { useEffect, useState } from "react";
 import Controller from "../../components/Controller";
 import InputBox from "../../../../../components/inputbox/InputBox";
 import { GridColDef } from "@mui/x-data-grid";
@@ -23,7 +25,7 @@ import {
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useTransformedConfigData } from "../../../../../src/hooks/useTransformConfigData";
 import { useSearchParams } from "next/navigation";
-import useSerial from "../../../../../src/hooks/useSerial";
+import useSerial, { delayPromise } from "../../../../../src/hooks/useSerial";
 import {
   getPolygonGeofenceData,
   getCircularGeofenceData,
@@ -32,16 +34,16 @@ import {
   AT_EDIT_PREFIX,
   POLYGON_GEOFENCE_POINTS,
 } from "../../../../../src/hooks/useSerial/constant";
-import { convertCoordinatesToHexString } from "../../../../../utils/coordinateToHex";
-import { toast } from "react-toastify";
+import {
+  convertCircleCoordinatesToHexString,
+  convertCoordinatesToHexString,
+} from "../../../../../utils/coordinateToHex";
+import { findCircleIndexByNumber } from "../../../../../utils/generateFormattedIndexes";
 
 export default function Page() {
+  const router = useRouter();
   const [type, setType] = useState("circular");
   const [groupId, setGroupId] = useState<number>(undefined);
-  const [
-    isReadyToRequestSecondePolygonAdd,
-    setIsReadyToRequestSecondePolygonAdd,
-  ] = useState(false);
   const mapManager = useMapManager();
   const searchParams = useSearchParams();
   const {
@@ -59,12 +61,11 @@ export default function Page() {
   const polygonData = getPolygonGeofenceData(polygonList);
   const circularData = getCircularGeofenceData(circularList);
 
-  const { originData, formData, getFormFields, resetData, getEditDataForPage } =
-    useTransformedConfigData({
-      data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
-        .packageToJson.synctrak,
-      blacklist: ["info"],
-    });
+  const { formData } = useTransformedConfigData({
+    data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
+      .packageToJson.synctrak,
+    blacklist: ["info"],
+  });
 
   const polygonGeofenceMax = formData.find(({ info }) => info.tab_id === "53")
     ?.info.max;
@@ -89,29 +90,46 @@ export default function Page() {
 
     setType(paramsType);
   };
-  console.log(mapManager.polygons);
-  console.log(groupId);
 
   const handleAdd = () => {
+    const imei = currentPort.port.imei;
+
     if (type === "polygon") {
       const pointId = POLYGON_GEOFENCE_POINTS[groupId - 1];
       const coordinateToHexString = convertCoordinatesToHexString(
         mapManager.polygons[0].path
       );
-      const imei = currentPort.port.imei;
-      currentPort.port.oneditsuccess = () => {
-        console.log("suc");
+
+      currentPort.port.oneditsuccess = async () => {
+        await delayPromise(100);
         addPolygonData();
       };
-      console.log(
-        `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`
-      );
+
+      // TODO 20개 이상
       write({
-        data: `${AT_EDIT_PREFIX};${imei};${pointId};${coordinateToHexString}`,
+        data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
         port: currentPort.port,
         writer: currentPort.writer,
       });
     } else {
+      const circleIndex = findCircleIndexByNumber(groupId - 1);
+      const circle = mapManager.circles[0];
+      const coordinateToHexString = convertCircleCoordinatesToHexString({
+        lat: circle.center.lat,
+        lng: circle.center.lng,
+        radius: circle.radius,
+      });
+
+      currentPort.port.oneditsuccess = () => {
+        toast("Save Success");
+        router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
+      };
+
+      write({
+        data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}01010000000000`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
     }
   };
 
@@ -119,12 +137,14 @@ export default function Page() {
     const imei = currentPort.port.imei;
     currentPort.port.oneditsuccess = () => {
       toast("Save Success");
+      router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
     };
+
     write({
       data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
         2,
         "0"
-      )};${mapManager.polygons[0].path.length
+      )}#${mapManager.polygons[0].path.length
         .toString(16)
         .padStart(2, "0")}010100000000`,
       port: currentPort.port,
@@ -235,7 +255,15 @@ export default function Page() {
           justifyContent="flex-end"
           marginTop="40px"
         >
-          <Button variant="outlined" color="secondary">
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={() =>
+              router.push(
+                `/configuration/geofence?imei=${currentPort.port.imei}`
+              )
+            }
+          >
             Cancel
           </Button>
           <Button

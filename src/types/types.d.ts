@@ -20,6 +20,16 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  iscircularpointfetching: any;
+  circlehandler(value: string): unknown;
+  isjsonpackagefetching: boolean;
+  ispackagecountfetching: boolean;
+  isimeifetching: boolean;
+  modelinfo: string;
+  ismodelinfofetching: boolean;
+  isRdyStatusFetching: boolean;
+  polygonhandler: (value: any) => void;
+  ispolygonpointfetching: boolean;
   circlemax: number;
   polygonmax: number;
   circulargeofence: string;
