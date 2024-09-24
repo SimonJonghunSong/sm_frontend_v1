@@ -140,16 +140,26 @@ const useSerial = () => {
           // HEALTH CHECK & MODEL INFO
           if (value.includes("$PST;Rdy") || value.includes("$PST;Ver;")) {
             const dataField = value.trim().split(";")[2];
-
             if (value.includes("$PST;Rdy") && dataField === "UP") {
-              // 신경써야 하는 부분
-              write({
-                data: AT_GET_MODEL_INFO,
-                port,
-                writer,
-              });
+              if (port.imei && port.modelinfo) {
+                editSerialPort({
+                  payload: {
+                    port,
+                    readableStreamClosed,
+                    writableStreamClosed,
+                    writer,
+                    reader,
+                  },
+                  imei: port.imei,
+                });
+              } else {
+                write({
+                  data: AT_GET_MODEL_INFO,
+                  port,
+                  writer,
+                });
+              }
             }
-
             if (value.includes("$PST;Ver;")) {
               port.modelinfo = dataField;
               write({

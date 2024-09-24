@@ -12,12 +12,7 @@ import {
   Polyline,
   useLoadScript,
 } from "@react-google-maps/api";
-import React, {
-  useCallback,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import React, { useCallback, useRef, forwardRef } from "react";
 
 import type { CircleType, MarkerType, PolygonType, PolylineType } from "./type";
 

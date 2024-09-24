@@ -13,6 +13,12 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "types": ["@serwist/next/typings"],
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["components/*"],
+      "@/src/*": ["src/*"],
+      "@/utils/*": ["utils/*"]
+    },
     "plugins": [
       {
         "name": "next"

@@ -187,13 +187,12 @@ function fieldToEditString(fieldData: Field): string {
     case "combo":
       if ("list" in fieldData) {
         const options = parseComboList(fieldData.list);
-
-        const selectIndex = options.findIndex(
+        const selectValue = options.find(
           (item) => item.value === fieldData.value
-        );
+        ).realValue;
 
         const editValue =
-          selectIndex < 10 ? `0${selectIndex}` : `${selectIndex}`;
+          Number(selectValue) < 10 ? `0${selectValue}` : `${selectValue}`;
 
         return `${optionId}#${editValue}`;
       }
@@ -406,7 +405,6 @@ export function useTransformedConfigData({
           const editStrings: string[] = editedData.reduce((acc, cur) => {
             return [...acc, fieldToEditString(cur)];
           }, [] as string[]);
-
           if (editStrings.length === 0) return [];
 
           if (editStrings.length > 20) {

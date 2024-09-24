@@ -24,8 +24,8 @@ export const getPolygonGeofenceData = (
     (acc: PolygonGeofenceDataType[], item: string, index: number) => {
       const [number, value] = item.split("#");
 
-      // '00000000000000' 값을 가지는 항목은 무시
-      if (value === "00000000000000") return acc;
+      // '00'개의 폴리곤 개수를 가지는 항목은 무시
+      if (value.substring(0, 2) === "00") return acc;
 
       // 필요한 데이터 추출 및 변환
       const groupId = parseInt(number, 10) + 1;

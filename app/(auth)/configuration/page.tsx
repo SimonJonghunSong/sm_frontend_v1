@@ -6,14 +6,16 @@ import { useTransformedConfigData } from "../../../src/hooks/useTransformConfigD
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { configurationPageContext } from "./layout";
 import { AT_EDIT_PREFIX } from "../../../src/hooks/useSerial/constant";
 import useSerialStore from "../../../src/stores/useSerialStore";
+import FullLoading from "@/components/FullLoading";
 
 export default function page() {
   const searchParams = useSearchParams();
   const { setJsonPackageOfSerialPortForUpdate } = useSerialStore();
+  const [isFullLoading, setIsFullLoading] = useState(false);
   const { tab } = useContext(configurationPageContext);
 
   // data
@@ -25,8 +27,6 @@ export default function page() {
   const currentPort = portList.find(
     ({ port }) => port.imei === searchParams.get("imei")
   );
-
-  console.log(currentPort.isPackageFetching, ": currentPort.isPackageFetching");
 
   const { originData, formData, getFormFields, resetData, getEditDataForPage } =
     useTransformedConfigData({
@@ -63,8 +63,21 @@ export default function page() {
     });
   };
 
+  useEffect(() => {
+    if (!currentPort.port.writable && !currentPort.port.readable) {
+      setIsFullLoading(true);
+    } else {
+      setIsFullLoading(false);
+    }
+  }, [
+    currentPort.port.writable,
+    currentPort.port.readable,
+    currentPort.port.ismodelinfofetching,
+  ]);
+
   return (
     <form className="contentWrap">
+      {isFullLoading && <FullLoading />}
       <Controller />
 
       <Stack direction="row" justifyContent="space-between">
