@@ -32,6 +32,7 @@ import Controller from "../../../components/Controller";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { parseResponseToPolygonData } from "../../utils";
 import FullLoading from "../../../../../../components/FullLoading";
+import { chunkDataByNumberAndWrite } from "@/src/functions";
 
 export default function Page() {
   const router = useRouter();
@@ -65,11 +66,19 @@ export default function Page() {
     };
 
     // TODO 20개 이상
-    write({
-      data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
-      port: currentPort.port,
-      writer: currentPort.writer,
-    });
+    // write({
+    //   data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
+    //   port: currentPort.port,
+    //   writer: currentPort.writer,
+    // });
+    // 20개 이상이면 쪼개서 보내는 로직
+    chunkDataByNumberAndWrite(
+      { write, port: currentPort.port, writer: currentPort.writer },
+      {
+        prefix: `${AT_EDIT_PREFIX}${imei};${pointId};`,
+        target: coordinateToHexString,
+      }
+    );
   };
 
   const addPolygonData = () => {
@@ -140,13 +149,23 @@ export default function Page() {
       }
     };
     // TODO 20개 이상
-    write({
-      data: `AT^REQ;${currentImei};${
-        POLYGON_GEOFENCE_POINTS[(Number(currentGrpId) - 1) as number]
-      };${generateFormattedIndexes(polyCount).join()}`,
-      port: currentPort.port,
-      writer: currentPort.writer,
-    });
+    // write({
+    //   data: `AT^REQ;${currentImei};${
+    //     POLYGON_GEOFENCE_POINTS[(Number(currentGrpId) - 1) as number]
+    //   };${generateFormattedIndexes(polyCount).join()}`,
+    //   port: currentPort.port,
+    //   writer: currentPort.writer,
+    // });
+    // 20개 이상이면 쪼개서 보내는 로직
+    chunkDataByNumberAndWrite(
+      { write, port: currentPort.port, writer: currentPort.writer },
+      {
+        prefix: `AT^REQ;${currentImei};${
+          POLYGON_GEOFENCE_POINTS[(Number(currentGrpId) - 1) as number]
+        };`,
+        target: generateFormattedIndexes(polyCount).join(),
+      }
+    );
   }, [currentPort.port.readable, currentPort.port.writable]);
 
   return (
