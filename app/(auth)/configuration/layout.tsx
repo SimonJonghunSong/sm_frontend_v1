@@ -7,7 +7,8 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useTransformedConfigData } from "../../../src/hooks/useTransformConfigData";
+import { ToastContainer } from "react-toastify";
+import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import {
   redirect,
   usePathname,
@@ -15,10 +16,9 @@ import {
   useSearchParams,
 } from "next/navigation";
 import { tabNameToHref } from "./components/FieldRenderer";
-import useSerial from "../../../src/hooks/useSerial";
-import SideMenu from "../../../components/sidemenu/SideMenu";
+import useSerial from "@/src/hooks/useSerial";
+import SideMenu from "@/components/sidemenu/SideMenu";
 import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
-import { ToastContainer } from "react-toastify";
 
 // 탭 형식 레이아웃
 interface IConfigurationPageContext {

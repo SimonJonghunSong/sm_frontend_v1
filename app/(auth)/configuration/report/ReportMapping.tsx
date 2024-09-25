@@ -1,8 +1,5 @@
 import {
   Stack,
-  Select,
-  MenuItem,
-  TextField,
   Divider,
   Checkbox,
   FormControl,

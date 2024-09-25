@@ -1,15 +1,15 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import useSerial, { delayPromise } from "../../../src/hooks/useSerial";
-import { useTransformedConfigData } from "../../../src/hooks/useTransformConfigData";
+import useSerial from "@/src/hooks/useSerial";
+import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { configurationPageContext } from "./layout";
-import { AT_EDIT_PREFIX } from "../../../src/hooks/useSerial/constant";
-import useSerialStore from "../../../src/stores/useSerialStore";
+import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
+import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 
 export default function page() {

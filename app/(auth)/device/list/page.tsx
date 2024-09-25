@@ -5,12 +5,12 @@ import { useRouter } from "next/navigation";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Button, IconButton, Stack } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../../../../components/dataTable";
-import Modal from "../../../../components/Modal";
-import useModal from "../../../../utils/useModal";
-import useSerial, { delayPromise } from "../../../../src/hooks/useSerial";
-import { AT_GET_JSON } from "../../../../src/hooks/useSerial/constant";
-import useSerialStore from "../../../../src/stores/useSerialStore";
+import DataTable from "@/components/dataTable";
+import Modal from "@/components/Modal";
+import useModal from "@/utils/useModal";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
+import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import useSerialStore from "@/src/stores/useSerialStore";
 
 const modalColumns: GridColDef[] = [
   {

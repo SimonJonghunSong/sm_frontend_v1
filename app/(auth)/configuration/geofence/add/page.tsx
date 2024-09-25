@@ -341,7 +341,11 @@ function CircularType({
             sx={{ width: "100%" }}
           >
             {filteredOptions.map((grpId) => {
-              return <MenuItem value={`${grpId}`}>{grpId}</MenuItem>;
+              return (
+                <MenuItem key={grpId} value={`${grpId}`}>
+                  {grpId}
+                </MenuItem>
+              );
             })}
           </Select>
         </InputBox.Body>
@@ -443,6 +447,7 @@ function PolygonType({
 
   useEffect(() => {
     onChangeGroupId(filteredOptions[0]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -462,7 +467,11 @@ function PolygonType({
             sx={{ width: "100%" }}
           >
             {filteredOptions.map((grpId) => {
-              return <MenuItem value={`${grpId}`}>{grpId}</MenuItem>;
+              return (
+                <MenuItem key={grpId} value={`${grpId}`}>
+                  {grpId}
+                </MenuItem>
+              );
             })}
           </Select>
         </InputBox.Body>

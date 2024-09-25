@@ -2,12 +2,11 @@
 import styles from "./styles.module.scss";
 import { Button, Checkbox, FormControlLabel, Stack } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-
 import UsbIcon from "@mui/icons-material/Usb";
 import UsbOffIcon from "@mui/icons-material/UsbOff";
 import { redirect } from "next/navigation";
-import useSerial from "../../../src/hooks/useSerial";
-import { SerialPortState } from "../../../src/stores/useSerialStore";
+import useSerial from "@/src/hooks/useSerial";
+import { SerialPortState } from "@/src/stores/useSerialStore";
 
 type Steps = "BEFORE" | "ING" | "FAILED" | "SUCCESS";
 

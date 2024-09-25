@@ -1,7 +1,6 @@
 import { Stack, Select, MenuItem, TextField, Button } from "@mui/material";
 import React from "react";
 import InputBox from "../../../../components/inputbox/InputBox";
-import { SwitchPrimary } from "../../../../components/switches";
 
 export default function DriverId201to300() {
   return (
@@ -177,11 +176,12 @@ export default function DriverId201to300() {
             </InputBox.Body>
           </InputBox>
         </Stack>
-
       </Stack>
-        <Stack alignItems="center" mb="52px">
-            <Button variant="contained" color="secondary" sx={{width: 200}}>Add</Button>
-        </Stack>
+      <Stack alignItems="center" mb="52px">
+        <Button variant="contained" color="secondary" sx={{ width: 200 }}>
+          Add
+        </Button>
+      </Stack>
     </>
   );
 }

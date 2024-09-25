@@ -2,7 +2,7 @@
 
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import Maps from "../../../../components/Map";
+import Maps from "@/components/Map";
 import {
   Box,
   Button,

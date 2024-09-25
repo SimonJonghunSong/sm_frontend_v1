@@ -18,6 +18,7 @@ const pageList = [
   "/configuration/fw-update",
   "/configuration/geofence",
   "/configuration/geofence/add",
+  "/configuration/geofence/edit",
   "/configuration/input-output",
   "/configuration/network",
   "/configuration/profile",
