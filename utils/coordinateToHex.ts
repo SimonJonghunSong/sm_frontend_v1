@@ -9,25 +9,35 @@ export const convertCoordinatesToHexString = (
 ): string => {
   return coordiarray
     .map((coord, index) => {
-      // Index는 두 자릿수로 포맷 (00, 01, 02...)
+      // Index를 두 자릿수로 포맷 (00, 01, 02...)
       const indexStr = index.toString().padStart(2, "0");
 
-      // lat를 소수점 6자리로 반올림 후 1000000 곱하고 16진수로 변환
-      const latHex = Math.round(coord.lat * 1000000)
+      // lat을 toFixed(6)으로 소수점 6자리로 고정 후 1000000 곱하고 16진수로 변환
+      let latValue = (Number(coord.lat.toFixed(6)) * 1000000)
         .toString(16)
         .toUpperCase()
         .padStart(8, "0");
 
-      // lng를 소수점 6자리로 반올림 후 1000000 곱하고 16진수로 변환
-      const lngHex = Math.round(coord.lng * 1000000)
+      // 음수일 경우 첫 번째 자리를 8로 변경
+      if (coord.lat < 0) {
+        latValue = `8${latValue.slice(1)}`;
+      }
+
+      // lng를 toFixed(6)으로 소수점 6자리로 고정 후 1000000 곱하고 16진수로 변환
+      let lngValue = (Number(coord.lng.toFixed(6)) * 1000000)
         .toString(16)
         .toUpperCase()
         .padStart(8, "0");
+
+      // 음수일 경우 첫 번째 자리를 8로 변경
+      if (coord.lng < 0) {
+        lngValue = `8${lngValue.slice(1)}`;
+      }
 
       // XX#YYYYYYYYYYYYYYYY; 형식으로 문자열 생성
-      return `${indexStr}#${latHex}${lngHex}`;
+      return `${indexStr}#${latValue}${lngValue}`;
     })
-    .join(";"); // 각 결과를 ;로 이어붙인 후 마지막에도 ; 추가
+    .join(";"); // 각 결과를 ;로 이어붙임
 };
 
 export const convertCircleCoordinatesToHexString = ({
@@ -39,15 +49,27 @@ export const convertCircleCoordinatesToHexString = ({
   lng: number;
   radius: number;
 }): string => {
-  // lat, lng 소수점 6자리로 자르고 1000000 곱한 후 16진수로 변환 (8자리 유지)
-  const latHex = Math.round(lat * 1000000)
+  // lat을 toFixed(6)으로 소수점 6자리로 고정 후 1000000 곱한 후 16진수로 변환 (8자리 유지)
+  let latHex = (Number(lat.toFixed(6)) * 1000000)
     .toString(16)
     .padStart(8, "0")
     .toUpperCase();
-  const lngHex = Math.round(lng * 1000000)
+
+  // 음수일 경우 첫 번째 자리를 8로 변경
+  if (lat < 0) {
+    latHex = `8${latHex.slice(1)}`;
+  }
+
+  // lng를 toFixed(6)으로 소수점 6자리로 고정 후 1000000 곱한 후 16진수로 변환 (8자리 유지)
+  let lngHex = (Number(lng.toFixed(6)) * 1000000)
     .toString(16)
     .padStart(8, "0")
     .toUpperCase();
+
+  // 음수일 경우 첫 번째 자리를 8로 변경
+  if (lng < 0) {
+    lngHex = `8${lngHex.slice(1)}`;
+  }
 
   // radius는 정수로 변환 후 16진수로 변환 (4자리 유지)
   const radiusHex = Math.round(radius)
