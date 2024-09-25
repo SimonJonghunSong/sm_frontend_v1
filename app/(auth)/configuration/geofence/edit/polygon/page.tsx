@@ -12,26 +12,23 @@ import {
   Stack,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../../../../../../components/dataTable";
-import Maps from "../../../../../../components/Map";
-import InputBox from "../../../../../../components/inputbox/InputBox";
-import {
-  useMapManager,
-  PolygonData,
-} from "../../../../../../src/hooks/useMapManager";
-import useSerial, { delayPromise } from "../../../../../../src/hooks/useSerial";
+import DataTable from "@/components/dataTable";
+import Maps from "@/components/Map";
+import InputBox from "@/components/inputbox/InputBox";
+import { useMapManager, PolygonData } from "@/src/hooks/useMapManager";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import {
   CR,
   AT_EDIT_PREFIX,
   POLYGON_GEOFENCE_POINTS,
-} from "../../../../../../src/hooks/useSerial/constant";
-import { getPolygonGeofenceData } from "../../../../../../src/hooks/useSerial/utils";
-import { convertCoordinatesToHexString } from "../../../../../../utils/coordinateToHex";
-import { generateFormattedIndexes } from "../../../../../../utils/generateFormattedIndexes";
+} from "@/src/hooks/useSerial/constant";
+import { getPolygonGeofenceData } from "@/src/hooks/useSerial/utils";
+import { convertCoordinatesToHexString } from "@/utils/coordinateToHex";
+import { generateFormattedIndexes } from "@/utils/generateFormattedIndexes";
 import Controller from "../../../components/Controller";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { parseResponseToPolygonData } from "../../utils";
-import FullLoading from "../../../../../../components/FullLoading";
+import FullLoading from "@/components/FullLoading";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
 
 export default function Page() {
@@ -65,12 +62,6 @@ export default function Page() {
       addPolygonData();
     };
 
-    // TODO 20개 이상
-    // write({
-    //   data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
-    //   port: currentPort.port,
-    //   writer: currentPort.writer,
-    // });
     // 20개 이상이면 쪼개서 보내는 로직
     chunkDataByNumberAndWrite(
       { write, port: currentPort.port, writer: currentPort.writer },
@@ -88,12 +79,15 @@ export default function Page() {
       router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
     };
 
+    const isPolygonSpeedLimitDisabled =
+      polygonList[Number(currentGrpId) - 1].split("#")[1].length === 6;
+
     write({
       data: `${AT_EDIT_PREFIX}${imei};53;${String(
         Number(currentGrpId) - 1
       ).padStart(2, "0")}#${mapManager.polygons[0].path.length
         .toString(16)
-        .padStart(2, "0")}010100000000`,
+        .padStart(2, "0")}0101${isPolygonSpeedLimitDisabled ? "" : "00000000"}`,
       port: currentPort.port,
       writer: currentPort.writer,
     });
@@ -148,14 +142,7 @@ export default function Page() {
         }
       }
     };
-    // TODO 20개 이상
-    // write({
-    //   data: `AT^REQ;${currentImei};${
-    //     POLYGON_GEOFENCE_POINTS[(Number(currentGrpId) - 1) as number]
-    //   };${generateFormattedIndexes(polyCount).join()}`,
-    //   port: currentPort.port,
-    //   writer: currentPort.writer,
-    // });
+
     // 20개 이상이면 쪼개서 보내는 로직
     chunkDataByNumberAndWrite(
       { write, port: currentPort.port, writer: currentPort.writer },

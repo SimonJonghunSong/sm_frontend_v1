@@ -9,30 +9,16 @@ import {
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Stack,
   TextField,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "@/components/dataTable";
 import Maps from "@/components/Map";
 import InputBox from "@/components/inputbox/InputBox";
-import { useMapManager, PolygonData } from "@/src/hooks/useMapManager";
-import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import {
-  POLYGON_GEOFENCE_POINTS,
-  AT_EDIT_PREFIX,
-  CR,
-} from "@/src/hooks/useSerial/constant";
-import {
-  getPolygonGeofenceData,
-  getCircularGeofenceData,
-} from "@/src/hooks/useSerial/utils";
-import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
-import {
-  convertCoordinatesToHexString,
-  convertCircleCoordinatesToHexString,
-} from "@/utils/coordinateToHex";
+import { useMapManager } from "@/src/hooks/useMapManager";
+import useSerial from "@/src/hooks/useSerial";
+import { AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
+import { convertCircleCoordinatesToHexString } from "@/utils/coordinateToHex";
 import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import Controller from "../../../components/Controller";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
@@ -54,7 +40,6 @@ export default function Page() {
   const currentPort = portList.find(({ port }) => port.imei === currentImei);
 
   const circularList = currentPort.circularGeofenceData;
-  const circularData = getCircularGeofenceData(circularList);
 
   const handleEdit = () => {
     const imei = currentPort.port.imei;

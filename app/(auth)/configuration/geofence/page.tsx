@@ -20,12 +20,12 @@ import React, {
   useState,
 } from "react";
 import Controller from "../components/Controller";
-import InputBox from "../../../../components/inputbox/InputBox";
-import { SwitchPrimary } from "../../../../components/switches";
+import InputBox from "@/components/inputbox/InputBox";
+import { SwitchPrimary } from "@/components/switches";
 import { GridColDef, GridRowParams } from "@mui/x-data-grid";
-import DataTable from "../../../../components/dataTable";
-import { useTransformedConfigData } from "../../../../src/hooks/useTransformConfigData";
-import useSerial, { delayPromise } from "../../../../src/hooks/useSerial";
+import DataTable from "@/components/dataTable";
+import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   AT_EDIT_PREFIX,
@@ -34,19 +34,19 @@ import {
   AT_GET_POLYGON_GEOFENCE_LIST,
   CR,
   POLYGON_GEOFENCE_POINTS,
-} from "../../../../src/hooks/useSerial/constant";
+} from "@/src/hooks/useSerial/constant";
 import {
   getCircularGeofenceData,
   getPolygonGeofenceData,
-} from "../../../../src/hooks/useSerial/utils";
+} from "@/src/hooks/useSerial/utils";
 import {
   findCircleIndexByNumber,
   generateFormattedIndexes,
-} from "../../../../utils/generateFormattedIndexes";
-import { useMapManager } from "../../../../src/hooks/useMapManager";
-import { PolygonType, CircleType } from "../../../../components/Map/type";
-import useSerialStore from "../../../../src/stores/useSerialStore";
-import FullLoading from "../../../../components/FullLoading";
+} from "@/utils/generateFormattedIndexes";
+import { useMapManager } from "@/src/hooks/useMapManager";
+import { PolygonType, CircleType } from "@/components/Map/type";
+import useSerialStore from "@/src/stores/useSerialStore";
+import FullLoading from "@/components/FullLoading";
 import { parseLatLngRadius, parseResponseToPolygonData } from "./utils";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
 
@@ -79,7 +79,12 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderCell: (e) => (
-      <IconButton onClick={() => e.value.onEdit()}>
+      <IconButton
+        onClick={(event) => {
+          event.stopPropagation();
+          e.value.onEdit();
+        }}
+      >
         <EditOutlinedIcon />
       </IconButton>
     ),
@@ -91,7 +96,12 @@ const columns: GridColDef[] = [
     headerAlign: "center",
     align: "center",
     renderCell: (e) => (
-      <IconButton onClick={() => e.value.onDelete()}>
+      <IconButton
+        onClick={(event) => {
+          event.stopPropagation();
+          e.value.onDelete();
+        }}
+      >
         <DeleteForeverOutlinedIcon />
       </IconButton>
     ),
@@ -236,11 +246,20 @@ export default function Page() {
           onDelete: () => {
             const imei = currentPort.port.imei;
             if (type === "polygon") {
+              const isPolygonSpeedLimitDisabled =
+                polygonList[groupId - 1].split("#")[1].length === 6;
+
               currentPort.port.oneditsuccess = () => {
                 setPolygonGeofence({
                   imei,
                   payload: polygonList.map((value, index) =>
-                    index === groupId - 1 ? `${groupId}#00000000000000` : value
+                    index === groupId - 1
+                      ? `${groupId}#${
+                          isPolygonSpeedLimitDisabled
+                            ? "000000"
+                            : "00000000000000"
+                        }`
+                      : value
                   ),
                 });
               };
@@ -248,7 +267,9 @@ export default function Page() {
               write({
                 data: `${AT_EDIT_PREFIX}${imei};53;${String(
                   groupId - 1
-                ).padStart(2, "0")}#00000000000000`,
+                ).padStart(2, "0")}#${
+                  isPolygonSpeedLimitDisabled ? "000000" : "00000000000000"
+                }`,
                 port: currentPort.port,
                 writer: currentPort.writer,
               });
@@ -318,14 +339,7 @@ export default function Page() {
         currentPort.port.polygonhandler = null;
         currentPort.port.ispolygonpointfetching = false;
       };
-      // TODO 20개씩 쪼개 보내기
-      // write({
-      //   data: `AT^REQ;${imei};${
-      //     POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
-      //   };${generateFormattedIndexes(polyCount).join()}`,
-      //   port: currentPort.port,
-      //   writer: currentPort.writer,
-      // });
+
       // 20개 이상이면 쪼개서 보내는 로직
       chunkDataByNumberAndWrite(
         { write, port: currentPort.port, writer: currentPort.writer },

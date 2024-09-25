@@ -10,6 +10,7 @@ type PolygonGeofenceDataType = {
   polygonSpeedLimit: number;
   type: string;
   polygonPointId: number;
+  isPolygonSpeedLimitDisable: boolean;
 };
 
 export const getGeofenceData = (data: string) => {
@@ -37,6 +38,8 @@ export const getPolygonGeofenceData = (
       const polygonSpeedLimit = parseInt(value.substring(6), 16) / 1000000;
       const type = "polygon";
       const polygonPointId = POLYGON_GEOFENCE_POINTS[index];
+      const isPolygonSpeedLimitDisable = Number.isNaN(polygonSpeedLimit);
+
       // 변환된 데이터 객체를 accumulator에 추가
       acc.push({
         groupId,
@@ -46,6 +49,7 @@ export const getPolygonGeofenceData = (
         polygonSpeedLimit,
         type,
         polygonPointId,
+        isPolygonSpeedLimitDisable,
       });
 
       return acc;

@@ -13,32 +13,29 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import Maps from "../../../../../components/Map";
+import Maps from "@/components/Map";
 import Controller from "../../components/Controller";
-import InputBox from "../../../../../components/inputbox/InputBox";
+import InputBox from "@/components/inputbox/InputBox";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../../../../../components/dataTable";
-import {
-  PolygonData,
-  useMapManager,
-} from "../../../../../src/hooks/useMapManager";
+import DataTable from "@/components/dataTable";
+import { PolygonData, useMapManager } from "@/src/hooks/useMapManager";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import { useTransformedConfigData } from "../../../../../src/hooks/useTransformConfigData";
+import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { useSearchParams } from "next/navigation";
-import useSerial, { delayPromise } from "../../../../../src/hooks/useSerial";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import {
   getPolygonGeofenceData,
   getCircularGeofenceData,
-} from "../../../../../src/hooks/useSerial/utils";
+} from "@/src/hooks/useSerial/utils";
 import {
   AT_EDIT_PREFIX,
   POLYGON_GEOFENCE_POINTS,
-} from "../../../../../src/hooks/useSerial/constant";
+} from "@/src/hooks/useSerial/constant";
 import {
   convertCircleCoordinatesToHexString,
   convertCoordinatesToHexString,
-} from "../../../../../utils/coordinateToHex";
-import { findCircleIndexByNumber } from "../../../../../utils/generateFormattedIndexes";
+} from "@/utils/coordinateToHex";
+import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
 
 export default function Page() {
@@ -106,12 +103,6 @@ export default function Page() {
         addPolygonData();
       };
 
-      // TODO 20개 이상
-      // write({
-      //   data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
-      //   port: currentPort.port,
-      //   writer: currentPort.writer,
-      // });
       // 20개 이상이면 쪼개서 보내는 로직
       chunkDataByNumberAndWrite(
         { write, port: currentPort.port, writer: currentPort.writer },
@@ -149,13 +140,16 @@ export default function Page() {
       router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
     };
 
+    const isPolygonSpeedLimitDisabled =
+      polygonList[groupId - 1].split("#")[1].length === 6;
+
     write({
       data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
         2,
         "0"
       )}#${mapManager.polygons[0].path.length
         .toString(16)
-        .padStart(2, "0")}010100000000`,
+        .padStart(2, "0")}0101${isPolygonSpeedLimitDisabled ? "" : "00000000"}`,
       port: currentPort.port,
       writer: currentPort.writer,
     });
