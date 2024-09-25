@@ -48,6 +48,7 @@ import { PolygonType, CircleType } from "../../../../components/Map/type";
 import useSerialStore from "../../../../src/stores/useSerialStore";
 import FullLoading from "../../../../components/FullLoading";
 import { parseLatLngRadius, parseResponseToPolygonData } from "./utils";
+import { chunkDataByNumberAndWrite } from "@/src/functions";
 
 const columns: GridColDef[] = [
   {
@@ -318,13 +319,23 @@ export default function Page() {
         currentPort.port.ispolygonpointfetching = false;
       };
       // TODO 20개씩 쪼개 보내기
-      write({
-        data: `AT^REQ;${imei};${
-          POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
-        };${generateFormattedIndexes(polyCount).join()}`,
-        port: currentPort.port,
-        writer: currentPort.writer,
-      });
+      // write({
+      //   data: `AT^REQ;${imei};${
+      //     POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
+      //   };${generateFormattedIndexes(polyCount).join()}`,
+      //   port: currentPort.port,
+      //   writer: currentPort.writer,
+      // });
+      // 20개 이상이면 쪼개서 보내는 로직
+      chunkDataByNumberAndWrite(
+        { write, port: currentPort.port, writer: currentPort.writer },
+        {
+          prefix: `AT^REQ;${imei};${
+            POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
+          };`,
+          target: generateFormattedIndexes(polyCount).join(),
+        }
+      );
     } else {
       setFetchedPolygonData(undefined);
       const circleIndex = findCircleIndexByNumber(data.row.groupId - 1);

@@ -39,6 +39,7 @@ import {
   convertCoordinatesToHexString,
 } from "../../../../../utils/coordinateToHex";
 import { findCircleIndexByNumber } from "../../../../../utils/generateFormattedIndexes";
+import { chunkDataByNumberAndWrite } from "@/src/functions";
 
 export default function Page() {
   const router = useRouter();
@@ -106,11 +107,19 @@ export default function Page() {
       };
 
       // TODO 20개 이상
-      write({
-        data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
-        port: currentPort.port,
-        writer: currentPort.writer,
-      });
+      // write({
+      //   data: `${AT_EDIT_PREFIX}${imei};${pointId};${coordinateToHexString}`,
+      //   port: currentPort.port,
+      //   writer: currentPort.writer,
+      // });
+      // 20개 이상이면 쪼개서 보내는 로직
+      chunkDataByNumberAndWrite(
+        { write, port: currentPort.port, writer: currentPort.writer },
+        {
+          prefix: `${AT_EDIT_PREFIX}${imei};${pointId};`,
+          target: coordinateToHexString,
+        }
+      );
     } else {
       const circleIndex = findCircleIndexByNumber(groupId - 1);
       const circle = mapManager.circles[0];

@@ -53,15 +53,14 @@ const ConfigurationLayout = ({ children }) => {
     redirect("/device");
   }
 
-  const { originData } = useTransformedConfigData({
+  const { formData } = useTransformedConfigData({
     data: portList.find(({ port }) => port.imei === imei).packageToJson
       .synctrak,
     blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
   });
 
   // state
-  const defaultTabName =
-    searchParams.get("tab") || Object.keys(originData?.[1])?.[0];
+  const defaultTabName = searchParams.get("tab") || formData[0].tabName;
   const [tab, setTab] = useState(
     pathname !== "/configuration" ? "" : defaultTabName
   );
@@ -94,20 +93,16 @@ const ConfigurationLayout = ({ children }) => {
           queries={{ imei }}
           configuration
           sideMenuItems={[
-            ...originData
-              .map((item) => {
-                const [key] = Object.entries(item)[0];
+            ...formData.map((item) => {
+              const key = item.tabName;
 
-                return {
-                  name: key as unknown as string,
-                  href: `/configuration/${tabNameToHref(
-                    key as unknown as string
-                  )}`,
-                  isActive: tab === key,
-                  onClick: handleTabClick,
-                };
-              })
-              .filter((item) => item.name !== "info"),
+              return {
+                name: key,
+                href: `/configuration/${tabNameToHref(key)}`,
+                isActive: tab === key,
+                onClick: handleTabClick,
+              };
+            }),
             {
               name: "Geofence",
               href: `/configuration/geofence?imei=${imei}`,
