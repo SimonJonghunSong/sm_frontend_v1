@@ -122,10 +122,6 @@ export default function Controller() {
     setPath(e.target.files[0]);
   };
 
-  useEffect(() => {
-    console.log("i am a perfect");
-  }, []);
-
   return (
     <Stack
       direction="row"
