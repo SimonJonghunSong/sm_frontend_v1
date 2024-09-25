@@ -37,7 +37,6 @@ export const parseResponseToPolygonData = (
 
 export const parseLatLngRadius = (hexString: string): CircleType => {
   // 문자열에서 16진수 값만 추출
-  console.log(hexString, "hexString");
   const hexValue = hexString.split("#")[1];
 
   // 첫 8자리 (lat)와 그 다음 8자리 (lng)를 10진수로 변환 후 1000000으로 나눔

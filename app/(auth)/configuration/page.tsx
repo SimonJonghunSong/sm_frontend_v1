@@ -32,7 +32,7 @@ export default function page() {
     useTransformedConfigData({
       data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
         .packageToJson.synctrak,
-      blacklist: ["info"],
+      blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
     });
 
   const pageData = useMemo(() => {

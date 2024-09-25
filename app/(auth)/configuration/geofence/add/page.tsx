@@ -192,17 +192,17 @@ export default function Page() {
                 updateCircleCenter={mapManager.updateCircleCenter}
                 lat={
                   mapManager.circles.length > 0
-                    ? mapManager.circles[0].center.lat
+                    ? Number(mapManager.circles[0].center.lat.toFixed(6))
                     : undefined
                 }
                 long={
                   mapManager.circles.length > 0
-                    ? mapManager.circles[0].center.lng
+                    ? Number(mapManager.circles[0].center.lng.toFixed(6))
                     : undefined
                 }
                 radius={
                   mapManager.circles.length > 0
-                    ? mapManager.circles[0].radius
+                    ? Number(mapManager.circles[0].radius.toFixed(0))
                     : undefined
                 }
                 groupId={groupId}

@@ -81,8 +81,10 @@ export const getCircularGeofenceData = (
       const inAlert: "Disabled" | "Enabled" =
         value.substring(20, 22) === "00" ? "Disabled" : "Enabled"; // 21~22번째 자리
       const outAlert: "Disabled" | "Enabled" =
-        value.substring(22, 23) === "00" ? "Disabled" : "Enabled"; // 23번째 자리
+        value.substring(22, 24) === "00" ? "Disabled" : "Enabled"; // 23번째 자리
       const type = "circular";
+
+      if (inAlert === "Disabled" && outAlert === "Disabled") return acc;
 
       // 변환된 데이터 객체를 accumulator에 추가
       acc.push({
