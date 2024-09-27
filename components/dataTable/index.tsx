@@ -1,12 +1,14 @@
 import { Box, Button, Pagination, PaginationItem, Stack } from "@mui/material";
 import {
   DataGrid,
+  GridCallbackDetails,
   GridColDef,
   GridEventListener,
   GridFooter,
   GridFooterContainer,
   gridPageCountSelector,
   gridPageSelector,
+  GridRowSelectionModel,
   useGridApiContext,
   useGridSelector,
 } from "@mui/x-data-grid";
@@ -23,6 +25,10 @@ type DataTableProps = {
   rowHeight?: number;
   footerButton?: React.ReactNode;
   noDataMessage?: string;
+  onRowSelectionModelChange?: (
+    rowSelectionModel: GridRowSelectionModel,
+    details: GridCallbackDetails
+  ) => void;
 };
 export default function DataTable({
   disableResize = false,
@@ -35,6 +41,7 @@ export default function DataTable({
   footerButton,
   noDataMessage = "No Data",
   onRowClick = () => {},
+  onRowSelectionModelChange = () => {},
 }: DataTableProps) {
   return (
     <Box sx={{ display: "grid", gridTemplateColumns: "1fr" }}>
@@ -52,6 +59,7 @@ export default function DataTable({
         hideFooterPagination={disablePagination}
         hideFooter={disablePagination && !footerButton}
         onRowClick={onRowClick}
+        onRowSelectionModelChange={onRowSelectionModelChange}
         slots={{
           pagination: CustomPagination,
           footer: () => CustomFooter(footerButton),

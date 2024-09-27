@@ -339,7 +339,7 @@ export function useTransformedConfigData({
   }, [data]);
 
   const getEditDataForPage = useCallback(
-    (pageName: string) => {
+    (pageName: string, onlyEdited = true) => {
       const pageData = (formData || []).find(
         (item) => item.tabName === pageName
       );
@@ -402,7 +402,9 @@ export function useTransformedConfigData({
           const editedData = pageData.fields.filter((item) => {
             return getFormFields(pageData.tabName, item.fieldName).isChange;
           });
-          const editStrings: string[] = editedData.reduce((acc, cur) => {
+          const editStrings: string[] = (
+            onlyEdited ? editedData : pageData.fields
+          ).reduce((acc, cur) => {
             return [...acc, fieldToEditString(cur)];
           }, [] as string[]);
           if (editStrings.length === 0) return [];
@@ -423,7 +425,7 @@ export function useTransformedConfigData({
     [formData, getFormFields]
   );
 
-  const getAllEditData = useCallback(() => {
+  const getEditedData = useCallback(() => {
     const editedData = formData.filter((item) => item.tabName !== "info");
 
     const editString = Object.entries(editedData).reduce((acc, cur) => {
@@ -456,6 +458,18 @@ export function useTransformedConfigData({
     console.log("editString >>>", editString);
   }, [formData]);
 
+  const getProfileData = useCallback(() => {
+    let editStrings = [] as string[];
+
+    formData.forEach((item) => {
+      getEditDataForPage(item.tabName, false).forEach((data) => {
+        editStrings.push(`${item.info.hdr},PRG;;${data}`);
+      });
+    });
+
+    return editStrings;
+  }, [formData]);
+
   useEffect(() => {
     setOriginData(data);
   }, [data]);
@@ -467,6 +481,7 @@ export function useTransformedConfigData({
     resetData,
     isDirty,
     getEditDataForPage,
-    getAllEditData,
+    getEditedData,
+    getProfileData,
   };
 }

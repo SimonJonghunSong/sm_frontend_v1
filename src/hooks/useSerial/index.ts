@@ -9,7 +9,7 @@ import {
   CR,
 } from "./constant";
 import useSerialStore from "../../stores/useSerialStore";
-import { fileDownload } from "../../../utils/fileDownload";
+import { fileDownload } from "@/utils/fileDownload";
 import { toast } from "react-toastify";
 import { getGeofenceData } from "./utils";
 
@@ -232,7 +232,7 @@ const useSerial = () => {
               { length: Number(dataField) },
               (_, i) => `${AT_GET_JSON}${i + 1}`
             );
-
+            port.isjsonpackagefetching = true;
             setPackageFetchingStart({ imei: port.imei });
 
             // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
@@ -263,13 +263,16 @@ const useSerial = () => {
             }
           } else if (value.includes("RPR") || value.includes("USP")) {
             port.oneditsuccess?.();
-            toast("Success!", { type: "info" });
             port.oneditsuccess = null;
-          } else if (value.includes("ERR")) {
-            console.log(value);
-            port.onprev?.();
-            toast(value, { type: "error" });
-            port.onprev = null;
+          } else if (value.includes("ERR") || port.iserrorvalue) {
+            if (value.includes(CR)) {
+              port.iserrorvalue = false;
+              port.onprev?.();
+              toast(value, { type: "error" });
+              port.onprev = null;
+            } else {
+              port.iserrorvalue = true;
+            }
           } else if (port.ispolygonfetching) {
             port.polygongeofence = (port.polygongeofence || "") + value;
 
@@ -312,7 +315,7 @@ const useSerial = () => {
             port.polygonhandler(value);
           } else if (port.iscircularpointfetching) {
             port.circlehandler(value);
-          } else {
+          } else if (port.isjsonpackagefetching) {
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
 
             // '\u0003'에 매치되는 부분을 찾고, 패킷 버퍼 카운트를 업데이트
@@ -349,9 +352,14 @@ const useSerial = () => {
                 imei: currentImei,
                 payload: jsonPacketBufferRef.current.get(currentImei),
               });
+              if (port.onafterjsonpacket) {
+                port.onafterjsonpacket();
+                port.onafterjsonpacket = null;
+              }
               // 버퍼와 카운트 재설정
               jsonPacketBufferRef.current.set(currentImei, "");
               jsonPacketBufferCountRef.current.set(currentImei, 0);
+              port.isjsonpackagefetching = false;
             }
           }
         }
@@ -436,6 +444,7 @@ const useSerial = () => {
 
   useEffect(() => {
     getPorts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return {

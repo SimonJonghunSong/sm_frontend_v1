@@ -3,9 +3,10 @@
 import "../../styles/variable.css";
 import "../../styles/reset.css";
 import "../../styles/global.css";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
 
 const AuthLayout = ({ children }) => {
   const router = useRouter();

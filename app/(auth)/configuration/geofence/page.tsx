@@ -33,22 +33,17 @@ import {
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
   AT_GET_POLYGON_GEOFENCE_LIST,
   CR,
-  POLYGON_GEOFENCE_POINTS,
 } from "@/src/hooks/useSerial/constant";
 import {
   getCircularGeofenceData,
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
-import {
-  findCircleIndexByNumber,
-  generateFormattedIndexes,
-} from "@/utils/generateFormattedIndexes";
+import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import { PolygonType, CircleType } from "@/components/Map/type";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import { parseLatLngRadius, parseResponseToPolygonData } from "./utils";
-import { chunkDataByNumberAndWrite } from "@/src/functions";
 
 const columns: GridColDef[] = [
   {
@@ -155,66 +150,6 @@ export default function Page() {
   ) => {
     setState(e.target.value);
   };
-
-  useEffect(() => {
-    setIsFullLoading(true);
-
-    if (!currentPort.port.readable || !currentPort.port.writable) return;
-
-    if (!polygonGeofenceMax) {
-      return setIsCircularFetchReady(true);
-    }
-
-    currentPort.port.polygonfetchcount = 0;
-    currentPort.port.ispolygonfetching = true;
-    currentPort.port.polygonmax = Number(polygonGeofenceMax);
-    currentPort.port.onafterpolygongeofence = () => {
-      currentPort.port.ispolygonfetching = false;
-      setIsCircularFetchReady(true);
-      currentPort.port.polygongeofence = "";
-    };
-
-    (async () => {
-      for (const command of AT_GET_POLYGON_GEOFENCE_LIST(
-        searchParams.get("imei")
-      )) {
-        await delayPromise(200); // 300ms 지연
-
-        write({
-          data: command,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        });
-      }
-    })();
-  }, [currentPort.port.readable, currentPort.port.writable]);
-
-  useEffect(() => {
-    if (!circularGeofenceMax || !isCircularFetchReady) return;
-
-    currentPort.port.circularfetchcount = 0;
-    currentPort.port.iscircularfetching = true;
-    currentPort.port.circlemax = Number(circularGeofenceMax);
-    currentPort.port.onaftercirculargeofence = () => {
-      currentPort.port.iscircularfetching = false;
-      setIsFullLoading(false);
-      currentPort.port.circulargeofence = "";
-    };
-
-    (async () => {
-      for (const command of circularGeofenceMax === "255"
-        ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(searchParams.get("imei"))
-        : AT_GET_CIRCULAR_GEOFENCE_999_LIST(searchParams.get("imei"))) {
-        await delayPromise(10); // 10ms 지연
-
-        write({
-          data: command,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        });
-      }
-    })();
-  }, [isCircularFetchReady]);
 
   const polygonData = getPolygonGeofenceData(polygonList);
   const circularData = getCircularGeofenceData(circularList);
@@ -340,16 +275,16 @@ export default function Page() {
         currentPort.port.ispolygonpointfetching = false;
       };
 
-      // 20개 이상이면 쪼개서 보내는 로직
-      chunkDataByNumberAndWrite(
-        { write, port: currentPort.port, writer: currentPort.writer },
-        {
-          prefix: `AT^REQ;${imei};${
-            POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
-          };`,
-          target: generateFormattedIndexes(polyCount).join(),
-        }
-      );
+      // TODO 20개 이상이면 쪼개서 보내는 로직 (수정 필요)
+      // chunkDataByNumberAndWrite(
+      //   { write, port: currentPort.port, writer: currentPort.writer },
+      //   {
+      //     prefix: `AT^REQ;${imei};${
+      //       POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
+      //     };`,
+      //     target: generateFormattedIndexes(polyCount).join(),
+      //   }
+      // );
     } else {
       setFetchedPolygonData(undefined);
       const circleIndex = findCircleIndexByNumber(data.row.groupId - 1);
@@ -382,6 +317,66 @@ export default function Page() {
       });
     }
   };
+
+  useEffect(() => {
+    setIsFullLoading(true);
+
+    if (!currentPort.port.readable || !currentPort.port.writable) return;
+
+    if (!polygonGeofenceMax) {
+      return setIsCircularFetchReady(true);
+    }
+
+    currentPort.port.polygonfetchcount = 0;
+    currentPort.port.ispolygonfetching = true;
+    currentPort.port.polygonmax = Number(polygonGeofenceMax);
+    currentPort.port.onafterpolygongeofence = () => {
+      currentPort.port.ispolygonfetching = false;
+      setIsCircularFetchReady(true);
+      currentPort.port.polygongeofence = "";
+    };
+
+    (async () => {
+      for (const command of AT_GET_POLYGON_GEOFENCE_LIST(
+        searchParams.get("imei")
+      )) {
+        await delayPromise(200); // 300ms 지연
+
+        write({
+          data: command,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
+      }
+    })();
+  }, [currentPort.port.readable, currentPort.port.writable]);
+
+  useEffect(() => {
+    if (!circularGeofenceMax || !isCircularFetchReady) return;
+
+    currentPort.port.circularfetchcount = 0;
+    currentPort.port.iscircularfetching = true;
+    currentPort.port.circlemax = Number(circularGeofenceMax);
+    currentPort.port.onaftercirculargeofence = () => {
+      currentPort.port.iscircularfetching = false;
+      setIsFullLoading(false);
+      currentPort.port.circulargeofence = "";
+    };
+
+    (async () => {
+      for (const command of circularGeofenceMax === "255"
+        ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(searchParams.get("imei"))
+        : AT_GET_CIRCULAR_GEOFENCE_999_LIST(searchParams.get("imei"))) {
+        await delayPromise(10); // 10ms 지연
+
+        write({
+          data: command,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
+      }
+    })();
+  }, [isCircularFetchReady]);
 
   return (
     <div className="pageWrap">

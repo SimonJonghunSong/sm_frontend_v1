@@ -11,21 +11,21 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import Modal from "../../../../components/Modal";
-import useModal from "../../../../utils/useModal";
+import Modal from "@/components/Modal";
+import useModal from "@/utils/useModal";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "../../../../components/dataTable";
-import useSerial, { delayPromise } from "../../../../src/hooks/useSerial";
-import useSerialStore from "../../../../src/stores/useSerialStore";
-import {
-  AT_GET_CSV,
-  AT_GET_JSON,
-} from "../../../../src/hooks/useSerial/constant";
+import DataTable from "@/components/dataTable";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
+import useSerialStore from "@/src/stores/useSerialStore";
+import { AT_GET_CSV, AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import useProfile from "@/src/hooks/useProfile";
+import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
+import FullLoading from "@/components/FullLoading";
 
 const DELAY_MS = 100;
 
@@ -42,10 +42,23 @@ export default function Controller() {
     func: { close, write },
   } = useSerial();
   const { setPackageFetchingStart } = useSerialStore();
-
   const currentPort = portList.find(
     ({ port }) => port.imei === searchParams.get("imei")
   );
+  const { getProfileData } = useTransformedConfigData({
+    data: currentPort.packageToJson.synctrak,
+    blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
+  });
+
+  const {
+    state: { isDownloading },
+    func: { getProfileAllData },
+  } = useProfile({
+    port: currentPort.port,
+    writer: currentPort.writer,
+    imei: searchParams.get("imei"),
+    writeSerial: write,
+  });
 
   const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
@@ -85,7 +98,7 @@ export default function Controller() {
       { length: currentPort.jsonPackageCount },
       (_, i) => `${AT_GET_JSON}${i + 1}`
     );
-
+    currentPort.port.isjsonpackagefetching = true;
     for (const command of commands) {
       await delayPromise(DELAY_MS); // 200ms 지연
 
@@ -100,14 +113,6 @@ export default function Controller() {
         },
       });
     }
-  };
-
-  const handleCsvDownload = () => {
-    write({
-      data: AT_GET_CSV,
-      port: currentPort.port,
-      writer: currentPort.writer,
-    });
   };
 
   const toggleSaveChanges = () => {
@@ -131,6 +136,7 @@ export default function Controller() {
       pb="24px"
       borderBottom="1px solid var(--grey4)"
     >
+      {isDownloading && <FullLoading />}
       <Stack
         direction="row"
         gap="8px"
@@ -220,7 +226,7 @@ export default function Controller() {
             Upload
           </Button>
         </Tooltip>
-        <IconButton onClick={handleCsvDownload}>
+        <IconButton onClick={getProfileAllData}>
           <FileDownloadOutlinedIcon sx={{ color: "var(--black)" }} />
         </IconButton>
       </Stack>
