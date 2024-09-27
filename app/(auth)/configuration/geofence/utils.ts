@@ -1,6 +1,22 @@
 import { CircleType } from "../../../../components/Map/type";
 import { PolygonData } from "../../../../src/hooks/useMapManager";
 
+/**
+ *
+ * @param response
+ * @param onError
+ * @returns
+ *
+ * @example response: RRE;0000000000;67;00#023d73c20791809c;01#023d73c207914848;02#023d3c7c07914848;03#023d3ae407916e81
+ *          returns {
+ *                    id: 0,
+ *                    path: [
+ *                           {lat: -32.234234, lng: 103.324234},
+ *                           {lat: -32.234234, lng: 103.324234},
+ *                           {lat: -32.234234, lng: 103.324234}
+ *                          ]
+ *                    }
+ */
 export const parseResponseToPolygonData = (
   response: string,
   onError?: () => void
