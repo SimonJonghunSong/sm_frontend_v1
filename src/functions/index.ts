@@ -10,16 +10,18 @@ export function splitArrayIntoChunks<T>(array: T[], chunkSize = 20) {
 interface IChunkDataByNumber {
   prefix: string;
   target: string;
+  chuckString?: string;
   chunkSize?: number;
 }
 
 export function chunkDataByNumber({
   prefix,
   target,
+  chuckString = ";",
   chunkSize = 20,
 }: IChunkDataByNumber) {
-  return splitArrayIntoChunks(target.split(";"), chunkSize).map(
-    (item) => `${prefix}${item.join(";")}`
+  return splitArrayIntoChunks(target.split(chuckString), chunkSize).map(
+    (item) => `${prefix}${item.join(chuckString)}`
   );
 }
 
