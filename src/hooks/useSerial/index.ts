@@ -188,6 +188,9 @@ const useSerial = () => {
                   },
                   imei: currentImei,
                 });
+                port.grpNo = portList.find(
+                  ({ imei }) => imei === currentImei
+                ).jsonPackageCount;
               } else {
                 console.log("add new Serial Port");
                 // imei로 매칭된 기기가 존재하지 않으면 port 추가
