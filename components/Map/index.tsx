@@ -134,11 +134,11 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
             key={index}
             paths={polygon.paths}
             options={{
-              strokeColor: polygon.strokeColor,
+              strokeColor: polygon.strokeColor || "#0500FF",
               strokeOpacity: polygon.strokeOpacity,
-              strokeWeight: polygon.strokeWeight,
-              fillColor: polygon.fillColor,
-              fillOpacity: polygon.fillOpacity,
+              strokeWeight: polygon.strokeWeight || 0,
+              fillColor: polygon.fillColor || "#0500FF",
+              fillOpacity: polygon.fillOpacity || 0.2,
             }}
           />
         ))}
@@ -148,11 +148,11 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
             center={circle.center}
             radius={circle.radius}
             options={{
-              strokeColor: circle.strokeColor,
+              strokeColor: circle.strokeColor || "#0500FF",
               strokeOpacity: circle.strokeOpacity,
-              strokeWeight: circle.strokeWeight,
-              fillColor: circle.fillColor,
-              fillOpacity: circle.fillOpacity,
+              strokeWeight: circle.strokeWeight || 0,
+              fillColor: circle.fillColor || "#0500FF",
+              fillOpacity: circle.fillOpacity || 0.2,
             }}
           />
         ))}
@@ -162,9 +162,17 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
               drawingControl,
               polygonOptions: {
                 editable: editableDrawing,
+                fillColor: "#0500FF",
+                fillOpacity: 0.2,
+                strokeColor: "#0500FF",
+                strokeWeight: 0,
               },
               circleOptions: {
                 editable: editableDrawing,
+                fillColor: "#0500FF",
+                fillOpacity: 0.2,
+                strokeColor: "#0500FF",
+                strokeWeight: 0,
               },
               polylineOptions: {
                 editable: editableDrawing,
