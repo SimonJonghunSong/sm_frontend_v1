@@ -39,8 +39,6 @@ export default function Page() {
   const currentImei = searchParams.get("imei");
   const currentPort = portList.find(({ port }) => port.imei === currentImei);
 
-  const circularList = currentPort.circularGeofenceData;
-
   const handleEdit = () => {
     const imei = currentPort.port.imei;
 
@@ -115,7 +113,7 @@ export default function Page() {
       {isFullLoading && <FullLoading />}
       <article className="contentWrap">
         <Controller />
-        <div className="pageTitle">Add New</div>
+        <div className="pageTitle">Edit Circular Geofence</div>
 
         <Stack direction="row" gap="40px" mb="40px">
           <Stack gap="20px" sx={{ width: "50%" }}>
@@ -232,7 +230,6 @@ function CircularType({
   updateCircleRadius?: (circleId: number, newRadius: number) => void;
   groupId?: number;
 }) {
-  console.log(lat, long, radius);
   return (
     <>
       <InputBox>
