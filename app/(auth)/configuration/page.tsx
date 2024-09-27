@@ -64,7 +64,7 @@ export default function page() {
   };
 
   useEffect(() => {
-    if (!currentPort.port.writable && !currentPort.port.readable) {
+    if (!currentPort.port.writable || !currentPort.port.readable) {
       setIsFullLoading(true);
     } else {
       setIsFullLoading(false);

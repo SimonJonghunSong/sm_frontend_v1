@@ -61,6 +61,7 @@ type SerialPortAction = {
     imei: string;
     payload: string[];
   }) => void;
+  setShouldFetchJsonPackage: ({ imei }: { imei: string }) => void;
 };
 
 export const parse = (str) => {
@@ -143,6 +144,7 @@ const useSerialStore = create(
                     rawPackage: portInGlobalState.rawPackage + payload.trim(),
                     jsonPackage: jsonPkgArray,
                     isPackageFetching: false,
+                    shouldRefetchPackage: false,
                     packageToJson: json as unknown as { synctrak: any[] },
                     isPackageError: !json,
                   }
@@ -178,6 +180,16 @@ const useSerialStore = create(
             portList: get().portList.map((item) => {
               return item.imei === imei
                 ? { ...item, polygonGeofenceData: payload }
+                : item;
+            }),
+          };
+        }),
+      setShouldFetchJsonPackage: ({ imei }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, shouldRefetchPackage: true }
                 : item;
             }),
           };

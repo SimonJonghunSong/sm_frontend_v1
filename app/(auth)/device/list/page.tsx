@@ -499,19 +499,29 @@ function Apply({
   const { portList } = useSerialStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
-  const rows = portList.map((port, index) => {
-    return {
-      id: index,
-      col1: port.port.modelinfo.split("_")[0],
-      col2: port.port.imei,
-      col4: port.port.modelinfo.split("_")[
-        port.port.modelinfo.split("_").length - 1
-      ],
-    };
-  });
+
+  const { setShouldFetchJsonPackage } = useSerialStore();
+
+  const rows = portList
+    .filter(
+      ({ port }) =>
+        port.modelinfo.split("_")[port.modelinfo.split("_").length - 1] ===
+        profile[1].split("=")[1]
+    )
+    .map((port, index) => {
+      return {
+        id: index,
+        col1: port.port.modelinfo.split("_")[0],
+        col2: port.port.imei,
+        col4: port.port.modelinfo.split("_")[
+          port.port.modelinfo.split("_").length - 1
+        ],
+      };
+    });
 
   const handleApply = async () => {
     setIsLoading(true);
+
     // portList에서 선택된 인덱스를 필터링한 후 for...of로 루프
     const selectedPorts = portList.filter((_, index) =>
       selectedIndex.includes(index)
@@ -526,6 +536,8 @@ function Apply({
           port: port.port,
         });
       }
+
+      setShouldFetchJsonPackage({ imei: port.port.imei });
     }
 
     toast("Configure Deivce Success", {

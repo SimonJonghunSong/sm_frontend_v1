@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
@@ -22,9 +22,8 @@ import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import useSerialStore from "@/src/stores/useSerialStore";
-import { AT_GET_CSV, AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import useProfile from "@/src/hooks/useProfile";
-import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import FullLoading from "@/components/FullLoading";
 
 const DELAY_MS = 100;
@@ -36,6 +35,7 @@ export default function Controller() {
   const [path, setPath] = useState<File>();
   const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
   const [showUploadChanges, setShowUploadChanges] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     state: { portList },
@@ -45,10 +45,6 @@ export default function Controller() {
   const currentPort = portList.find(
     ({ port }) => port.imei === searchParams.get("imei")
   );
-  const { getProfileData } = useTransformedConfigData({
-    data: currentPort.packageToJson.synctrak,
-    blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
-  });
 
   const {
     state: { isDownloading },
@@ -91,6 +87,7 @@ export default function Controller() {
     });
   };
   const handleRefreshJsonPacket = async () => {
+    setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
     setPackageFetchingStart({ imei: currentPort.port.imei });
 
@@ -113,6 +110,8 @@ export default function Controller() {
         },
       });
     }
+
+    setIsLoading(false);
   };
 
   const toggleSaveChanges = () => {
@@ -126,6 +125,19 @@ export default function Controller() {
   const handlePathChange = (e) => {
     setPath(e.target.files[0]);
   };
+  useEffect(() => {
+    if (
+      currentPort.port.writable &&
+      currentPort.port.readable &&
+      currentPort.shouldRefetchPackage
+    ) {
+      handleRefreshJsonPacket();
+    }
+  }, [
+    currentPort.port.writable,
+    currentPort.port.readable,
+    currentPort.shouldRefetchPackage,
+  ]);
 
   return (
     <Stack
@@ -136,7 +148,7 @@ export default function Controller() {
       pb="24px"
       borderBottom="1px solid var(--grey4)"
     >
-      {isDownloading && <FullLoading />}
+      {(isDownloading || isLoading) && <FullLoading />}
       <Stack
         direction="row"
         gap="8px"
