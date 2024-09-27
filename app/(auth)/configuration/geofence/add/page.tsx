@@ -37,11 +37,13 @@ import {
 } from "@/utils/coordinateToHex";
 import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
+import FullLoading from "@/components/FullLoading";
 
 export default function Page() {
   const router = useRouter();
   const [type, setType] = useState("circular");
   const [groupId, setGroupId] = useState<number>(undefined);
+  const [isFullLoading, setIsFullLoading] = useState<boolean>(false);
   const mapManager = useMapManager();
   const searchParams = useSearchParams();
   const {
@@ -155,8 +157,21 @@ export default function Page() {
     });
   };
 
+  useEffect(() => {
+    if (!currentPort.port.writable || !currentPort.port.readable) {
+      setIsFullLoading(true);
+    } else {
+      setIsFullLoading(false);
+    }
+  }, [
+    currentPort.port.writable,
+    currentPort.port.readable,
+    currentPort.port.ismodelinfofetching,
+  ]);
+
   return (
     <div className="pageWrap">
+      {isFullLoading && <FullLoading />}
       <article className="contentWrap">
         <Controller />
         <div className="pageTitle">Add New</div>
@@ -430,8 +445,8 @@ function PolygonType({
   const rows = polygon
     ? polygon.path.map(({ lat, lng }, index) => ({
         id: index,
-        lat,
-        long: lng,
+        lat: lat.toFixed(6),
+        long: lng.toFixed(6),
         delete: {
           id: index,
           onDelete: () => removePolygonPoint?.(polygon, index),
@@ -447,7 +462,6 @@ function PolygonType({
 
   useEffect(() => {
     onChangeGroupId(filteredOptions[0]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -480,7 +494,7 @@ function PolygonType({
       <DataTable
         checkbox={false}
         noDataMessage="No registered geofence"
-        disablePagination
+        disablePagination={false}
         rows={rows}
         columns={columns}
       />
