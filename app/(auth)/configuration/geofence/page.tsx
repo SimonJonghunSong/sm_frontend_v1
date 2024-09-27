@@ -33,17 +33,23 @@ import {
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
   AT_GET_POLYGON_GEOFENCE_LIST,
   CR,
+  POLYGON_GEOFENCE_POINTS,
 } from "@/src/hooks/useSerial/constant";
 import {
   getCircularGeofenceData,
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
-import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
+import {
+  findCircleIndexByNumber,
+  generateFormattedIndexes,
+} from "@/utils/generateFormattedIndexes";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import { PolygonType, CircleType } from "@/components/Map/type";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import { parseLatLngRadius, parseResponseToPolygonData } from "./utils";
+import { chunkDataByNumberAndWrite } from "@/src/functions";
+import Link from "next/link";
 
 const columns: GridColDef[] = [
   {
@@ -251,13 +257,20 @@ export default function Page() {
           Math.ceil(polyCount / 20)
         ) {
           currentPort.port.ispolygonpointfetching = false;
-          const polygonData = parseResponseToPolygonData(
-            polygonPointRef.current.replaceAll("\r", ""),
-            () => {
-              polygonPointRef.current = "";
-              setFetchedPolygonData(undefined);
-            }
-          );
+          const polygonPoint = polygonPointRef.current
+            .split(CR)
+            .filter((item) => item !== "");
+          const header = polygonPoint[0].split(";").slice(0, 3).join(";") + ";";
+          const combinedData = polygonPoint
+            .map((item) => item.split(";").slice(3).join(";"))
+            .join(";");
+          const polygonAllData = header + combinedData;
+
+          const polygonData = parseResponseToPolygonData(polygonAllData, () => {
+            polygonPointRef.current = "";
+            setFetchedPolygonData(undefined);
+          });
+
           if (polygonData) {
             setFetchedPolygonData({ paths: polygonData.path });
             if (mapRef.current) {
@@ -266,8 +279,8 @@ export default function Page() {
                 lng: polygonData.path[0].lng,
               });
             }
-            polygonPointRef.current = "";
           }
+          polygonPointRef.current = "";
         }
       };
       currentPort.port.onprev = () => {
@@ -275,16 +288,17 @@ export default function Page() {
         currentPort.port.ispolygonpointfetching = false;
       };
 
-      // TODO 20개 이상이면 쪼개서 보내는 로직 (수정 필요)
-      // chunkDataByNumberAndWrite(
-      //   { write, port: currentPort.port, writer: currentPort.writer },
-      //   {
-      //     prefix: `AT^REQ;${imei};${
-      //       POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
-      //     };`,
-      //     target: generateFormattedIndexes(polyCount).join(),
-      //   }
-      // );
+      chunkDataByNumberAndWrite(
+        { write, port: currentPort.port, writer: currentPort.writer },
+
+        {
+          chuckString: ",",
+          prefix: `AT^REQ;${imei};${
+            POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
+          };`,
+          target: generateFormattedIndexes(polyCount).join(),
+        }
+      );
     } else {
       setFetchedPolygonData(undefined);
       const circleIndex = findCircleIndexByNumber(data.row.groupId - 1);
@@ -429,7 +443,11 @@ export default function Page() {
               <Button
                 variant="contained"
                 color="secondary"
-                href={`/configuration/geofence/add?imei=${currentPort.port.imei}`}
+                onClick={() => {
+                  router.push(
+                    `/configuration/geofence/add?imei=${currentPort.port.imei}`
+                  );
+                }}
               >
                 Add
               </Button>

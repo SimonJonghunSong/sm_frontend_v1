@@ -100,6 +100,7 @@ export default function Page() {
     const polyCount = polygonData.find(
       ({ groupId }) => groupId === Number(currentGrpId)
     ).polygonCount;
+
     currentPort.port.ispolygonpointfetching = true;
     currentPort.port.polygonhandler = (value) => {
       polygonPointRef.current += value;
@@ -108,13 +109,17 @@ export default function Page() {
         Math.ceil(polyCount / 20)
       ) {
         currentPort.port.ispolygonpointfetching = false;
-        const polygonData = parseResponseToPolygonData(
-          polygonPointRef.current.replaceAll("\r", ""),
-          () => {
-            polygonPointRef.current = "";
-            setIsFullLoading(false);
-          }
-        );
+        const polygonPoint = polygonPointRef.current
+          .split(CR)
+          .filter((item) => item !== "");
+        const header = polygonPoint[0].split(";").slice(0, 3).join(";") + ";";
+        const combinedData = polygonPoint
+          .map((item) => item.split(";").slice(3).join(";"))
+          .join(";");
+        const polygonAllData = header + combinedData;
+        const polygonData = parseResponseToPolygonData(polygonAllData, () => {
+          polygonPointRef.current = "";
+        });
 
         if (polygonData) {
           // setFetchedPolygonData({ paths: polygonData.path });
@@ -137,16 +142,20 @@ export default function Page() {
               lng: polygonData.path[0].lng,
             });
           }
-          polygonPointRef.current = "";
           setIsFullLoading(false);
         }
+        polygonPointRef.current = "";
       }
     };
-
+    currentPort.port.onprev = () => {
+      currentPort.port.polygonhandler = null;
+      currentPort.port.ispolygonpointfetching = false;
+    };
     // 20개 이상이면 쪼개서 보내는 로직
     chunkDataByNumberAndWrite(
       { write, port: currentPort.port, writer: currentPort.writer },
       {
+        chuckString: ",",
         prefix: `AT^REQ;${currentImei};${
           POLYGON_GEOFENCE_POINTS[(Number(currentGrpId) - 1) as number]
         };`,
@@ -160,7 +169,7 @@ export default function Page() {
       {isFullLoading && <FullLoading />}
       <article className="contentWrap">
         <Controller />
-        <div className="pageTitle">Edit Geofence</div>
+        <div className="pageTitle">Edit Polygon Geofence</div>
 
         <Stack direction="row" gap="40px" mb="40px">
           <Stack gap="20px" sx={{ width: "50%" }}>
