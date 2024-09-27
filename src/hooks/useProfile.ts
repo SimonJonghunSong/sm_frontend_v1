@@ -10,11 +10,7 @@ import {
   POLYGON_GEOFENCE_POINTS,
 } from "./useSerial/constant";
 import { useTransformedConfigData } from "./useTransformConfigData";
-import {
-  chunkDataByNumber,
-  chunkDataByNumberAndWrite,
-  splitArrayIntoChunks,
-} from "../functions";
+import { chunkDataByNumber } from "../functions";
 import { fileDownload } from "@/utils/fileDownload";
 
 interface UseProfileType {
@@ -333,7 +329,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
           (v) => v === Number(polygonPointId)
         );
 
-        return [...point, `PLG,PRG;;${polygonGeofence[index]}`];
+        return [...point, `PLG,PRG;;53;${polygonGeofence[index]}`];
       })
       .flat();
 

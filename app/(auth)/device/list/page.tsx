@@ -528,7 +528,7 @@ function Apply({
     );
 
     for (const port of selectedPorts) {
-      for (let i = 2; i < profile.length - 1; i++) {
+      for (let i = 2; i < profile.length; i++) {
         await delayPromise(DELAY_MS); // 비동기 지연 함수
         await write({
           data: `${AT_EDIT_PREFIX};${profile[i].split(";;")[1]}`,
