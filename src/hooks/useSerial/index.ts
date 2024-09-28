@@ -99,6 +99,7 @@ const useSerial = () => {
 
       port.ondisconnect = async () => {
         deleteSerialPort(port);
+        window.location.reload();
         await getPorts();
       };
 
@@ -335,6 +336,7 @@ const useSerial = () => {
                 currentImei,
                 currentCount + matches.length
               );
+              port.onjsonpacketcountup?.(matches.length);
             }
 
             // 값에서 특정 문자를 제거하고 버퍼 업데이트

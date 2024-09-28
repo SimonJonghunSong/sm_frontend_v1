@@ -117,6 +117,7 @@ const DELAY_MS = 100;
 
 const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const [percentage, setPercentage] = useState(0);
   const {
     setPackageFetchingStart,
     portList,
@@ -302,20 +303,25 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   };
 
   const getProfileAllData = async () => {
+    setPercentage(0);
     setIsDownloading(true);
     await getJsonPkg({});
+    setPercentage(25);
     await delayPromise(DELAY_MS);
 
     // Polygon 데이터 가져오기
     await getPolygonDataWithPromise();
+    setPercentage(50);
     await delayPromise(DELAY_MS);
 
     // Polygon Point 데이터 가져오기
     await getPolygonPointDataWithPromise();
+    setPercentage(75);
     await delayPromise(DELAY_MS);
 
     // Circular 데이터 가져오기
     await getCircularDataWithPromise();
+    setPercentage(100);
     const profilePartial = getProfileData();
 
     const circularGeofence = getStoreCircularData({ imei });
@@ -374,6 +380,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   return {
     state: {
       isDownloading,
+      percentage,
     },
     func: { getProfileAllData },
   };
