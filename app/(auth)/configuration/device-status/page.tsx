@@ -10,14 +10,11 @@ import {
   Stack,
 } from "@mui/material";
 import React, { useState } from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
-import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import Image from "next/image";
 import InputBox from "../../../../components/inputbox/InputBox";
 
 export default function Page() {
-
   const [version, setVersion] = useState<string>("1.1.1");
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -26,8 +23,6 @@ export default function Page() {
 
   return (
     <div className="pageWrap">
-      <SideMenu configuration sideMenuItems={sideMenuItems} />
-
       <article className="contentWrap">
         <Controller />
 
@@ -185,7 +180,11 @@ export default function Page() {
           <Stack sx={{ width: "50%" }}>
             <div className="pageTitle">GNSS Information</div>
             <Box>
-              <Image src={sampleMap} alt="sampleMap" style={{display: "block", width: "100%", height: "auto"}}/>
+              <Image
+                src={sampleMap}
+                alt="sampleMap"
+                style={{ display: "block", width: "100%", height: "auto" }}
+              />
             </Box>
             <Stack
               direction="row"
@@ -241,7 +240,7 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Modem Status</span>
-                  <InputBox.Info tooltipText="example tooltip text"/>
+                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>On</div>
@@ -256,7 +255,7 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Network Status</span>
-                  <InputBox.Info tooltipText="example tooltip text"/>
+                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>Activated</div>
@@ -272,7 +271,7 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Current Operator</span>
-                  <InputBox.Info tooltipText="example tooltip text"/>
+                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>42402</div>
@@ -287,7 +286,7 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Signal Level</span>
-                  <InputBox.Info tooltipText="example tooltip text"/>
+                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>Excellent Signal</div>
@@ -302,7 +301,7 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Socket Type</span>
-                  <InputBox.Info tooltipText="example tooltip text"/>
+                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>Avl data sending</div>
@@ -317,7 +316,7 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Socket</span>
-                  <InputBox.Info tooltipText="example tooltip text"/>
+                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>13.0.0.0 : 27676 (TCP)</div>

@@ -500,6 +500,7 @@ function Apply({
   const { portList } = useSerialStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
+  const [percentage, setPercentage] = useState<number>(0);
 
   const { setShouldFetchJsonPackage } = useSerialStore();
 
@@ -531,6 +532,7 @@ function Apply({
     for (const port of selectedPorts) {
       for (let i = 2; i < profile.length; i++) {
         await delayPromise(DELAY_MS); // 비동기 지연 함수
+        setPercentage((prev) => prev + 1);
         await write({
           data: `${AT_EDIT_PREFIX};${profile[i].split(";;")[1]}`,
           writer: port.writer,
@@ -551,7 +553,9 @@ function Apply({
 
   return (
     <>
-      {isLoading && <FullLoading />}
+      {isLoading && (
+        <FullLoading progress={(percentage / (profile.length - 2)) * 100} />
+      )}
       <Stack>
         <DataTable
           rowHeight={56}

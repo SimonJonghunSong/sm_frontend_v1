@@ -20,6 +20,7 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  onjsonpacketcountup: (count: number) => void;
   onafterjsonpacket: () => void;
   iserrorvalue: boolean;
   iscircularpointfetching: any;

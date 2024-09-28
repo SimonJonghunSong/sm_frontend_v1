@@ -93,6 +93,11 @@ const ConfigurationLayout = ({ children }) => {
           queries={{ imei }}
           configuration
           sideMenuItems={[
+            // {
+            //   name: "Device Status",
+            //   href: `/configuration/device-status?imei=${imei}`,
+            //   isActive: pathname === "/configuration/device-status",
+            // },
             ...formData.map((item) => {
               const key = item.tabName;
 
@@ -106,7 +111,7 @@ const ConfigurationLayout = ({ children }) => {
             {
               name: "Geofence",
               href: `/configuration/geofence?imei=${imei}`,
-              icon: () => <HexagonOutlinedIcon />,
+              isActive: pathname.includes("/configuration/geofence"),
             },
           ]}
         />

@@ -36,6 +36,7 @@ export default function Controller() {
   const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
   const [showUploadChanges, setShowUploadChanges] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [packageCount, setPackageCount] = useState(0);
 
   const {
     state: { portList },
@@ -47,7 +48,7 @@ export default function Controller() {
   );
 
   const {
-    state: { isDownloading },
+    state: { isDownloading, percentage },
     func: { getProfileAllData },
   } = useProfile({
     port: currentPort.port,
@@ -96,22 +97,21 @@ export default function Controller() {
       (_, i) => `${AT_GET_JSON}${i + 1}`
     );
     currentPort.port.isjsonpackagefetching = true;
+    currentPort.port.onjsonpacketcountup = (count) => {
+      setPackageCount((prev) => prev + count);
+    };
     for (const command of commands) {
-      await delayPromise(DELAY_MS); // 200ms 지연
+      await delayPromise(DELAY_MS); // 100ms 지연
 
       write({
         data: command,
         port: currentPort.port,
         writer: currentPort.writer,
-        callback: () => {
-          toast("done", {
-            position: "bottom-center",
-          });
-        },
       });
     }
 
     setIsLoading(false);
+    setPackageCount(0);
   };
 
   const toggleSaveChanges = () => {
@@ -148,7 +148,15 @@ export default function Controller() {
       pb="24px"
       borderBottom="1px solid var(--grey4)"
     >
-      {(isDownloading || isLoading) && <FullLoading />}
+      {(isDownloading || isLoading) && (
+        <FullLoading
+          progress={
+            isDownloading
+              ? percentage
+              : (packageCount / currentPort.jsonPackageCount) * 100
+          }
+        />
+      )}
       <Stack
         direction="row"
         gap="8px"
