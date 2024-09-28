@@ -1,12 +1,13 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useContext, useEffect, useMemo, useState } from "react";
+import { toast } from "react-toastify";
 import useSerial from "@/src/hooks/useSerial";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
-import { useContext, useEffect, useMemo, useState } from "react";
 import { configurationPageContext } from "./layout";
 import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
@@ -52,6 +53,7 @@ export default function page() {
     };
     currentPort.port.oneditsuccess = () => {
       setJsonPackageOfSerialPortForUpdate({ imei, payload: originData });
+      toast("Save Success!", { type: "success" });
     };
 
     getEditDataForPage(tab).forEach((item) => {
