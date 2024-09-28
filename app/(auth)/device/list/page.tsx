@@ -93,6 +93,7 @@ export default function DeviceList() {
               onClick={(e) => {
                 e.stopPropagation();
                 forget(params.value.port.port);
+                window.location.reload();
               }}
             >
               Connect
