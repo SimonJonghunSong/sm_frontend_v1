@@ -9,6 +9,8 @@
   justify-content: center;
   align-items: center;
   z-index: 9999; /* 다른 요소 위에 나타나도록 */
+  flex-direction: column;
+  gap: 50px;
 }
 
 .spinner {
@@ -104,4 +106,8 @@
       -2.6em 0em 0 0em rgba(255, 132, 0, 0.7),
       -1.8em -1.8em 0 0em rgba(255, 132, 0, 1);
   }
+}
+
+.progress {
+  width: 400px;
 }
