@@ -117,7 +117,12 @@ const DELAY_MS = 100;
 
 const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const [isDownloading, setIsDownloading] = useState(false);
-  const { setPackageFetchingStart, portList } = useSerialStore();
+  const {
+    setPackageFetchingStart,
+    portList,
+    getPolygonData: getStorePolygonData,
+    getCircularData: getStoreCircularData,
+  } = useSerialStore();
   const polygonPointRef = useRef("");
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
@@ -157,9 +162,6 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   );
   const polygonGeofenceMax = geofenceMaxCount.polygonGeofenceMax;
   const circularGeofenceMax = geofenceMaxCount.circularGeofenceMax;
-
-  const polygonGeofence = currentPort.polygonGeofenceData;
-  const circularGeofence = currentPort.circularGeofenceData;
 
   const write = ({ data }: { data: string }) => {
     writeSerial({
@@ -230,6 +232,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   }: {
     onSuccess?: () => void;
   }) => {
+    const polygonGeofence = getStorePolygonData({ imei });
     const validPolygon = polygonGeofence.filter((polygon) => {
       const [number, value] = polygon.split("#");
       return value.substring(0, 2) !== "00";
@@ -315,6 +318,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     await getCircularDataWithPromise();
     const profilePartial = getProfileData();
 
+    const circularGeofence = getStoreCircularData({ imei });
     const validCircular = circularGeofence.filter((circle) => {
       const [number, value] = circle.split("#");
       return value !== "NoData";
@@ -328,7 +332,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
         const index = POLYGON_GEOFENCE_POINTS.findIndex(
           (v) => v === Number(polygonPointId)
         );
-
+        const polygonGeofence = getStorePolygonData({ imei });
         return [...point, `PLG,PRG;;53;${polygonGeofence[index]}`];
       })
       .flat();

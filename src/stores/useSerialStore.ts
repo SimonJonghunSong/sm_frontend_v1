@@ -62,6 +62,8 @@ type SerialPortAction = {
     payload: string[];
   }) => void;
   setShouldFetchJsonPackage: ({ imei }: { imei: string }) => void;
+  getPolygonData: ({ imei }: { imei: string }) => string[];
+  getCircularData: ({ imei }: { imei: string }) => string[];
 };
 
 export const parse = (str) => {
@@ -194,6 +196,18 @@ const useSerialStore = create(
             }),
           };
         }),
+      getPolygonData: ({ imei }) => {
+        const currentPort = get().portList.find(
+          (item) => item.port.imei === imei
+        );
+        return currentPort.polygonGeofenceData;
+      },
+      getCircularData: ({ imei }) => {
+        const currentPort = get().portList.find(
+          (item) => item.port.imei === imei
+        );
+        return currentPort.circularGeofenceData;
+      },
     }),
 
     {
