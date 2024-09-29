@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import {
@@ -29,6 +29,8 @@ import {
 } from "@/src/hooks/useSerial/utils";
 import {
   AT_EDIT_PREFIX,
+  AT_REQ,
+  CR,
   POLYGON_GEOFENCE_POINTS,
 } from "@/src/hooks/useSerial/constant";
 import {
@@ -44,6 +46,7 @@ export default function Page() {
   const [type, setType] = useState("circular");
   const [groupId, setGroupId] = useState<number>(undefined);
   const [isFullLoading, setIsFullLoading] = useState<boolean>(false);
+  const isCircleOutputActiveBuffer = useRef<string>();
   const mapManager = useMapManager();
   const searchParams = useSearchParams();
   const {
@@ -114,23 +117,48 @@ export default function Page() {
         }
       );
     } else {
-      const circleIndex = findCircleIndexByNumber(groupId - 1);
-      const circle = mapManager.circles[0];
-      const coordinateToHexString = convertCircleCoordinatesToHexString({
-        lat: circle.center.lat,
-        lng: circle.center.lng,
-        radius: circle.radius,
+      const circleOutputActiveFetchPromise = new Promise<boolean>((resolve) => {
+        // 9001: Circular Output Active
+        // Determines whether to use the output active & delay item of the circular item. (Supported by LATAM or Brazil only)
+        currentPort.port.iscircleoutputactivefetching = true;
+        currentPort.port.circleoutputactivehandler = (value) => {
+          isCircleOutputActiveBuffer.current += value;
+          if (value.includes(CR)) {
+            currentPort.port.iscircleoutputactivefetching = false;
+            const isEnable =
+              isCircleOutputActiveBuffer.current.split("#")[1] === "01";
+            isCircleOutputActiveBuffer.current = undefined;
+            resolve(isEnable);
+          }
+        };
+        write({
+          data: `${AT_REQ}${imei};90;01`,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
       });
 
-      currentPort.port.oneditsuccess = () => {
-        toast("Save Success");
-        router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
-      };
+      circleOutputActiveFetchPromise.then((isOutputActive) => {
+        const circleIndex = findCircleIndexByNumber(groupId - 1);
+        const circle = mapManager.circles[0];
+        const coordinateToHexString = convertCircleCoordinatesToHexString({
+          lat: circle.center.lat,
+          lng: circle.center.lng,
+          radius: circle.radius,
+        });
 
-      write({
-        data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}01010000000000`,
-        port: currentPort.port,
-        writer: currentPort.writer,
+        currentPort.port.oneditsuccess = () => {
+          toast("Save Success");
+          router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
+        };
+
+        write({
+          data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}${
+            isOutputActive ? "01010000000000" : "0101"
+          }`,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
       });
     }
   };

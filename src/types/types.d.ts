@@ -20,6 +20,9 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  circleoutputactivehandler(value: string): unknown;
+  iscircleoutputactivefetching: boolean;
+  onread(value: string): unknown;
   onjsonpacketcountup: (count: number) => void;
   onafterjsonpacket: () => void;
   iserrorvalue: boolean;

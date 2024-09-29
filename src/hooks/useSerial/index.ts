@@ -319,6 +319,8 @@ const useSerial = () => {
             port.polygonhandler(value);
           } else if (port.iscircularpointfetching) {
             port.circlehandler(value);
+          } else if (port.iscircleoutputactivefetching) {
+            port.circleoutputactivehandler(value);
           } else if (port.isjsonpackagefetching) {
             const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
 
