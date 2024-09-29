@@ -17,7 +17,7 @@ import Maps from "@/components/Map";
 import InputBox from "@/components/inputbox/InputBox";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import useSerial from "@/src/hooks/useSerial";
-import { AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
+import { AT_EDIT_PREFIX, AT_REQ, CR } from "@/src/hooks/useSerial/constant";
 import { convertCircleCoordinatesToHexString } from "@/utils/coordinateToHex";
 import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import Controller from "../../../components/Controller";
@@ -35,6 +35,7 @@ export default function Page() {
   } = useSerial();
   const [isFullLoading, setIsFullLoading] = useState(false);
   const mapRef = useRef<google.maps.Map>(null);
+  const isCircleOutputActiveBuffer = useRef<string>();
   const currentGrpId = searchParams.get("grpId");
   const currentImei = searchParams.get("imei");
   const currentPort = portList.find(({ port }) => port.imei === currentImei);
@@ -42,23 +43,47 @@ export default function Page() {
   const handleEdit = () => {
     const imei = currentPort.port.imei;
 
-    const circleIndex = findCircleIndexByNumber(Number(currentGrpId) - 1);
-    const circle = mapManager.circles[0];
-    const coordinateToHexString = convertCircleCoordinatesToHexString({
-      lat: circle.center.lat,
-      lng: circle.center.lng,
-      radius: circle.radius,
+    const circleOutputActiveFetchPromise = new Promise<boolean>((resolve) => {
+      // 9001: Circular Output Active
+      // Determines whether to use the output active & delay item of the circular item. (Supported by LATAM or Brazil only)
+      currentPort.port.iscircleoutputactivefetching = true;
+      currentPort.port.circleoutputactivehandler = (value) => {
+        isCircleOutputActiveBuffer.current += value;
+        if (value.includes(CR)) {
+          currentPort.port.iscircleoutputactivefetching = false;
+          const isEnable =
+            isCircleOutputActiveBuffer.current.split("#")[1] === "01";
+          isCircleOutputActiveBuffer.current = undefined;
+          resolve(isEnable);
+        }
+      };
+      write({
+        data: `${AT_REQ}${imei};90;01`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
     });
 
-    currentPort.port.oneditsuccess = () => {
-      toast("Save Success");
-      router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
-    };
+    circleOutputActiveFetchPromise.then((isOutputActive) => {
+      const circleIndex = findCircleIndexByNumber(Number(currentGrpId) - 1);
+      const circle = mapManager.circles[0];
+      const coordinateToHexString = convertCircleCoordinatesToHexString({
+        lat: circle.center.lat,
+        lng: circle.center.lng,
+        radius: circle.radius,
+      });
 
-    write({
-      data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}01010000000000`,
-      port: currentPort.port,
-      writer: currentPort.writer,
+      currentPort.port.oneditsuccess = () => {
+        toast("Save Success");
+        router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
+      };
+      write({
+        data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}${
+          isOutputActive ? "01010000000000" : "0101"
+        }`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
     });
   };
 
