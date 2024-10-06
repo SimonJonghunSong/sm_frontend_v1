@@ -74,7 +74,7 @@ export default function Page() {
       });
 
       currentPort.port.oneditsuccess = () => {
-        toast("Save Success");
+        toast("Save Success", { type: "success" });
         router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
       };
       write({

@@ -149,7 +149,7 @@ export default function Page() {
         });
 
         currentPort.port.oneditsuccess = () => {
-          toast("Save Success");
+          toast("Save Success", { type: "success" });
           router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
         };
 
@@ -167,7 +167,7 @@ export default function Page() {
   const addPolygonData = () => {
     const imei = currentPort.port.imei;
     currentPort.port.oneditsuccess = () => {
-      toast("Save Success");
+      toast("Save Success", { type: "success" });
       router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
     };
 
