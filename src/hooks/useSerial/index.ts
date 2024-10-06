@@ -265,7 +265,7 @@ const useSerial = () => {
               fileDownload(blob, `${port.imei}.profile`);
               csvBufferRef.current.set(port.imei, undefined);
             }
-          } else if (value.includes("RPR") || value.includes("USP")) {
+          } else if (value.includes("RPR")) {
             port.oneditsuccess?.();
             port.oneditsuccess = null;
           } else if (value.includes("ERR") || port.iserrorvalue) {

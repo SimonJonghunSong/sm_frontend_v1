@@ -126,7 +126,8 @@ export default function Page() {
           if (value.includes(CR)) {
             currentPort.port.iscircleoutputactivefetching = false;
             const isEnable =
-              isCircleOutputActiveBuffer.current.split("#")[1] === "01";
+              isCircleOutputActiveBuffer.current.split("#")[1] === "01" &&
+              !isCircleOutputActiveBuffer.current.includes("USP"); //* USP = Unsupported Parameters
             isCircleOutputActiveBuffer.current = undefined;
             resolve(isEnable);
           }
