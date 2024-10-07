@@ -8,7 +8,6 @@ import KeyboardDoubleArrowRightOutlinedIcon from "@mui/icons-material/KeyboardDo
 import DataTable from "../../../components/dataTable";
 import { GridColDef } from "@mui/x-data-grid";
 
-
 const columns: GridColDef[] = [
   {
     field: "col1",
@@ -57,70 +56,69 @@ const columns: GridColDef[] = [
     ),
   },
 ];
-  
-  const rows = [
-    {
-      id: 0,
-      col1: "01",
-      col2: { id: "1", value: "AT^$PSTDBG=E" },
-      col3: { id: "1" },
-    },
-    {
-      id: 1,
-      col1: "02",
-      col2: { id: "1", value: "AT^$PSTDBG=G" },
-      col3: { id: "1" },
-    },
-    {
-      id: 2,
-      col1: "03",
-      col2: { id: "1", value: "AT^$ESN_READ=" },
-      col3: { id: "1" },
-    },
-    {
-      id: 3,
-      col1: "04",
-      col2: { id: "1", value: "AT^$StartFM" },
-      col3: { id: "1" },
-    },
-    {
-      id: 4,
-      col1: "05",
-      col2: { id: "1", value: "AT^$FRCSLP" },
-      col3: { id: "1" },
-    },
-    {
-      id: 5,
-      col1: "06",
-      col2: { id: "1", value: "AT^CMD;;01;02" },
-      col3: { id: "1" },
-    },
-    {
-      id: 6,
-      col1: "07",
-      col2: { id: "1", value: "AT^CMD;;01;03" },
-      col3: { id: "1" },
-    },
-    {
-      id: 7,
-      col1: "08",
-      col2: { id: "1", value: "AT+CPIN?" },
-      col3: { id: "1" },
-    },
-    {
-      id: 8,
-      col1: "09",
-      col2: { id: "1", value: "AT+CEREG?" },
-      col3: { id: "1" },
-    },
-    {
-      id: 9,
-      col1: "10",
-      col2: { id: "1", value: "AT+QJDR?" },
-      col3: { id: "1" },
-    },
-  ];
 
+const rows = [
+  {
+    id: 0,
+    col1: "01",
+    col2: { id: "1", value: "AT^$PSTDBG=E" },
+    col3: { id: "1" },
+  },
+  {
+    id: 1,
+    col1: "02",
+    col2: { id: "1", value: "AT^$PSTDBG=G" },
+    col3: { id: "1" },
+  },
+  {
+    id: 2,
+    col1: "03",
+    col2: { id: "1", value: "AT^$ESN_READ=" },
+    col3: { id: "1" },
+  },
+  {
+    id: 3,
+    col1: "04",
+    col2: { id: "1", value: "AT^$StartFM" },
+    col3: { id: "1" },
+  },
+  {
+    id: 4,
+    col1: "05",
+    col2: { id: "1", value: "AT^$FRCSLP" },
+    col3: { id: "1" },
+  },
+  {
+    id: 5,
+    col1: "06",
+    col2: { id: "1", value: "AT^CMD;;01;02" },
+    col3: { id: "1" },
+  },
+  {
+    id: 6,
+    col1: "07",
+    col2: { id: "1", value: "AT^CMD;;01;03" },
+    col3: { id: "1" },
+  },
+  {
+    id: 7,
+    col1: "08",
+    col2: { id: "1", value: "AT+CPIN?" },
+    col3: { id: "1" },
+  },
+  {
+    id: 8,
+    col1: "09",
+    col2: { id: "1", value: "AT+CEREG?" },
+    col3: { id: "1" },
+  },
+  {
+    id: 9,
+    col1: "10",
+    col2: { id: "1", value: "AT+QJDR?" },
+    col3: { id: "1" },
+  },
+];
 
 export default function ResponseLog() {
   const [expand, setExpand] = useState(false);
@@ -131,8 +129,11 @@ export default function ResponseLog() {
     <>
       <Stack direction="row" gap={expand ? "16px" : 0} flexGrow={1}>
         <Stack gap="16px" flexGrow={1}>
-          <div className={styles.logWrap} style={{padding: "16px"}}>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero laborum nobis, veritatis iste quas, quia, sit a aut fuga porro soluta minima. Incidunt commodi nesciunt omnis, modi quis reiciendis suscipit!
+          <div className={styles.logWrap} style={{ padding: "16px" }}>
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero
+            laborum nobis, veritatis iste quas, quia, sit a aut fuga porro
+            soluta minima. Incidunt commodi nesciunt omnis, modi quis reiciendis
+            suscipit!
           </div>
           <Stack direction="row" gap="16px">
             <TextField
@@ -162,7 +163,7 @@ export default function ResponseLog() {
           </Stack>
         </Stack>
         <Stack
-        //   flexGrow={1}
+          //   flexGrow={1}
           sx={{ position: "relative", width: expand ? "auto" : 0 }}
         >
           <IconButton
@@ -197,13 +198,19 @@ export default function ResponseLog() {
             flexGrow={1}
             sx={{
               position: "relative",
-            //   width: expand ? "auto" : 0,
+              //   width: expand ? "auto" : 0,
               overflow: "hidden",
             }}
           >
             <div className={styles.logWrap}>
-            <DataTable rows={rows} columns={columns} rowHeight={42} disablePagination disableRowClick disableResize/>
-
+              <DataTable
+                rows={rows}
+                columns={columns}
+                rowHeight={42}
+                disablePagination
+                disableRowClick
+                disableResize
+              />
             </div>
             <Button variant="contained" color="secondary">
               Send

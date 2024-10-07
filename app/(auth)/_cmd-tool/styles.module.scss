@@ -1,40 +1,42 @@
 .cmdWrap {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  background-color: #fff;
+  height: 100%;
+  .cmdTitle {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
+  .logWrap {
     display: flex;
-    flex-direction: column;
-    padding: 20px 0;
-    background-color: #fff;
-    height: 100%;
-    .cmdTitle {
-        font-size: 16px;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
-
-
-    .logWrap {
-        display: flex;
-        width: 100%;
-        min-width: 500px;
-        border: 1px solid var(--grey4);
-        border-radius: 8px;
-        flex-grow: 1;
-        max-height: 720px;
-        overflow-y: scroll;
-    }
+    width: 100%;
+    min-width: 500px;
+    border: 1px solid var(--grey4);
+    border-radius: 8px;
+    flex-grow: 1;
+    max-height: 720px;
+    overflow-y: scroll;
+  }
 }
 
 .consoleWrap {
-    display: flex;
-    background-color: #000;
-    color: white;
-    border-radius: 8px;
-    padding: 16px;
-    min-height: 566px;
-    max-height: 856px;
-    overflow-y: scroll;
-    
-    div {
-        
-        flex-grow: 1;
-    }
+  display: flex;
+  background-color: #000;
+  color: white;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 566px;
+  max-height: 856px;
+  overflow-y: scroll;
+
+  div {
+    flex-grow: 1;
+  }
+}
+
+.textIndent {
+  margin-left: 0.9em;
 }
