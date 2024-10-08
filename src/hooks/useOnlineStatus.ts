@@ -13,7 +13,7 @@ const useOnlineStatus = () => {
     if (isOnline === undefined) {
       setIsOnline(navigator.onLine);
     }
-
+    console.log(navigator.serviceWorker);
     if (navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
         payload:
