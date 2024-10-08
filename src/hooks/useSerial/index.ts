@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import {
   AT_GET_JSON,
@@ -43,6 +44,9 @@ const updateIndexedDB = async (
 const DELAY_MS = 100;
 
 const useSerial = () => {
+  const modelVersionBufferRef = useRef(new Map());
+  const imeiBufferRef = useRef(new Map());
+  const totalGrpNoBufferRef = useRef(new Map());
   const jsonPacketBufferRef = useRef(new Map());
   const jsonPacketBufferCountRef = useRef(new Map());
   const callbackRef = useRef(new Map());
@@ -160,129 +164,151 @@ const useSerial = () => {
 
         if (value) {
           // HEALTH CHECK & MODEL INFO
-          if (value.includes("$PST;Rdy") || value.includes("$PST;Ver;")) {
+          if (value.includes("PST;Rdy")) {
             const dataField = value.trim().split(";")[2];
-            if (value.includes("$PST;Rdy") && dataField === "UP") {
-              if (port.imei && port.modelinfo) {
-                editSerialPort({
-                  payload: {
-                    port,
-                    readableStreamClosed,
-                    writableStreamClosed,
-                    writer,
-                    reader,
-                  },
-                  imei: port.imei,
-                });
-              } else {
-                write({
-                  data: AT_GET_MODEL_INFO,
-                  port,
-                  writer,
-                });
-              }
+            if (dataField === "UP") {
+              port.ismodelinfofetching = true;
+              port.injectedId = nanoid();
+              write({
+                data: AT_GET_MODEL_INFO,
+                port,
+                writer,
+              });
             }
-            if (value.includes("$PST;Ver;")) {
-              port.modelinfo = dataField;
+          } else if (port.ismodelinfofetching) {
+            modelVersionBufferRef.current.set(
+              port.injectedId,
+              (modelVersionBufferRef.current.get(port.injectedId) || "") + value
+            );
+            if (value.includes(CR)) {
+              const modelVersionBuffer = modelVersionBufferRef.current.get(
+                port.injectedId
+              );
+              const modelVersion = modelVersionBuffer.trim().split(";")[2];
+              port.modelinfo = modelVersion;
+              port.ismodelinfofetching = false;
+              modelVersionBufferRef.current.set(port.injectedId, undefined);
+              port.isimeifetching = true;
               write({
                 data: AT_GET_IMEI,
                 port,
                 writer,
               });
             }
-          } else if (value.includes("RES;")) {
-            const currentImei = value.trim().split(";")[1];
-
-            const alreadyInGlobalData = portList.some(
-              ({ imei }) => imei === currentImei
+          } else if (port.isimeifetching) {
+            imeiBufferRef.current.set(
+              port.injectedId,
+              (imeiBufferRef.current.get(port.injectedId) || "") + value
             );
-            if (currentImei) {
-              port.imei = currentImei;
+
+            if (value.includes(CR)) {
+              const imeiBuffer = imeiBufferRef.current.get(port.injectedId);
+              const currentImei = imeiBuffer.trim().split(";")[1];
+              const alreadyInGlobalData = portList.some(
+                ({ imei }) => imei === currentImei
+              );
+              port.isimeifetching = false;
+              if (currentImei) {
+                port.imei = currentImei;
+                await updateIndexedDB(
+                  currentImei,
+                  imeiBufferRef.current.get(port.injectedId),
+                  indexeddbRef,
+                  broadcastChannel
+                );
+                imeiBufferRef.current.set(port.injectedId, undefined);
+                if (alreadyInGlobalData) {
+                  console.log("already in store, edit Serial Port");
+                  // imei로 매칭된 기기가 존재하면 port stream과 reader, writer만 할당, 나머지는 기존의 데이터 사용
+                  editSerialPort({
+                    payload: {
+                      port,
+                      readableStreamClosed,
+                      writableStreamClosed,
+                      writer,
+                      reader,
+                    },
+                    imei: currentImei,
+                  });
+
+                  port.grpNo = portList.find(
+                    ({ imei }) => imei === currentImei
+                  ).jsonPackageCount;
+                } else {
+                  console.log("add new Serial Port");
+                  // imei로 매칭된 기기가 존재하지 않으면 port 추가
+                  addSerialPort({
+                    port,
+                    readableStreamClosed,
+                    reader,
+                    writableStreamClosed,
+                    writer,
+                    isReadyUp: true,
+                    modelVersion: port.modelinfo,
+                    jsonPackageCount: undefined,
+                    rawPackage: "",
+                    jsonPackage: [],
+                    isPackageFetching: false,
+                    imei: currentImei,
+                    packageToJson: undefined,
+                    isPackageError: false,
+                    shouldRefetchPackage: false,
+                    polygonGeofenceData: [],
+                    circularGeofenceData: [],
+                  });
+                  port.ispackagecountfetching = true;
+                  write({
+                    data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
+                    port,
+                    writer,
+                  });
+                }
+              }
+            }
+          } else if (port.ispackagecountfetching) {
+            totalGrpNoBufferRef.current.set(
+              port.injectedId,
+              totalGrpNoBufferRef.current.get(port.injectedId) || "" + value
+            );
+
+            if (value.includes(CR)) {
+              const dataField = totalGrpNoBufferRef.current
+                .get(port.injectedId)
+                .trim()
+                .split(";")[3];
               await updateIndexedDB(
-                currentImei,
-                value,
+                port.imei,
+                totalGrpNoBufferRef.current.get(port.injectedId),
                 indexeddbRef,
                 broadcastChannel
               );
-              if (alreadyInGlobalData) {
-                console.log("already in store, edit Serial Port");
-                // imei로 매칭된 기기가 존재하면 port stream과 reader, writer만 할당, 나머지는 기존의 데이터 사용
-                editSerialPort({
-                  payload: {
-                    port,
-                    readableStreamClosed,
-                    writableStreamClosed,
-                    writer,
-                    reader,
-                  },
-                  imei: currentImei,
-                });
+              port.grpNo = Number(dataField);
+              editSerialPort({
+                payload: {
+                  jsonPackageCount: Number(dataField),
+                },
+                imei: port.imei,
+              });
 
-                port.grpNo = portList.find(
-                  ({ imei }) => imei === currentImei
-                ).jsonPackageCount;
-              } else {
-                console.log("add new Serial Port");
-                // imei로 매칭된 기기가 존재하지 않으면 port 추가
-                addSerialPort({
-                  port,
-                  readableStreamClosed,
-                  reader,
-                  writableStreamClosed,
-                  writer,
-                  isReadyUp: true,
-                  modelVersion: port.modelinfo,
-                  jsonPackageCount: undefined,
-                  rawPackage: "",
-                  jsonPackage: [],
-                  isPackageFetching: false,
-                  imei: currentImei,
-                  packageToJson: undefined,
-                  isPackageError: false,
-                  shouldRefetchPackage: false,
-                  polygonGeofenceData: [],
-                  circularGeofenceData: [],
-                });
+              const commands = Array.from(
+                { length: Number(dataField) },
+                (_, i) => `${AT_GET_JSON}${i + 1}`
+              );
+              port.ispackagecountfetching = false;
+              totalGrpNoBufferRef.current.set(port.injectedId, undefined);
+              port.isjsonpackagefetching = true;
+              setPackageFetchingStart({ imei: port.imei });
+
+              // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
+              for (const command of commands) {
+                await delayPromise(DELAY_MS); // 100ms 지연
 
                 write({
-                  data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
+                  data: command,
                   port,
                   writer,
                 });
               }
-            }
-          } else if (value.includes("$PST;StartJSON;TotalGrpNo;")) {
-            const dataField = value.trim().split(";")[3];
-            await updateIndexedDB(
-              port.imei,
-              value,
-              indexeddbRef,
-              broadcastChannel
-            );
-            port.grpNo = Number(dataField);
-            editSerialPort({
-              payload: {
-                jsonPackageCount: Number(dataField),
-              },
-              imei: port.imei,
-            });
-
-            const commands = Array.from(
-              { length: Number(dataField) },
-              (_, i) => `${AT_GET_JSON}${i + 1}`
-            );
-            port.isjsonpackagefetching = true;
-            setPackageFetchingStart({ imei: port.imei });
-
-            // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
-            for (const command of commands) {
-              await delayPromise(DELAY_MS); // 100ms 지연
-
-              write({
-                data: command,
-                port,
-                writer,
-              });
             }
           } else if (
             value.includes("$PST;CSV;") ||
