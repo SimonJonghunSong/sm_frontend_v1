@@ -84,7 +84,7 @@ export default function Navbar() {
   const [networkModal, networkModalToggle] = useModal();
 
   const { isOnline } = useNetworkMonitor();
-  useOnlineStatus();
+  // useOnlineStatus();
 
   const navLinkes =
     userRole && userRole === "ROOT"
