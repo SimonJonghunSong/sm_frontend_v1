@@ -14,10 +14,10 @@ const notoSans = Noto_Sans({
   subsets: ["latin"],
 });
 
-const APP_NAME = "Next.js";
-const APP_DEFAULT_TITLE = "Next.js";
-const APP_TITLE_TEMPLATE = "%s - Next.js";
-const APP_DESCRIPTION = "Next.js!";
+const APP_NAME = "ST Sync Master";
+const APP_DEFAULT_TITLE = "ST Sync Master";
+const APP_TITLE_TEMPLATE = "%s - ST Sync Master";
+const APP_DESCRIPTION = "ST Sync Master!";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
