@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import { toast } from "react-toastify";
 import {
@@ -52,6 +52,7 @@ const useSerial = () => {
   const callbackRef = useRef(new Map());
   const csvBufferRef = useRef(new Map());
   const indexeddbRef = useRef(new Map());
+  const [connectingPortCount, setConnectingPortCount] = useState(0);
   const broadcastChannel = new BroadcastChannel("command_log");
   const {
     portList,
@@ -123,7 +124,7 @@ const useSerial = () => {
 
       port.ondisconnect = async () => {
         deleteSerialPort(port);
-        window.location.reload();
+        // window.location.reload();
         await getPorts();
       };
 
@@ -169,6 +170,7 @@ const useSerial = () => {
             if (dataField === "UP") {
               port.ismodelinfofetching = true;
               port.injectedId = nanoid();
+              setConnectingPortCount((prev) => prev + 1);
               write({
                 data: AT_GET_MODEL_INFO,
                 port,
@@ -217,6 +219,7 @@ const useSerial = () => {
                   broadcastChannel
                 );
                 imeiBufferRef.current.set(port.injectedId, undefined);
+                setConnectingPortCount((prev) => prev - 1);
                 if (alreadyInGlobalData) {
                   console.log("already in store, edit Serial Port");
                   // imei로 매칭된 기기가 존재하면 port stream과 reader, writer만 할당, 나머지는 기존의 데이터 사용
@@ -581,7 +584,7 @@ const useSerial = () => {
   }, []);
 
   return {
-    state: { portList },
+    state: { portList, connectingPortCount },
     func: {
       requestPort,
       killAllPort,

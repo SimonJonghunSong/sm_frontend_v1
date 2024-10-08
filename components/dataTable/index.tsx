@@ -8,6 +8,7 @@ import {
   GridFooterContainer,
   gridPageCountSelector,
   gridPageSelector,
+  GridRowClassNameParams,
   GridRowSelectionModel,
   useGridApiContext,
   useGridSelector,
@@ -25,6 +26,7 @@ type DataTableProps = {
   rowHeight?: number;
   footerButton?: React.ReactNode;
   noDataMessage?: string;
+  getRowClassName?: (params: GridRowClassNameParams) => string;
   onRowSelectionModelChange?: (
     rowSelectionModel: GridRowSelectionModel,
     details: GridCallbackDetails
@@ -42,6 +44,7 @@ export default function DataTable({
   noDataMessage = "No Data",
   onRowClick = () => {},
   onRowSelectionModelChange = () => {},
+  getRowClassName,
 }: DataTableProps) {
   return (
     <Box sx={{ display: "grid", gridTemplateColumns: "1fr" }}>
@@ -52,6 +55,7 @@ export default function DataTable({
         disableColumnMenu
         disableColumnResize={disableResize}
         disableRowSelectionOnClick={!checkbox || disableRowClick}
+        getRowClassName={getRowClassName}
         rowHeight={rowHeight}
         autoHeight
         disableColumnSorting

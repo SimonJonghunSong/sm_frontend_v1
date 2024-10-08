@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import { Button, IconButton, Stack } from "@mui/material";
+import { Button, IconButton, Skeleton, Stack } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import Modal from "@/components/Modal";
@@ -40,10 +40,14 @@ const modalColumns: GridColDef[] = [
 
 const DELAY_MS = 50;
 
+const RowSkeleton = () => {
+  return <Skeleton animation="wave" />;
+};
+
 export default function DeviceList() {
   const {
-    state: { portList },
-    func: { requestPort, forget, write },
+    state: { portList, connectingPortCount },
+    func: { requestPort, forget, write, close },
   } = useSerial();
 
   const { setPackageFetchingStart } = useSerialStore();
@@ -55,6 +59,12 @@ export default function DeviceList() {
       flex: 1,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => {
+        if (params.id === "skeleton") {
+          return <RowSkeleton />;
+        }
+        return <>{params.value}</>;
+      },
     },
     {
       field: "col2",
@@ -62,6 +72,12 @@ export default function DeviceList() {
       flex: 1,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => {
+        if (params.id === "skeleton") {
+          return <RowSkeleton />;
+        }
+        return <>{params.value}</>;
+      },
     },
     {
       field: "col3",
@@ -69,6 +85,12 @@ export default function DeviceList() {
       flex: 1,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => {
+        if (params.id === "skeleton") {
+          return <RowSkeleton />;
+        }
+        return <>{params.value}</>;
+      },
     },
     {
       field: "col4",
@@ -76,6 +98,12 @@ export default function DeviceList() {
       flex: 1,
       headerAlign: "center",
       align: "center",
+      renderCell: (params) => {
+        if (params.id === "skeleton") {
+          return <RowSkeleton />;
+        }
+        return <>{params.value}</>;
+      },
     },
     {
       field: "col5",
@@ -84,6 +112,9 @@ export default function DeviceList() {
       headerAlign: "center",
       align: "center",
       renderCell: (params) => {
+        if (params.id === "skeleton") {
+          return <RowSkeleton />;
+        }
         return params.value ? (
           params.value?.connected ? (
             <Button
@@ -93,7 +124,13 @@ export default function DeviceList() {
               onClick={(e) => {
                 e.stopPropagation();
                 forget(params.value.port.port);
-                window.location.reload();
+                // close({
+                //   port: params.value.port.port,
+                //   writer: params.value.port.writer,
+                //   reader: params.value.port.reader,
+                //   writableStreamClosed: params.value.port.writableStreamClosed,
+                //   readableStreamClosed: params.value.port.readableStreamClosed,
+                // });
               }}
             >
               Connect
@@ -126,77 +163,89 @@ export default function DeviceList() {
       flex: 1,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) =>
-        params.value.isPackageFetching ? (
-          <Button
-            disabled
-            variant="contained"
-            color="secondary"
-            sx={{ width: "120px" }}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            Loading...
-          </Button>
-        ) : (
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="center"
-            gap={"4px"}
-            height={"100%"}
-          >
+      renderCell: (params) => {
+        if (params.id === "skeleton") {
+          return <RowSkeleton />;
+        }
+        if (params.value.isPackageFetching) {
+          return (
             <Button
-              disabled={!params.value.configure || params.value.isPackageError}
+              disabled
               variant="contained"
               color="secondary"
               sx={{ width: "120px" }}
               onClick={(e) => {
                 e.stopPropagation();
-                router.push(
-                  `/configuration?imei=${params.value.port.port.imei}`
-                );
               }}
             >
-              Configure
+              Loading...
             </Button>
-            <Button
-              disabled={
-                params.value.isPackageFetching ||
-                !params.value.port.writer.write ||
-                !params.value.port.reader.read
-              }
-              variant="outlined"
-              color="secondary"
-              sx={{ width: "10px" }}
-              onClick={async (e) => {
-                e.stopPropagation();
-
-                params.value.port.port.grpNo =
-                  params.value.port.jsonPackageCount;
-
-                setPackageFetchingStart({ imei: params.value.port.port.imei });
-
-                const commands = Array.from(
-                  { length: params.value.port.jsonPackageCount },
-                  (_, i) => `${AT_GET_JSON}${i + 1}`
-                );
-                params.value.port.port.isjsonpackagefetching = true;
-                for (const command of commands) {
-                  write({
-                    data: command,
-                    port: params.value.port.port,
-                    writer: params.value.port.writer,
-                  });
-                  await delayPromise(DELAY_MS); // 100ms 지연
+          );
+        } else {
+          return (
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+              gap={"4px"}
+              height={"100%"}
+            >
+              <Button
+                disabled={
+                  !params.value.configure || params.value.isPackageError
                 }
-              }}
-            >
-              <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
-            </Button>
-          </Stack>
-        ),
+                variant="contained"
+                color="secondary"
+                sx={{ width: "120px" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push(
+                    `/configuration?imei=${params.value.port.port.imei}`
+                  );
+                }}
+              >
+                Configure
+              </Button>
+              <Button
+                disabled={
+                  params.value.isPackageFetching ||
+                  !params.value.port.writer.write ||
+                  !params.value.port.reader.read
+                }
+                variant="outlined"
+                color="secondary"
+                sx={{ width: "10px" }}
+                onClick={async (e) => {
+                  e.stopPropagation();
+
+                  params.value.port.port.grpNo =
+                    params.value.port.jsonPackageCount;
+
+                  setPackageFetchingStart({
+                    imei: params.value.port.port.imei,
+                  });
+
+                  const commands = Array.from(
+                    { length: params.value.port.jsonPackageCount },
+                    (_, i) => `${AT_GET_JSON}${i + 1}`
+                  );
+                  params.value.port.port.isjsonpackagefetching = true;
+                  for (const command of commands) {
+                    write({
+                      data: command,
+                      port: params.value.port.port,
+                      writer: params.value.port.writer,
+                    });
+                    await delayPromise(DELAY_MS); // 100ms 지연
+                  }
+                }}
+              >
+                <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
+              </Button>
+            </Stack>
+          );
+        }
+      },
     },
   ];
 
@@ -244,8 +293,14 @@ export default function DeviceList() {
             rowHeight={72}
             checkbox={false}
             disablePagination
-            rows={rows}
+            rows={
+              connectingPortCount > 0 ? [...rows, { id: "skeleton" }] : rows
+            }
             columns={columns}
+            getRowClassName={(params) => {
+              console.log(params);
+              return "ds";
+            }}
           />
           <Button
             variant="contained"
