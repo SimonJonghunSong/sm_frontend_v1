@@ -241,7 +241,7 @@ export default function Page() {
             onClick={handleEdit}
             disabled={(mapManager.polygons[0]?.path.length || 0) < 3}
           >
-            Edit
+            Save
           </Button>
         </Stack>
       </article>

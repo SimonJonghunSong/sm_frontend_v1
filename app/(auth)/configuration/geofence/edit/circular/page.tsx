@@ -226,7 +226,7 @@ export default function Page() {
             onClick={handleEdit}
             disabled={mapManager.circles.length === 0}
           >
-            Edit
+            Save
           </Button>
         </Stack>
       </article>
