@@ -238,8 +238,11 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
       const [number, value] = polygon.split("#");
       return value.substring(0, 2) !== "00";
     });
-
     const polygonPointReqList = createPolygonGeofenceArray(validPolygon);
+
+    if (polygonPointReqList.length === 0) {
+      onSuccess();
+    }
 
     port.ispolygonpointfetching = true;
     port.polygonhandler = (polygonPointBuffer) => {

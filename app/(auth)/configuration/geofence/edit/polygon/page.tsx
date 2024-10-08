@@ -75,7 +75,7 @@ export default function Page() {
   const addPolygonData = () => {
     const imei = currentPort.port.imei;
     currentPort.port.oneditsuccess = () => {
-      toast("Save Success");
+      toast("Save Success", { type: "success" });
       router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
     };
 
@@ -241,7 +241,7 @@ export default function Page() {
             onClick={handleEdit}
             disabled={(mapManager.polygons[0]?.path.length || 0) < 3}
           >
-            Edit
+            Save
           </Button>
         </Stack>
       </article>

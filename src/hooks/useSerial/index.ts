@@ -307,7 +307,7 @@ const useSerial = () => {
               fileDownload(blob, `${port.imei}.profile`);
               csvBufferRef.current.set(port.imei, undefined);
             }
-          } else if (value.includes("RPR") || value.includes("USP")) {
+          } else if (value.includes("RPR")) {
             await updateIndexedDB(
               port.imei,
               value,
