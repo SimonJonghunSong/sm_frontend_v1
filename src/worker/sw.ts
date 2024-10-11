@@ -61,17 +61,17 @@ self.addEventListener("fetch", async (event) => {
 
   if (!isOnline || !navigator.onLine) {
     // new CacheOnly()
-    event.respondWith(
-      (async () => {
-        try {
-          // 수동 오프라인 및 offline일 때 캐싱에서 사용
-          return caches.match(event.request);
-        } catch (e) {
-          console.log(e, event.request.url);
-          return Response.error();
-        }
-      })()
-    );
+    // event.respondWith(
+    //   (async () => {
+    //     try {
+    //       // 수동 오프라인 및 offline일 때 캐싱에서 사용
+    //       return caches.match(event.request);
+    //     } catch (e) {
+    //       console.log(e, event.request.url);
+    //       return Response.error();
+    //     }
+    //   })()
+    // );
   }
 });
 
