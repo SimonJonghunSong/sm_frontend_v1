@@ -9,12 +9,12 @@ const useOnlineStatus = () => {
   const { isOnline, setIsOnline } = useNetworkMonitorStore();
 
   // 초기 온라인 상태 설정
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (isOnline === undefined) {
       setIsOnline(navigator.onLine);
     }
     console.log(navigator.serviceWorker);
-    if (navigator.serviceWorker.controller) {
+    if (navigator.serviceWorker?.controller) {
       navigator.serviceWorker.controller.postMessage({
         payload:
           isOnline === undefined
@@ -47,7 +47,7 @@ const useOnlineStatus = () => {
     };
 
     const notifyServiceWorker = (status: string) => {
-      navigator.serviceWorker.controller?.postMessage({ payload: status });
+      navigator.serviceWorker?.controller?.postMessage({ payload: status });
     };
 
     const handleOffline = () => notifyServiceWorker("offline");
@@ -56,7 +56,7 @@ const useOnlineStatus = () => {
     window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
 
-    navigator.serviceWorker.addEventListener(
+    navigator.serviceWorker?.addEventListener(
       "message",
       handleServiceWorkerMessage
     );
@@ -66,7 +66,7 @@ const useOnlineStatus = () => {
     return () => {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("offline", handleOnline);
-      navigator.serviceWorker.removeEventListener(
+      navigator.serviceWorker?.removeEventListener(
         "message",
         handleServiceWorkerMessage
       );

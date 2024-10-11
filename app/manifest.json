@@ -18,8 +18,7 @@
   "orientation": "any",
   "display": "standalone",
   "dir": "auto",
-  "lang": "ko-KR",
-  "name": "STSync",
+  "name": "ST Sync Master",
   "short_name": "STSyncMaster",
   "start_url": "/"
 }
