@@ -1,5 +1,7 @@
 import crypto from "crypto";
 import withSerwistInit from "@serwist/next";
+import fs from "fs";
+import path from "path";
 
 const randomUUID = crypto.randomUUID();
 
@@ -59,10 +61,12 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   cacheOnNavigation: true,
   reloadOnOnline: false,
-  additionalPrecacheEntries: pageList.map((url) => ({
-    url,
-    revision: randomUUID,
-  })),
+  // additionalPrecacheEntries: pageList.map((url) => {
+  //   return {
+  //     url,
+  //     revision: randomUUID,
+  //   };
+  // }),
 });
 
 export default withSerwist({
