@@ -1,6 +1,6 @@
 import { defaultCache } from "@serwist/next/worker";
 import type { PrecacheEntry, SerwistGlobalConfig } from "serwist";
-import { BackgroundSyncQueue, Serwist, CacheOnly } from "serwist";
+import { BackgroundSyncQueue, Serwist, CacheFirst } from "serwist";
 import {
   MANUAL_STATUS_UPDATED,
   NETWORK_STATUS_CHANGED,
@@ -61,17 +61,26 @@ self.addEventListener("fetch", async (event) => {
 
   if (!isOnline || !navigator.onLine) {
     // new CacheOnly()
-    // event.respondWith(
-    //   (async () => {
-    //     try {
-    //       // 수동 오프라인 및 offline일 때 캐싱에서 사용
-    //       return caches.match(event.request);
-    //     } catch (e) {
-    //       console.log(e, event.request.url);
-    //       return Response.error();
-    //     }
-    //   })()
-    // );
+    event.respondWith(
+      (async () => {
+        try {
+          return (
+            caches.match(event.request) ||
+            fetch(event.request).then((fetchedResponse) => {
+              caches
+                .open("idontknow")
+                .then((cache) =>
+                  cache.put(event.request, fetchedResponse.clone())
+                );
+              return fetchedResponse;
+            })
+          );
+        } catch (e) {
+          console.log(e, event.request.url);
+          return Response.error();
+        }
+      })()
+    );
   }
 });
 

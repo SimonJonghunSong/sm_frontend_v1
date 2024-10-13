@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect } from "react";
+import { useEffect } from "react";
 import useNetworkMonitorStore from "../../utils/useNetworkMonitorStore";
 import {
   MANUAL_STATUS_UPDATED,
@@ -13,7 +13,7 @@ const useOnlineStatus = () => {
     if (isOnline === undefined) {
       setIsOnline(navigator.onLine);
     }
-    console.log(navigator.serviceWorker);
+
     if (navigator.serviceWorker?.controller) {
       navigator.serviceWorker.controller.postMessage({
         payload:
