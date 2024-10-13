@@ -303,15 +303,15 @@ const useSerial = () => {
               setPackageFetchingStart({ imei: port.imei });
 
               // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
-              for (const command of commands) {
-                await delayPromise(DELAY_MS); // 100ms 지연
-
-                write({
-                  data: command,
-                  port,
-                  writer,
-                });
-              }
+              commands.forEach((command, index) => {
+                setTimeout(async () => {
+                  await write({
+                    data: command,
+                    port,
+                    writer,
+                  });
+                }, index * DELAY_MS); // 각 명령마다 100ms씩 지연
+              });
             }
           } else if (
             value.includes("$PST;CSV;") ||
