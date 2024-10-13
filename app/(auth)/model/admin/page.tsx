@@ -30,6 +30,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { adminColumns, adminRows, rows } from "../tableData";
 import useAuthStore from "../../../../utils/useAuthStore";
+import { get } from "@/src/api/apiClient";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
@@ -51,17 +52,26 @@ const selectSortData = [
 
 export default function Model() {
   const router = useRouter();
-  const {userRole} = useAuthStore();
+  const { userRole } = useAuthStore();
 
   useEffect(() => {
     if (userRole !== "ADMIN") {
-      router.replace("/model")
+      router.replace("/model");
     }
-  },[]);
+  }, []);
 
   if (userRole !== "ADMIN") {
-    return <></>
+    return <></>;
   }
+
+  useEffect(() => {
+    // Could be GET or POST/PUT/PATCH/DELETE
+    fetch("https://dummyjson.com/quotes")
+      .then((res) => res.json())
+      .then(console.log);
+
+    /* { status: 'ok', method: 'GET' } */
+  }, []);
 
   const [rowData, setRowData] = useState(adminRows);
   const [columnData, setColumnData] = useState(adminColumns);
@@ -79,7 +89,6 @@ export default function Model() {
   const handleAddModel = () => {
     modalToggle();
   };
-
 
   return (
     <div className="pageWrap">
@@ -120,25 +129,25 @@ export default function Model() {
             </Stack>
 
             <Stack direction="row" gap="24px" alignItems="center">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  onClick={handleAddModel}
-                >
-                  Add
-                </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleAddModel}
+              >
+                Add
+              </Button>
             </Stack>
           </Stack>
-            <DataTable
-              rows={rowData}
-              columns={columnData}
-              rowHeight={120}
-              footerButton={
-                <Button variant="text" color="info">
-                  Delete
-                </Button>
-              }
-            />
+          <DataTable
+            rows={rowData}
+            columns={columnData}
+            rowHeight={120}
+            footerButton={
+              <Button variant="text" color="info">
+                Delete
+              </Button>
+            }
+          />
         </Stack>
       </article>
 

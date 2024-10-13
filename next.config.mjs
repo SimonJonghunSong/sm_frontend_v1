@@ -1,15 +1,12 @@
 import crypto from "crypto";
 import withSerwistInit from "@serwist/next";
-import fs from "fs";
-import path from "path";
 
 const randomUUID = crypto.randomUUID();
 
-const additionalPrecache = [
+const additionalPrecachePageList = [
   "/",
 
-  "/account",
-
+  "/configuration",
   "/configuration/geofence",
   "/configuration/geofence/add",
   "/configuration/geofence/edit/circular",
@@ -20,6 +17,10 @@ const additionalPrecache = [
 
   "/model",
   "/model/admin",
+
+  "/server",
+  "/server/mqtt",
+  "/server/scuti",
 
   "/settings",
   "/settings/languages",
@@ -42,7 +43,7 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   cacheOnNavigation: true,
   reloadOnOnline: false,
-  additionalPrecacheEntries: additionalPrecache.map((url) => {
+  additionalPrecacheEntries: additionalPrecachePageList.map((url) => {
     return {
       url,
       revision: randomUUID,
