@@ -61,6 +61,7 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   cacheOnNavigation: true,
   reloadOnOnline: false,
+  additionalPrecacheEntries: ["/"],
   // additionalPrecacheEntries: pageList.map((url) => {
   //   return {
   //     url,
