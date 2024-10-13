@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "node scripts/postbuild.mjs",
     "start": "next start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
