@@ -5,40 +5,21 @@ import path from "path";
 
 const randomUUID = crypto.randomUUID();
 
-const pageList = [
+const additionalPrecache = [
   "/",
 
   "/account",
 
-  "/configuration",
-  "/configuration/accessories",
-  "/configuration/bluetooth",
-  "/configuration/commands",
-  "/configuration/device-status",
-  "/configuration/driver",
-  "/configuration/edit-profile",
-  "/configuration/fw-update",
   "/configuration/geofence",
   "/configuration/geofence/add",
   "/configuration/geofence/edit/circular",
   "/configuration/geofence/edit/polygon",
-  "/configuration/input-output",
-  "/configuration/network",
-  "/configuration/profile",
-  "/configuration/report",
-  "/configuration/rf",
-  "/configuration/system",
-  "/configuration/tracking",
 
   "/device",
   "/device/list",
 
   "/model",
   "/model/admin",
-
-  "/server",
-  "/server/mqtt",
-  "/server/scuti",
 
   "/settings",
   "/settings/languages",
@@ -61,13 +42,12 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   cacheOnNavigation: true,
   reloadOnOnline: false,
-  additionalPrecacheEntries: ["/"],
-  // additionalPrecacheEntries: pageList.map((url) => {
-  //   return {
-  //     url,
-  //     revision: randomUUID,
-  //   };
-  // }),
+  additionalPrecacheEntries: additionalPrecache.map((url) => {
+    return {
+      url,
+      revision: randomUUID,
+    };
+  }),
 });
 
 export default withSerwist({
