@@ -529,7 +529,7 @@ const useSerial = () => {
         console.log(data, ":::cmd data");
         if (port.imei) {
           await addWriteLog(port.imei, data);
-          broadcastChannel.postMessage("updated");
+          broadcastChannel.postMessage({ status: "updated", imei: port.imei });
         }
         await writer.write(data + SUFFIX); // Uint8Array 전송
         return true;

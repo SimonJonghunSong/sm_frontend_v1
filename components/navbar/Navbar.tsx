@@ -162,7 +162,11 @@ export default function Navbar() {
                       pathname.startsWith(link.href) ? styles.active : undefined
                     }
                   >
-                    <button onClick={cmdModalToggle}>
+                    <button
+                      onClick={() => {
+                        window.open(`${window.location.origin}/cmd`, "_blank");
+                      }}
+                    >
                       <link.icon />
                       <span>{link.name}</span>
                     </button>

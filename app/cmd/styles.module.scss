@@ -1,0 +1,19 @@
+.consoleWrap {
+  width: 100%;
+  background-color: #000;
+  color: white;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 566px;
+  max-height: 856px;
+  overflow-y: scroll;
+
+  div {
+    flex-grow: 1;
+  }
+}
+
+.textIndent {
+  margin-left: 0.9em;
+  word-break: break-all;
+}
