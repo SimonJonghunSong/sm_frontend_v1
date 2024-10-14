@@ -297,8 +297,7 @@ export default function DeviceList() {
               connectingPortCount > 0 ? [...rows, { id: "skeleton" }] : rows
             }
             columns={columns}
-            getRowClassName={(params) => {
-              console.log(params);
+            getRowClassName={() => {
               return "ds";
             }}
           />
