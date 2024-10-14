@@ -45,12 +45,12 @@ const withSerwist = withSerwistInit({
   swDest: "public/sw.js",
   cacheOnNavigation: true,
   reloadOnOnline: false,
-  additionalPrecacheEntries: additionalPrecachePageList.map((url) => {
-    return {
-      url,
-      revision: randomUUID,
-    };
-  }),
+  // additionalPrecacheEntries: additionalPrecachePageList.map((url) => {
+  //   return {
+  //     url,
+  //     revision: randomUUID,
+  //   };
+  // }),
 });
 
 export default withSerwist({
