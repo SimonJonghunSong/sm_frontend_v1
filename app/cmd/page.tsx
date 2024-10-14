@@ -24,16 +24,16 @@ const Cmd = () => {
     }, 0);
   };
 
-  // useEffect(() => {
-  //   broadcastChannel.onmessage = ({ data }) => {
-  //     if (data === "updated") {
-  //       get();
-  //     }
-  //   };
-  //   return () => {
-  //     broadcastChannel.close();
-  //   };
-  // }, []);
+  useEffect(() => {
+    broadcastChannel.onmessage = ({ data }) => {
+      if (data.status === "updated") {
+        get(data.imei);
+      }
+    };
+    return () => {
+      broadcastChannel.close();
+    };
+  }, []);
 
   useEffect(() => {
     if (selectedImei) {
