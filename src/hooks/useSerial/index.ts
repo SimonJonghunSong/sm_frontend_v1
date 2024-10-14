@@ -163,6 +163,14 @@ const useSerial = () => {
       while (true) {
         const { value, done } = await reader.read();
 
+        console.log(
+          "---------------- 기기에서 넘어오는 value start ----------------"
+        );
+        console.log(value);
+        console.log(
+          "---------------- 기기에서 넘어오는 value end ----------------"
+        );
+
         if (value) {
           // HEALTH CHECK & MODEL INFO
           if (value.includes("PST;Rdy")) {
