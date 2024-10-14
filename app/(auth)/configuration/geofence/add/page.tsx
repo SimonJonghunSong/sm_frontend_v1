@@ -40,23 +40,23 @@ import {
 import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
 import FullLoading from "@/components/FullLoading";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 export default function Page() {
   const router = useRouter();
+  const { getCurrentImei } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
   const [type, setType] = useState("circular");
   const [groupId, setGroupId] = useState<number>(undefined);
   const [isFullLoading, setIsFullLoading] = useState<boolean>(false);
   const isCircleOutputActiveBuffer = useRef<string>();
   const mapManager = useMapManager();
-  const searchParams = useSearchParams();
   const {
     state: { portList },
     func: { write },
   } = useSerial();
 
-  const currentPort = portList.find(
-    ({ port }) => port.imei === searchParams.get("imei")
-  );
+  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const polygonList = currentPort.polygonGeofenceData;
   const circularList = currentPort.circularGeofenceData;
@@ -65,8 +65,8 @@ export default function Page() {
   const circularData = getCircularGeofenceData(circularList);
 
   const { formData } = useTransformedConfigData({
-    data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
-      .packageToJson.synctrak,
+    data: portList.find(({ port }) => port.imei === imei).packageToJson
+      .synctrak,
     blacklist: ["info"],
   });
 
@@ -150,7 +150,7 @@ export default function Page() {
 
         currentPort.port.oneditsuccess = () => {
           toast("Save Success", { type: "success" });
-          router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
+          router.push(`/configuration/geofence`);
         };
 
         write({
@@ -168,7 +168,7 @@ export default function Page() {
     const imei = currentPort.port.imei;
     currentPort.port.oneditsuccess = () => {
       toast("Save Success", { type: "success" });
-      router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
+      router.push(`/configuration/geofence`);
     };
 
     const isPolygonSpeedLimitDisabled =
@@ -305,11 +305,7 @@ export default function Page() {
           <Button
             variant="outlined"
             color="secondary"
-            onClick={() =>
-              router.push(
-                `/configuration/geofence?imei=${currentPort.port.imei}`
-              )
-            }
+            onClick={() => router.push(`/configuration/geofence`)}
           >
             Cancel
           </Button>

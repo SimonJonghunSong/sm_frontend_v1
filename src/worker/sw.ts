@@ -25,8 +25,6 @@ const serwist = new Serwist({
   precacheOptions: {
     cleanupOutdatedCaches: true,
     concurrency: 20,
-    // Ignore all URL parameters.
-    ignoreURLParametersMatching: [/.*/],
   },
   skipWaiting: true, // 서비스 워커가 설치되자마자 바로 활성화될지 여부를 설정
   clientsClaim: true, // 서비스 워커가 모든 열려 있는 웹 페이지에 바로 적용될지 여부를 설정

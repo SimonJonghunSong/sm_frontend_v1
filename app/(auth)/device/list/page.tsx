@@ -13,6 +13,7 @@ import { AT_EDIT_PREFIX, AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
 import { toast, ToastContainer } from "react-toastify";
 import FullLoading from "@/components/FullLoading";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 const modalColumns: GridColDef[] = [
   {
@@ -49,6 +50,7 @@ export default function DeviceList() {
     state: { portList, connectingPortCount },
     func: { requestPort, forget, write, close },
   } = useSerial();
+  const { setImei } = useSerialConfigurationStore();
 
   const { setPackageFetchingStart } = useSerialStore();
 
@@ -124,13 +126,6 @@ export default function DeviceList() {
               onClick={(e) => {
                 e.stopPropagation();
                 forget(params.value.port.port);
-                // close({
-                //   port: params.value.port.port,
-                //   writer: params.value.port.writer,
-                //   reader: params.value.port.reader,
-                //   writableStreamClosed: params.value.port.writableStreamClosed,
-                //   readableStreamClosed: params.value.port.readableStreamClosed,
-                // });
               }}
             >
               Connect
@@ -199,8 +194,9 @@ export default function DeviceList() {
                 sx={{ width: "120px" }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  setImei(params.value.port.port.imei);
                   router.push(
-                    `/configuration?imei=${params.value.port.port.imei}`
+                    `/configuration` // 수정 부분 1014
                   );
                 }}
               >

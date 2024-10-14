@@ -15,6 +15,7 @@ import {
 import React, {
   Dispatch,
   SetStateAction,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -26,7 +27,7 @@ import { GridColDef, GridRowParams } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   AT_EDIT_PREFIX,
   AT_GET_CIRCULAR_GEOFENCE_255_LIST,
@@ -49,7 +50,8 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import { parseLatLngRadius, parseResponseToPolygonData } from "./utils";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
-import Link from "next/link";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import { GeoContext } from "./layout";
 
 const columns: GridColDef[] = [
   {
@@ -115,8 +117,10 @@ const center = {
 };
 
 export default function Page() {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const { getCurrentImei } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
+  const { setGrpId } = useContext(GeoContext);
   const [fetchedPolygonData, setFetchedPolygonData] = useState<PolygonType>();
   const [fetcheCircleData, setFetchedCircleData] = useState<CircleType>();
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
@@ -132,13 +136,11 @@ export default function Page() {
     func: { write },
   } = useSerial();
 
-  const currentPort = portList.find(
-    ({ port }) => port.imei === searchParams.get("imei")
-  );
+  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const { formData } = useTransformedConfigData({
-    data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
-      .packageToJson.synctrak,
+    data: portList.find(({ port }) => port.imei === imei).packageToJson
+      .synctrak,
     blacklist: ["info"],
   });
 
@@ -170,15 +172,12 @@ export default function Page() {
         edit: {
           id: groupId,
           onEdit: () => {
-            const imei = currentPort.port.imei;
             if (type === "polygon") {
-              router.push(
-                `/configuration/geofence/edit/polygon?imei=${imei}&grpId=${groupId}`
-              );
+              setGrpId(groupId);
+              router.push(`/configuration/geofence/edit/polygon`);
             } else {
-              router.push(
-                `/configuration/geofence/edit/circular?imei=${imei}&grpId=${groupId}`
-              );
+              setGrpId(groupId);
+              router.push(`/configuration/geofence/edit/circular`);
             }
           },
         },
@@ -351,10 +350,8 @@ export default function Page() {
     };
 
     (async () => {
-      for (const command of AT_GET_POLYGON_GEOFENCE_LIST(
-        searchParams.get("imei")
-      )) {
-        await delayPromise(200); // 300ms 지연
+      for (const command of AT_GET_POLYGON_GEOFENCE_LIST(imei)) {
+        await delayPromise(60); // 60ms 지연
 
         write({
           data: command,
@@ -374,14 +371,15 @@ export default function Page() {
     currentPort.port.onaftercirculargeofence = () => {
       currentPort.port.iscircularfetching = false;
       setIsFullLoading(false);
+      setIsCircularFetchReady(false);
       currentPort.port.circulargeofence = "";
     };
 
     (async () => {
       for (const command of circularGeofenceMax === "255"
-        ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(searchParams.get("imei"))
-        : AT_GET_CIRCULAR_GEOFENCE_999_LIST(searchParams.get("imei"))) {
-        await delayPromise(200); // 10ms 지연
+        ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
+        : AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)) {
+        await delayPromise(60); // 60ms 지연
 
         write({
           data: command,
@@ -444,9 +442,7 @@ export default function Page() {
                 variant="contained"
                 color="secondary"
                 onClick={() => {
-                  router.push(
-                    `/configuration/geofence/add?imei=${currentPort.port.imei}`
-                  );
+                  router.push(`/configuration/geofence/add`);
                 }}
               >
                 Add

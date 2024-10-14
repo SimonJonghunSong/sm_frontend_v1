@@ -1,6 +1,5 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import useSerial from "@/src/hooks/useSerial";
@@ -8,16 +7,17 @@ import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
-import { configurationPageContext } from "./layout";
 import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 export default function page() {
-  const searchParams = useSearchParams();
+  const { getCurrentImei, getTab } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
+  const tab = getTab();
   const { setJsonPackageOfSerialPortForUpdate } = useSerialStore();
   const [isFullLoading, setIsFullLoading] = useState(false);
-  const { tab } = useContext(configurationPageContext);
 
   // data
   const {
@@ -25,14 +25,12 @@ export default function page() {
     func: { write },
   } = useSerial();
 
-  const currentPort = portList.find(
-    ({ port }) => port.imei === searchParams.get("imei")
-  );
+  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const { originData, formData, getFormFields, resetData, getEditDataForPage } =
     useTransformedConfigData({
-      data: portList.find(({ port }) => port.imei === searchParams.get("imei"))
-        .packageToJson.synctrak,
+      data: portList.find(({ port }) => port.imei === imei).packageToJson
+        .synctrak,
       blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
     });
 
@@ -46,8 +44,6 @@ export default function page() {
   );
 
   const handleSaveSettings = () => {
-    const imei = searchParams.get("imei");
-
     currentPort.port.onprev = () => {
       resetData();
     };

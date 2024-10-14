@@ -12,7 +12,6 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Modal from "@/components/Modal";
@@ -25,13 +24,14 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 const DELAY_MS = 100;
 
 export default function Controller() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [modelName, setModelName] = useState<string>(searchParams.get("imei"));
+  const { getCurrentImei, setImei, resetTab } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
+  const [modelName, setModelName] = useState<string>(imei);
   const [path, setPath] = useState<File>();
   const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
   const [showUploadChanges, setShowUploadChanges] = useState<boolean>(false);
@@ -43,9 +43,7 @@ export default function Controller() {
     func: { close, write },
   } = useSerial();
   const { setPackageFetchingStart } = useSerialStore();
-  const currentPort = portList.find(
-    ({ port }) => port.imei === searchParams.get("imei")
-  );
+  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const {
     state: { isDownloading, percentage },
@@ -53,7 +51,7 @@ export default function Controller() {
   } = useProfile({
     port: currentPort.port,
     writer: currentPort.writer,
-    imei: searchParams.get("imei"),
+    imei,
     writeSerial: write,
   });
 
@@ -63,8 +61,9 @@ export default function Controller() {
   const [uploadModal, uploadModalToggle] = useModal();
 
   const handleChange = (event: SelectChangeEvent) => {
+    setImei(event.target.value);
+    resetTab();
     setModelName(event.target.value);
-    router.push(`/configuration?imei=${event.target.value}`);
   };
   const handleApply = () => {
     applyModalToggle();

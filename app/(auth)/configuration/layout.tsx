@@ -1,43 +1,22 @@
 "use client";
 
-import {
-  createContext,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect } from "react";
 import { ToastContainer } from "react-toastify";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
-import {
-  redirect,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import { tabNameToHref } from "./components/FieldRenderer";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import useSerial from "@/src/hooks/useSerial";
 import SideMenu from "@/components/sidemenu/SideMenu";
 import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 // 탭 형식 레이아웃
-interface IConfigurationPageContext {
-  tab: string;
-  setTab: Dispatch<SetStateAction<string>>;
-}
-
-export const configurationPageContext =
-  createContext<IConfigurationPageContext>({
-    tab: "",
-    setTab: () => {},
-  });
 
 const ConfigurationLayout = ({ children }) => {
-  // util
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const router = useRouter();
-  const imei = searchParams.get("imei");
+  const { getCurrentImei, getTab, setTab } = useSerialConfigurationStore();
+  const pathname = usePathname();
+  const imei = getCurrentImei();
+  const tab = getTab();
 
   // data
   const {
@@ -47,7 +26,7 @@ const ConfigurationLayout = ({ children }) => {
   if (!portList?.length) {
     redirect("/404");
   } else if (
-    !searchParams.get("imei") ||
+    !imei ||
     !portList.find(({ port }) => port.imei === imei).packageToJson
   ) {
     redirect("/device");
@@ -60,34 +39,33 @@ const ConfigurationLayout = ({ children }) => {
   });
 
   // state
-  const defaultTabName = searchParams.get("tab") || formData[0].tabName;
-  const [tab, setTab] = useState(
-    pathname !== "/configuration" ? "" : defaultTabName
-  );
+  const defaultTabName = tab || formData[0].tabName;
 
   // event
   const handleTabClick = (name: string) => {
     if (pathname !== "/configuration") {
-      router.push(`/configuration?imei=${imei}`);
     } else if (name === "Geofence") {
-      router.replace(`/configuration/geofence?imei=${imei}`);
+      setTab("geofence");
+      router.push("/configuration/geofence");
     } else {
-      router.replace(`/configuration?tab=${name}&imei=${imei}`);
+      setTab(name);
     }
-
-    setTab(name);
   };
 
   useEffect(() => {
     if (pathname !== "/configuration") {
-      setTab("");
+      setTab(null);
     } else {
       setTab(defaultTabName);
     }
   }, [pathname]);
 
+  useEffect(() => {
+    setTab(defaultTabName);
+  }, [imei]);
+
   return (
-    <configurationPageContext.Provider value={{ tab, setTab }}>
+    <>
       <div className="pageWrap">
         <SideMenu
           queries={{ imei }}
@@ -103,22 +81,23 @@ const ConfigurationLayout = ({ children }) => {
 
               return {
                 name: key,
-                href: `/configuration/${tabNameToHref(key)}`,
                 isActive: tab === key,
+                href: "/configuration",
                 onClick: handleTabClick,
               };
             }),
             {
               name: "Geofence",
-              href: `/configuration/geofence?imei=${imei}`,
-              isActive: pathname.includes("/configuration/geofence"),
+              href: "/configuration",
+              isActive: tab === "geofence",
+              onClick: handleTabClick,
             },
           ]}
         />
         {children}
       </div>
       <ToastContainer />
-    </configurationPageContext.Provider>
+    </>
   );
 };
 

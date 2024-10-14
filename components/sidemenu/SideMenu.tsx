@@ -79,11 +79,7 @@ export default function SideMenu({
             return (
               <li
                 key={link.name}
-                className={
-                  pathname.startsWith(link.href) || link?.isActive
-                    ? styles.active
-                    : undefined
-                }
+                className={link?.isActive ? styles.active : undefined}
               >
                 {link?.onClick ? (
                   <button type="button" onClick={() => link.onClick(link.name)}>

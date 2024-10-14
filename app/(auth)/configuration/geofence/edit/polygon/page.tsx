@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import {
   Box,
@@ -30,20 +30,23 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import { parseResponseToPolygonData } from "../../utils";
 import FullLoading from "@/components/FullLoading";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import { GeoContext } from "../../layout";
 
 export default function Page() {
   const router = useRouter();
   const mapManager = useMapManager();
-  const searchParams = useSearchParams();
+  const { getCurrentImei } = useSerialConfigurationStore();
   const {
     state: { portList },
     func: { write },
   } = useSerial();
+  const { grpId } = useContext(GeoContext);
   const [isFullLoading, setIsFullLoading] = useState(false);
   const polygonPointRef = useRef("");
   const mapRef = useRef<google.maps.Map>(null);
-  const currentGrpId = searchParams.get("grpId");
-  const currentImei = searchParams.get("imei");
+  const currentGrpId = grpId;
+  const currentImei = getCurrentImei();
   const currentPort = portList.find(({ port }) => port.imei === currentImei);
 
   const polygonList = currentPort.polygonGeofenceData;
@@ -76,7 +79,7 @@ export default function Page() {
     const imei = currentPort.port.imei;
     currentPort.port.oneditsuccess = () => {
       toast("Save Success", { type: "success" });
-      router.push(`/configuration/geofence?imei=${currentPort.port.imei}`);
+      router.push(`/configuration/geofence`);
     };
 
     const isPolygonSpeedLimitDisabled =
@@ -92,6 +95,12 @@ export default function Page() {
       writer: currentPort.writer,
     });
   };
+
+  useEffect(() => {
+    if (!grpId) {
+      router.push(`/configuration/geofence`);
+    }
+  }, []);
 
   useEffect(() => {
     setIsFullLoading(true);
@@ -227,11 +236,7 @@ export default function Page() {
           <Button
             variant="outlined"
             color="secondary"
-            onClick={() =>
-              router.push(
-                `/configuration/geofence?imei=${currentPort.port.imei}`
-              )
-            }
+            onClick={() => router.push(`/configuration/geofence`)}
           >
             Cancel
           </Button>
