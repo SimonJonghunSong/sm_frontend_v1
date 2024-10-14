@@ -12,6 +12,8 @@ const additionalPrecachePageList = [
   "/configuration/geofence/edit/circular",
   "/configuration/geofence/edit/polygon",
 
+  "/cmd",
+
   "/device",
   "/device/list",
 
