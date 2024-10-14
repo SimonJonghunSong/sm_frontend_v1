@@ -44,6 +44,8 @@ const ConfigurationLayout = ({ children }) => {
   // event
   const handleTabClick = (name: string) => {
     if (pathname !== "/configuration") {
+      setTab(name);
+      router.push("/configuration");
     } else if (name === "Geofence") {
       setTab("geofence");
       router.push("/configuration/geofence");
@@ -54,7 +56,7 @@ const ConfigurationLayout = ({ children }) => {
 
   useEffect(() => {
     if (pathname !== "/configuration") {
-      setTab(null);
+      setTab("geofence");
     } else {
       setTab(defaultTabName);
     }
