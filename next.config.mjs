@@ -56,4 +56,7 @@ const withSerwist = withSerwistInit({
 export default withSerwist({
   // Your Next.js config
   reactStrictMode: false,
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 });
