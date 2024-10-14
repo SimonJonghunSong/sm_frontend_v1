@@ -50,7 +50,7 @@ export default function DeviceList() {
     state: { portList, connectingPortCount },
     func: { requestPort, forget, write, close },
   } = useSerial();
-  const { setImei } = useSerialConfigurationStore();
+  const { setImei, resetTab } = useSerialConfigurationStore();
 
   const { setPackageFetchingStart } = useSerialStore();
 
@@ -195,6 +195,7 @@ export default function DeviceList() {
                 onClick={(e) => {
                   e.stopPropagation();
                   setImei(params.value.port.port.imei);
+                  resetTab();
                   router.push(
                     `/configuration` // 수정 부분 1014
                   );
