@@ -34,7 +34,7 @@ const updateIndexedDB = async (
 ) => {
   if (isEndOfMessage(value)) {
     await addReadLog(imei, (ref.current.get(imei) || "") + value);
-    broadcastChannel.postMessage("updated");
+    broadcastChannel.postMessage({ status: "updated", imei });
     ref.current.set(imei, undefined);
   } else {
     ref.current.set(imei, (ref.current.get(imei) || "") + value);
@@ -429,15 +429,13 @@ const useSerial = () => {
             );
             port.polygonhandler(value);
           } else if (port.iscircularpointfetching) {
-            if (value.includes(CR)) {
-              await addReadLog(port.imei, indexeddbRef.current.get(port.imei));
-              indexeddbRef.current.set(port.imei, undefined);
-            } else {
-              indexeddbRef.current.set(
-                port.imei,
-                indexeddbRef.current.get(port.imei) + value
-              );
-            }
+            await updateIndexedDB(
+              port.imei,
+              value,
+              indexeddbRef,
+              broadcastChannel
+            );
+
             port.circlehandler(value);
           } else if (port.iscircleoutputactivefetching) {
             await updateIndexedDB(

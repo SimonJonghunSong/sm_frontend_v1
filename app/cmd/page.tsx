@@ -2,9 +2,9 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
-import { getLogsByIMEI } from "@/utils/idbLogUtil";
+import { clearLogs, getLogsByIMEI } from "@/utils/idbLogUtil";
 import useSerialStore from "@/src/stores/useSerialStore";
-import { OpenInFull } from "@mui/icons-material";
+import { Button } from "@mui/material";
 
 const Cmd = () => {
   const [selectedImei, setSelectedImei] = useState<string>();
@@ -26,7 +26,7 @@ const Cmd = () => {
 
   useEffect(() => {
     broadcastChannel.onmessage = ({ data }) => {
-      if (data.status === "updated") {
+      if (data.status === "updated" && selectedImei === data.imei) {
         get(data.imei);
       }
     };
@@ -52,11 +52,21 @@ const Cmd = () => {
           <option disabled hidden selected>
             Select Device by IMEI
           </option>
-          <option value={"0000000000"}>0000000000</option>
           {portList.map(({ port }) => {
             return <option value={port.imei}>{port.imei}</option>;
           })}
         </select>
+        <Button
+          disabled={!selectedImei}
+          onClick={() => {
+            if (selectedImei) {
+              clearLogs();
+              setLog([]);
+            }
+          }}
+        >
+          clear log
+        </Button>
       </header>
       <div ref={consoleRef} className={styles.consoleWrap}>
         <div>

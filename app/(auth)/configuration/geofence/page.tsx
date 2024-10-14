@@ -381,7 +381,7 @@ export default function Page() {
       for (const command of circularGeofenceMax === "255"
         ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(searchParams.get("imei"))
         : AT_GET_CIRCULAR_GEOFENCE_999_LIST(searchParams.get("imei"))) {
-        await delayPromise(10); // 10ms 지연
+        await delayPromise(200); // 10ms 지연
 
         write({
           data: command,
