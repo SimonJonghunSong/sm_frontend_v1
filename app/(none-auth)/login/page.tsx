@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import styles from "../styles.module.scss";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
 import Link from "next/link";
@@ -20,19 +21,19 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore, { UserRole } from "../../../utils/useAuthStore";
 import Alert from "../../../components/Alert";
+import { login } from "@/src/api/services/auth";
+import httpInstance from "@/src/api/axiosConfig";
 
 export default function page() {
   const router = useRouter();
 
+  const { setUserId, setUserRole } = useAuthStore();
+  const [inputId, setInputId] = useState<string>("");
+  const [selectedCountry, setSelectedCountry] = useState<string>("");
+  const [inputPassword, setInputPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const {setUserId, setUserRole} = useAuthStore();
-
-  const [inputId, setInputId] = useState<string>("");
-  const [inputPassword, setInputPassword] = useState<string>("");
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
 
   const handleMouseDownPassword = (
     event: React.MouseEvent<HTMLButtonElement>
@@ -40,19 +41,29 @@ export default function page() {
     event.preventDefault();
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (loginValidator({ id: inputId, password: inputPassword })) {
-      // 전역 변수에 저장
-      router.push("/");
-    } else {
-      Alert({title: "Error", text: `Invalid country or ID or password.\nPlease try again.`});
+    try {
+      await httpInstance.post(`/api/v1/auth/login`, {
+        country: selectedCountry,
+        user_id: inputId,
+        password: inputPassword,
+      });
+    } catch (error) {
+      console.log(error, "error");
     }
-  };
-  
 
-  // TODO: 임시 계정
+    // if (loginValidator({ id: inputId, password: inputPassword })) {
+    // 전역 변수에 저장
+    // router.push("/");
+    // } else {
+    //   Alert({
+    //     title: "Error",
+    //     text: `Invalid country or ID or password.\nPlease try again.`,
+    //   });
+    // }
+  };
+
   const accounts: {
     id: string;
     password: string;
@@ -64,32 +75,29 @@ export default function page() {
     { id: "guest1", password: "1234", role: "GUEST" },
   ];
 
-  const loginValidator = ({ id, password }) => {
-    const checkId = accounts.some((item) => item.id === id);
+  // const loginValidator = ({ id, password }) => {
+  //   const checkId = accounts.some((item) => item.id === id);
+  //   const matchIndex = accounts.findIndex((item) => item.id === id);
 
-    const matchIndex = accounts.findIndex((item) => item.id === id);
-    
-    // const checkPassword = 
-    if (checkId) {
-      if (accounts[matchIndex].password === password) {
-        // 아이디, 비밀번호 일치
-        console.log("아이디 및 비밀번호가 일치합니다.")
-        
-        console.log("accounts[matchIndex].role")
-        console.log(accounts[matchIndex].role);
-        console.log("id")
-        console.log(id);
-        
-        
-        setUserId(id);
-        setUserRole(accounts[matchIndex].role);
-        return true;
-      }
+  //   // const checkPassword =
+  //   if (checkId) {
+  //     if (accounts[matchIndex].password === password) {
+  //       // 아이디, 비밀번호 일치
+  //       console.log("아이디 및 비밀번호가 일치합니다.");
 
-    } else {
-      return false;
-    }
-  };
+  //       console.log("accounts[matchIndex].role");
+  //       console.log(accounts[matchIndex].role);
+  //       console.log("id");
+  //       console.log(id);
+
+  //       setUserId(id);
+  //       setUserRole(accounts[matchIndex].role);
+  //       return true;
+  //     }
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   return (
     <>
@@ -192,8 +200,21 @@ export default function page() {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ background: "var(--primary-gradient)", mt: 2, opacity: selectedCountry.length === 0 || inputId.length === 0 || inputPassword.length === 0 ? "0.5" : undefined }}
-            disabled={selectedCountry.length === 0 || inputId.length === 0 || inputPassword.length === 0}
+            sx={{
+              background: "var(--primary-gradient)",
+              mt: 2,
+              opacity:
+                selectedCountry.length === 0 ||
+                inputId.length === 0 ||
+                inputPassword.length === 0
+                  ? "0.5"
+                  : undefined,
+            }}
+            disabled={
+              selectedCountry.length === 0 ||
+              inputId.length === 0 ||
+              inputPassword.length === 0
+            }
           >
             Login
           </Button>

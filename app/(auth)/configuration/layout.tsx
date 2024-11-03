@@ -6,7 +6,6 @@ import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import useSerial from "@/src/hooks/useSerial";
 import SideMenu from "@/components/sidemenu/SideMenu";
-import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 // 탭 형식 레이아웃

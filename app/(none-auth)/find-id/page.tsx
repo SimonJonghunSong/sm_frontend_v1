@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
 import InputBox from "../../../components/inputbox/InputBox";

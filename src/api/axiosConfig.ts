@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const httpInstance = axios.create({
-  // TODO - baseUrl 설정
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -10,8 +10,7 @@ const httpInstance = axios.create({
 
 httpInstance.interceptors.request.use(
   (config) => {
-    // TODO 임시 토큰 처리
-    const token = localStorage.getItem("toekn");
+    const token = localStorage.getItem("token");
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   },

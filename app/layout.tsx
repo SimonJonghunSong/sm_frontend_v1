@@ -7,6 +7,9 @@ import { ThemeProvider } from "@mui/material";
 import theme from "../src/theme";
 import Hydration from "../utils/hydration";
 import { Metadata } from "next/types";
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
 
 /**적용하고자 하는 font*/
 const notoSans = Noto_Sans({
@@ -53,6 +56,8 @@ export const metadata: Metadata = {
   },
 };
 
+const client = new QueryClient();
+
 export default function RootLayout({
   children,
 }: {
@@ -64,12 +69,12 @@ export default function RootLayout({
         className={notoSans.className}
         style={{ backgroundColor: "#F3F3F3" }}
       >
-        <Hydration />
-        <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <>{children}</>
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+        <ReactQueryProvider>
+          <Hydration />
+          <AppRouterCacheProvider>
+            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          </AppRouterCacheProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
