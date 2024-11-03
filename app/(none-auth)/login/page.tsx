@@ -22,10 +22,17 @@ import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore, { UserRole } from "../../../utils/useAuthStore";
 import Alert from "../../../components/Alert";
 import { login } from "@/src/api/services/auth";
-import httpInstance from "@/src/api/axiosConfig";
 
 export default function page() {
   const router = useRouter();
+  const { mutate } = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      // TODO localStorage.set("token", token)
+      console.log();
+    },
+    onError: (err) => console.log("login Error", err, "login Error"),
+  });
 
   const { setUserId, setUserRole } = useAuthStore();
   const [inputId, setInputId] = useState<string>("");
@@ -41,17 +48,14 @@ export default function page() {
     event.preventDefault();
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      await httpInstance.post(`/api/v1/auth/login`, {
-        country: selectedCountry,
-        user_id: inputId,
-        password: inputPassword,
-      });
-    } catch (error) {
-      console.log(error, "error");
-    }
+
+    mutate({
+      user_id: inputId,
+      country: selectedCountry,
+      password: inputPassword,
+    });
 
     // if (loginValidator({ id: inputId, password: inputPassword })) {
     // 전역 변수에 저장
