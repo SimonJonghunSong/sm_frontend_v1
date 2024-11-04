@@ -413,7 +413,7 @@ function EditServerModal({
           <InputBox.Body>
             <TextField
               fullWidth
-              value={inputport}
+              value={inputPort}
               onChange={(e) => handleChange(e, setPort)}
             />
           </InputBox.Body>
