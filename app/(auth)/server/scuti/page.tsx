@@ -45,7 +45,7 @@ export default function Server() {
   const { mutate } = useMutation({
     mutationFn: deleteScutiServer,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
+      queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
       toast("Successfully deleted!", {
         type: "success",
         position: "top-center",

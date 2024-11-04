@@ -21,8 +21,6 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
-import { toast } from "react-toastify";
-import { AxiosError } from "axios";
 
 export default function page() {
   const router = useRouter();

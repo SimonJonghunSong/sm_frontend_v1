@@ -3,14 +3,7 @@
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
-import {
-  Button,
-  IconButton,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useReducer, useState } from "react";
 import DataTable from "../../../../components/dataTable";
@@ -139,6 +132,8 @@ export default function Server() {
   const handleDeleteRows = () => {
     mutate(selectedRows);
   };
+
+  if (isPending) return <></>;
 
   return (
     <div className="pageWrap">
@@ -383,9 +378,6 @@ function EditServerModal({
               defaultCountry={countryState.toLowerCase()}
               setCountryData={(data) => setCountryState(data as string)}
             />
-            {/* <Select value={"usa"} sx={{ width: "100%" }}>
-              <MenuItem value={"usa"}>USA</MenuItem>
-            </Select> */}
           </InputBox.Body>
         </InputBox>
 
