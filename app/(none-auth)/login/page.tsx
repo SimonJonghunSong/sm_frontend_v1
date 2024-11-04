@@ -32,7 +32,7 @@ export default function page() {
       setRefreshToken(response.data.paramter.refreshToken);
       setUserRole(response.data.paramter.role);
       setUserId(response.data.paramter.email);
-      router.push("/");
+      router.replace("/");
     },
   });
 
