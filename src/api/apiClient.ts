@@ -8,8 +8,10 @@ import httpInstance from "./axiosConfig";
  * @type ParamsType => Params Type
  * @returns
  */
-const get = <T, ParamsType>(url: string, params?: ParamsType) =>
-  httpInstance.get<T, AxiosResponse<T>>(url, { params });
+const get = <T, ParamsType extends {} = {}>(
+  url: string,
+  params?: ParamsType | void
+) => httpInstance.get<T, AxiosResponse<T>>(url, { params });
 /**
  *
  * @param url
@@ -40,6 +42,7 @@ const put = <T, RequestDataType>(url: string, data?: RequestDataType) =>
  * @type RequestDataTypes => Reqeust Data Type
  * @returns
  */
-const del = <T>(url: string) => httpInstance.delete<T, AxiosResponse<T>>(url);
+const del = <T, RequestDataType>(url: string, data?: RequestDataType) =>
+  httpInstance.delete<T, AxiosResponse<T>>(url, { data });
 
 export { get, post, put, del };

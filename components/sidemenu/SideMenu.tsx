@@ -11,6 +11,7 @@ import SyncOutlinedIcon from "@mui/icons-material/SyncOutlined";
 import { Divider } from "@mui/material";
 import { SwitchSecondary } from "../switches";
 import useParameterStore from "../../utils/useParameterStore";
+import useAuthStore from "@/utils/useAuthStore";
 
 type sideMenuItem = {
   name: string;
@@ -33,6 +34,7 @@ export default function SideMenu({
 }: SideMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
 
   function handleLogout() {
     Confirm({
@@ -47,6 +49,9 @@ export default function SideMenu({
 
   const logout = () => {
     localStorage.clear();
+    setToken(undefined);
+    setUserId(undefined), setUserRole(undefined);
+    setRefreshToken(undefined);
     router.push("/login");
   };
 

@@ -93,19 +93,39 @@ interface MqttServerDeleteBody {
   port: string;
 }
 
-// Scuti 서버 관련 타입 (MQTT와 동일한 구조)
-interface ScutiServerBody {
-  country: string;
-  region: string;
-  ip: string;
-  port: string;
+// 사용자 역할 정보 타입
+interface RoleResponse {
+  _id: string;
   name: string;
-  description: string;
 }
 
-interface ScutiServerDeleteBody {
-  ip: string;
-  port: string;
+// TODO 사용자 프로필 타입 (미정)
+interface ProfileResponse {
+  model: string;
+  fw_ver: string;
+  file_name: string;
+  file_contents: string;
+}
+
+// 사용자 정보 타입
+interface UserResponse {
+  _id: string;
+  user_id: string;
+  email: string;
+  name: string;
+  affiliation: string;
+  alias: string;
+  cmd_list: string[];
+  country: string;
+  department: string;
+  nda_contract_path: string;
+  nda_contract_contents: string;
+  password: string;
+  reg_date: string;
+  role: RoleResponse;
+  tax_id: string;
+  profile: ProfileResponse[];
+  __v: number;
 }
 
 // 타입 정의 예시
@@ -146,15 +166,15 @@ type MqttEndpoints =
     }
   | { endpoint: "/api/v1/mqtt/servers"; method: "PUT"; body: MqttServerBody };
 
-type ScutiEndpoints =
-  | { endpoint: "/api/v1/scuti/servers"; method: "POST"; body: ScutiServerBody }
-  | { endpoint: "/api/v1/scuti/servers"; method: "GET"; params: URLType }
-  | {
-      endpoint: "/api/v1/scuti/servers";
-      method: "DELETE";
-      body: ScutiServerDeleteBody;
-    }
-  | { endpoint: "/api/v1/scuti/servers"; method: "PUT"; body: ScutiServerBody };
+// type ScutiEndpoints =
+//   | { endpoint: "/api/v1/scuti/servers"; method: "POST"; body: ScutiServerBody }
+//   | { endpoint: "/api/v1/scuti/servers"; method: "GET"; params: URLType }
+//   | {
+//       endpoint: "/api/v1/scuti/servers";
+//       method: "DELETE";
+//       body: ScutiServerDeleteBody;
+//     }
+//   | { endpoint: "/api/v1/scuti/servers"; method: "PUT"; body: ScutiServerBody };
 
 // 통합 API 엔드포인트 타입
-type APIEndpoints = AuthEndpoints | MqttEndpoints | ScutiEndpoints;
+type APIEndpoints = AuthEndpoints | MqttEndpoints;

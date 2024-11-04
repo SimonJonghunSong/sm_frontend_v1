@@ -1,19 +1,62 @@
 "use client";
 
 import { useState } from "react";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import {
+  QueryClientProvider,
+  QueryClient,
+  QueryCache,
+} from "@tanstack/react-query";
 import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { AxiosError } from "axios";
+import { useRouter } from "next/navigation";
+import useAuthStore from "@/utils/useAuthStore";
+import { toast } from "react-toastify";
 
 export default function ReactQueryProvider({
   children,
 }: React.PropsWithChildren) {
+  const router = useRouter();
+  const { setToken, setRefreshToken } = useAuthStore();
   const [client] = useState(
     new QueryClient({
+      queryCache: new QueryCache({
+        onError: (
+          error: AxiosError<{ response: { code: number; reason: string } }>
+        ) => {
+          // Unauthrized
+          if (error.status === 401) {
+            setToken(undefined);
+            setRefreshToken(undefined);
+            router.push("/login");
+          }
+          toast(error.response?.data?.response?.reason || "Error", {
+            type: "error",
+            position: "top-center",
+          });
+        },
+      }),
       defaultOptions: {
         queries: {
           refetchOnWindowFocus: false,
           refetchOnMount: false,
           retry: 1,
+        },
+        mutations: {
+          onError: (
+            error: AxiosError<{ response: { code: number; reason: string } }>
+          ) => {
+            // Unauthrized
+            if (error.status === 401) {
+              setToken(undefined);
+              setRefreshToken(undefined);
+              router.push("/login");
+            }
+
+            toast(error.response?.data?.response?.reason || "Error", {
+              type: "error",
+              position: "top-center",
+            });
+          },
         },
       },
     })

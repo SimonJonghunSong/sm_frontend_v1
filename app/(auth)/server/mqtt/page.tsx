@@ -5,16 +5,14 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 
 import {
   Button,
-  FormControl,
   IconButton,
   MenuItem,
   Select,
-  SelectChangeEvent,
   Stack,
   TextField,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { useReducer, useState } from "react";
 import DataTable from "../../../../components/dataTable";
 import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
@@ -22,8 +20,39 @@ import SelectCountry from "../../../../components/SelectCountry";
 import InputBox from "../../../../components/inputbox/InputBox";
 import useModal from "../../../../utils/useModal";
 import Modal from "../../../../components/Modal";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  addMqttServer,
+  getMqttServer,
+  modifyMqttServer,
+  deleteMqttServer,
+} from "@/src/api/services/mqtt";
+import { toast } from "react-toastify";
 
 export default function Server() {
+  const { data, error, isPending } = useQuery({
+    queryKey: ["mqtt-server"],
+    queryFn: getMqttServer,
+  });
+  const [selectedMqttServer, setSelectedMqttServer] = useState<{
+    col1: string;
+    col2: string;
+    col3: string;
+    col4: string;
+  }>();
+  const [selectedRows, setSelectedRows] = useState<string[]>();
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: deleteMqttServer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
+      toast("Successfully deleted!", {
+        type: "success",
+        position: "top-center",
+      });
+    },
+  });
+
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -59,10 +88,11 @@ export default function Server() {
       width: 80,
       headerAlign: "center",
       align: "center",
-      renderCell: () => (
+      renderCell: (event) => (
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
+            setSelectedMqttServer(event.row);
             editModalToggle();
           }}
         >
@@ -70,23 +100,6 @@ export default function Server() {
         </IconButton>
       ),
     },
-    // {
-    //   field: "col5",
-    //   headerName: "Edit",
-    //   width: 80,
-    //   headerAlign: "center",
-    //   align: "center",
-    //   renderCell: (params) => (
-    //     <IconButton
-    //       onClick={(e) => {
-    //         e.stopPropagation();
-    //         editModalToggle(params.id);
-    //       }}
-    //     >
-    //       <EditOutlinedIcon />
-    //     </IconButton>
-    //   ),
-    // },
     {
       field: "col6",
       headerName: "Delete",
@@ -97,7 +110,7 @@ export default function Server() {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            deleteRows(params.id);
+            mutate([params.row.id]);
           }}
         >
           <DeleteForeverOutlinedIcon />
@@ -106,98 +119,25 @@ export default function Server() {
     },
   ];
 
-  const rows = [
-    {
-      id: 0,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 1,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.35",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 2,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.36",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 3,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.37",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 4,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.38",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 5,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.39",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 6,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.40",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-    {
-      id: 7,
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.41",
-      col4: "1883",
-      col5: { id: "1" },
-      col6: { id: "1" },
-    },
-  ];
+  const rows = (data?.data.records || []).map(
+    ({ uid, country, region, ip, port }) => {
+      return {
+        id: uid,
+        col1: country,
+        col2: region,
+        col3: ip,
+        col4: port,
+        col5: { id: "1" },
+        col6: { id: "1" },
+      };
+    }
+  );
 
-  const [rowData, setRowData] = useState(rows);
   const [addModal, addModalToggle] = useModal();
-  // const [editModal, editModalToggle] = useModal();
   const [editModal, editModalToggle] = useModal();
 
-  // const editModalToggle = (id) => {
-  //   const editIndex = rowData.findIndex((item) => item.id == id);
-  //   const copyRows = [...rowData];
-
-  // }
-
-  const deleteRows = (id) => {
-    const deleteIndex = rowData.findIndex((item) => item.id === id);
-    const copyRows = [...rowData];
-    copyRows.splice(deleteIndex, 1);
-
-    setRowData(copyRows);
+  const handleDeleteRows = () => {
+    mutate(selectedRows);
   };
 
   return (
@@ -223,165 +163,271 @@ export default function Server() {
         </Stack>
 
         <DataTable
-          rows={rowData}
+          rows={error ? [] : rows}
           columns={columns}
+          onRowSelectionModelChange={(data) =>
+            setSelectedRows(data as string[])
+          }
           footerButton={
-            <Button variant="text" color="info">
+            <Button variant="text" color="info" onClick={handleDeleteRows}>
               Delete
             </Button>
           }
         />
       </article>
 
-      <Modal
-        open={addModal}
-        toggleOpen={addModalToggle}
-        title="Add MQTT Server"
-        confirm={() => {}}
-        confirmButtonText="Add"
-        width="400px"
-      >
-        <AddServerModal />
-      </Modal>
-
-      <Modal
-        open={editModal}
-        toggleOpen={editModalToggle}
-        title="Edit MQTT Server"
-        confirm={() => {}}
-        confirmButtonText="Save"
-        width="400px"
-      >
+      {addModal && <AddServerModal open onClose={addModalToggle} />}
+      {editModal && (
         <EditServerModal
-          region={"LA"}
-          serverIp={"231.232.22.34"}
-          port={"3000"}
+          country={selectedMqttServer.col1}
+          region={selectedMqttServer.col2}
+          serverIp={selectedMqttServer.col3}
+          port={selectedMqttServer.col4}
+          onClose={editModalToggle}
         />
-      </Modal>
-
-      {/* <Modal
-        open={editModal}
-        toggleOpen={editModalToggle}
-        title="Edit MQTT Server"
-        confirm={() => {}}
-        confirmButtonText="Save"
-        width="400px"
-      >
-        <EditServerModal
-          country = {1},
-          region={}
-          serverIp={"231.232.22.34"}
-          port={"3000"}
-        />
-      </Modal> */}
-
+      )}
     </div>
   );
 }
 
-function AddServerModal() {
+type State = {
+  country: string;
+  region: string;
+  serverIp: string;
+  port: string;
+};
+
+type Action =
+  | { type: "SET_COUNTRY"; payload: string }
+  | { type: "SET_REGION"; payload: string }
+  | { type: "SET_SERVER_IP"; payload: string }
+  | { type: "SET_PORT"; payload: string };
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "SET_COUNTRY":
+      return { ...state, country: action.payload };
+    case "SET_REGION":
+      return { ...state, region: action.payload };
+    case "SET_SERVER_IP":
+      return { ...state, serverIp: action.payload };
+    case "SET_PORT":
+      return { ...state, port: action.payload };
+    default:
+      return state;
+  }
+}
+
+function AddServerModal({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  const queryClient = useQueryClient();
+  const [state, dispatch] = useReducer(reducer, {
+    country: "",
+    region: "",
+    serverIp: "",
+    port: "",
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: addMqttServer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
+      toast("Successfully added!", {
+        type: "success",
+        position: "top-center",
+      });
+      onClose();
+    },
+  });
+
+  const setField = (type: Action["type"], value: string) =>
+    dispatch({ type, payload: value });
+
+  const handleAdd = () => {
+    mutate({
+      ...state,
+      country: state.country.toUpperCase(),
+      ip: state.serverIp,
+      name: "",
+      description: "",
+    });
+  };
+
   return (
-    <Stack>
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Country</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <SelectCountry />
-        </InputBox.Body>
-      </InputBox>
+    <Modal
+      open={open}
+      toggleOpen={onClose}
+      title="Add MQTT Server"
+      confirm={handleAdd}
+      confirmButtonText="Add"
+      width="400px"
+    >
+      <Stack>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Country</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <SelectCountry
+              setCountryData={(data) => setField("SET_COUNTRY", data as string)}
+            />
+          </InputBox.Body>
+        </InputBox>
 
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Region</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <TextField fullWidth />
-        </InputBox.Body>
-      </InputBox>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Region</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={state.region}
+              onChange={(e) => setField("SET_REGION", e.target.value)}
+            />
+          </InputBox.Body>
+        </InputBox>
 
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Server IP</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <TextField fullWidth />
-        </InputBox.Body>
-      </InputBox>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Server IP</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={state.serverIp}
+              onChange={(e) => setField("SET_SERVER_IP", e.target.value)}
+            />
+          </InputBox.Body>
+        </InputBox>
 
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Port</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <TextField fullWidth />
-        </InputBox.Body>
-      </InputBox>
-    </Stack>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Port</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={state.port}
+              onChange={(e) => setField("SET_PORT", e.target.value)}
+            />
+          </InputBox.Body>
+        </InputBox>
+      </Stack>
+    </Modal>
   );
 }
 
-function EditServerModal({ region, serverIp, port }) {
-  const [country, setCountry] = useState("USA");
-  const [inputregion, setRegion] = useState(region || "");
+function EditServerModal({
+  country,
+  region,
+  serverIp,
+  port,
+  onClose,
+}: {
+  country: string;
+  region: string;
+  serverIp: string;
+  port: string;
+  onClose: () => void;
+}) {
+  const queryClient = useQueryClient();
+  const { mutate } = useMutation({
+    mutationFn: modifyMqttServer,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
+      onClose();
+    },
+  });
+
+  const [countryState, setCountryState] = useState(country);
+  const [inputRegion, setRegion] = useState(region || "");
   const [inputServerIp, setServerIp] = useState(serverIp || "");
-  const [inputport, setPort] = useState(port || "");
+  const [inputPort, setPort] = useState(port || "");
 
   const handleChange = (e, setState) => {
     setState(e.target.value);
   };
 
+  const handleModify = () => {
+    mutate({
+      country: countryState,
+      region: inputRegion,
+      ip: inputServerIp,
+      port: inputPort,
+      name: "",
+      description: "",
+    });
+  };
+
   return (
-    <Stack>
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Country</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <Select value={"usa"} sx={{ width: "100%" }}>
-            <MenuItem value={"usa"}>USA</MenuItem>
-          </Select>
-        </InputBox.Body>
-      </InputBox>
+    <Modal
+      open
+      toggleOpen={onClose}
+      title="Edit MQTT Server"
+      confirm={handleModify}
+      confirmButtonText="Save"
+      width="400px"
+    >
+      <Stack>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Country</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <SelectCountry
+              defaultCountry={countryState.toLowerCase()}
+              setCountryData={(data) => setCountryState(data as string)}
+            />
+            {/* <Select value={"usa"} sx={{ width: "100%" }}>
+              <MenuItem value={"usa"}>USA</MenuItem>
+            </Select> */}
+          </InputBox.Body>
+        </InputBox>
 
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Region</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <TextField
-            fullWidth
-            value={inputregion}
-            onChange={(e) => handleChange(e, setRegion)}
-          />
-        </InputBox.Body>
-      </InputBox>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Region</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={inputRegion}
+              onChange={(e) => handleChange(e, setRegion)}
+            />
+          </InputBox.Body>
+        </InputBox>
 
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Server IP</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <TextField
-            fullWidth
-            value={inputServerIp}
-            onChange={(e) => handleChange(e, setServerIp)}
-          />
-        </InputBox.Body>
-      </InputBox>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Server IP</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={inputServerIp}
+              onChange={(e) => handleChange(e, setServerIp)}
+            />
+          </InputBox.Body>
+        </InputBox>
 
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>Port</InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <TextField
-            fullWidth
-            value={inputport}
-            onChange={(e) => handleChange(e, setPort)}
-          />
-        </InputBox.Body>
-      </InputBox>
-    </Stack>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>Port</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={inputPort}
+              onChange={(e) => handleChange(e, setPort)}
+            />
+          </InputBox.Body>
+        </InputBox>
+      </Stack>
+    </Modal>
   );
 }

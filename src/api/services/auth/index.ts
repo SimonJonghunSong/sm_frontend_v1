@@ -1,9 +1,5 @@
-import { post } from "../../apiClient";
-import { CommonResponse } from "../common/type";
-
-const signIn = (body: AuthRegisterBody) => {
-  return post<unknown, AuthRegisterBody>("/api/v1/auth/register", body);
-};
+import { get, post, put } from "../../apiClient";
+import { CommonGetResponse, CommonResponse } from "../common/type";
 
 const login = (body: AuthLoginBody) => {
   return post<
@@ -25,6 +21,24 @@ const findPassword = (body: AuthFindPassBody) => {
   return post("/api/v1/auth/find-pass", body);
 };
 
+const me = () => {
+  return get<CommonGetResponse<{ user: UserResponse }>>(
+    "/api/v1/auth/my/account"
+  );
+};
+
+const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
+  return put<
+    {
+      response: {
+        code: number;
+        reaseon: string;
+      };
+    },
+    AuthMyAccountUpdateBody
+  >("/api/v1/auth/my/account", body);
+};
+
 // { endpoint: "/api/v1/auth/find-id"; method: "POST"; body: AuthFindIdBody }
 // | {
 //     endpoint: "/api/v1/auth/find-pass";
@@ -32,4 +46,4 @@ const findPassword = (body: AuthFindPassBody) => {
 //     body: AuthFindPassBody;
 //   }
 
-export { signIn, login };
+export { login, findId, findPassword, me, modifyMyAccount };

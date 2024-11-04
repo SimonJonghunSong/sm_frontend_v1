@@ -1,24 +1,43 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
 import { useState } from "react";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
 import InputBox from "../../../components/inputbox/InputBox";
-import {
-  Button,
-  FormControl,
-  Stack,
-  TextField,
-  } from "@mui/material";
-import SelectCountry from '../../../components/SelectCountry';
+import { Button, FormControl, Stack, TextField } from "@mui/material";
+import SelectCountry from "../../../components/SelectCountry";
+import { findPassword } from "@/src/api/services/auth";
 
 export default function page() {
   const router = useRouter();
+  const [country, setCountry] = useState<string>();
+  const [email, setEmail] = useState<string>();
+
+  const { mutate } = useMutation({
+    mutationFn: findPassword,
+    onSuccess: () => {
+      router.push("/find-password/result");
+    },
+    onError: ({
+      response,
+    }: AxiosError<{ response: { code: number; reason: string } }>) => {
+      toast(response.data.response.reason, {
+        type: "error",
+        position: "top-center",
+      });
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push("/find-id/result");
+    mutate({
+      country,
+      email,
+    });
   };
 
   const handleClickLogin = () => {
@@ -32,7 +51,8 @@ export default function page() {
       </div>
       <div className="pageTitle">Forgot your Password?</div>
       <div className="description">
-        Please enter your registered email<br/>
+        Please enter your registered email
+        <br />
         address to reset your password
       </div>
 
@@ -44,7 +64,9 @@ export default function page() {
             </InputBox.Head>
             <InputBox.Body>
               <FormControl sx={{ width: "100%" }} size="small">
-                <SelectCountry />
+                <SelectCountry
+                  setCountryData={(country) => setCountry(country)}
+                />
               </FormControl>
             </InputBox.Body>
           </InputBox>
@@ -59,25 +81,26 @@ export default function page() {
                 variant="outlined"
                 size="small"
                 fullWidth
+                onChange={(e) => setEmail(e.target.value)}
               />
             </InputBox.Body>
           </InputBox>
           <Stack direction={"column"}>
             <Button
-                type="submit"
-                variant="contained"
-                fullWidth
-                sx={{ background: "var(--primary-gradient)", mt: 2 }}
-                >
-                Find ID
+              type="submit"
+              variant="contained"
+              fullWidth
+              sx={{ background: "var(--primary-gradient)", mt: 2 }}
+            >
+              Find Password
             </Button>
             <Button
-                variant="outlined"
-                fullWidth
-                sx={{ mt: 2 }}
-                onClick={handleClickLogin}
+              variant="outlined"
+              fullWidth
+              sx={{ mt: 2 }}
+              onClick={handleClickLogin}
             >
-                Login
+              Login
             </Button>
           </Stack>
         </form>

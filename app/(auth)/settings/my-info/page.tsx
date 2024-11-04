@@ -2,24 +2,36 @@
 
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-
-import {
-  Button,
-  IconButton,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import React, { useState } from "react";
 import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
-import useAuthStore from "../../../../utils/useAuthStore";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { me, modifyMyAccount } from "@/src/api/services/auth";
+import { toast } from "react-toastify";
 
 export default function Server() {
   const [showPassword, setShowPassword] = useState(false);
-  const {userId, userRole} = useAuthStore();
+  const [password, setPassword] = useState<string>();
+  const [confirmedPassword, setConfirmedPassword] = useState<string>();
+  const [department, setDepartment] = useState<string>();
+
+  const { data, isPending, error } = useQuery({
+    queryKey: ["me"],
+    queryFn: me,
+    select: (data) => {
+      return data.data.parameter.user;
+    },
+  });
+  const { mutate } = useMutation({
+    mutationFn: modifyMyAccount,
+    onSuccess: () => {
+      toast("Your information has been successfully updated.", {
+        type: "success",
+        position: "top-center",
+      });
+    },
+  });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -29,11 +41,26 @@ export default function Server() {
     event.preventDefault();
   };
 
-  const [affilication, setAffiliation] = useState<string>("");
+  const handleSave = () => {
+    if (password !== confirmedPassword) {
+      return toast(
+        "Password confirmation is incorrect. Please enter the same password.",
+        { type: "error", position: "top-center" }
+      );
+    }
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAffiliation(event.target.value);
+    mutate({
+      ...data,
+      password,
+      department,
+    });
   };
+
+  if (isPending) return <>...</>;
+
+  if (error) {
+    return <></>;
+  }
 
   return (
     <div className="pageWrap">
@@ -59,7 +86,7 @@ export default function Server() {
             borderBottom="1px solid var(--grey3)"
           >
             <div className="list-title">ID</div>
-            <div>{userId}</div>
+            <div>{data.user_id}</div>
           </Stack>
           <Stack
             direction="row"
@@ -69,7 +96,7 @@ export default function Server() {
             borderBottom="1px solid var(--grey3)"
           >
             <div className="list-title">E-mail</div>
-            <div>abc@abc.com</div>
+            <div>{data.email}</div>
           </Stack>
           <Stack
             direction="row"
@@ -87,6 +114,8 @@ export default function Server() {
                 size="small"
                 sx={{ width: 320 }}
                 type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -126,6 +155,8 @@ export default function Server() {
                 size="small"
                 sx={{ width: 320 }}
                 type={showPassword ? "text" : "password"}
+                value={confirmedPassword}
+                onChange={({ target }) => setConfirmedPassword(target.value)}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -157,7 +188,7 @@ export default function Server() {
             borderBottom="1px solid var(--grey3)"
           >
             <div className="list-title">Country</div>
-            <div>United States</div>
+            <div>{data.country}</div>
           </Stack>
           <Stack
             direction="row"
@@ -167,7 +198,7 @@ export default function Server() {
             borderBottom="1px solid var(--grey3)"
           >
             <div className="list-title">Role</div>
-            <div>{userRole}</div>
+            <div>{data.role.name.toUpperCase()}</div>
           </Stack>
           <Stack
             direction="row"
@@ -178,13 +209,15 @@ export default function Server() {
           >
             <div className="list-title">Affiliation</div>
             <div>
-              <Select
+              {/* TODO 기존 Select로 이루어짐
+               <Select
                 value={affilication}
                 onChange={handleChange}
                 sx={{ width: 320 }}
               >
-                <MenuItem value={"su"}>SU</MenuItem>
-              </Select>
+                <MenuItem value={"su"}>SU</MenuItem> 
+              </Select> */}
+              <div>{data.affiliation}</div>
             </div>
           </Stack>
           <Stack
@@ -196,7 +229,11 @@ export default function Server() {
           >
             <div className="list-title">Department</div>
             <div>
-              <TextField sx={{ width: 320 }} />
+              <TextField
+                sx={{ width: 320 }}
+                defaultValue={data.department}
+                onChange={(e) => setDepartment(e.target.value)}
+              />
             </div>
           </Stack>
         </Stack>
@@ -209,7 +246,12 @@ export default function Server() {
           <Button variant="outlined" color="secondary">
             Cancel
           </Button>
-          <Button variant="contained" color="secondary">
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={!password || !confirmedPassword}
+            onClick={handleSave}
+          >
             Save
           </Button>
         </Stack>

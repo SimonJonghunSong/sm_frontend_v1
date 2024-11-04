@@ -1,18 +1,43 @@
 "use client";
 
+import { useState } from "react";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
-import InputBox from "../../../components/inputbox/InputBox";
 import { Button, FormControl, Stack, TextField } from "@mui/material";
+import InputBox from "../../../components/inputbox/InputBox";
 import SelectCountry from "../../../components/SelectCountry";
+import { findId } from "@/src/api/services/auth";
 
 export default function page() {
   const router = useRouter();
+  const [country, setCountry] = useState<string>();
+  const [email, setEmail] = useState<string>();
+
+  const { mutate } = useMutation({
+    mutationFn: findId,
+    onSuccess: () => {
+      router.push("/find-id/result");
+    },
+    onError: ({
+      response,
+    }: AxiosError<{ response: { code: number; reason: string } }>) => {
+      toast(response.data.response.reason, {
+        type: "error",
+        position: "top-center",
+      });
+    },
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    router.push("/find-id/result");
+    mutate({
+      country,
+      email,
+    });
   };
 
   const handleClickLogin = () => {
@@ -39,7 +64,7 @@ export default function page() {
             </InputBox.Head>
             <InputBox.Body>
               <FormControl sx={{ width: "100%" }} size="small">
-                <SelectCountry />
+                <SelectCountry setCountryData={(data) => setCountry(data)} />
               </FormControl>
             </InputBox.Body>
           </InputBox>
@@ -54,6 +79,8 @@ export default function page() {
                 variant="outlined"
                 size="small"
                 fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </InputBox.Body>
           </InputBox>

@@ -26,22 +26,15 @@ import { AxiosError } from "axios";
 
 export default function page() {
   const router = useRouter();
-  const { setUserRole, setToken, setRefreshToken } = useAuthStore();
+  const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
       setToken(response.data.paramter.accessToken);
       setRefreshToken(response.data.paramter.refreshToken);
       setUserRole(response.data.paramter.role);
+      setUserId(response.data.paramter.email);
       router.push("/");
-    },
-    onError: ({
-      response,
-    }: AxiosError<{ response: { code: number; reason: string } }>) => {
-      toast(response.data.response.reason, {
-        type: "error",
-        position: "top-center",
-      });
     },
   });
 

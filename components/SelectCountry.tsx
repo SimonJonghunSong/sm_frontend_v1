@@ -9,10 +9,12 @@ const selectCountryData = [
 
 export default function SelectCountry({
   setCountryData,
+  defaultCountry,
 }: {
   setCountryData?: Dispatch<SetStateAction<string>>;
+  defaultCountry?: string;
 }) {
-  const [country, setCountry] = useState<string>("");
+  const [country, setCountry] = useState<string>(defaultCountry || "");
 
   const handleSelectChange = (
     e: SelectChangeEvent,
