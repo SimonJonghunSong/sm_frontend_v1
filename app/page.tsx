@@ -2,7 +2,6 @@
 
 import React, { useLayoutEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import useAuthStore from "../utils/useAuthStore";
 
 export default function Main() {

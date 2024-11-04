@@ -1,15 +1,16 @@
 import "../styles/variable.css";
 import "../styles/reset.css";
 import "../styles/global.css";
+import "react-toastify/dist/ReactToastify.css";
 import { Noto_Sans } from "next/font/google";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { ThemeProvider } from "@mui/material";
 import theme from "../src/theme";
 import Hydration from "../utils/hydration";
 import { Metadata } from "next/types";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
-import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experimental";
+import { QueryClient } from "@tanstack/react-query";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
+import { ToastContainer } from "react-toastify";
 
 /**적용하고자 하는 font*/
 const notoSans = Noto_Sans({
@@ -73,6 +74,7 @@ export default function RootLayout({
           <Hydration />
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>{children}</ThemeProvider>
+            <ToastContainer />
           </AppRouterCacheProvider>
         </ReactQueryProvider>
       </body>

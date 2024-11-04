@@ -19,22 +19,32 @@ import {
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
-import useAuthStore, { UserRole } from "../../../utils/useAuthStore";
-import Alert from "../../../components/Alert";
+import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
+import { toast } from "react-toastify";
+import { AxiosError } from "axios";
 
 export default function page() {
   const router = useRouter();
-  const { mutate } = useMutation({
+  const { setUserRole, setToken, setRefreshToken } = useAuthStore();
+  const { mutate, isPending } = useMutation({
     mutationFn: login,
-    onSuccess: () => {
-      // TODO localStorage.set("token", token)
-      console.log();
+    onSuccess: (response) => {
+      setToken(response.data.paramter.accessToken);
+      setRefreshToken(response.data.paramter.refreshToken);
+      setUserRole(response.data.paramter.role);
+      router.push("/");
     },
-    onError: (err) => console.log("login Error", err, "login Error"),
+    onError: ({
+      response,
+    }: AxiosError<{ response: { code: number; reason: string } }>) => {
+      toast(response.data.response.reason, {
+        type: "error",
+        position: "top-center",
+      });
+    },
   });
 
-  const { setUserId, setUserRole } = useAuthStore();
   const [inputId, setInputId] = useState<string>("");
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
@@ -50,58 +60,12 @@ export default function page() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     mutate({
       user_id: inputId,
       country: selectedCountry,
       password: inputPassword,
     });
-
-    // if (loginValidator({ id: inputId, password: inputPassword })) {
-    // 전역 변수에 저장
-    // router.push("/");
-    // } else {
-    //   Alert({
-    //     title: "Error",
-    //     text: `Invalid country or ID or password.\nPlease try again.`,
-    //   });
-    // }
   };
-
-  const accounts: {
-    id: string;
-    password: string;
-    role: UserRole;
-  }[] = [
-    { id: "root1", password: "1234", role: "ROOT" },
-    { id: "admin1", password: "1234", role: "ADMIN" },
-    { id: "customer1", password: "1234", role: "CUSTOMER" },
-    { id: "guest1", password: "1234", role: "GUEST" },
-  ];
-
-  // const loginValidator = ({ id, password }) => {
-  //   const checkId = accounts.some((item) => item.id === id);
-  //   const matchIndex = accounts.findIndex((item) => item.id === id);
-
-  //   // const checkPassword =
-  //   if (checkId) {
-  //     if (accounts[matchIndex].password === password) {
-  //       // 아이디, 비밀번호 일치
-  //       console.log("아이디 및 비밀번호가 일치합니다.");
-
-  //       console.log("accounts[matchIndex].role");
-  //       console.log(accounts[matchIndex].role);
-  //       console.log("id");
-  //       console.log(id);
-
-  //       setUserId(id);
-  //       setUserRole(accounts[matchIndex].role);
-  //       return true;
-  //     }
-  //   } else {
-  //     return false;
-  //   }
-  // };
 
   return (
     <>
@@ -145,8 +109,6 @@ export default function page() {
                 fullWidth
                 value={inputId}
                 onChange={(e) => setInputId(e.target.value)}
-                // error
-                // helperText="error!!"
               />
             </InputBox.Body>
           </InputBox>
@@ -217,7 +179,8 @@ export default function page() {
             disabled={
               selectedCountry.length === 0 ||
               inputId.length === 0 ||
-              inputPassword.length === 0
+              inputPassword.length === 0 ||
+              isPending
             }
           >
             Login

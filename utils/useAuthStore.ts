@@ -1,13 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export type UserRole = "ROOT" | "ADMIN" | "CUSTOMER" | "GUEST";
+export type UserRole = string;
 
 interface authState {
   userId: string;
   setUserId: (newUserId: string) => void;
   userRole: UserRole;
   setUserRole: (newUserRole: UserRole) => void;
+  token: string;
+  setToken: (newUserId: string) => void;
+  refreshToken: string;
+  setRefreshToken: (newUserId: string) => void;
 }
 
 const useAuthStore = create(
@@ -17,6 +21,10 @@ const useAuthStore = create(
       setUserId: (newUserId) => set({ userId: newUserId }),
       userRole: null,
       setUserRole: (newUserRole) => set({ userRole: newUserRole }),
+      token: null,
+      setToken: (token) => set({ token }),
+      refreshToken: null,
+      setRefreshToken: (refreshToken) => set({ refreshToken }),
     }),
     {
       name: "syncMasterAuthStore",

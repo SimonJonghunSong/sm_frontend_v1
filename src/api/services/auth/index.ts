@@ -1,11 +1,20 @@
 import { post } from "../../apiClient";
+import { CommonResponse } from "../common/type";
 
 const signIn = (body: AuthRegisterBody) => {
   return post<unknown, AuthRegisterBody>("/api/v1/auth/register", body);
 };
 
 const login = (body: AuthLoginBody) => {
-  return post("/api/v1/auth/login", body);
+  return post<
+    CommonResponse<{
+      accessToken: string;
+      email: string;
+      refreshToken: string;
+      role: string;
+    }>,
+    AuthLoginBody
+  >("/api/v1/auth/login", body);
 };
 
 const findId = (body: AuthFindIdBody) => {

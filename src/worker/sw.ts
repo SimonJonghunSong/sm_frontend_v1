@@ -38,26 +38,26 @@ const queue = new BackgroundSyncQueue("myQueueName");
 
 self.addEventListener("fetch", async (event) => {
   // POST || PUT Background Sync API
-  if (event.request.method === "POST" || event.request.method === "PUT") {
-    if (!isOnline) {
-      await queue.pushRequest({ request: event.request });
-      return Response.error();
-    }
+  // if (event.request.method === "POST" || event.request.method === "PUT") {
+  //   if (!isOnline) {
+  //     await queue.pushRequest({ request: event.request });
+  //     return Response.error();
+  //   }
 
-    const backgroundSync = async () => {
-      try {
-        const response = await fetch(event.request.clone());
-        return response;
-      } catch (error) {
-        await queue.pushRequest({ request: event.request });
-        return Response.error();
-      }
-    };
+  //   const backgroundSync = async () => {
+  //     try {
+  //       const response = await fetch(event.request.clone());
+  //       return response;
+  //     } catch (error) {
+  //       await queue.pushRequest({ request: event.request });
+  //       return Response.error();
+  //     }
+  //   };
 
-    event.respondWith(backgroundSync());
+  //   event.respondWith(backgroundSync());
 
-    return;
-  }
+  //   return;
+  // }
 
   if (!isOnline || !navigator.onLine) {
     // new CacheOnly()
