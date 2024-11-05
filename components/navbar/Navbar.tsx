@@ -129,148 +129,161 @@ export default function Navbar() {
   };
 
   return (
-    mounted && (
-      <nav className={styles.nav}>
-        <div className={styles.left}>
-          <Link href={"/"} className={styles.logo}>
-            <Image src={logo} alt="synctrack" />
+    <nav className={styles.nav}>
+      <div className={styles.left}>
+        <Link href={"/"} className={styles.logo}>
+          <Image src={logo} alt="synctrack" />
+          {mounted && (
             <div className={styles.role}>{`${replaceFirstLetterToUppercase(
               userRole
             )}`}</div>
-          </Link>
-          <ul className={styles.mainMenu}>
-            {navLinkes.map((link) => {
-              if (link.href) {
-                return (
-                  <li
-                    key={link.name}
-                    className={
-                      pathname.startsWith(link.href) ? styles.active : undefined
-                    }
-                  >
-                    <Link href={link.href}>
-                      <link.icon />
-                      <span>{link.name}</span>
-                    </Link>
-                  </li>
-                );
-              } else {
-                return (
-                  <li
-                    key={link.name}
-                    className={
-                      pathname.startsWith(link.href) ? styles.active : undefined
-                    }
-                  >
-                    <button
-                      onClick={() => {
-                        window.open(`${window.location.origin}/cmd`, "_blank");
-                      }}
+          )}
+        </Link>
+        <ul className={styles.mainMenu}>
+          {!mounted ? (
+            <></>
+          ) : (
+            <>
+              {navLinkes.map((link) => {
+                if (link.href) {
+                  return (
+                    <li
+                      key={link.name}
+                      className={
+                        pathname.startsWith(link.href)
+                          ? styles.active
+                          : undefined
+                      }
                     >
-                      <link.icon />
-                      <span>{link.name}</span>
-                    </button>
-                  </li>
-                );
-              }
-            })}
-          </ul>
-        </div>
+                      <Link href={link.href}>
+                        <link.icon />
+                        <span>{link.name}</span>
+                      </Link>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li
+                      key={link.name}
+                      className={
+                        pathname.startsWith(link.href)
+                          ? styles.active
+                          : undefined
+                      }
+                    >
+                      <button
+                        onClick={() => {
+                          window.open(
+                            `${window.location.origin}/cmd`,
+                            "_blank"
+                          );
+                        }}
+                      >
+                        <link.icon />
+                        <span>{link.name}</span>
+                      </button>
+                    </li>
+                  );
+                }
+              })}
+            </>
+          )}
+        </ul>
+      </div>
 
-        <div className={styles.right}>
-          <ul className={styles.subMenu}>
-            <li>
-              <button onClick={() => setNotificationModal(!notificationModal)}>
-                <NotificationsSharpIcon />
-              </button>
-            </li>
-            <li>
-              <Link href="/settings">
-                <SettingsSharpIcon />
-              </Link>
-            </li>
-            <li>
-              <Link href="/info">
-                <HelpSharpIcon />
-              </Link>
-            </li>
-            <li>
-              <Link href="/support">
-                <HeadsetMicIcon />
-              </Link>
-            </li>
-          </ul>
+      <div className={styles.right}>
+        <ul className={styles.subMenu}>
+          <li>
+            <button onClick={() => setNotificationModal(!notificationModal)}>
+              <NotificationsSharpIcon />
+            </button>
+          </li>
+          <li>
+            <Link href="/settings">
+              <SettingsSharpIcon />
+            </Link>
+          </li>
+          <li>
+            <Link href="/info">
+              <HelpSharpIcon />
+            </Link>
+          </li>
+          <li>
+            <Link href="/support">
+              <HeadsetMicIcon />
+            </Link>
+          </li>
+        </ul>
 
-          <TextField
-            variant="outlined"
-            size="small"
-            placeholder="Search..."
-            id="search"
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                paddingRight: 0,
-                color: "var(--grey5)",
-              },
-              backgroundColor: "var(--black)",
-            }}
-            InputProps={{
-              endAdornment: (
-                <IconButton type="submit">
-                  <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
-                </IconButton>
-              ),
-            }}
-            onClick={handleSearchClick}
-            inputProps={{ readOnly: true }}
-          />
+        <TextField
+          variant="outlined"
+          size="small"
+          placeholder="Search..."
+          id="search"
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              paddingRight: 0,
+              color: "var(--grey5)",
+            },
+            backgroundColor: "var(--black)",
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton type="submit">
+                <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+              </IconButton>
+            ),
+          }}
+          onClick={handleSearchClick}
+          inputProps={{ readOnly: true }}
+        />
 
+        <div
+          className={
+            isOnline
+              ? `${styles.toggle} ${styles.active}`
+              : `${styles.toggle} ${styles.offline}`
+          }
+        >
+          <div onClick={() => isOnline && handleToggleNetwork(false)}>
+            Offline
+          </div>
           <div
-            className={
-              isOnline
-                ? `${styles.toggle} ${styles.active}`
-                : `${styles.toggle} ${styles.offline}`
+            onClick={() =>
+              !isOnline && navigator.onLine && handleToggleNetwork(true)
             }
           >
-            <div onClick={() => isOnline && handleToggleNetwork(false)}>
-              Offline
-            </div>
-            <div
-              onClick={() =>
-                !isOnline && navigator.onLine && handleToggleNetwork(true)
-              }
-            >
-              Online
-            </div>
+            Online
           </div>
         </div>
+      </div>
 
-        <Modal
-          closeButton
-          open={cmdModal}
-          toggleOpen={cmdModalToggle}
-          confirm={() => {}}
-          confirmButtonText="Add"
-          width="1240px"
-        >
-          <CmdModal />
-        </Modal>
+      <Modal
+        closeButton
+        open={cmdModal}
+        toggleOpen={cmdModalToggle}
+        confirm={() => {}}
+        confirmButtonText="Add"
+        width="1240px"
+      >
+        <CmdModal />
+      </Modal>
 
-        <Modal
-          closeButton
-          open={networkModal}
-          toggleOpen={networkModalToggle}
-          confirm={() => {}}
-          confirmButtonText="Add"
-          width="720px"
-        >
-          <SearchModal />
-        </Modal>
+      <Modal
+        closeButton
+        open={networkModal}
+        toggleOpen={networkModalToggle}
+        confirm={() => {}}
+        confirmButtonText="Add"
+        width="720px"
+      >
+        <SearchModal />
+      </Modal>
 
-        {notificationModal && (
-          <NotificationModal setNotificationModal={setNotificationModal} />
-        )}
-      </nav>
-    )
+      {notificationModal && (
+        <NotificationModal setNotificationModal={setNotificationModal} />
+      )}
+    </nav>
   );
 }
 

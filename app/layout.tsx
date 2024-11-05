@@ -8,7 +8,6 @@ import { ThemeProvider } from "@mui/material";
 import theme from "../src/theme";
 import Hydration from "../utils/hydration";
 import { Metadata } from "next/types";
-import { QueryClient } from "@tanstack/react-query";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
 import { ToastContainer } from "react-toastify";
 
@@ -57,8 +56,6 @@ export const metadata: Metadata = {
   },
 };
 
-const client = new QueryClient();
-
 export default function RootLayout({
   children,
 }: {
@@ -71,7 +68,9 @@ export default function RootLayout({
         style={{ backgroundColor: "#F3F3F3" }}
       >
         <ReactQueryProvider>
+          {/* ? 정리 대상 1순위 */}
           <Hydration />
+          {/* ? 정리 대상 1순위 */}
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>{children}</ThemeProvider>
             <ToastContainer />

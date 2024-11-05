@@ -133,8 +133,6 @@ export default function Server() {
     mutate(selectedRows);
   };
 
-  if (isPending) return <></>;
-
   return (
     <div className="pageWrap">
       <SideMenu sideMenuItems={sideMenuItems} />

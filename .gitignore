@@ -6,3 +6,5 @@ node_modules
 
 public/sw*
 public/swe-worker*
+
+out
