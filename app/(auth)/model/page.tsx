@@ -37,19 +37,13 @@ import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { SwitchPrimary } from "../../../components/switches";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import useAuthStore from "../../../utils/useAuthStore";
+
 import { adminColumns, adminRows, rows } from "./tableData";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
   { label: "network2", value: "network2" },
   { label: "network3", value: "network3" },
-];
-
-const selectCompanyData = [
-  { label: "company1", value: "company1" },
-  { label: "company2", value: "company2" },
-  { label: "company3", value: "company3" },
 ];
 
 const selectSortData = [

@@ -15,6 +15,8 @@ type ModalProps = {
   open: boolean;
   toggleOpen: () => void;
   width: string;
+  disabled?: boolean;
+  manualToggleOpenWhenConfirm?: boolean;
 };
 
 export default function Modal({
@@ -26,9 +28,11 @@ export default function Modal({
   open,
   toggleOpen,
   width,
+  disabled,
+  manualToggleOpenWhenConfirm,
 }: ModalProps) {
-
-  const onClose = (_e, reason) => reason !== 'backdropClick' && open && toggleOpen();
+  const onClose = (_e, reason) =>
+    reason !== "backdropClick" && open && toggleOpen();
 
   return (
     <>
@@ -59,7 +63,7 @@ export default function Modal({
               position: "absolute",
               right: "6px",
               top: "6px",
-              zIndex:30,
+              zIndex: 30,
             }}
           >
             <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
@@ -79,10 +83,11 @@ export default function Modal({
             )}
             <Button
               variant="contained"
+              disabled={disabled}
               sx={{ width: 80, height: 32, fontSize: 13 }}
               onClick={() => {
                 confirm && confirm();
-                toggleOpen();
+                !manualToggleOpenWhenConfirm && toggleOpen();
               }}
             >
               {confirm ? confirmButtonText : "닫기"}

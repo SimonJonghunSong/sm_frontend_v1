@@ -16,18 +16,25 @@ export default function ReactQueryProvider({
   children,
 }: React.PropsWithChildren) {
   const router = useRouter();
-  const { setToken, setRefreshToken } = useAuthStore();
+  const { setToken, setRefreshToken, setUserId, setUserRole } = useAuthStore();
   const [client] = useState(
     new QueryClient({
       queryCache: new QueryCache({
         onError: (
           error: AxiosError<{ response: { code: number; reason: string } }>
         ) => {
-          // Unauthrized
-          if (error.status === 401) {
+          console.log(error);
+
+          // Unauthrized || error.response.data.response.code === 5204 => No token provided
+          if (
+            error.status === 401 ||
+            error.response.data.response.code === 5204
+          ) {
+            setUserId(undefined);
+            setUserRole(undefined);
             setToken(undefined);
             setRefreshToken(undefined);
-            router.push("/login");
+            router.replace("/login");
           }
           toast(error.response?.data?.response?.reason || "Error", {
             type: "error",
