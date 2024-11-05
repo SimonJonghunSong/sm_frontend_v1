@@ -3,14 +3,7 @@
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
-import {
-  Button,
-  IconButton,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import React, { useReducer, useState } from "react";
 import DataTable from "../../../../components/dataTable";
@@ -30,7 +23,7 @@ import {
 } from "@/src/api/services/scuti";
 
 export default function Server() {
-  const { data, error, isPending } = useQuery({
+  const { data, error } = useQuery({
     queryKey: ["scuti-server"],
     queryFn: getScutiServer,
   });
@@ -39,6 +32,7 @@ export default function Server() {
     col2: string;
     col3: string;
     col4: string;
+    uid: string;
   }>();
   const [selectedRows, setSelectedRows] = useState<string[]>();
   const queryClient = useQueryClient();
@@ -184,6 +178,7 @@ export default function Server() {
           serverIp={selectedMqttServer.col3}
           port={selectedMqttServer.col4}
           onClose={editModalToggle}
+          uid={selectedMqttServer.uid}
         />
       )}
     </div>
@@ -322,11 +317,13 @@ function EditServerModal({
   serverIp,
   port,
   onClose,
+  uid,
 }: {
   country: string;
   region: string;
   serverIp: string;
   port: string;
+  uid: string;
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
@@ -353,6 +350,7 @@ function EditServerModal({
       region: inputRegion,
       ip: inputServerIp,
       port: inputPort,
+      uid,
       name: "",
       description: "",
     });

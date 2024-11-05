@@ -7,7 +7,7 @@ const getMqttServer = () => {
 const addMqttServer = (body: MqttServerBody) => {
   return post("/api/v1/mqtt/servers", body);
 };
-const modifyMqttServer = (body: MqttServerBody) => {
+const modifyMqttServer = (body: MqttServerBody & { uid: string }) => {
   return put("/api/v1/mqtt/servers", body);
 };
 const deleteMqttServer = (body: string[]) => {

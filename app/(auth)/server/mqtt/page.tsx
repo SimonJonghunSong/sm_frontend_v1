@@ -32,6 +32,7 @@ export default function Server() {
     col2: string;
     col3: string;
     col4: string;
+    id: string;
   }>();
   const [selectedRows, setSelectedRows] = useState<string[]>();
   const queryClient = useQueryClient();
@@ -177,6 +178,7 @@ export default function Server() {
           serverIp={selectedMqttServer.col3}
           port={selectedMqttServer.col4}
           onClose={editModalToggle}
+          uid={selectedMqttServer.id}
         />
       )}
     </div>
@@ -321,11 +323,13 @@ function EditServerModal({
   serverIp,
   port,
   onClose,
+  uid,
 }: {
   country: string;
   region: string;
   serverIp: string;
   port: string;
+  uid: string;
   onClose: () => void;
 }) {
   const queryClient = useQueryClient();
@@ -354,6 +358,7 @@ function EditServerModal({
       port: inputPort,
       name: "",
       description: "",
+      uid,
     });
   };
 

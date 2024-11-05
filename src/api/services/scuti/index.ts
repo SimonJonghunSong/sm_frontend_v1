@@ -7,7 +7,7 @@ const getScutiServer = () => {
 const addScutiServer = (body: ScutiServerBody) => {
   return post("/api/v1/scuti/servers", body);
 };
-const modifyScutiServer = (body: ScutiServerBody) => {
+const modifyScutiServer = (body: ScutiServerBody & { uid: string }) => {
   return put("/api/v1/scuti/servers", body);
 };
 const deleteScutiServer = (body: string[]) => {
