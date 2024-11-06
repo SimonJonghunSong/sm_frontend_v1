@@ -10,16 +10,9 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Free up disk space
+      - name: Pull repository
         run: |
-          sudo rm -rf /home/simon/actions-runner/_work/_tool
-          sudo rm -rf /home/simon/actions-runner/_work/_temp
-          sudo apt-get clean
-
-      - name: Check out the repository
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          git -C /home/simon/stsunlab-sync-master remote set-url origin git@github.com:ben031/stsunlab-sync-master.git
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
