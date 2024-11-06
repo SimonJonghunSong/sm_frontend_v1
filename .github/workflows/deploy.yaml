@@ -7,37 +7,16 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
-
     steps:
-      - name: Pull repository
-        run: |
-          git -C /home/simon/stsunlab-sync-master remote set-url origin git@github.com:ben031/stsunlab-sync-master.git
-
-      #   - name: Free up Node.js cache
-      #     run: |
-      #       sudo rm -rf /home/simon/actions-runner/_work/_tool
-
-      #   - name: Set up Node.js
-      #     uses: actions/setup-node@v3
-      #     with:
-      #       node-version: "22.11.0"
-
-      - name: Install dependencies
-        run: |
-          cd /home/simon/stsunlab-sync-master
-          npm install
-
-      - name: Build Next.js app
-        run: |
-          cd /home/simon/stsunlab-sync-master
-          npm run build
-
-      - name: Start app with PM2
-        run: |
-          pm2 delete all || true # 이전 프로세스 종료
-          pm2 start npm --name "next-app" -- start --prefix /home/simon/stsunlab-sync-master
-
-      - name: PM2 process 자동 복구 설정
-        run: |
-          pm2 save
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /home/simon/stsunlab-sync-master
+            git pull https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/stsunlab-sync-master.git
+            npm install
+            npm run build
+            pm2 restart all
