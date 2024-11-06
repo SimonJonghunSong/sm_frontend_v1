@@ -11,7 +11,7 @@ const getUsers = () => {
 const addUser = (body: UserBody) => {
   return post("/api/v1/user", body);
 };
-const modifyUser = (body: UserBody & { uid: string }) => {
+const modifyUser = (body: UserBody) => {
   return put("/api/v1/user", body);
 };
 const deleteUser = (body: string[]) => {

@@ -9,13 +9,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useReducer, useState } from "react";
 import dayjs from "dayjs";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../../components/dataTable";
@@ -25,16 +19,17 @@ import InputBox from "../../../components/inputbox/InputBox";
 import SelectCountry from "../../../components/SelectCountry";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { addUser, deleteUser, getUsers } from "@/src/api/services/user";
+  addUser,
+  deleteUser,
+  getUsers,
+  modifyUser,
+} from "@/src/api/services/user";
 import { toast } from "react-toastify";
 
 const selectRoleData = [
+  { label: "Root", value: "root" },
   { label: "Admin", value: "admin" },
   { label: "Customer", value: "customer" },
   { label: "Guest", value: "guest" },
@@ -97,11 +92,19 @@ export default function Account() {
       width: 80,
       headerAlign: "center",
       align: "center",
-      renderCell: () => (
-        <IconButton onClick={(e) => e.stopPropagation()}>
-          <EditOutlinedIcon />
-        </IconButton>
-      ),
+      renderCell: (event) => {
+        return (
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedUser(event.row);
+              editmodalToggle();
+            }}
+          >
+            <EditOutlinedIcon />
+          </IconButton>
+        );
+      },
     },
     {
       field: "col9",
@@ -122,6 +125,15 @@ export default function Account() {
     },
   ];
   const [selectedRowIdList, setSelectedRowIdList] = useState<string[]>();
+  const [selectedUser, setSelectedUser] = useState<{
+    col1: string; // email
+    col2: string; // id
+    col3: string; // username
+    col4: string; // company(account)
+    col5: string; // country
+    col6: string; // role
+    col7: string; // date
+  }>();
   const queryClient = useQueryClient();
   const { data, error } = useQuery({
     queryKey: ["user"],
@@ -139,8 +151,9 @@ export default function Account() {
   });
   const [roleFilter, setRoleFilter] = useState<string>("All");
   const [userFilter, setUserFilter] = useState<string>("All");
-  console.log(roleFilter, userFilter);
+
   const [modal, modalToggle] = useModal();
+  const [editmodal, editmodalToggle] = useModal();
 
   const handleSelectChange = (
     e: SelectChangeEvent,
@@ -236,6 +249,37 @@ export default function Account() {
       </article>
 
       {modal && <AddAcountModal onClose={modalToggle} />}
+      {editmodal && (
+        <EditAcountModal
+          onClose={editmodalToggle}
+          role={selectedUser.col6}
+          email={selectedUser.col1}
+          id={selectedUser.col2}
+          name={selectedUser.col3}
+          department={
+            data.data.user_list.find(
+              ({ user_id }) => user_id === selectedUser.col2
+            ).department
+          }
+          taxId={
+            data.data.user_list.find(
+              ({ user_id }) => user_id === selectedUser.col2
+            ).tax_id
+          }
+          company=""
+          password=""
+          alias={
+            data.data.user_list.find(
+              ({ user_id }) => user_id === selectedUser.col2
+            ).alias
+          }
+          country={
+            data.data.user_list.find(
+              ({ user_id }) => user_id === selectedUser.col2
+            ).country
+          }
+        />
+      )}
     </div>
   );
 }
@@ -332,6 +376,7 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
     company,
     taxId,
     alias,
+    country,
   } = state;
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -396,7 +441,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         !confirmPassword ||
         !company ||
         !taxId ||
-        !alias
+        !alias ||
+        !country
       }
     >
       <Stack>
@@ -630,25 +676,51 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-function EditAcountModal({ onClose }: { onClose: () => void }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const {
+function EditAcountModal({
+  onClose,
+  role,
+  email,
+  id,
+  name,
+  password,
+  company,
+  taxId,
+  alias,
+  country,
+  department,
+}: {
+  role: string;
+  email: string;
+  id: string;
+  name: string;
+  password: string;
+  company: string;
+  taxId: string;
+  alias: string;
+  country: string;
+  department: string;
+  onClose: () => void;
+}) {
+  const [state, dispatch] = useReducer(reducer, {
+    ...initialState,
     role,
-    id,
     email,
+    id,
     name,
     password,
-    confirmPassword,
     company,
     taxId,
     alias,
-  } = state;
-  const queryClient = new QueryClient();
+    country,
+    department,
+  });
+
+  const queryClient = useQueryClient();
   const { mutate } = useMutation({
-    mutationFn: addUser,
+    mutationFn: modifyUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast("Successfully added!", {
+      toast("Successfully Edited!", {
         type: "success",
         position: "top-center",
       });
@@ -663,7 +735,7 @@ function EditAcountModal({ onClose }: { onClose: () => void }) {
   // };
 
   const handleSubmit = () => {
-    if (password !== confirmPassword) {
+    if (state.password !== state.confirmPassword) {
       return toast(
         "Password confirmation is incorrect. Please enter the same password",
         { type: "error", position: "top-center" }
@@ -692,21 +764,22 @@ function EditAcountModal({ onClose }: { onClose: () => void }) {
     <Modal
       open
       toggleOpen={onClose}
-      title="Add Account"
+      title="Edit Account"
       confirm={handleSubmit}
       confirmButtonText="Add"
       width="400px"
       manualToggleOpenWhenConfirm
       disabled={
-        !role ||
-        !id ||
-        !email ||
-        !name ||
-        !password ||
-        !confirmPassword ||
-        !company ||
-        !taxId ||
-        !alias
+        !state.role ||
+        !state.id ||
+        !state.email ||
+        !state.name ||
+        !state.password ||
+        !state.confirmPassword ||
+        !state.company ||
+        !state.taxId ||
+        !state.alias ||
+        !state.country
       }
     >
       <Stack>
@@ -837,6 +910,7 @@ function EditAcountModal({ onClose }: { onClose: () => void }) {
           </InputBox.Head>
           <InputBox.Body>
             <SelectCountry
+              defaultCountry={state.country.toLowerCase()}
               setCountryData={(value) =>
                 dispatch({ type: "SET_COUNTRY", value: value as string })
               }
