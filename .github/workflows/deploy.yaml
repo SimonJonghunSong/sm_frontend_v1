@@ -10,9 +10,10 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Update repository
-        run: |
-          git -C /home/simon/stsunlab-sync-master pull
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
