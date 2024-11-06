@@ -9,6 +9,7 @@ export default function Main() {
   // FIX: 로그인 여부에 따라 홈 화면 분기
 
   const router = useRouter();
+  console.log("SUCCESS ! HAHA");
 
   useLayoutEffect(() => {
     if (userId !== null && userRole !== null) {
