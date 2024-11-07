@@ -48,7 +48,6 @@ export default function page() {
   ) => {
     event.preventDefault();
   };
-  console.log("SECOND SUCCCCCCEESSSSS");
 
   const handleSubmit = (e) => {
     e.preventDefault();
