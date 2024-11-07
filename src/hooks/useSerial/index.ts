@@ -279,7 +279,7 @@ const useSerial = () => {
           } else if (port.ispackagecountfetching) {
             totalGrpNoBufferRef.current.set(
               port.injectedId,
-              totalGrpNoBufferRef.current.get(port.injectedId) || "" + value
+              (totalGrpNoBufferRef.current.get(port.injectedId) || "") + value
             );
 
             if (value.includes(CR)) {
