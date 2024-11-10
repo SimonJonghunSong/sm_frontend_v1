@@ -38,7 +38,9 @@ import { SwitchPrimary } from "../../../components/switches";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { adminColumns, adminRows, rows } from "./tableData";
+import { getAdminColumns, adminRows, rows } from "./tableData";
+import { getModels } from "@/src/api/services/model";
+import { useQuery } from "@tanstack/react-query";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
@@ -53,6 +55,11 @@ const selectSortData = [
 ];
 
 export default function Model() {
+  const { data, error } = useQuery({
+    queryKey: ["model"],
+    queryFn: getModels,
+  });
+
   const columns: GridColDef[] = [
     {
       field: "col1",
