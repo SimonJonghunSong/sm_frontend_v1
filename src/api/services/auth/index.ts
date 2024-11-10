@@ -1,5 +1,5 @@
 import { get, post, put } from "../../apiClient";
-import { CommonGetResponse, CommonResponse } from "../common/type";
+import { CommonResponse } from "../common/type";
 
 const login = (body: AuthLoginBody) => {
   return post<
@@ -22,9 +22,7 @@ const findPassword = (body: AuthFindPassBody) => {
 };
 
 const me = () => {
-  return get<CommonGetResponse<{ user: UserResponse }>>(
-    "/api/v1/auth/my/account"
-  );
+  return get<CommonResponse<{ user: UserResponse }>>("/api/v1/auth/my/account");
 };
 
 const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
