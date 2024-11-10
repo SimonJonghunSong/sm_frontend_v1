@@ -59,6 +59,8 @@ export default function ReactQueryProvider({
               router.push("/login");
             }
 
+            console.log("error >>>", error);
+
             toast(error.response?.data?.response?.reason || "Error", {
               type: "error",
               position: "top-center",
