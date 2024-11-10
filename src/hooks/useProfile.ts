@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { AT_GET_JSON } from "./useConnection";
 import useSerialStore from "../stores/useSerialStore";
 import { delayPromise } from "./useSerial";
 import {
