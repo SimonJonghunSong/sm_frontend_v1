@@ -28,10 +28,15 @@ export default function page() {
   const { mutate, isPending } = useMutation({
     mutationFn: login,
     onSuccess: (response) => {
-      setToken(response.data.paramter.accessToken);
-      setRefreshToken(response.data.paramter.refreshToken);
-      setUserRole(response.data.paramter.role);
-      setUserId(response.data.paramter.email);
+      console.log("????>>>>", response);
+      console.log("????>>>>", response.data);
+      console.log("????22>>>>", setToken);
+
+      setToken(response.data.parameter.accessToken);
+      setRefreshToken(response.data.parameter.refreshToken);
+      setUserRole(response.data.parameter.role);
+      setUserId(response.data.parameter.email);
+
       router.replace("/");
     },
   });

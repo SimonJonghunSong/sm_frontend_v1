@@ -1,5 +1,5 @@
 export interface CommonResponse<T> {
-  paramter: T;
+  parameter: T;
   response: {
     code: number;
     reason: string;
