@@ -16,12 +16,7 @@ import { useRouter } from "next/navigation";
 import { getAdminColumns, getAdminRows, getRows } from "../tableData";
 import useAuthStore from "../../../../utils/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  addModel,
-  delModel,
-  editModel,
-  getModels,
-} from "@/src/api/services/model";
+import { delModel, editModel, getModels } from "@/src/api/services/model";
 import AddModal from "app/(auth)/model/admin/AddModal";
 import { Model } from "@/src/api/services/model/type";
 import EditModal from "app/(auth)/model/admin/EditModal";
@@ -111,7 +106,7 @@ const initialState: FormState = {
 
 export default function Model() {
   const queryClient = useQueryClient();
-  const { data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ["model"],
     queryFn: getModels,
   });

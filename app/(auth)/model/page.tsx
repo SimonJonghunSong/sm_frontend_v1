@@ -7,7 +7,6 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  IconButton,
   LinearProgress,
   MenuItem,
   Pagination,
@@ -22,15 +21,12 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import React, {
   Dispatch,
   SetStateAction,
   useCallback,
   useEffect,
   useMemo,
-  useRef,
   useState,
 } from "react";
 import DataTable from "../../../components/dataTable";
@@ -66,7 +62,7 @@ const selectSortData = [
 export default function Model() {
   const { getIncludeUids, addDatas } = useModelPkgStore();
 
-  const { data, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ["model"],
     queryFn: getModels,
     select: (data) => {
@@ -177,6 +173,7 @@ export default function Model() {
 
   const [rowData, setRowData] = useState(getRows(data?.data?.records));
   const filteredRowData = rowData
+    // 로드된 모델만 필터링
     .filter((item) => {
       if (showLoadedModels) {
         return item.loaded;
@@ -184,16 +181,17 @@ export default function Model() {
 
       return true;
     })
+    // features 탭 필터링
     .filter((item) => {
       if (selectedTab) {
         const features = item.col4.split(",");
-        console.log("features >>>", features);
 
         return features.includes(selectedTab);
       }
 
       return true;
     })
+    // 정렬 필터링
     .toSorted((a, b) => {
       switch (filter) {
         case "A-Z":
@@ -209,8 +207,6 @@ export default function Model() {
           );
       }
     });
-
-  console.log("filteredRowData >>>>", filteredRowData);
 
   const [columnData, setColumnData] = useState(getColumns());
 
