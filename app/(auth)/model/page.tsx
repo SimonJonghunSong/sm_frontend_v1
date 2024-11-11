@@ -1,4 +1,11 @@
 "use client";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import styles from "./styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
@@ -21,14 +28,6 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
 import DataTable from "../../../components/dataTable";
 import Modal from "../../../components/Modal";
 import useModal from "../../../utils/useModal";
@@ -446,7 +445,6 @@ export default function Model() {
 
 function AddAcountModal() {
   const [role, setRole] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
 
   const handleSelectChange = (
     e: SelectChangeEvent,

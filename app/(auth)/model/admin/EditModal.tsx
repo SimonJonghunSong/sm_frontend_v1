@@ -196,7 +196,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       toggleOpen={handleCloseModal}
       title="Edit Model"
       confirm={handleAddConfirm}
-      confirmButtonText="Edit"
+      confirmButtonText="Save"
       width="720px"
       disabled={!devName || !country || !supportedFeatures.length}
     >

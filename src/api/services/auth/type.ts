@@ -165,16 +165,3 @@ type MqttEndpoints =
       body: MqttServerDeleteBody;
     }
   | { endpoint: "/api/v1/mqtt/servers"; method: "PUT"; body: MqttServerBody };
-
-// type ScutiEndpoints =
-//   | { endpoint: "/api/v1/scuti/servers"; method: "POST"; body: ScutiServerBody }
-//   | { endpoint: "/api/v1/scuti/servers"; method: "GET"; params: URLType }
-//   | {
-//       endpoint: "/api/v1/scuti/servers";
-//       method: "DELETE";
-//       body: ScutiServerDeleteBody;
-//     }
-//   | { endpoint: "/api/v1/scuti/servers"; method: "PUT"; body: ScutiServerBody };
-
-// 통합 API 엔드포인트 타입
-type APIEndpoints = AuthEndpoints | MqttEndpoints;
