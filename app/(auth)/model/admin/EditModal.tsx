@@ -1,4 +1,9 @@
 "use client";
+
+import React, { useEffect, useReducer, useState } from "react";
+import Image from "next/image";
+import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
@@ -6,37 +11,24 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Stack,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useReducer, useState } from "react";
 import Modal from "../../../../components/Modal";
 import InputBox from "../../../../components/inputbox/InputBox";
 import { SwitchPrimary } from "../../../../components/switches";
-import Image from "next/image";
 import { editModel } from "@/src/api/services/model";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Model } from "@/src/api/services/model/type";
-import { toast } from "react-toastify";
-
-const selectNetworkData = [
-  { label: "network1", value: "network1" },
-  { label: "network2", value: "network2" },
-  { label: "network3", value: "network3" },
-];
 
 export interface FormState {
   devName: string;
   country: string;
-  imageFile: string;
-  imageFileSmall: string;
+  imageFile: File;
   supportedNetworkType: string[];
   supportedFeatures: string[];
-  settingFile: string;
+  settingFile: File;
   hide: boolean;
 }
 
@@ -46,11 +38,10 @@ type FormAction =
   | { type: "SET_DATA"; value: FormState }
   | { type: "SET_DEV_NAME"; value: string }
   | { type: "SET_COUNTRY"; value: string }
-  | { type: "SET_IMAGE_FILE"; value: string }
-  | { type: "SET_IMAGE_FILE_SMALL"; value: string }
+  | { type: "SET_IMAGE_FILE"; value: File }
   | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
   | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
-  | { type: "SET_SETTING_FILE"; value: string }
+  | { type: "SET_SETTING_FILE"; value: File }
   | { type: "SET_HIDE"; value: boolean };
 
 // 리듀서 함수 정의
@@ -66,8 +57,6 @@ function reducer(state: FormState, action: FormAction): FormState {
       return { ...state, country: action.value };
     case "SET_IMAGE_FILE":
       return { ...state, imageFile: action.value };
-    case "SET_IMAGE_FILE_SMALL":
-      return { ...state, imageFileSmall: action.value };
     case "SET_SUPPORTED_NETWORK_TYPE":
       return { ...state, supportedNetworkType: action.value };
     case "SET_SUPPORTED_FEATURES":
@@ -84,11 +73,10 @@ function reducer(state: FormState, action: FormAction): FormState {
 const initialState: FormState = {
   devName: "",
   country: "",
-  imageFile: "",
-  imageFileSmall: "",
+  imageFile: undefined,
   supportedNetworkType: [],
   supportedFeatures: [],
-  settingFile: "",
+  settingFile: undefined,
   hide: false,
 };
 
@@ -100,7 +88,6 @@ interface Props {
 export default function EditModal({ handleCloseModal, selectedData }: Props) {
   // forms
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const queryClient = useQueryClient();
   const editModelRequest = useMutation({
     mutationFn: editModel,
@@ -118,7 +105,6 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     devName,
     country,
     imageFile,
-    imageFileSmall,
     supportedNetworkType,
     supportedFeatures,
     settingFile,
@@ -126,19 +112,30 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
   } = state;
 
   const [file, setFile] = useState<File>(null);
+  const [imagePreview, setThumbnailPreview] = useState(null);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+
+    dispatch({
+      type: "SET_SETTING_FILE",
+      value: e.target.files[0],
+    });
   };
 
-  const [imagePreview, setThumbnailPreview] = useState(null);
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const imageFile = e.target.files[0];
+    if (imageFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setThumbnailPreview(reader.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(imageFile);
+
+      dispatch({
+        type: "SET_IMAGE_FILE",
+        value: imageFile,
+      });
     }
   };
 
@@ -178,18 +175,25 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     }
   };
 
-  const handleAddConfirm = async () => {
-    editModelRequest.mutate({
-      uid: selectedData.uid,
-      country,
-      hide,
-      image_file: imageFile,
-      image_file_small: imageFileSmall,
-      model_pkg: "model_pkg",
-      setting_file: settingFile,
-      supported_network_type: supportedNetworkType,
-      supported_features: supportedFeatures,
-    });
+  const handleEditConfirm = async () => {
+    const formData = new FormData();
+
+    formData.append("model_image", imageFile);
+    formData.append("default_profile", settingFile);
+    formData.append(
+      "json",
+      JSON.stringify({
+        dev_name: devName,
+        fw_ver: "1.1.0",
+        country,
+        supported_network_type: supportedNetworkType,
+        supported_features: supportedFeatures,
+        hide,
+        model_pkg: "model_pkg",
+      })
+    );
+
+    editModelRequest.mutateAsync(formData);
   };
 
   useEffect(() => {
@@ -198,11 +202,10 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       value: {
         devName: selectedData.dev_name,
         country: selectedData.country.name,
-        imageFile: selectedData.image_file,
-        imageFileSmall: selectedData.image_file_small,
+        imageFile: undefined, // TODO IMAGE path 설정
         supportedNetworkType: selectedData.supported_network_type,
         supportedFeatures: selectedData.supported_features,
-        settingFile: selectedData.setting_file,
+        settingFile: undefined, // TODO IMAGE path 설정
         hide: selectedData.hide,
       },
     });
@@ -213,10 +216,17 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       open={true}
       toggleOpen={handleCloseModal}
       title="Edit Model"
-      confirm={handleAddConfirm}
+      confirm={handleEditConfirm}
       confirmButtonText="Save"
       width="720px"
-      disabled={!devName || !country || !supportedFeatures.length}
+      disabled={
+        !imageFile ||
+        !devName ||
+        !country ||
+        !supportedNetworkType.length ||
+        !supportedFeatures.length ||
+        !settingFile
+      }
     >
       <Stack>
         <InputBox>
@@ -456,10 +466,11 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
                 justifyContent="space-between"
                 alignItems="center"
                 width="100%"
+                gap={1}
               >
                 <span>Hide from List</span>
                 <SwitchPrimary
-                  value={hide}
+                  checked={hide}
                   onChange={(e) => {
                     dispatch({
                       type: "SET_HIDE",

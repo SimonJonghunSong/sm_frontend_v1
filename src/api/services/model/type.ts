@@ -21,7 +21,6 @@ export interface Country {
 
 export interface AddModelBody {
   image_file: string;
-  image_file_small: string;
   dev_name: string;
   fw_ver: string;
   country: string;

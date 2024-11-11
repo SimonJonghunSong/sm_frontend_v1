@@ -120,34 +120,35 @@ export default function Model() {
     deleteRequest.mutate([id]);
   };
   const handleClickHide = (id: string) => {
-    const targetData = (data?.data?.records || []).find(
-      (item) => item.uid === id
-    );
-
-    if (targetData) {
-      const {
-        uid,
-        country,
-        hide,
-        image_file,
-        image_file_small,
-        setting_file,
-        supported_network_type,
-        supported_features,
-        model_pkg,
-      } = targetData;
-      editModelRequest.mutate({
-        uid,
-        country: country.name,
-        hide: !hide,
-        image_file,
-        image_file_small,
-        setting_file,
-        supported_network_type,
-        supported_features,
-        model_pkg: model_pkg || "model_pkg",
-      });
-    }
+    // TODO 이미지 업로드 변경에 의한 재작업 필요
+    // 1. EditModal 파일 180번째 줄 handleEditConfirm 참고 하셔서 작업 부탁드립니다 ! 😃😁😄😀😆🥹😅
+    toast("... is fixing");
+    // const targetData = (data?.data?.records || []).find(
+    //   (item) => item.uid === id
+    // );
+    // if (targetData) {
+    //   const {
+    //     uid,
+    //     country,
+    //     hide,
+    //     image_file,
+    //     image_file_small,
+    //     setting_file,
+    //     supported_network_type,
+    //     supported_features,
+    //     model_pkg,
+    //   } = targetData;
+    //   editModelRequest.mutate({
+    //     uid,
+    //     country: country.name,
+    //     hide: !hide,
+    //     image_file,
+    //     setting_file,
+    //     supported_network_type,
+    //     supported_features,
+    //     model_pkg: model_pkg || "model_pkg",
+    //   });
+    // }
   };
 
   const [selectedRowIdList, setSelectedRowIdList] = useState<string[]>();
