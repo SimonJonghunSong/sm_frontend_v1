@@ -13,19 +13,12 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import Modal from "../../../../components/Modal";
 import InputBox from "../../../../components/inputbox/InputBox";
 import { SwitchPrimary } from "../../../../components/switches";
 import Image from "next/image";
-import { addModel, editModel } from "@/src/api/services/model";
+import { editModel } from "@/src/api/services/model";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Model } from "@/src/api/services/model/type";
 import { toast } from "react-toastify";

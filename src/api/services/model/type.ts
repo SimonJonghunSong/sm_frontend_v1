@@ -32,7 +32,18 @@ export interface AddModelBody {
   model_pkg: string;
 }
 
+export interface PostModelPkgBody {
+  uid_list: string[];
+}
+
 export interface EditModelBody
   extends Omit<AddModelBody, "dev_name" | "fw_ver"> {
   uid: string;
+}
+
+export interface ModelPkg {
+  uid: string;
+  dev_name: string;
+  fw_ver: string;
+  model_pkg: string;
 }
