@@ -1,15 +1,13 @@
 "use client";
 
+import dayjs from "dayjs";
+import { GridColDef } from "@mui/x-data-grid";
+import { Stack, IconButton, Box } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
-import { Stack, Button, IconButton } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import Image from "next/image";
-import { SwitchPrimary } from "../../../components/switches";
 import { Model } from "@/src/api/services/model/type";
-import dayjs from "dayjs";
-import { FormState } from "app/(auth)/model/admin/page";
+import { SwitchPrimary } from "../../../components/switches";
 
 export const getAdminColumns: (
   onEditClick: (id: string) => void,
@@ -22,18 +20,27 @@ export const getAdminColumns: (
     minWidth: 200,
     headerAlign: "center",
     align: "center",
-    renderCell: (params) =>
-      params.value && (
-        <Stack
-          direction="row"
-          gap="4px"
-          justifyContent="center"
-          alignItems="center"
-          height="100%"
-        >
-          <Image src={params.value} alt="thumbnail" width={96} height={96} />
-        </Stack>
-      ),
+    renderCell: (params) => {
+      if (params.value) {
+        return (
+          <Stack
+            direction="row"
+            gap="4px"
+            alignItems="center"
+            justifyContent="center"
+            height="100%"
+          >
+            <Box sx={{ objectFit: "cover" }} width={96} height={96}>
+              <img
+                src={params.value}
+                alt="thumbnail"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
+          </Stack>
+        );
+      }
+    },
   },
   {
     field: "col2",
@@ -126,20 +133,10 @@ export const getAdminColumns: (
   },
 ];
 
-const MOCK_MODEL_IMAGES = [
-  "/images/ST4215U,ST8310UM.png",
-  "/images/ST4305,ST8300 series.png",
-  "/images/ST4315,ST8310U series.png",
-  "/images/ST4345.png",
-  "/images/ST4915.png",
-  "/images/ST4955.png",
-  "/images/ST6560.png",
-];
-
 export const getAdminRows = (data?: Model[]) =>
   (data || []).map((item, idx) => ({
     id: item.uid,
-    col1: MOCK_MODEL_IMAGES[idx % 7],
+    col1: item.image_file,
     col2: item.dev_name,
     col3: item.fw_ver,
     col4: item.supported_features.join(","),
@@ -153,7 +150,7 @@ export const getAdminRows = (data?: Model[]) =>
 export const getRows = (data?: (Model & { loaded: boolean })[]) =>
   (data || []).map((item, idx) => ({
     id: item.uid,
-    col1: MOCK_MODEL_IMAGES[idx % 7],
+    col1: item.image_file,
     col2: item.dev_name,
     col3: item.fw_ver,
     col4: item.supported_features.join(","),

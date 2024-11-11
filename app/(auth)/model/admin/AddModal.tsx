@@ -178,7 +178,7 @@ export default function AddModal({ handleCloseModal }: Props) {
   const handleAddConfirm = async () => {
     const formData = new FormData();
 
-    formData.append("model_image", imageFile);
+    formData.append("image_file", imageFile);
     formData.append("default_profile", settingFile);
     formData.append(
       "json",

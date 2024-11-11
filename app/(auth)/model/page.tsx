@@ -1,4 +1,5 @@
 "use client";
+
 import React, {
   Dispatch,
   SetStateAction,
@@ -38,7 +39,6 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { SwitchPrimary } from "../../../components/switches";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getRows } from "./tableData";
 import { getModelPkg, getModels } from "@/src/api/services/model";
@@ -96,7 +96,13 @@ export default function Model() {
             alignItems="center"
             height="100%"
           >
-            <Image src={params.value} alt="thumbnail" width={96} height={96} />
+            <Box sx={{ objectFit: "cover" }} width={96} height={96}>
+              <img
+                src={params.value}
+                alt="thumbnail"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
           </Stack>
         ),
     },
@@ -484,12 +490,13 @@ function AddAcountModal() {
             <Stack direction="row" gap="16px" alignItems="flex-end">
               <div className={styles.thumbnail}>
                 {imagePreview ? (
-                  <Image
-                    src={imagePreview}
-                    alt="preview"
-                    width={160}
-                    height={160}
-                  />
+                  <Box width={160} height={160} sx={{ objectFit: "contain" }}>
+                    <img
+                      src={imagePreview}
+                      alt="preview"
+                      style={{ width: "100%", height: "100%" }}
+                    />
+                  </Box>
                 ) : (
                   <ImageOutlinedIcon
                     sx={{ color: "var(--grey4)", fontSize: 62 }}
@@ -737,7 +744,14 @@ function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
         {paginatedRows.map((item, index) => (
           <li key={item.id}>
             <div className={styles.galleryThumbnail}>
-              <Image src={item.col1} alt="model" fill />
+              <Box width={195} height={172} sx={{ objectFit: "contain" }}>
+                <img
+                  src={item.col1}
+                  alt="model"
+                  style={{ width: "100%", height: "100%" }}
+                />
+              </Box>
+              {/* <Image src={item.col1} alt="model" fill /> */}
             </div>
             <div className={styles.galleryTitle}>{item.col2}</div>
             <ModelButton

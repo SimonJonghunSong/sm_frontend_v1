@@ -1,12 +1,11 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import styles from "../styles.module.scss";
 import {
-  Box,
   Button,
-  LinearProgress,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -33,7 +32,6 @@ export interface FormState {
   devName: string;
   country: string;
   imageFile: string;
-  imageFileSmall: string;
   supportedNetworkType: string[];
   supportedFeatures: string[];
   settingFile: string;
@@ -47,7 +45,6 @@ type FormAction =
   | { type: "SET_DEV_NAME"; value: string }
   | { type: "SET_COUNTRY"; value: string }
   | { type: "SET_IMAGE_FILE"; value: string }
-  | { type: "SET_IMAGE_FILE_SMALL"; value: string }
   | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
   | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
   | { type: "SET_SETTING_FILE"; value: string }
@@ -57,7 +54,6 @@ const initialState: FormState = {
   devName: "",
   country: "",
   imageFile: "",
-  imageFileSmall: "",
   supportedNetworkType: [],
   supportedFeatures: [],
   settingFile: "",
@@ -324,45 +320,5 @@ export default function Model() {
         />
       )}
     </div>
-  );
-}
-
-type DataTableProps = {
-  rows: any;
-  setRows: any;
-  toggleLoaded: any;
-};
-
-function LinearDeterminate({ setEndLoaded }) {
-  const [progress, setProgress] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress >= 100) {
-          clearInterval(timer);
-          setTimeout(setEndLoaded, 0); // 비동기적으로 상태 업데이트를 처리합니다.
-          return 100;
-        }
-        const diff = Math.random() * 10;
-        return Math.min(oldProgress + diff, 100);
-      });
-    }, 100);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [setEndLoaded]);
-
-  return (
-    <Box
-      sx={{ width: "100%", position: "absolute", bottom: "-3px", left: "4px" }}
-    >
-      <LinearProgress
-        variant="determinate"
-        value={progress}
-        sx={{ width: "calc(100% - 8px)", height: "2px" }}
-      />
-    </Box>
   );
 }
