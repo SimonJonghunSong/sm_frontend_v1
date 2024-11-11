@@ -12,6 +12,9 @@ import { Divider } from "@mui/material";
 import { SwitchSecondary } from "../switches";
 import useParameterStore from "../../utils/useParameterStore";
 import useAuthStore from "@/utils/useAuthStore";
+import { useMutation } from "@tanstack/react-query";
+import { logout } from "@/src/api/services/auth";
+import { toast } from "react-toastify";
 
 type sideMenuItem = {
   name: string;
@@ -36,23 +39,35 @@ export default function SideMenu({
   const router = useRouter();
   const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
 
+  const loginMutation = useMutation({
+    mutationFn: logout,
+  });
+
   function handleLogout() {
     Confirm({
       title: "Confirm",
       text: "Are you sure you want to log out?",
     }).then((result) => {
       if (result.isConfirmed) {
-        logout();
+        purgeAuthSetting();
       }
     });
   }
 
-  const logout = () => {
-    localStorage.clear();
-    setToken(undefined);
-    setUserId(undefined), setUserRole(undefined);
-    setRefreshToken(undefined);
-    router.push("/login");
+  const purgeAuthSetting = async () => {
+    try {
+      await loginMutation.mutateAsync();
+    } catch (error) {
+    } finally {
+      setToken(undefined);
+      setUserId(undefined);
+      setUserRole(undefined);
+      setRefreshToken(undefined);
+      router.replace("/login");
+      toast("Logged out successfully.", {
+        type: "info",
+      });
+    }
   };
 
   function handleDeleteModel() {

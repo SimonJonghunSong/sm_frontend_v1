@@ -13,6 +13,10 @@ const login = (body: AuthLoginBody) => {
   >("/api/v1/auth/login", body);
 };
 
+const logout = () => {
+  return post("api/v1/auth/logout");
+};
+
 const findId = (body: AuthFindIdBody) => {
   return post("/api/v1/auth/find-id", body);
 };
@@ -37,11 +41,4 @@ const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
   >("/api/v1/auth/my/account", body);
 };
 
-// { endpoint: "/api/v1/auth/find-id"; method: "POST"; body: AuthFindIdBody }
-// | {
-//     endpoint: "/api/v1/auth/find-pass";
-//     method: "POST";
-//     body: AuthFindPassBody;
-//   }
-
-export { login, findId, findPassword, me, modifyMyAccount };
+export { login, findId, findPassword, me, modifyMyAccount, logout };

@@ -11,12 +11,20 @@ const getModels = () => {
   return get<{ count: number; records: Model[] }>("/api/v1/models");
 };
 
-const addModel = (body: AddModelBody) => {
-  return post("/api/v1/model", body);
+const addModel = (body: FormData) => {
+  return post("/api/v1/model", body, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
-const editModel = (body: EditModelBody) => {
-  return put("/api/v1/model", body);
+const editModel = (body: FormData) => {
+  return put("/api/v1/model", body, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 const delModel = (uid_list: string[]) => {

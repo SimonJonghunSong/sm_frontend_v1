@@ -1,4 +1,9 @@
 "use client";
+
+import React, { useReducer, useState } from "react";
+import Image from "next/image";
+import { toast } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
@@ -6,43 +11,24 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  MenuItem,
   Radio,
   RadioGroup,
-  Select,
   Stack,
   TextField,
 } from "@mui/material";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
 import Modal from "../../../../components/Modal";
 import InputBox from "../../../../components/inputbox/InputBox";
 import { SwitchPrimary } from "../../../../components/switches";
-import Image from "next/image";
 import { addModel } from "@/src/api/services/model";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-
-const selectNetworkData = [
-  { label: "network1", value: "network1" },
-  { label: "network2", value: "network2" },
-  { label: "network3", value: "network3" },
-];
 
 export interface FormState {
   devName: string;
   country: string;
-  imageFile: string;
+  imageFile: File;
   imageFileSmall: string;
   supportedNetworkType: string[];
   supportedFeatures: string[];
-  settingFile: string;
+  settingFile: File;
   hide: boolean;
 }
 
@@ -52,11 +38,10 @@ type FormAction =
   | { type: "SET_DATA"; value: FormState }
   | { type: "SET_DEV_NAME"; value: string }
   | { type: "SET_COUNTRY"; value: string }
-  | { type: "SET_IMAGE_FILE"; value: string }
-  | { type: "SET_IMAGE_FILE_SMALL"; value: string }
+  | { type: "SET_IMAGE_FILE"; value: File }
   | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
   | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
-  | { type: "SET_SETTING_FILE"; value: string }
+  | { type: "SET_SETTING_FILE"; value: File }
   | { type: "SET_HIDE"; value: boolean };
 
 // 리듀서 함수 정의
@@ -72,8 +57,6 @@ function reducer(state: FormState, action: FormAction): FormState {
       return { ...state, country: action.value };
     case "SET_IMAGE_FILE":
       return { ...state, imageFile: action.value };
-    case "SET_IMAGE_FILE_SMALL":
-      return { ...state, imageFileSmall: action.value };
     case "SET_SUPPORTED_NETWORK_TYPE":
       return { ...state, supportedNetworkType: action.value };
     case "SET_SUPPORTED_FEATURES":
@@ -90,11 +73,11 @@ function reducer(state: FormState, action: FormAction): FormState {
 const initialState: FormState = {
   devName: "",
   country: "",
-  imageFile: "",
+  imageFile: undefined,
   imageFileSmall: "",
   supportedNetworkType: [],
   supportedFeatures: [],
-  settingFile: "",
+  settingFile: undefined,
   hide: false,
 };
 
@@ -105,7 +88,6 @@ interface Props {
 export default function AddModal({ handleCloseModal }: Props) {
   // forms
   const [state, dispatch] = useReducer(reducer, initialState);
-
   const queryClient = useQueryClient();
   const addModelRequest = useMutation({
     mutationFn: addModel,
@@ -113,7 +95,6 @@ export default function AddModal({ handleCloseModal }: Props) {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully added!", {
         type: "success",
-        position: "top-center",
       });
       handleCloseModal();
     },
@@ -123,7 +104,6 @@ export default function AddModal({ handleCloseModal }: Props) {
     devName,
     country,
     imageFile,
-    imageFileSmall,
     supportedNetworkType,
     supportedFeatures,
     settingFile,
@@ -133,17 +113,46 @@ export default function AddModal({ handleCloseModal }: Props) {
   const [file, setFile] = useState<File>(null);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
+
+    dispatch({
+      type: "SET_SETTING_FILE",
+      value: e.target.files[0],
+    });
   };
 
   const [imagePreview, setThumbnailPreview] = useState(null);
+
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
+    const imageFile = e.target.files[0];
+    if (imageFile) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setThumbnailPreview(reader.result);
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(imageFile);
+
+      dispatch({
+        type: "SET_IMAGE_FILE",
+        value: imageFile,
+      });
+    }
+  };
+
+  const handleSupportedNetworkType = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      dispatch({
+        type: "SET_SUPPORTED_NETWORK_TYPE",
+        value: [...supportedNetworkType, value],
+      });
+    } else {
+      dispatch({
+        type: "SET_SUPPORTED_NETWORK_TYPE",
+        value: supportedNetworkType.filter((item) => item !== value),
+      });
     }
   };
 
@@ -165,19 +174,25 @@ export default function AddModal({ handleCloseModal }: Props) {
     }
   };
 
-  const handleAddConfirm = async () => {
-    addModelRequest.mutateAsync({
-      country,
-      hide,
-      image_file: imageFile,
-      image_file_small: imageFileSmall,
-      model_pkg: "model_pkg",
-      setting_file: settingFile,
-      dev_name: devName,
-      fw_ver: "1.1.0",
-      supported_network_type: supportedNetworkType,
-      supported_features: supportedFeatures,
-    });
+  const handleAddConfirm = () => {
+    const formData = new FormData();
+
+    formData.append("image_file", imageFile);
+    formData.append("default_profile", settingFile);
+    formData.append(
+      "json",
+      JSON.stringify({
+        dev_name: devName,
+        fw_ver: "1.1.0",
+        country,
+        supported_network_type: supportedNetworkType,
+        supported_features: supportedFeatures,
+        hide,
+        model_pkg: "model_pkg",
+      })
+    );
+
+    addModelRequest.mutate(formData);
   };
 
   return (
@@ -186,9 +201,16 @@ export default function AddModal({ handleCloseModal }: Props) {
       toggleOpen={handleCloseModal}
       title="Add Model"
       confirm={handleAddConfirm}
-      confirmButtonText="Add"
+      confirmButtonText="Save"
       width="720px"
-      disabled={!devName || !country || !supportedFeatures.length}
+      disabled={
+        !imageFile ||
+        !devName ||
+        !country ||
+        !supportedNetworkType.length ||
+        !supportedFeatures.length ||
+        !settingFile
+      }
     >
       <Stack>
         <InputBox>
@@ -283,29 +305,36 @@ export default function AddModal({ handleCloseModal }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Network<i>*</i>
+              Network <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
+
           <InputBox.Body>
-            <FormControl sx={{ width: "100%" }} size="small">
-              <Select
-                displayEmpty
-                renderValue={(v) =>
-                  v?.length ? (
-                    selectNetworkData.find((item) => item.value === v).label
-                  ) : (
-                    <span className="text-grey-5">Select</span>
-                  )
-                }
-                value={""}
-                disabled
-              >
-                {selectNetworkData.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
+            <FormControl
+              sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
+            >
+              {[
+                { label: "2G", value: "2G" },
+                { label: "3G", value: "3G" },
+                { label: "LTE Cat.1", value: "LTEcat1" },
+                { label: "LTE Cat-M1", value: "LTECatM1" },
+                { label: "5G", value: "5G" },
+              ].map(({ label, value }) => {
+                return (
+                  <FormControlLabel
+                    value={value}
+                    key={value}
+                    control={
+                      <Checkbox
+                        onChange={handleSupportedNetworkType}
+                        value={value}
+                        checked={supportedNetworkType.includes(value)}
+                      />
+                    }
+                    label={label}
+                  />
+                );
+              })}
             </FormControl>
           </InputBox.Body>
         </InputBox>
@@ -318,50 +347,26 @@ export default function AddModal({ handleCloseModal }: Props) {
             <FormControl
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
-              <FormControlLabel
-                value="Wi-Fi"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="Wi-Fi"
-                    checked={supportedFeatures.includes("Wi-Fi")}
+              {[
+                { label: "Wi-Fi", value: "Wi-Fi" },
+                { label: "BLE", value: "BLE" },
+                { label: "RF", value: "RF" },
+                { label: "NB-IoT", value: "NB-IoT" },
+              ].map(({ label, value }) => {
+                return (
+                  <FormControlLabel
+                    value={value}
+                    control={
+                      <Checkbox
+                        onChange={handleSupportedFeaturesType}
+                        value={value}
+                        checked={supportedFeatures.includes(value)}
+                      />
+                    }
+                    label={label}
                   />
-                }
-                label="Wi-Fi"
-              />
-              <FormControlLabel
-                value="BLE"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="BLE"
-                    checked={supportedFeatures.includes("BLE")}
-                  />
-                }
-                label="BLE"
-              />
-              <FormControlLabel
-                value="RF"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="RF"
-                    checked={supportedFeatures.includes("RF")}
-                  />
-                }
-                label="RF"
-              />
-              <FormControlLabel
-                value="NB-IoT"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="NB-IoT"
-                    checked={supportedFeatures.includes("NB-IoT")}
-                  />
-                }
-                label="NB-IoT"
-              />
+                );
+              })}
             </FormControl>
           </InputBox.Body>
         </InputBox>
@@ -374,140 +379,38 @@ export default function AddModal({ handleCloseModal }: Props) {
             <FormControl
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
-              <FormControlLabel
-                value="Advanced"
-                control={
-                  <Checkbox
-                    name="Advanced"
-                    checked={supportedFeatures.includes("Advanced")}
-                    onChange={handleSupportedFeaturesType}
+              {[
+                { label: "Advanced", value: "Advanced" },
+                { label: "Low-cost", value: "Low-cost" },
+                {
+                  label: "Low-power consumption",
+                  value: "Low-power consumption",
+                },
+                { label: "Compact-size", value: "Compact-size" },
+                { label: "BoxTracker", value: "BoxTracker" },
+                { label: "Waterproof", value: "Waterproof" },
+                { label: "Geofence", value: "Geofence" },
+                { label: "Jamming Detection", value: "Jamming Detection" },
+                { label: "Accelerometer", value: "Accelerometer" },
+                { label: "Ignition", value: "Ignition" },
+                { label: "Solar", value: "Solar" },
+                { label: "OBD", value: "OBD" },
+              ].map(({ label, value }) => {
+                return (
+                  <FormControlLabel
+                    key={value}
+                    value={value}
+                    control={
+                      <Checkbox
+                        onChange={handleSupportedFeaturesType}
+                        value={value}
+                        checked={supportedFeatures.includes(value)}
+                      />
+                    }
+                    label={label}
                   />
-                }
-                label="Advanced"
-              />
-              <FormControlLabel
-                value="Low-cost"
-                control={
-                  <Checkbox
-                    name="Low-cost"
-                    checked={supportedFeatures.includes("Low-cost")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Low-cost"
-              />
-              <FormControlLabel
-                value="Low-power consumption"
-                control={
-                  <Checkbox
-                    name="Low-power consumption"
-                    checked={supportedFeatures.includes(
-                      "Low-power consumption"
-                    )}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Low-power consumption"
-              />
-              <FormControlLabel
-                value="Compact-size"
-                control={
-                  <Checkbox
-                    name="Compact-size"
-                    checked={supportedFeatures.includes("Compact-size")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Compact-size"
-              />
-              <FormControlLabel
-                value="BoxTracker"
-                control={
-                  <Checkbox
-                    name="BoxTracker"
-                    checked={supportedFeatures.includes("BoxTracker")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="BoxTracker"
-              />
-              <FormControlLabel
-                value="Waterproof"
-                control={
-                  <Checkbox
-                    name="Waterproof"
-                    checked={supportedFeatures.includes("Waterproof")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Waterproof"
-              />
-              <FormControlLabel
-                value="Geofence"
-                control={
-                  <Checkbox
-                    name="Geofence"
-                    checked={supportedFeatures.includes("Geofence")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Geofence"
-              />
-              <FormControlLabel
-                value="Jamming Detection"
-                control={
-                  <Checkbox
-                    name="Jamming Detection"
-                    checked={supportedFeatures.includes("Jamming Detection")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Jamming Detection"
-              />
-              <FormControlLabel
-                value="Accelerometer"
-                control={
-                  <Checkbox
-                    name="Accelerometer"
-                    checked={supportedFeatures.includes("Accelerometer")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Accelerometer"
-              />
-              <FormControlLabel
-                value="Ignition"
-                control={
-                  <Checkbox
-                    name="Ignition"
-                    checked={supportedFeatures.includes("Ignition")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Ignition"
-              />
-              <FormControlLabel
-                value="Solar"
-                control={
-                  <Checkbox
-                    name="Solar"
-                    checked={supportedFeatures.includes("Solar")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Solar"
-              />
-              <FormControlLabel
-                value="OBD"
-                control={
-                  <Checkbox
-                    name="OBD"
-                    checked={supportedFeatures.includes("OBD")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="OBD"
-              />
+                );
+              })}
             </FormControl>
           </InputBox.Body>
         </InputBox>
@@ -546,11 +449,11 @@ export default function AddModal({ handleCloseModal }: Props) {
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
-                width="100%"
+                gap={1}
               >
                 <span>Hide from List</span>
                 <SwitchPrimary
-                  value={hide}
+                  checked={hide}
                   onChange={(e) => {
                     dispatch({
                       type: "SET_HIDE",

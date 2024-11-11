@@ -1,4 +1,12 @@
 "use client";
+
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import styles from "./styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
@@ -21,14 +29,6 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
 import DataTable from "../../../components/dataTable";
 import Modal from "../../../components/Modal";
 import useModal from "../../../utils/useModal";
@@ -39,7 +39,6 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { SwitchPrimary } from "../../../components/switches";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getRows } from "./tableData";
 import { getModelPkg, getModels } from "@/src/api/services/model";
@@ -97,7 +96,13 @@ export default function Model() {
             alignItems="center"
             height="100%"
           >
-            <Image src={params.value} alt="thumbnail" width={96} height={96} />
+            <Box sx={{ objectFit: "cover" }} width={96} height={96}>
+              <img
+                src={params.value}
+                alt="thumbnail"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
           </Stack>
         ),
     },
@@ -248,7 +253,6 @@ export default function Model() {
 
           toast("Successfully loaded!", {
             type: "success",
-            position: "top-center",
           });
         },
       }
@@ -325,7 +329,6 @@ export default function Model() {
 
             toast("Successfully loaded!", {
               type: "success",
-              position: "top-center",
             });
           },
         }
@@ -446,7 +449,6 @@ export default function Model() {
 
 function AddAcountModal() {
   const [role, setRole] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
 
   const handleSelectChange = (
     e: SelectChangeEvent,
@@ -486,12 +488,17 @@ function AddAcountModal() {
             <Stack direction="row" gap="16px" alignItems="flex-end">
               <div className={styles.thumbnail}>
                 {imagePreview ? (
-                  <Image
-                    src={imagePreview}
-                    alt="preview"
-                    width={160}
-                    height={160}
-                  />
+                  <Box width={160} height={160}>
+                    <img
+                      src={imagePreview}
+                      alt="preview"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Box>
                 ) : (
                   <ImageOutlinedIcon
                     sx={{ color: "var(--grey4)", fontSize: 62 }}
@@ -739,7 +746,18 @@ function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
         {paginatedRows.map((item, index) => (
           <li key={item.id}>
             <div className={styles.galleryThumbnail}>
-              <Image src={item.col1} alt="model" fill />
+              <Box width={195} height={172}>
+                <img
+                  src={item.col1}
+                  alt="model"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
+              {/* <Image src={item.col1} alt="model" fill /> */}
             </div>
             <div className={styles.galleryTitle}>{item.col2}</div>
             <ModelButton

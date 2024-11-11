@@ -1,39 +1,27 @@
 "use client";
+
+import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import { toast } from "react-toastify";
 import styles from "../styles.module.scss";
 import {
-  Box,
   Button,
-  LinearProgress,
   MenuItem,
   Select,
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
 import DataTable from "../../../../components/dataTable";
 import useModal from "../../../../utils/useModal";
 import { useRouter } from "next/navigation";
-import { getAdminColumns, getAdminRows, getRows } from "../tableData";
+import { getAdminColumns, getAdminRows } from "../tableData";
 import useAuthStore from "../../../../utils/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { delModel, editModel, getModels } from "@/src/api/services/model";
 import AddModal from "app/(auth)/model/admin/AddModal";
-import { Model } from "@/src/api/services/model/type";
+import { Model as ModelType } from "@/src/api/services/model/type";
 import EditModal from "app/(auth)/model/admin/EditModal";
-import { toast } from "react-toastify";
-import dayjs from "dayjs";
-
-const selectNetworkData = [
-  { label: "network1", value: "network1" },
-  { label: "network2", value: "network2" },
-  { label: "network3", value: "network3" },
-];
-
-const selectCompanyData = [
-  { label: "company1", value: "company1" },
-  { label: "company2", value: "company2" },
-  { label: "company3", value: "company3" },
-];
+import { AxiosError } from "axios";
 
 const selectSortData = [
   { label: "Newest", value: "Newest" },
@@ -45,7 +33,6 @@ export interface FormState {
   devName: string;
   country: string;
   imageFile: string;
-  imageFileSmall: string;
   supportedNetworkType: string[];
   supportedFeatures: string[];
   settingFile: string;
@@ -59,45 +46,15 @@ type FormAction =
   | { type: "SET_DEV_NAME"; value: string }
   | { type: "SET_COUNTRY"; value: string }
   | { type: "SET_IMAGE_FILE"; value: string }
-  | { type: "SET_IMAGE_FILE_SMALL"; value: string }
   | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
   | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
   | { type: "SET_SETTING_FILE"; value: string }
   | { type: "SET_HIDE"; value: boolean };
 
-// 리듀서 함수 정의
-function reducer(state: FormState, action: FormAction): FormState {
-  switch (action.type) {
-    case "RESET":
-      return { ...initialState };
-    case "SET_DATA":
-      return { ...action.value };
-    case "SET_DEV_NAME":
-      return { ...state, devName: action.value };
-    case "SET_COUNTRY":
-      return { ...state, country: action.value };
-    case "SET_IMAGE_FILE":
-      return { ...state, imageFile: action.value };
-    case "SET_IMAGE_FILE_SMALL":
-      return { ...state, imageFileSmall: action.value };
-    case "SET_SUPPORTED_NETWORK_TYPE":
-      return { ...state, supportedNetworkType: action.value };
-    case "SET_SUPPORTED_FEATURES":
-      return { ...state, supportedFeatures: action.value };
-    case "SET_SETTING_FILE":
-      return { ...state, settingFile: action.value };
-    case "SET_HIDE":
-      return { ...state, hide: action.value };
-    default:
-      return state;
-  }
-}
-
 const initialState: FormState = {
   devName: "",
   country: "",
   imageFile: "",
-  imageFileSmall: "",
   supportedNetworkType: [],
   supportedFeatures: [],
   settingFile: "",
@@ -116,7 +73,6 @@ export default function Model() {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully deleted!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
@@ -126,12 +82,11 @@ export default function Model() {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully edited!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
 
-  const [selectedData, setSelectedData] = useState<Model | null>(null);
+  const [selectedData, setSelectedData] = useState<ModelType | null>(null);
 
   const router = useRouter();
   const { userRole } = useAuthStore();
@@ -146,15 +101,6 @@ export default function Model() {
     return <></>;
   }
 
-  useEffect(() => {
-    // Could be GET or POST/PUT/PATCH/DELETE
-    fetch("https://dummyjson.com/quotes")
-      .then((res) => res.json())
-      .then(console.log);
-
-    /* { status: 'ok', method: 'GET' } */
-  }, []);
-
   const handleClickEdit = (id: string) => {
     const targetData = (data?.data?.records || []).find(
       (item) => item.uid === id
@@ -168,34 +114,37 @@ export default function Model() {
   const handleClickDelete = (id: string) => {
     deleteRequest.mutate([id]);
   };
+
   const handleClickHide = (id: string) => {
     const targetData = (data?.data?.records || []).find(
       (item) => item.uid === id
     );
-
     if (targetData) {
       const {
-        uid,
+        dev_name,
         country,
         hide,
-        image_file,
-        image_file_small,
-        setting_file,
         supported_network_type,
         supported_features,
-        model_pkg,
-      } = targetData;
-      editModelRequest.mutate({
         uid,
-        country: country.name,
-        hide: !hide,
-        image_file,
-        image_file_small,
-        setting_file,
-        supported_network_type,
-        supported_features,
-        model_pkg: model_pkg || "model_pkg",
-      });
+      } = targetData;
+      const formData = new FormData();
+
+      formData.append(
+        "json",
+        JSON.stringify({
+          uid,
+          dev_name,
+          fw_ver: "1.1.0",
+          country: country.name,
+          supported_network_type,
+          supported_features,
+          hide: !hide,
+          model_pkg: "model_pkg",
+        })
+      );
+
+      editModelRequest.mutate(formData);
     }
   };
 
@@ -372,45 +321,5 @@ export default function Model() {
         />
       )}
     </div>
-  );
-}
-
-type DataTableProps = {
-  rows: any;
-  setRows: any;
-  toggleLoaded: any;
-};
-
-function LinearDeterminate({ setEndLoaded }) {
-  const [progress, setProgress] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress >= 100) {
-          clearInterval(timer);
-          setTimeout(setEndLoaded, 0); // 비동기적으로 상태 업데이트를 처리합니다.
-          return 100;
-        }
-        const diff = Math.random() * 10;
-        return Math.min(oldProgress + diff, 100);
-      });
-    }, 100);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [setEndLoaded]);
-
-  return (
-    <Box
-      sx={{ width: "100%", position: "absolute", bottom: "-3px", left: "4px" }}
-    >
-      <LinearProgress
-        variant="determinate"
-        value={progress}
-        sx={{ width: "calc(100% - 8px)", height: "2px" }}
-      />
-    </Box>
   );
 }

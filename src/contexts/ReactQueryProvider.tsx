@@ -38,7 +38,6 @@ export default function ReactQueryProvider({
           }
           toast(error.response?.data?.response?.reason || "Error", {
             type: "error",
-            position: "top-center",
           });
         },
       }),
@@ -64,7 +63,6 @@ export default function ReactQueryProvider({
 
             toast(error.response?.data?.response?.reason || "Error", {
               type: "error",
-              position: "top-center",
             });
           },
         },
