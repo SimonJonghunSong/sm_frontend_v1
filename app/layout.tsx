@@ -73,7 +73,7 @@ export default function RootLayout({
           {/* ? 정리 대상 1순위 */}
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>{children}</ThemeProvider>
-            <ToastContainer />
+            <ToastContainer pauseOnFocusLoss={false} />
           </AppRouterCacheProvider>
         </ReactQueryProvider>
       </body>
