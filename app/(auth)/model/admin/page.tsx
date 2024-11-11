@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react";
 import DataTable from "../../../../components/dataTable";
 import useModal from "../../../../utils/useModal";
 import { useRouter } from "next/navigation";
-import { getAdminColumns, getAdminRows, rows } from "../tableData";
+import { getAdminColumns, getAdminRows, getRows } from "../tableData";
 import useAuthStore from "../../../../utils/useAuthStore";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
