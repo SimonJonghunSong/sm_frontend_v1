@@ -46,6 +46,7 @@ import { getModelPkg, getModels } from "@/src/api/services/model";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import useModelPkgStore from "@/src/stores/useModelPkgStore";
 import dayjs from "dayjs";
+import useCustomPagination from "@/src/hooks/useCustomPagination";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
@@ -712,39 +713,26 @@ type DataTableProps = {
 const PAGE_SIZE = 10;
 
 function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
-  const [page, setPage] = useState(1);
-  const pageCount = useMemo(
-    () => rows.length / PAGE_SIZE + (rows.length % PAGE_SIZE ? 1 : 0),
-    [rows]
-  );
+  const { paginatedRows, page, pageCount, handleChangePage } =
+    useCustomPagination({ rows });
 
   return (
     <Stack alignItems="center">
       <ul className={styles.galleryWrap}>
-        {(rows || [])
-          .filter((item, index) => {
-            const startIndex = PAGE_SIZE * (page - 1);
-            const endIndex = startIndex + PAGE_SIZE;
-
-            console.log("startIndex >>>", startIndex);
-            console.log("endIndex >>>", endIndex);
-
-            return startIndex <= index && index < endIndex;
-          })
-          .map((item, index) => (
-            <li key={item.id}>
-              <div className={styles.galleryThumbnail}>
-                <Image src={item.col1} alt="model" fill />
-              </div>
-              <div className={styles.galleryTitle}>{item.col2}</div>
-              <ModelButton
-                setRows={setRows}
-                index={index}
-                loaded={rows[index].loaded}
-                toggleLoaded={() => toggleLoaded(item.id)}
-              />
-            </li>
-          ))}
+        {paginatedRows.map((item, index) => (
+          <li key={item.id}>
+            <div className={styles.galleryThumbnail}>
+              <Image src={item.col1} alt="model" fill />
+            </div>
+            <div className={styles.galleryTitle}>{item.col2}</div>
+            <ModelButton
+              setRows={setRows}
+              index={index}
+              loaded={rows[index].loaded}
+              toggleLoaded={() => toggleLoaded(item.id)}
+            />
+          </li>
+        ))}
       </ul>
       <Stack spacing={2} justifyContent="center" mt="40px">
         <Pagination
@@ -754,7 +742,7 @@ function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
           variant="outlined"
           shape="rounded"
           onChange={(event: React.ChangeEvent<unknown>, value: number) => {
-            setPage(value);
+            handleChangePage(value);
           }}
           renderItem={(props2) => (
             <PaginationItem
