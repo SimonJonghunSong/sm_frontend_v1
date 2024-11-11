@@ -175,7 +175,7 @@ export default function AddModal({ handleCloseModal }: Props) {
     }
   };
 
-  const handleAddConfirm = async () => {
+  const handleAddConfirm = () => {
     const formData = new FormData();
 
     formData.append("image_file", imageFile);
@@ -193,7 +193,7 @@ export default function AddModal({ handleCloseModal }: Props) {
       })
     );
 
-    addModelRequest.mutateAsync(formData);
+    addModelRequest.mutate(formData);
   };
 
   return (

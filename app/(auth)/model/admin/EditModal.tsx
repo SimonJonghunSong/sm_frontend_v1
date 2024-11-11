@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
+  Box,
   Button,
   Checkbox,
   FormControl,
@@ -175,14 +176,17 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     }
   };
 
-  const handleEditConfirm = async () => {
+  const handleEditConfirm = () => {
     const formData = new FormData();
 
-    formData.append("image_file", imageFile);
+    if (imageFile) {
+      formData.append("image_file", imageFile);
+    }
     formData.append("default_profile", settingFile);
     formData.append(
       "json",
       JSON.stringify({
+        uid: selectedData.uid,
         dev_name: devName,
         fw_ver: "1.1.0",
         country,
@@ -193,7 +197,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       })
     );
 
-    editModelRequest.mutateAsync(formData);
+    editModelRequest.mutate(formData);
   };
 
   useEffect(() => {
@@ -209,6 +213,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         hide: selectedData.hide,
       },
     });
+    setThumbnailPreview(selectedData.image_file);
   }, [selectedData]);
 
   return (
@@ -220,7 +225,6 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       confirmButtonText="Save"
       width="720px"
       disabled={
-        !imageFile ||
         !devName ||
         !country ||
         !supportedNetworkType.length ||
@@ -240,12 +244,17 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
               <Stack direction="row" gap="16px" alignItems="flex-end">
                 <div className={styles.thumbnail}>
                   {imagePreview ? (
-                    <Image
-                      src={imagePreview}
-                      alt="preview"
-                      width={160}
-                      height={160}
-                    />
+                    <Box width={160} height={160}>
+                      <img
+                        src={imagePreview}
+                        alt="thumbnail"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                        }}
+                      />
+                    </Box>
                   ) : (
                     <ImageOutlinedIcon
                       sx={{ color: "var(--grey4)", fontSize: 62 }}

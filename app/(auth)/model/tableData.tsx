@@ -30,11 +30,11 @@ export const getAdminColumns: (
             justifyContent="center"
             height="100%"
           >
-            <Box sx={{ objectFit: "cover" }} width={96} height={96}>
+            <Box width={96} height={96}>
               <img
                 src={params.value}
                 alt="thumbnail"
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%", height: "100%", objectFit: "contain" }}
               />
             </Box>
           </Stack>

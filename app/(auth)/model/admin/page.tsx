@@ -21,6 +21,7 @@ import { delModel, editModel, getModels } from "@/src/api/services/model";
 import AddModal from "app/(auth)/model/admin/AddModal";
 import { Model as ModelType } from "@/src/api/services/model/type";
 import EditModal from "app/(auth)/model/admin/EditModal";
+import { AxiosError } from "axios";
 
 const selectSortData = [
   { label: "Newest", value: "Newest" },
@@ -115,36 +116,38 @@ export default function Model() {
   const handleClickDelete = (id: string) => {
     deleteRequest.mutate([id]);
   };
+
   const handleClickHide = (id: string) => {
-    // TODO 이미지 업로드 변경에 의한 재작업 필요
-    // 1. EditModal 파일 180번째 줄 handleEditConfirm 참고 하셔서 작업 부탁드립니다 ! 😃😁😄😀😆🥹😅
-    toast("... is fixing");
-    // const targetData = (data?.data?.records || []).find(
-    //   (item) => item.uid === id
-    // );
-    // if (targetData) {
-    //   const {
-    //     uid,
-    //     country,
-    //     hide,
-    //     image_file,
-    //     image_file_small,
-    //     setting_file,
-    //     supported_network_type,
-    //     supported_features,
-    //     model_pkg,
-    //   } = targetData;
-    //   editModelRequest.mutate({
-    //     uid,
-    //     country: country.name,
-    //     hide: !hide,
-    //     image_file,
-    //     setting_file,
-    //     supported_network_type,
-    //     supported_features,
-    //     model_pkg: model_pkg || "model_pkg",
-    //   });
-    // }
+    const targetData = (data?.data?.records || []).find(
+      (item) => item.uid === id
+    );
+    if (targetData) {
+      const {
+        dev_name,
+        country,
+        hide,
+        supported_network_type,
+        supported_features,
+        uid,
+      } = targetData;
+      const formData = new FormData();
+
+      formData.append(
+        "json",
+        JSON.stringify({
+          uid,
+          dev_name,
+          fw_ver: "1.1.0",
+          country: country.name,
+          supported_network_type,
+          supported_features,
+          hide: !hide,
+          model_pkg: "model_pkg",
+        })
+      );
+
+      editModelRequest.mutate(formData);
+    }
   };
 
   const [selectedRowIdList, setSelectedRowIdList] = useState<string[]>();

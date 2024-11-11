@@ -490,11 +490,15 @@ function AddAcountModal() {
             <Stack direction="row" gap="16px" alignItems="flex-end">
               <div className={styles.thumbnail}>
                 {imagePreview ? (
-                  <Box width={160} height={160} sx={{ objectFit: "contain" }}>
+                  <Box width={160} height={160}>
                     <img
                       src={imagePreview}
                       alt="preview"
-                      style={{ width: "100%", height: "100%" }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
                     />
                   </Box>
                 ) : (
@@ -744,11 +748,15 @@ function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
         {paginatedRows.map((item, index) => (
           <li key={item.id}>
             <div className={styles.galleryThumbnail}>
-              <Box width={195} height={172} sx={{ objectFit: "contain" }}>
+              <Box width={195} height={172}>
                 <img
                   src={item.col1}
                   alt="model"
-                  style={{ width: "100%", height: "100%" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
                 />
               </Box>
               {/* <Image src={item.col1} alt="model" fill /> */}
