@@ -142,6 +142,24 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     }
   };
 
+  const handleSupportedNetworkType = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      dispatch({
+        type: "SET_SUPPORTED_NETWORK_TYPE",
+        value: [...supportedNetworkType, value],
+      });
+    } else {
+      dispatch({
+        type: "SET_SUPPORTED_NETWORK_TYPE",
+        value: supportedNetworkType.filter((item) => item !== value),
+      });
+    }
+  };
+
   const handleSupportedFeaturesType = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -298,25 +316,31 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
-            <FormControl sx={{ width: "100%" }} size="small">
-              <Select
-                displayEmpty
-                renderValue={(v) =>
-                  v?.length ? (
-                    selectNetworkData.find((item) => item.value === v).label
-                  ) : (
-                    <span className="text-grey-5">Select</span>
-                  )
-                }
-                value={""}
-                disabled
-              >
-                {selectNetworkData.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
+            <FormControl
+              sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
+            >
+              {[
+                { label: "2G", value: "2G" },
+                { label: "3G", value: "3G" },
+                { label: "LTE Cat.1", value: "LTEcat1" },
+                { label: "LTE Cat-M1", value: "LTECatM1" },
+                { label: "5G", value: "5G" },
+              ].map(({ label, value }) => {
+                return (
+                  <FormControlLabel
+                    value={value}
+                    key={value}
+                    control={
+                      <Checkbox
+                        onChange={handleSupportedNetworkType}
+                        value={value}
+                        checked={supportedNetworkType.includes(value)}
+                      />
+                    }
+                    label={label}
+                  />
+                );
+              })}
             </FormControl>
           </InputBox.Body>
         </InputBox>
@@ -329,50 +353,26 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
             <FormControl
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
-              <FormControlLabel
-                value="Wi-Fi"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="Wi-Fi"
-                    checked={supportedFeatures.includes("Wi-Fi")}
+              {[
+                { label: "Wi-Fi", value: "Wi-Fi" },
+                { label: "BLE", value: "BLE" },
+                { label: "RF", value: "RF" },
+                { label: "NB-IoT", value: "NB-IoT" },
+              ].map(({ label, value }) => {
+                return (
+                  <FormControlLabel
+                    value={value}
+                    control={
+                      <Checkbox
+                        onChange={handleSupportedFeaturesType}
+                        value={value}
+                        checked={supportedFeatures.includes(value)}
+                      />
+                    }
+                    label={label}
                   />
-                }
-                label="Wi-Fi"
-              />
-              <FormControlLabel
-                value="BLE"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="BLE"
-                    checked={supportedFeatures.includes("BLE")}
-                  />
-                }
-                label="BLE"
-              />
-              <FormControlLabel
-                value="RF"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="RF"
-                    checked={supportedFeatures.includes("RF")}
-                  />
-                }
-                label="RF"
-              />
-              <FormControlLabel
-                value="NB-IoT"
-                control={
-                  <Checkbox
-                    onChange={handleSupportedFeaturesType}
-                    value="NB-IoT"
-                    checked={supportedFeatures.includes("NB-IoT")}
-                  />
-                }
-                label="NB-IoT"
-              />
+                );
+              })}
             </FormControl>
           </InputBox.Body>
         </InputBox>
@@ -385,140 +385,38 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
             <FormControl
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
-              <FormControlLabel
-                value="Advanced"
-                control={
-                  <Checkbox
-                    name="Advanced"
-                    checked={supportedFeatures.includes("Advanced")}
-                    onChange={handleSupportedFeaturesType}
+              {[
+                { label: "Advanced", value: "Advanced" },
+                { label: "Low-cost", value: "Low-cost" },
+                {
+                  label: "Low-power consumption",
+                  value: "Low-power consumption",
+                },
+                { label: "Compact-size", value: "Compact-size" },
+                { label: "BoxTracker", value: "BoxTracker" },
+                { label: "Waterproof", value: "Waterproof" },
+                { label: "Geofence", value: "Geofence" },
+                { label: "Jamming Detection", value: "Jamming Detection" },
+                { label: "Accelerometer", value: "Accelerometer" },
+                { label: "Ignition", value: "Ignition" },
+                { label: "Solar", value: "Solar" },
+                { label: "OBD", value: "OBD" },
+              ].map(({ label, value }) => {
+                return (
+                  <FormControlLabel
+                    key={value}
+                    value={value}
+                    control={
+                      <Checkbox
+                        onChange={handleSupportedFeaturesType}
+                        value={value}
+                        checked={supportedFeatures.includes(value)}
+                      />
+                    }
+                    label={label}
                   />
-                }
-                label="Advanced"
-              />
-              <FormControlLabel
-                value="Low-cost"
-                control={
-                  <Checkbox
-                    name="Low-cost"
-                    checked={supportedFeatures.includes("Low-cost")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Low-cost"
-              />
-              <FormControlLabel
-                value="Low-power consumption"
-                control={
-                  <Checkbox
-                    name="Low-power consumption"
-                    checked={supportedFeatures.includes(
-                      "Low-power consumption"
-                    )}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Low-power consumption"
-              />
-              <FormControlLabel
-                value="Compact-size"
-                control={
-                  <Checkbox
-                    name="Compact-size"
-                    checked={supportedFeatures.includes("Compact-size")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Compact-size"
-              />
-              <FormControlLabel
-                value="BoxTracker"
-                control={
-                  <Checkbox
-                    name="BoxTracker"
-                    checked={supportedFeatures.includes("BoxTracker")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="BoxTracker"
-              />
-              <FormControlLabel
-                value="Waterproof"
-                control={
-                  <Checkbox
-                    name="Waterproof"
-                    checked={supportedFeatures.includes("Waterproof")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Waterproof"
-              />
-              <FormControlLabel
-                value="Geofence"
-                control={
-                  <Checkbox
-                    name="Geofence"
-                    checked={supportedFeatures.includes("Geofence")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Geofence"
-              />
-              <FormControlLabel
-                value="Jamming Detection"
-                control={
-                  <Checkbox
-                    name="Jamming Detection"
-                    checked={supportedFeatures.includes("Jamming Detection")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Jamming Detection"
-              />
-              <FormControlLabel
-                value="Accelerometer"
-                control={
-                  <Checkbox
-                    name="Accelerometer"
-                    checked={supportedFeatures.includes("Accelerometer")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Accelerometer"
-              />
-              <FormControlLabel
-                value="Ignition"
-                control={
-                  <Checkbox
-                    name="Ignition"
-                    checked={supportedFeatures.includes("Ignition")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Ignition"
-              />
-              <FormControlLabel
-                value="Solar"
-                control={
-                  <Checkbox
-                    name="Solar"
-                    checked={supportedFeatures.includes("Solar")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="Solar"
-              />
-              <FormControlLabel
-                value="OBD"
-                control={
-                  <Checkbox
-                    name="OBD"
-                    checked={supportedFeatures.includes("OBD")}
-                    onChange={handleSupportedFeaturesType}
-                  />
-                }
-                label="OBD"
-              />
+                );
+              })}
             </FormControl>
           </InputBox.Body>
         </InputBox>
