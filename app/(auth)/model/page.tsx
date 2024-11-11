@@ -47,6 +47,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import useModelPkgStore from "@/src/stores/useModelPkgStore";
 import dayjs from "dayjs";
 import useCustomPagination from "@/src/hooks/useCustomPagination";
+import { toast } from "react-toastify";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
@@ -244,6 +245,11 @@ export default function Model() {
           addDatas(records);
 
           setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
+
+          toast("Successfully loaded!", {
+            type: "success",
+            position: "top-center",
+          });
         },
       }
     );
@@ -316,6 +322,11 @@ export default function Model() {
                 item.id === id ? { ...item, loaded: !item.loaded } : item
               )
             );
+
+            toast("Successfully loaded!", {
+              type: "success",
+              position: "top-center",
+            });
           },
         }
       );
