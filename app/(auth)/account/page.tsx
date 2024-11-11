@@ -27,6 +27,7 @@ import {
   modifyUser,
 } from "@/src/api/services/user";
 import { toast } from "react-toastify";
+import useAuthStore from "@/utils/useAuthStore";
 
 const selectRoleData = [
   { label: "Root", value: "root" },
@@ -134,6 +135,7 @@ export default function Account() {
     col6: string; // role
     col7: string; // date
   }>();
+
   const queryClient = useQueryClient();
   const { data, error } = useQuery({
     queryKey: ["user"],
@@ -284,8 +286,6 @@ export default function Account() {
   );
 }
 
-// TODO: Role condition에 따라 레이아웃 다르게 보여지도록 필요 (아래 샘플은 customer 기준: 제일 많은 컴포넌트)
-
 interface FormState {
   role: string;
   id: string;
@@ -318,17 +318,17 @@ type FormAction =
 
 // 초기 상태 정의
 const initialState: FormState = {
-  role: "",
-  id: "",
-  email: "",
-  name: "",
-  password: "",
-  confirmPassword: "",
-  country: "",
-  company: "",
-  department: "",
-  taxId: "",
-  alias: "",
+  role: undefined,
+  id: undefined,
+  email: undefined,
+  name: undefined,
+  password: undefined,
+  confirmPassword: undefined,
+  country: undefined,
+  company: undefined,
+  department: undefined,
+  taxId: undefined,
+  alias: undefined,
   ndaFile: null,
 };
 
@@ -364,7 +364,54 @@ function reducer(state: FormState, action: FormAction): FormState {
   }
 }
 
+const getFieldsByRole = (userRole: string) => {
+  switch (userRole) {
+    case "ROOT":
+      return ["role", "id", "email", "password", "passwordConfirm"];
+    case "ADMIN":
+      return [
+        "role",
+        "id",
+        "email",
+        "name",
+        "password",
+        "passwordConfirm",
+        "country",
+        "affiliation",
+        "department",
+      ];
+    case "CUSTOMER":
+      return [
+        "role",
+        "id",
+        "email",
+        "name",
+        "password",
+        "passwordConfirm",
+        "country",
+        "company",
+        "department",
+        "taxId",
+        "alias",
+        "affiliation",
+        "department",
+      ];
+    case "GUEST":
+      return [
+        "role",
+        "id",
+        "email",
+        "name",
+        "password",
+        "passwordConfirm",
+        "country",
+      ];
+  }
+};
+
 function AddAcountModal({ onClose }: { onClose: () => void }) {
+  const { userRole } = useAuthStore();
+
   const [state, dispatch] = useReducer(reducer, initialState);
   const {
     role,
@@ -390,6 +437,7 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
       onClose();
     },
   });
+
   // 일시적인 미사용
   // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   //   if (e.target.files) {
@@ -423,6 +471,46 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
     });
   };
 
+  const getDisableState = () => {
+    switch (userRole) {
+      case "ROOT":
+        return !role || !id || !email || !password || !confirmPassword;
+      case "ADMIN":
+        return (
+          !role ||
+          !id ||
+          !email ||
+          !password ||
+          !confirmPassword ||
+          !name ||
+          !country
+        );
+      case "CUSTOMER":
+        return (
+          !role ||
+          !id ||
+          !email ||
+          !password ||
+          !confirmPassword ||
+          !name ||
+          !country ||
+          !company ||
+          !taxId ||
+          !alias
+        );
+      case "GUEST":
+        return (
+          !role ||
+          !id ||
+          !email ||
+          !password ||
+          !confirmPassword ||
+          !name ||
+          !country
+        );
+    }
+  };
+
   return (
     <Modal
       open
@@ -432,18 +520,7 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
       confirmButtonText="Add"
       width="400px"
       manualToggleOpenWhenConfirm
-      disabled={
-        !role ||
-        !id ||
-        !email ||
-        !name ||
-        !password ||
-        !confirmPassword ||
-        !company ||
-        !taxId ||
-        !alias ||
-        !country
-      }
+      disabled={getDisableState()}
     >
       <Stack>
         <InputBox>
@@ -511,22 +588,24 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             />
           </InputBox.Body>
         </InputBox>
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Name<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.name}
-              onChange={(e) =>
-                dispatch({ type: "SET_NAME", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
+        {getFieldsByRole(userRole).includes("name") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Name<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.name}
+                onChange={(e) =>
+                  dispatch({ type: "SET_NAME", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
         <InputBox>
           <InputBox.Head>
@@ -565,87 +644,92 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           </InputBox.Body>
         </InputBox>
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Country<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <SelectCountry
-              setCountryData={(value) =>
-                dispatch({ type: "SET_COUNTRY", value: value as string })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Company<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.company}
-              onChange={(e) =>
-                dispatch({ type: "SET_COMPANY", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>Department</InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.department}
-              onChange={(e) =>
-                dispatch({ type: "SET_DEPARTMENT", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Tax ID<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.taxId}
-              onChange={(e) =>
-                dispatch({ type: "SET_TAX_ID", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Alias<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.alias}
-              onChange={(e) =>
-                dispatch({ type: "SET_ALIAS", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
+        {getFieldsByRole(userRole).includes("country") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Country<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <SelectCountry
+                setCountryData={(value) =>
+                  dispatch({ type: "SET_COUNTRY", value: value as string })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
+        {getFieldsByRole(userRole).includes("company") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Company<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.company}
+                onChange={(e) =>
+                  dispatch({ type: "SET_COMPANY", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
+        {getFieldsByRole(userRole).includes("department") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Department</InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.department}
+                onChange={(e) =>
+                  dispatch({ type: "SET_DEPARTMENT", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
+        {getFieldsByRole(userRole).includes("taxId") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Tax ID<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.taxId}
+                onChange={(e) =>
+                  dispatch({ type: "SET_TAX_ID", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
+        {getFieldsByRole(userRole).includes("alias") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Alias<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.alias}
+                onChange={(e) =>
+                  dispatch({ type: "SET_ALIAS", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
         {/* <InputBox>
         <InputBox.Head>
           <InputBox.Title>
@@ -701,6 +785,7 @@ function EditAcountModal({
   department: string;
   onClose: () => void;
 }) {
+  const { userRole } = useAuthStore();
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
     role,
@@ -733,6 +818,52 @@ function EditAcountModal({
   //     dispatch({ type: "SET_NDA_FILE", value: e.target.files[0] });
   //   }
   // };
+
+  const getDisableState = () => {
+    switch (userRole) {
+      case "ROOT":
+        return (
+          !state.role ||
+          !state.id ||
+          !state.email ||
+          !state.password ||
+          !state.confirmPassword
+        );
+      case "ADMIN":
+        return (
+          !state.role ||
+          !state.id ||
+          !state.email ||
+          !state.password ||
+          !state.confirmPassword ||
+          !state.name ||
+          !state.country
+        );
+      case "CUSTOMER":
+        return (
+          !state.role ||
+          !state.id ||
+          !state.email ||
+          !state.password ||
+          !state.confirmPassword ||
+          !state.name ||
+          !state.country ||
+          !state.company ||
+          !state.taxId ||
+          !state.alias
+        );
+      case "GUEST":
+        return (
+          !state.role ||
+          !state.id ||
+          !state.email ||
+          !state.password ||
+          !state.confirmPassword ||
+          !state.name ||
+          !state.country
+        );
+    }
+  };
 
   const handleSubmit = () => {
     if (state.password !== state.confirmPassword) {
@@ -769,18 +900,7 @@ function EditAcountModal({
       confirmButtonText="Add"
       width="400px"
       manualToggleOpenWhenConfirm
-      disabled={
-        !state.role ||
-        !state.id ||
-        !state.email ||
-        !state.name ||
-        !state.password ||
-        !state.confirmPassword ||
-        !state.company ||
-        !state.taxId ||
-        !state.alias ||
-        !state.country
-      }
+      disabled={getDisableState()}
     >
       <Stack>
         <InputBox>
@@ -848,22 +968,25 @@ function EditAcountModal({
             />
           </InputBox.Body>
         </InputBox>
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Name<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.name}
-              onChange={(e) =>
-                dispatch({ type: "SET_NAME", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
+
+        {getFieldsByRole(userRole).includes("name") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Name<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.name}
+                onChange={(e) =>
+                  dispatch({ type: "SET_NAME", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
         <InputBox>
           <InputBox.Head>
@@ -901,88 +1024,97 @@ function EditAcountModal({
             />
           </InputBox.Body>
         </InputBox>
+        {getFieldsByRole(userRole).includes("country") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Country<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <SelectCountry
+                defaultCountry={state.country.toLowerCase()}
+                setCountryData={(value) =>
+                  dispatch({ type: "SET_COUNTRY", value: value as string })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Country<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <SelectCountry
-              defaultCountry={state.country.toLowerCase()}
-              setCountryData={(value) =>
-                dispatch({ type: "SET_COUNTRY", value: value as string })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
+        {getFieldsByRole(userRole).includes("company") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Company<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.company}
+                onChange={(e) =>
+                  dispatch({ type: "SET_COMPANY", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Company<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.company}
-              onChange={(e) =>
-                dispatch({ type: "SET_COMPANY", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
+        {getFieldsByRole(userRole).includes("department") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Department</InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.department}
+                onChange={(e) =>
+                  dispatch({ type: "SET_DEPARTMENT", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>Department</InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.department}
-              onChange={(e) =>
-                dispatch({ type: "SET_DEPARTMENT", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
+        {getFieldsByRole(userRole).includes("taxId") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Tax ID<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.taxId}
+                onChange={(e) =>
+                  dispatch({ type: "SET_TAX_ID", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Tax ID<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.taxId}
-              onChange={(e) =>
-                dispatch({ type: "SET_TAX_ID", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              Alias<i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.alias}
-              onChange={(e) =>
-                dispatch({ type: "SET_ALIAS", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
+        {getFieldsByRole(userRole).includes("alias") && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                Alias<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                fullWidth
+                value={state.alias}
+                onChange={(e) =>
+                  dispatch({ type: "SET_ALIAS", value: e.target.value })
+                }
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
         {/* <InputBox>
         <InputBox.Head>
