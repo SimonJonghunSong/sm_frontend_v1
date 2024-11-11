@@ -95,7 +95,6 @@ export default function AddModal({ handleCloseModal }: Props) {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully added!", {
         type: "success",
-        position: "top-center",
       });
       handleCloseModal();
     },

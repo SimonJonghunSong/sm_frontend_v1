@@ -96,7 +96,6 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully edited!", {
         type: "success",
-        position: "top-center",
       });
       handleCloseModal();
     },

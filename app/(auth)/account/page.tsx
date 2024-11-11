@@ -147,7 +147,6 @@ export default function Account() {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       toast("Successfully deleted!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
@@ -432,7 +431,6 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       toast("Successfully added!", {
         type: "success",
-        position: "top-center",
       });
       onClose();
     },
@@ -807,7 +805,6 @@ function EditAcountModal({
       queryClient.invalidateQueries({ queryKey: ["user"] });
       toast("Successfully Edited!", {
         type: "success",
-        position: "top-center",
       });
       onClose();
     },

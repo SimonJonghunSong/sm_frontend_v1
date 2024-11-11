@@ -64,7 +64,9 @@ export default function SideMenu({
       setUserRole(undefined);
       setRefreshToken(undefined);
       router.replace("/login");
-      toast("Logged out successfully.", { type: "info" });
+      toast("Logged out successfully.", {
+        type: "info",
+      });
     }
   };
 

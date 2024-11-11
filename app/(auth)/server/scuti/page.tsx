@@ -42,7 +42,6 @@ export default function Server() {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
       toast("Successfully deleted!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
@@ -228,7 +227,6 @@ function AddServerModal({ onClose }) {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
       toast("Successfully added!", {
         type: "success",
-        position: "top-center",
       });
       onClose();
     },

@@ -253,7 +253,6 @@ export default function Model() {
 
           toast("Successfully loaded!", {
             type: "success",
-            position: "top-center",
           });
         },
       }
@@ -330,7 +329,6 @@ export default function Model() {
 
             toast("Successfully loaded!", {
               type: "success",
-              position: "top-center",
             });
           },
         }

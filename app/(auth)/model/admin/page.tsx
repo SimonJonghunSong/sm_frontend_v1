@@ -73,7 +73,6 @@ export default function Model() {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully deleted!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
@@ -83,7 +82,6 @@ export default function Model() {
       queryClient.invalidateQueries({ queryKey: ["model"] });
       toast("Successfully edited!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
