@@ -3,6 +3,7 @@ import {
   EditModelBody,
   Model,
   ModelPkg,
+  PostModelPkgBody,
 } from "@/src/api/services/model/type";
 import { get, post, put, del } from "../../apiClient";
 
@@ -22,10 +23,11 @@ const delModel = (uid_list: string[]) => {
   return del("/api/v1/models", { uid_list });
 };
 
-const getModelPkg = (uid_list: string[]) => {
-  return get<{ count: number; records: ModelPkg[] }>("/api/v1/models_pkg", {
-    uid_list,
-  });
+const getModelPkg = (body: PostModelPkgBody) => {
+  return post<{ count: number; records: ModelPkg[] }, PostModelPkgBody>(
+    "/api/v1/models_pkg",
+    body
+  );
 };
 
 export { getModels, addModel, editModel, delModel, getModelPkg };

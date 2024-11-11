@@ -235,14 +235,17 @@ export default function Model() {
   };
 
   const handleLoadAllModel = async () => {
-    getModelPkgRequest.mutate(["all"], {
-      onSuccess: (res) => {
-        const records = res.data.records;
-        addDatas(records);
+    getModelPkgRequest.mutate(
+      { uid_list: ["all"] },
+      {
+        onSuccess: (res) => {
+          const records = res.data.records;
+          addDatas(records);
 
-        setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
-      },
-    });
+          setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
+        },
+      }
+    );
   };
 
   const toggleShowLoadedModels = () => {
@@ -300,18 +303,21 @@ export default function Model() {
 
   const toggleLoaded = useCallback(
     (id: string) => {
-      getModelPkgRequest.mutate([id], {
-        onSuccess: (res) => {
-          const records = res.data.records;
-          addDatas(records);
+      getModelPkgRequest.mutate(
+        { uid_list: [id] },
+        {
+          onSuccess: (res) => {
+            const records = res.data.records;
+            addDatas(records);
 
-          setRowData((prev) =>
-            prev.map((item) =>
-              item.id === id ? { ...item, loaded: !item.loaded } : item
-            )
-          );
-        },
-      });
+            setRowData((prev) =>
+              prev.map((item) =>
+                item.id === id ? { ...item, loaded: !item.loaded } : item
+              )
+            );
+          },
+        }
+      );
     },
     [data]
   );
