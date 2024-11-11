@@ -1,10 +1,10 @@
 import { useRef, useState } from "react";
-import { AT_GET_JSON } from "./useConnection";
 import useSerialStore from "../stores/useSerialStore";
 import { delayPromise } from "./useSerial";
 import {
   AT_GET_CIRCULAR_GEOFENCE_255_LIST,
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
+  AT_GET_JSON,
   AT_GET_POLYGON_GEOFENCE_LIST,
   CR,
   POLYGON_GEOFENCE_POINTS,

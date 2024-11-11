@@ -27,7 +27,6 @@ export default function page() {
     }: AxiosError<{ response: { code: number; reason: string } }>) => {
       toast(response.data.response.reason, {
         type: "error",
-        position: "top-center",
       });
     },
   });

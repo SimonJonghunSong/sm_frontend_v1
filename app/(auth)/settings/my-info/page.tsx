@@ -28,7 +28,6 @@ export default function Server() {
     onSuccess: () => {
       toast("Your information has been successfully updated.", {
         type: "success",
-        position: "top-center",
       });
     },
   });

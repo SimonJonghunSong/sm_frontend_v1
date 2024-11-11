@@ -38,7 +38,6 @@ export default function ReactQueryProvider({
           }
           toast(error.response?.data?.response?.reason || "Error", {
             type: "error",
-            position: "top-center",
           });
         },
       }),
@@ -49,6 +48,7 @@ export default function ReactQueryProvider({
           retry: 1,
         },
         mutations: {
+          retry: 0,
           onError: (
             error: AxiosError<{ response: { code: number; reason: string } }>
           ) => {
@@ -59,9 +59,10 @@ export default function ReactQueryProvider({
               router.push("/login");
             }
 
+            console.log("error >>>", error);
+
             toast(error.response?.data?.response?.reason || "Error", {
               type: "error",
-              position: "top-center",
             });
           },
         },

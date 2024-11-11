@@ -42,7 +42,6 @@ export default function Server() {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
       toast("Successfully deleted!", {
         type: "success",
-        position: "top-center",
       });
     },
   });
@@ -234,7 +233,6 @@ function AddServerModal({
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
       toast("Successfully added!", {
         type: "success",
-        position: "top-center",
       });
       onClose();
     },

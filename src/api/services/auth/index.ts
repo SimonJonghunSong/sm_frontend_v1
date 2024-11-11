@@ -1,5 +1,5 @@
 import { get, post, put } from "../../apiClient";
-import { CommonGetResponse, CommonResponse } from "../common/type";
+import { CommonResponse } from "../common/type";
 
 const login = (body: AuthLoginBody) => {
   return post<
@@ -13,6 +13,10 @@ const login = (body: AuthLoginBody) => {
   >("/api/v1/auth/login", body);
 };
 
+const logout = () => {
+  return post("api/v1/auth/logout");
+};
+
 const findId = (body: AuthFindIdBody) => {
   return post("/api/v1/auth/find-id", body);
 };
@@ -22,9 +26,7 @@ const findPassword = (body: AuthFindPassBody) => {
 };
 
 const me = () => {
-  return get<CommonGetResponse<{ user: UserResponse }>>(
-    "/api/v1/auth/my/account"
-  );
+  return get<CommonResponse<{ user: UserResponse }>>("/api/v1/auth/my/account");
 };
 
 const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
@@ -39,11 +41,4 @@ const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
   >("/api/v1/auth/my/account", body);
 };
 
-// { endpoint: "/api/v1/auth/find-id"; method: "POST"; body: AuthFindIdBody }
-// | {
-//     endpoint: "/api/v1/auth/find-pass";
-//     method: "POST";
-//     body: AuthFindPassBody;
-//   }
-
-export { login, findId, findPassword, me, modifyMyAccount };
+export { login, findId, findPassword, me, modifyMyAccount, logout };

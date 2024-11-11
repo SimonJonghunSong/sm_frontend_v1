@@ -1,4 +1,12 @@
 "use client";
+
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import styles from "./styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
@@ -7,7 +15,6 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  IconButton,
   LinearProgress,
   MenuItem,
   Pagination,
@@ -22,9 +29,6 @@ import {
   ToggleButtonGroup,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import DataTable from "../../../components/dataTable";
 import Modal from "../../../components/Modal";
 import useModal from "../../../utils/useModal";
@@ -35,10 +39,14 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { SwitchPrimary } from "../../../components/switches";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-import { adminColumns, adminRows, rows } from "./tableData";
+import { getRows } from "./tableData";
+import { getModelPkg, getModels } from "@/src/api/services/model";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import useModelPkgStore from "@/src/stores/useModelPkgStore";
+import dayjs from "dayjs";
+import useCustomPagination from "@/src/hooks/useCustomPagination";
+import { toast } from "react-toastify";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
@@ -53,7 +61,26 @@ const selectSortData = [
 ];
 
 export default function Model() {
-  const columns: GridColDef[] = [
+  const { getIncludeUids, addDatas } = useModelPkgStore();
+
+  const { data } = useQuery({
+    queryKey: ["model"],
+    queryFn: getModels,
+    select: (data) => {
+      return {
+        ...data,
+        data: {
+          ...data.data,
+          records: data.data.records.map((item) => ({
+            ...item,
+            loaded: getIncludeUids().includes(item.uid),
+          })),
+        },
+      };
+    },
+  });
+
+  const getColumns: () => GridColDef[] = () => [
     {
       field: "col1",
       headerName: "Image",
@@ -69,7 +96,13 @@ export default function Model() {
             alignItems="center"
             height="100%"
           >
-            <Image src={params.value} alt="thumbnail" width={96} height={96} />
+            <Box sx={{ objectFit: "cover" }} width={96} height={96}>
+              <img
+                src={params.value}
+                alt="thumbnail"
+                style={{ width: "100%", height: "100%" }}
+              />
+            </Box>
           </Stack>
         ),
     },
@@ -100,6 +133,7 @@ export default function Model() {
           justifyContent="center"
           alignItems="center"
           height="100%"
+          flexWrap="wrap"
         >
           {params?.value.split(",").map((item) => (
             <span key={item} className="chip">
@@ -115,14 +149,20 @@ export default function Model() {
       width: 180,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) => (
-        <ModelButton
-          setRows={setRowData}
-          index={rowData.findIndex((item) => item.id === params.row.id)}
-          loaded={params.row.loaded}
-          toggleLoaded={toggleLoaded}
-        />
-      ),
+      renderCell: (params) => {
+        return (
+          <ModelButton
+            setRows={setRowData}
+            index={filteredRowData.findIndex(
+              (item) => item.id === params.row.id
+            )}
+            loaded={params.row.loaded}
+            toggleLoaded={() => {
+              toggleLoaded(params.row.id);
+            }}
+          />
+        );
+      },
     },
     {
       field: "col7",
@@ -133,12 +173,55 @@ export default function Model() {
     },
   ];
 
-  const [rowData, setRowData] = useState(rows);
-  const [columnData, setColumnData] = useState(columns);
-
+  // Filter
   const [filter, setFilter] = useState<string>("Newest");
+  const [showLoadedModels, setShowLoadedModels] = useState<boolean>(false);
+  const [selectedTab, setSelectedTab] = useState("");
+
+  const [rowData, setRowData] = useState(getRows(data?.data?.records));
+  const filteredRowData = rowData
+    // 로드된 모델만 필터링
+    .filter((item) => {
+      if (showLoadedModels) {
+        return item.loaded;
+      }
+
+      return true;
+    })
+    // features 탭 필터링
+    .filter((item) => {
+      if (selectedTab) {
+        const features = item.col4.split(",");
+
+        return features.includes(selectedTab);
+      }
+
+      return true;
+    })
+    // 정렬 필터링
+    .toSorted((a, b) => {
+      switch (filter) {
+        case "A-Z":
+          return a.col2.localeCompare(b.col2);
+        case "Oldest":
+          return (
+            dayjs(a.col7).toDate().getTime() - dayjs(b.col7).toDate().getTime()
+          );
+        case "Newest":
+        default:
+          return (
+            dayjs(b.col7).toDate().getTime() - dayjs(a.col7).toDate().getTime()
+          );
+      }
+    });
+
+  const [columnData, setColumnData] = useState(getColumns());
 
   const [viewType, setViewType] = React.useState<string | null>("galleryType");
+
+  const getModelPkgRequest = useMutation({
+    mutationFn: getModelPkg,
+  });
 
   const handleViewType = (
     event: React.MouseEvent<HTMLElement>,
@@ -158,49 +241,106 @@ export default function Model() {
     setState(e.target.value);
   };
 
-  const handleLoadAllModel = () => {
-    alert("load all models");
-  };
+  const handleLoadAllModel = async () => {
+    getModelPkgRequest.mutate(
+      { uid_list: ["all"] },
+      {
+        onSuccess: (res) => {
+          const records = res.data.records;
+          addDatas(records);
 
-  const handleAddModel = () => {
-    modalToggle();
-  };
+          setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
 
-  const [showLoadedModels, setShowLoadedModels] = useState<boolean>(false);
+          toast("Successfully loaded!", {
+            type: "success",
+          });
+        },
+      }
+    );
+  };
 
   const toggleShowLoadedModels = () => {
     setShowLoadedModels(!showLoadedModels);
   };
 
-  useEffect(() => {
-    if (showLoadedModels) {
-      const copyRows = rowData.filter((item) => item.loaded === true);
-      console.log("copyRows");
-      console.log(copyRows);
-      setRowData(copyRows as any);
-    } else {
-      setRowData(rows);
-    }
-  }, [showLoadedModels]);
+  const renderTabs = () => {
+    const records = data?.data?.records || [];
 
-  const toggleLoaded = (index) => {
-    const copyRows = [...rowData];
-    copyRows[index].loaded = !copyRows[index].loaded;
-    setRowData(copyRows as any);
+    const tabs = records.reduce((acc, cur) => {
+      const supportedFeatures = cur.supported_features;
+
+      supportedFeatures.forEach((item) => {
+        if (acc[item]) {
+          acc[item] += 1;
+        } else {
+          acc[item] = 1;
+        }
+      });
+
+      return acc;
+    }, {} as Record<string, number>);
+
+    return (
+      <Stack className={styles.head} direction="row" flexWrap={"wrap"}>
+        <span
+          className={selectedTab === "" ? styles.active : undefined}
+          onClick={() => {
+            setSelectedTab("");
+          }}
+        >
+          All({records.length})
+        </span>
+        {Object.entries(tabs).map(([key, value]) => (
+          <span
+            className={selectedTab === key ? styles.active : undefined}
+            onClick={() => {
+              setSelectedTab(key);
+            }}
+          >
+            {key}({value})
+          </span>
+        ))}
+      </Stack>
+    );
   };
+
+  useEffect(() => {
+    setRowData(getRows(data?.data?.records));
+  }, [data]);
+
+  useEffect(() => {
+    setColumnData(getColumns());
+  }, [rowData]);
+
+  const toggleLoaded = useCallback(
+    (id: string) => {
+      getModelPkgRequest.mutate(
+        { uid_list: [id] },
+        {
+          onSuccess: (res) => {
+            const records = res.data.records;
+            addDatas(records);
+
+            setRowData((prev) =>
+              prev.map((item) =>
+                item.id === id ? { ...item, loaded: !item.loaded } : item
+              )
+            );
+
+            toast("Successfully loaded!", {
+              type: "success",
+            });
+          },
+        }
+      );
+    },
+    [data]
+  );
 
   return (
     <div className="pageWrap">
       <article className="contentWrap">
-        <Stack className={styles.head} direction="row">
-          <span className={styles.active}>All(31)</span>
-          <span>LTE(10)</span>
-          <span>BLE(10)</span>
-          <span>ADVANCED(7)</span>
-          <span>2G(7)</span>
-          <span>OBD(7)</span>
-          <span>RF(7)</span>
-        </Stack>
+        {renderTabs()}
         <Stack>
           <Stack
             direction="row"
@@ -279,13 +419,13 @@ export default function Model() {
           {viewType === "listType" ? (
             <DataTable
               checkbox={false}
-              rows={rowData}
+              rows={filteredRowData}
               columns={columnData}
               rowHeight={120}
             />
           ) : (
             <GalleryView
-              rows={rowData}
+              rows={filteredRowData}
               setRows={setRowData}
               toggleLoaded={toggleLoaded}
             />
@@ -309,7 +449,6 @@ export default function Model() {
 
 function AddAcountModal() {
   const [role, setRole] = useState<string>("");
-  const [company, setCompany] = useState<string>("");
 
   const handleSelectChange = (
     e: SelectChangeEvent,
@@ -349,12 +488,17 @@ function AddAcountModal() {
             <Stack direction="row" gap="16px" alignItems="flex-end">
               <div className={styles.thumbnail}>
                 {imagePreview ? (
-                  <Image
-                    src={imagePreview}
-                    alt="preview"
-                    width={160}
-                    height={160}
-                  />
+                  <Box width={160} height={160}>
+                    <img
+                      src={imagePreview}
+                      alt="preview"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Box>
                 ) : (
                   <ImageOutlinedIcon
                     sx={{ color: "var(--grey4)", fontSize: 62 }}
@@ -590,31 +734,51 @@ type DataTableProps = {
   toggleLoaded: any;
 };
 
+const PAGE_SIZE = 10;
+
 function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
+  const { paginatedRows, page, pageCount, handleChangePage } =
+    useCustomPagination({ rows });
+
   return (
     <Stack alignItems="center">
       <ul className={styles.galleryWrap}>
-        {rows.map((item, index) => (
+        {paginatedRows.map((item, index) => (
           <li key={item.id}>
             <div className={styles.galleryThumbnail}>
-              <Image src={item.col1} alt="model" fill />
+              <Box width={195} height={172}>
+                <img
+                  src={item.col1}
+                  alt="model"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
+              {/* <Image src={item.col1} alt="model" fill /> */}
             </div>
             <div className={styles.galleryTitle}>{item.col2}</div>
             <ModelButton
               setRows={setRows}
               index={index}
               loaded={rows[index].loaded}
-              toggleLoaded={toggleLoaded}
+              toggleLoaded={() => toggleLoaded(item.id)}
             />
           </li>
         ))}
       </ul>
       <Stack spacing={2} justifyContent="center" mt="40px">
         <Pagination
-          count={3}
+          page={page}
+          count={pageCount}
           color="primary"
           variant="outlined"
           shape="rounded"
+          onChange={(event: React.ChangeEvent<unknown>, value: number) => {
+            handleChangePage(value);
+          }}
           renderItem={(props2) => (
             <PaginationItem
               {...props2}
@@ -677,7 +841,8 @@ function ModelButton({ setRows, index, loaded, toggleLoaded }) {
   };
 
   const loadedEnd = () => {
-    toggleLoaded(index);
+    toggleLoaded();
+    setStartLoaded(false);
   };
 
   if (loaded) {

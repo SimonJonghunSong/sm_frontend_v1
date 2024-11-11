@@ -1,4 +1,4 @@
-import { AxiosResponse } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import httpInstance from "./axiosConfig";
 /**
  *
@@ -20,8 +20,11 @@ const get = <T, ParamsType extends {} = {}>(
  * @type RequestDataTypes => Reqeust Data Type
  * @returns
  */
-const post = <T, RequestDataType>(url: string, data?: RequestDataType) =>
-  httpInstance.post<T, AxiosResponse<T>, RequestDataType>(url, data);
+const post = <T, RequestDataType>(
+  url: string,
+  data?: RequestDataType,
+  config?: AxiosRequestConfig<RequestDataType>
+) => httpInstance.post<T, AxiosResponse<T>, RequestDataType>(url, data, config);
 
 /**
  *
@@ -31,8 +34,11 @@ const post = <T, RequestDataType>(url: string, data?: RequestDataType) =>
  * @type RequestDataTypes => Reqeust Data Type
  * @returns
  */
-const put = <T, RequestDataType>(url: string, data?: RequestDataType) =>
-  httpInstance.put<T, AxiosResponse<T>, RequestDataType>(url, data);
+const put = <T, RequestDataType>(
+  url: string,
+  data?: RequestDataType,
+  config?: AxiosRequestConfig<RequestDataType>
+) => httpInstance.put<T, AxiosResponse<T>, RequestDataType>(url, data, config);
 
 /**
  *
