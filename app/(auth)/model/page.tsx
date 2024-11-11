@@ -24,7 +24,15 @@ import {
 import { GridColDef } from "@mui/x-data-grid";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import DataTable from "../../../components/dataTable";
 import Modal from "../../../components/Modal";
 import useModal from "../../../utils/useModal";
@@ -37,10 +45,11 @@ import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { SwitchPrimary } from "../../../components/switches";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-import { getAdminColumns, adminRows, rows } from "./tableData";
-import { getModels } from "@/src/api/services/model";
-import { useQuery } from "@tanstack/react-query";
+import { getRows } from "./tableData";
+import { getModelPkg, getModels } from "@/src/api/services/model";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import useModelPkgStore from "@/src/stores/useModelPkgStore";
+import dayjs from "dayjs";
 
 const selectNetworkData = [
   { label: "network1", value: "network1" },
@@ -55,12 +64,26 @@ const selectSortData = [
 ];
 
 export default function Model() {
+  const { getIncludeUids, addDatas } = useModelPkgStore();
+
   const { data, error } = useQuery({
     queryKey: ["model"],
     queryFn: getModels,
+    select: (data) => {
+      return {
+        ...data,
+        data: {
+          ...data.data,
+          records: data.data.records.map((item) => ({
+            ...item,
+            loaded: getIncludeUids().includes(item.uid),
+          })),
+        },
+      };
+    },
   });
 
-  const columns: GridColDef[] = [
+  const getColumns: () => GridColDef[] = () => [
     {
       field: "col1",
       headerName: "Image",
@@ -107,6 +130,7 @@ export default function Model() {
           justifyContent="center"
           alignItems="center"
           height="100%"
+          flexWrap="wrap"
         >
           {params?.value.split(",").map((item) => (
             <span key={item} className="chip">
@@ -122,14 +146,20 @@ export default function Model() {
       width: 180,
       headerAlign: "center",
       align: "center",
-      renderCell: (params) => (
-        <ModelButton
-          setRows={setRowData}
-          index={rowData.findIndex((item) => item.id === params.row.id)}
-          loaded={params.row.loaded}
-          toggleLoaded={toggleLoaded}
-        />
-      ),
+      renderCell: (params) => {
+        return (
+          <ModelButton
+            setRows={setRowData}
+            index={filteredRowData.findIndex(
+              (item) => item.id === params.row.id
+            )}
+            loaded={params.row.loaded}
+            toggleLoaded={() => {
+              toggleLoaded(params.row.id);
+            }}
+          />
+        );
+      },
     },
     {
       field: "col7",
@@ -140,12 +170,55 @@ export default function Model() {
     },
   ];
 
-  const [rowData, setRowData] = useState(rows);
-  const [columnData, setColumnData] = useState(columns);
-
+  // Filter
   const [filter, setFilter] = useState<string>("Newest");
+  const [showLoadedModels, setShowLoadedModels] = useState<boolean>(false);
+  const [selectedTab, setSelectedTab] = useState("");
+
+  const [rowData, setRowData] = useState(getRows(data?.data?.records));
+  const filteredRowData = rowData
+    .filter((item) => {
+      if (showLoadedModels) {
+        return item.loaded;
+      }
+
+      return true;
+    })
+    .filter((item) => {
+      if (selectedTab) {
+        const features = item.col4.split(",");
+        console.log("features >>>", features);
+
+        return features.includes(selectedTab);
+      }
+
+      return true;
+    })
+    .toSorted((a, b) => {
+      switch (filter) {
+        case "A-Z":
+          return a.col2.localeCompare(b.col2);
+        case "Oldest":
+          return (
+            dayjs(a.col7).toDate().getTime() - dayjs(b.col7).toDate().getTime()
+          );
+        case "Newest":
+        default:
+          return (
+            dayjs(b.col7).toDate().getTime() - dayjs(a.col7).toDate().getTime()
+          );
+      }
+    });
+
+  console.log("filteredRowData >>>>", filteredRowData);
+
+  const [columnData, setColumnData] = useState(getColumns());
 
   const [viewType, setViewType] = React.useState<string | null>("galleryType");
+
+  const getModelPkgRequest = useMutation({
+    mutationFn: getModelPkg,
+  });
 
   const handleViewType = (
     event: React.MouseEvent<HTMLElement>,
@@ -165,49 +238,92 @@ export default function Model() {
     setState(e.target.value);
   };
 
-  const handleLoadAllModel = () => {
-    alert("load all models");
-  };
+  const handleLoadAllModel = async () => {
+    getModelPkgRequest.mutate(["all"], {
+      onSuccess: (res) => {
+        const records = res.data.records;
+        addDatas(records);
 
-  const handleAddModel = () => {
-    modalToggle();
+        setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
+      },
+    });
   };
-
-  const [showLoadedModels, setShowLoadedModels] = useState<boolean>(false);
 
   const toggleShowLoadedModels = () => {
     setShowLoadedModels(!showLoadedModels);
   };
 
-  useEffect(() => {
-    if (showLoadedModels) {
-      const copyRows = rowData.filter((item) => item.loaded === true);
-      console.log("copyRows");
-      console.log(copyRows);
-      setRowData(copyRows as any);
-    } else {
-      setRowData(rows);
-    }
-  }, [showLoadedModels]);
+  const renderTabs = () => {
+    const records = data?.data?.records || [];
 
-  const toggleLoaded = (index) => {
-    const copyRows = [...rowData];
-    copyRows[index].loaded = !copyRows[index].loaded;
-    setRowData(copyRows as any);
+    const tabs = records.reduce((acc, cur) => {
+      const supportedFeatures = cur.supported_features;
+
+      supportedFeatures.forEach((item) => {
+        if (acc[item]) {
+          acc[item] += 1;
+        } else {
+          acc[item] = 1;
+        }
+      });
+
+      return acc;
+    }, {} as Record<string, number>);
+
+    return (
+      <Stack className={styles.head} direction="row" flexWrap={"wrap"}>
+        <span
+          className={selectedTab === "" ? styles.active : undefined}
+          onClick={() => {
+            setSelectedTab("");
+          }}
+        >
+          All({records.length})
+        </span>
+        {Object.entries(tabs).map(([key, value]) => (
+          <span
+            className={selectedTab === key ? styles.active : undefined}
+            onClick={() => {
+              setSelectedTab(key);
+            }}
+          >
+            {key}({value})
+          </span>
+        ))}
+      </Stack>
+    );
   };
+
+  useEffect(() => {
+    setRowData(getRows(data?.data?.records));
+  }, [data]);
+
+  useEffect(() => {
+    setColumnData(getColumns());
+  }, [rowData]);
+
+  const toggleLoaded = useCallback(
+    (id: string) => {
+      getModelPkgRequest.mutate([id], {
+        onSuccess: (res) => {
+          const records = res.data.records;
+          addDatas(records);
+
+          setRowData((prev) =>
+            prev.map((item) =>
+              item.id === id ? { ...item, loaded: !item.loaded } : item
+            )
+          );
+        },
+      });
+    },
+    [data]
+  );
 
   return (
     <div className="pageWrap">
       <article className="contentWrap">
-        <Stack className={styles.head} direction="row">
-          <span className={styles.active}>All(31)</span>
-          <span>LTE(10)</span>
-          <span>BLE(10)</span>
-          <span>ADVANCED(7)</span>
-          <span>2G(7)</span>
-          <span>OBD(7)</span>
-          <span>RF(7)</span>
-        </Stack>
+        {renderTabs()}
         <Stack>
           <Stack
             direction="row"
@@ -286,13 +402,13 @@ export default function Model() {
           {viewType === "listType" ? (
             <DataTable
               checkbox={false}
-              rows={rowData}
+              rows={filteredRowData}
               columns={columnData}
               rowHeight={120}
             />
           ) : (
             <GalleryView
-              rows={rowData}
+              rows={filteredRowData}
               setRows={setRowData}
               toggleLoaded={toggleLoaded}
             />
@@ -597,31 +713,53 @@ type DataTableProps = {
   toggleLoaded: any;
 };
 
+const PAGE_SIZE = 10;
+
 function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
+  const [page, setPage] = useState(1);
+  const pageCount = useMemo(
+    () => rows.length / PAGE_SIZE + (rows.length % PAGE_SIZE ? 1 : 0),
+    [rows]
+  );
+
   return (
     <Stack alignItems="center">
       <ul className={styles.galleryWrap}>
-        {rows.map((item, index) => (
-          <li key={item.id}>
-            <div className={styles.galleryThumbnail}>
-              <Image src={item.col1} alt="model" fill />
-            </div>
-            <div className={styles.galleryTitle}>{item.col2}</div>
-            <ModelButton
-              setRows={setRows}
-              index={index}
-              loaded={rows[index].loaded}
-              toggleLoaded={toggleLoaded}
-            />
-          </li>
-        ))}
+        {(rows || [])
+          .filter((item, index) => {
+            const startIndex = PAGE_SIZE * (page - 1);
+            const endIndex = startIndex + PAGE_SIZE;
+
+            console.log("startIndex >>>", startIndex);
+            console.log("endIndex >>>", endIndex);
+
+            return startIndex <= index && index < endIndex;
+          })
+          .map((item, index) => (
+            <li key={item.id}>
+              <div className={styles.galleryThumbnail}>
+                <Image src={item.col1} alt="model" fill />
+              </div>
+              <div className={styles.galleryTitle}>{item.col2}</div>
+              <ModelButton
+                setRows={setRows}
+                index={index}
+                loaded={rows[index].loaded}
+                toggleLoaded={() => toggleLoaded(item.id)}
+              />
+            </li>
+          ))}
       </ul>
       <Stack spacing={2} justifyContent="center" mt="40px">
         <Pagination
-          count={3}
+          page={page}
+          count={pageCount}
           color="primary"
           variant="outlined"
           shape="rounded"
+          onChange={(event: React.ChangeEvent<unknown>, value: number) => {
+            setPage(value);
+          }}
           renderItem={(props2) => (
             <PaginationItem
               {...props2}
@@ -684,7 +822,8 @@ function ModelButton({ setRows, index, loaded, toggleLoaded }) {
   };
 
   const loadedEnd = () => {
-    toggleLoaded(index);
+    toggleLoaded();
+    setStartLoaded(false);
   };
 
   if (loaded) {

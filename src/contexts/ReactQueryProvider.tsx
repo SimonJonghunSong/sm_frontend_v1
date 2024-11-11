@@ -49,6 +49,7 @@ export default function ReactQueryProvider({
           retry: 1,
         },
         mutations: {
+          retry: 0,
           onError: (
             error: AxiosError<{ response: { code: number; reason: string } }>
           ) => {
