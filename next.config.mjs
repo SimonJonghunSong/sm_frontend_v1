@@ -31,7 +31,6 @@ const additionalPrecachePageList = [
   "/settings/privacy-policy",
 
   "/find-id",
-  "/find-id/result",
 
   "/find-password",
   "/find-password/result",

@@ -18,7 +18,13 @@ const logout = () => {
 };
 
 const findId = (body: AuthFindIdBody) => {
-  return post("/api/v1/auth/find-id", body);
+  return post<
+    {
+      reponse: { code: number; reason: string };
+      parameter: { user_id: string };
+    },
+    AuthFindIdBody
+  >("/api/v1/auth/find-id", body);
 };
 
 const findPassword = (body: AuthFindPassBody) => {
