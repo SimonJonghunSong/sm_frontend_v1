@@ -50,7 +50,10 @@ export default function ReactQueryProvider({
         mutations: {
           retry: 0,
           onError: (
-            error: AxiosError<{ response: { code: number; reason: string } }>
+            error: AxiosError<{
+              response: { code: number; reason: string };
+              message?: string;
+            }>
           ) => {
             // Unauthrized
             if (error.status === 401) {
@@ -61,9 +64,14 @@ export default function ReactQueryProvider({
 
             console.log("error >>>", error);
 
-            toast(error.response?.data?.response?.reason || "Error", {
-              type: "error",
-            });
+            toast(
+              error.response?.data?.response?.reason ||
+                error.response?.data?.message ||
+                "Error",
+              {
+                type: "error",
+              }
+            );
           },
         },
       },
