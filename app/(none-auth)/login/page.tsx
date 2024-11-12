@@ -41,7 +41,6 @@ export default function page() {
   });
 
   const [inputId, setInputId] = useState<string>("");
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -53,11 +52,22 @@ export default function page() {
     event.preventDefault();
   };
 
+  const getCountryByLang = () => {
+    switch (lang) {
+      case "en":
+        return "usa";
+      case "pt":
+        return "portugal";
+      case "es":
+        return "spain";
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({
       user_id: inputId,
-      country: selectedCountry,
+      country: getCountryByLang(),
       password: inputPassword,
     });
   };
@@ -94,7 +104,7 @@ export default function page() {
                     lang === "en" ? "usa" : lang === "es" ? "spain" : "portugal"
                   }
                   setCountryData={(country) => {
-                    setSelectedCountry(country);
+                    // setSelectedCountry(country);
                     setLang(
                       country === "usa"
                         ? "en"
@@ -180,17 +190,12 @@ export default function page() {
               background: "var(--primary-gradient)",
               mt: 2,
               opacity:
-                selectedCountry.length === 0 ||
-                inputId.length === 0 ||
-                inputPassword.length === 0
+                inputId.length === 0 || inputPassword.length === 0
                   ? "0.5"
                   : undefined,
             }}
             disabled={
-              selectedCountry.length === 0 ||
-              inputId.length === 0 ||
-              inputPassword.length === 0 ||
-              isPending
+              inputId.length === 0 || inputPassword.length === 0 || isPending
             }
           >
             Login

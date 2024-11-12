@@ -8,7 +8,7 @@ export interface Model {
   dev_name: string;
   fw_ver: string;
   country: Country;
-  setting_file: string;
+  default_profile: string;
   hide: boolean;
   reg_date: string;
   updated: string;

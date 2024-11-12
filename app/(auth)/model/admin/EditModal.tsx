@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useReducer, useState } from "react";
-import Image from "next/image";
 import { toast } from "react-toastify";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
@@ -181,7 +180,9 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     if (imageFile) {
       formData.append("image_file", imageFile);
     }
-    formData.append("default_profile", settingFile);
+    if (settingFile) {
+      formData.append("default_profile", settingFile);
+    }
     formData.append(
       "json",
       JSON.stringify({
@@ -205,10 +206,10 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       value: {
         devName: selectedData.dev_name,
         country: selectedData.country.name,
-        imageFile: undefined, // TODO IMAGE path 설정
+        imageFile: undefined,
         supportedNetworkType: selectedData.supported_network_type,
         supportedFeatures: selectedData.supported_features,
-        settingFile: undefined, // TODO IMAGE path 설정
+        settingFile: undefined,
         hide: selectedData.hide,
       },
     });
@@ -227,8 +228,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         !devName ||
         !country ||
         !supportedNetworkType.length ||
-        !supportedFeatures.length ||
-        !settingFile
+        !supportedFeatures.length
       }
     >
       <Stack>
@@ -450,7 +450,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
               <TextField
                 placeholder="Choose file to upload"
                 fullWidth
-                value={file?.name || ""}
+                value={file?.name || selectedData.default_profile}
                 inputProps={{ readOnly: true }}
               />
               <Button variant="contained" color="secondary" component="label">
