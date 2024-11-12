@@ -2,14 +2,15 @@ import "../styles/variable.css";
 import "../styles/reset.css";
 import "../styles/global.css";
 import "react-toastify/dist/ReactToastify.css";
+import { Metadata } from "next/types";
 import { Noto_Sans } from "next/font/google";
-import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { ThemeProvider } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import theme from "../src/theme";
 import Hydration from "../utils/hydration";
-import { Metadata } from "next/types";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
-import { ToastContainer } from "react-toastify";
+import NextIntlProvider from "@/src/contexts/NextIntlProvider";
 
 /**적용하고자 하는 font*/
 const notoSans = Noto_Sans({
@@ -56,13 +57,13 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <NextIntlProvider>
       <body
         className={notoSans.className}
         style={{ backgroundColor: "#F3F3F3" }}
@@ -77,6 +78,6 @@ export default function RootLayout({
           </AppRouterCacheProvider>
         </ReactQueryProvider>
       </body>
-    </html>
+    </NextIntlProvider>
   );
 }

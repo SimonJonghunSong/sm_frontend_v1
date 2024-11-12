@@ -1,3 +1,4 @@
+import createNextIntlPlugin from "next-intl/plugin";
 import crypto from "crypto";
 import withSerwistInit from "@serwist/next";
 
@@ -61,9 +62,11 @@ const withSerwist = withSerwistInit({
 //   },
 // });
 
-export default {
+const withNextIntl = createNextIntlPlugin();
+
+export default withNextIntl({
   reactStrictMode: false,
   typescript: {
     ignoreBuildErrors: true,
   },
-};
+});
