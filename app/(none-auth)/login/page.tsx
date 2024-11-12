@@ -21,11 +21,13 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
-// import { useTranslations } from "next-intl";
+import useLangStore from "@/utils/useLangStore";
+import { useTranslations } from "next-intl";
 
 export default function page() {
   const router = useRouter();
-  // const t = useTranslations("HomePage");
+  const { lang, setLang } = useLangStore();
+  const t = useTranslations("HomePage");
   const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -62,7 +64,7 @@ export default function page() {
 
   return (
     <>
-      {/* <h1>{t("title")}</h1> TEST 용도 입니다. */}
+      {/* <h1>{t("title")}</h1> */}
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
@@ -87,7 +89,21 @@ export default function page() {
             </InputBox.Head>
             <InputBox.Body>
               <FormControl sx={{ width: "100%" }} size="small">
-                <SelectCountry setCountryData={setSelectedCountry} />
+                <SelectCountry
+                  defaultCountry={
+                    lang === "en" ? "usa" : lang === "es" ? "spain" : "portugal"
+                  }
+                  setCountryData={(country) => {
+                    setSelectedCountry(country);
+                    setLang(
+                      country === "usa"
+                        ? "en"
+                        : country === "portugal"
+                        ? "pt"
+                        : "es"
+                    );
+                  }}
+                />
               </FormControl>
             </InputBox.Body>
           </InputBox>

@@ -6,12 +6,11 @@ import { Metadata } from "next/types";
 import { Noto_Sans } from "next/font/google";
 import { ThemeProvider } from "@mui/material";
 import { ToastContainer } from "react-toastify";
-import { NextIntlClientProvider } from "next-intl";
-import { getLocale, getMessages } from "next-intl/server";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import theme from "../src/theme";
 import Hydration from "../utils/hydration";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
+import NextIntlProvider from "@/src/contexts/NextIntlProvider";
 
 /**적용하고자 하는 font*/
 const notoSans = Noto_Sans({
@@ -63,11 +62,8 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
-  const messages = await getMessages();
-
   return (
-    <html lang={locale}>
+    <NextIntlProvider>
       <body
         className={notoSans.className}
         style={{ backgroundColor: "#F3F3F3" }}
@@ -77,15 +73,11 @@ export default async function RootLayout({
           <Hydration />
           {/* ? 정리 대상 1순위 */}
           <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>
-              <NextIntlClientProvider messages={messages}>
-                {children}
-              </NextIntlClientProvider>
-            </ThemeProvider>
+            <ThemeProvider theme={theme}>{children}</ThemeProvider>
             <ToastContainer pauseOnFocusLoss={false} />
           </AppRouterCacheProvider>
         </ReactQueryProvider>
       </body>
-    </html>
+    </NextIntlProvider>
   );
 }
