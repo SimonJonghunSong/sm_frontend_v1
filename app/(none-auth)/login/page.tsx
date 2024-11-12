@@ -21,9 +21,11 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
+// import { useTranslations } from "next-intl";
 
 export default function page() {
   const router = useRouter();
+  // const t = useTranslations("HomePage");
   const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -60,6 +62,7 @@ export default function page() {
 
   return (
     <>
+      {/* <h1>{t("title")}</h1> TEST 용도 입니다. */}
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
