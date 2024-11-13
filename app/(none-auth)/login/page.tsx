@@ -21,6 +21,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
+import GlobalLoading from "@/components/GlobalLoading";
 
 export default function page() {
   const router = useRouter();

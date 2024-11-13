@@ -26,7 +26,7 @@ import Confirm from "../Confirm";
 import CmdTool from "../../app/(auth)/_cmd-tool/CmdTool";
 import useAuthStore from "../../utils/useAuthStore";
 import useNetworkMonitor from "../../utils/useNetworkMonitorStore";
-import useOnlineStatus from "../../src/hooks/useOnlineStatus";
+import { toast } from "react-toastify";
 
 const rootMenus = [
   { name: "Server", href: "/server", icon: () => <StorageIcon /> },
@@ -83,8 +83,7 @@ export default function Navbar() {
   const [cmdModal, cmdModalToggle] = useModal();
   const [networkModal, networkModalToggle] = useModal();
 
-  const { isOnline } = useNetworkMonitor();
-  useOnlineStatus();
+  const { isOnline, setIsOnline } = useNetworkMonitor();
 
   const navLinkes =
     userRole && userRole === "ROOT"
@@ -108,6 +107,16 @@ export default function Navbar() {
   };
 
   const handleToggleNetwork = (isOfflineToOnline: boolean) => {
+    console.log("???????? >>>>>>>", isOfflineToOnline);
+
+    if (isOfflineToOnline && !navigator.onLine) {
+      toast("Switching online is not possible when there is no network.", {
+        type: "error",
+        position: "top-center",
+      });
+      return;
+    }
+
     Confirm({
       title: "Confirm",
       text: `Are you sure you want to switch to ${
@@ -115,11 +124,8 @@ export default function Navbar() {
       } usage?`,
     }).then((result) => {
       if (result.isConfirmed) {
-        if (navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage({
-            payload: isOfflineToOnline ? "online" : "offline",
-          });
-        }
+        setIsOnline(isOfflineToOnline);
+        console.log("change~!");
       }
     });
   };
@@ -248,11 +254,7 @@ export default function Navbar() {
           <div onClick={() => isOnline && handleToggleNetwork(false)}>
             Offline
           </div>
-          <div
-            onClick={() =>
-              !isOnline && navigator.onLine && handleToggleNetwork(true)
-            }
-          >
+          <div onClick={() => !isOnline && handleToggleNetwork(true)}>
             Online
           </div>
         </div>

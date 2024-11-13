@@ -5,6 +5,7 @@ import "../../styles/reset.css";
 import "../../styles/global.css";
 import { useEffect, useState } from "react";
 import AuthCheck from "./AuthCheck";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const NoneAuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
@@ -19,6 +20,7 @@ const NoneAuthLayout = ({ children }) => {
     <div className="noneAuthWrap">
       <AuthCheck />
       {children}
+      <GlobalLoading />
     </div>
   );
 };

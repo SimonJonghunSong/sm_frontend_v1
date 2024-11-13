@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import FullLoading from "@/components/FullLoading";
 import AuthCheck from "./AuthCheck";
+import GlobalLoading from "@/components/GlobalLoading";
 
 const AuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
@@ -29,6 +30,7 @@ const AuthLayout = ({ children }) => {
       <AuthCheck />
       <Navbar />
       <section>{children}</section>
+      <GlobalLoading />
     </div>
   );
 };

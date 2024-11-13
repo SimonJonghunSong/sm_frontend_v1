@@ -25,6 +25,12 @@
       }
     ]
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx"],
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "src/worker/sw.ts"
+  ],
   "exclude": ["node_modules", "public/sw.js"]
 }

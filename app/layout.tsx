@@ -10,6 +10,9 @@ import Hydration from "../utils/hydration";
 import { Metadata } from "next/types";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
 import { ToastContainer } from "react-toastify";
+import GlobalLoading from "@/components/GlobalLoading";
+import ServiceWorkerRegister from "@/src/worker/ServiceWorkerRegister";
+import NetworkStatusCheck from "@/components/NetworkStatusCheck";
 
 /**적용하고자 하는 font*/
 const notoSans = Noto_Sans({
@@ -72,7 +75,11 @@ export default function RootLayout({
           <Hydration />
           {/* ? 정리 대상 1순위 */}
           <AppRouterCacheProvider>
-            <ThemeProvider theme={theme}>{children}</ThemeProvider>
+            <ThemeProvider theme={theme}>
+              {children}
+              <ServiceWorkerRegister />
+              <NetworkStatusCheck />
+            </ThemeProvider>
             <ToastContainer pauseOnFocusLoss={false} />
           </AppRouterCacheProvider>
         </ReactQueryProvider>
