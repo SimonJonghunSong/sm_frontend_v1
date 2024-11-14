@@ -11,9 +11,10 @@ import {
   ClientToServiceWorkerResponseAction,
   ServiceWorkerToClientAction,
 } from "@/src/worker/types";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ServiceWorkerRegister() {
+  const isReadyServiceWorker = useRef(false);
   const { swToClientBroadcast, sendMessage } = useServiceWorkerMessage();
 
   useEffect(() => {
@@ -58,7 +59,7 @@ export default function ServiceWorkerRegister() {
   }, []);
 
   useEffect(() => {
-    if ("serviceWorker" in navigator) {
+    if (!isReadyServiceWorker.current && "serviceWorker" in navigator) {
       navigator.serviceWorker
         .register(`/sw.js?v=${process.env.BUILD_TIMESTAMP}`)
         .then((registration) => {

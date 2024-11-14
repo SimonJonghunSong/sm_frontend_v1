@@ -1,7 +1,39 @@
 // TODO: 배포 할때마다 새로운 값이 할당 될 수 있도록 수정 필요
 const CACHE_NAME = `sync-master-cache-${new Date().getTime()}`;
 // URLs to cache
-const urlsToCache = ["/", "/login", "/device", "/offline.html"];
+const urlsToCache = [
+  "/",
+  "/404",
+
+  "/login",
+
+  "/model",
+  "/model/admin",
+
+  "/device",
+  "/device/list",
+
+  "/account",
+
+  "/configuration",
+  "/configuration/geofence",
+  "/configuration/geofence/add",
+  "/configuration/geofence/edit/circular",
+  "/configuration/geofence/edit/polygon",
+  "/configuration/fw-update",
+  "/configuration/edit-profile",
+
+  "/server",
+  "/server/mqtt",
+  "/server/scuti",
+
+  "/settings",
+  "/settings/languages",
+  "/settings/my-info",
+  "/settings/privacy-policy",
+
+  "/offline.html",
+];
 
 // broadcase
 const swToClientBroadcast = new BroadcastChannel("sw-to-client");
@@ -41,10 +73,14 @@ const handleServiceWorkerInstall = (
 async function generateCacheOnSetup(cacheName: string, urlsToCache: string[]) {
   const cache = await caches.open(cacheName);
 
-  // 페이지 캐싱 처리
-  await cache.addAll(urlsToCache);
-  // 페이지 내 리소스 캐싱 처리
-  await cachePagesAndResources(cache, urlsToCache);
+  for (const url of urlsToCache) {
+    try {
+      const response = await fetch(url);
+      cache.put(url, response);
+    } catch (error) {
+      console.error(`Error fetching ${url}:`, error);
+    }
+  }
 
   console.log("service worker skipWaiting...");
   isInstallFinish = true;
@@ -209,14 +245,30 @@ const handleOnlineCaching = (event) => {
  *
  * @param {FetchEvent} event
  */
-const handleOfflineCaching = (event) => {
+const handleOfflineCaching = (
+  event: ServiceWorkerGlobalScopeEventMap["fetch"]
+) => {
   const request = event.request;
+  const requestUrl = new URL(request.url);
+  const requestUrlHost = requestUrl.host;
+  const clientUrlHost = swSelf.location.host;
+  const isCientRequest = requestUrlHost === clientUrlHost;
 
-  event.respondWith(
-    caches.match(request).then((cachedResponse) => {
-      return cachedResponse || caches.match("/offline.html");
-    })
-  );
+  if (request.method === "GET" && isCientRequest) {
+    const normalizedUrl = requestUrl.origin + requestUrl.pathname;
+
+    event.respondWith(
+      caches.match(normalizedUrl).then((cachedResponse) => {
+        return cachedResponse || caches.match("/offline.html");
+      })
+    );
+  } else {
+    event.respondWith(
+      caches.match(request).then((cachedResponse) => {
+        return cachedResponse || caches.match("/offline.html");
+      })
+    );
+  }
 };
 
 /**
@@ -224,18 +276,22 @@ const handleOfflineCaching = (event) => {
  *
  * @param {*} event
  */
-const handleServiceWorkerFetch = (event) => {
+const handleServiceWorkerFetch = (
+  event: ServiceWorkerGlobalScopeEventMap["fetch"]
+) => {
   const request = event.request;
 
   if (request.url.match(/\.(?:png|jpg|jpeg|svg|gif|css|js)$/)) {
     // 정적 자산 파일을 Cache-first 방식으로 캐싱
     handleCachingStatic(event);
   } else {
-    if (isOnline) {
+    if (!isInstallFinish || isOnline) {
+      console.log("first time online mode(menual offline mode)");
+
       // 온라인 요청에 대해서는 Network-first 방식 사용
       handleOnlineCaching(event);
     } else {
-      // 오프안 요청에 대해서는 Cache-only 방식 사용
+      // 오프라인 요청에 대해서는 Cache-only 방식 사용
       handleOfflineCaching(event);
     }
   }

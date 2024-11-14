@@ -9,7 +9,7 @@ interface NetworkState {
 const useNetworkMonitor = create(
   persist<NetworkState>(
     (set) => ({
-      isOnline: undefined,
+      isOnline: typeof window !== "undefined" ? navigator.onLine : undefined,
       setIsOnline: (onlineStatus) => set({ isOnline: onlineStatus }),
     }),
     {

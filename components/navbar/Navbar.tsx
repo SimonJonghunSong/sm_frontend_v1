@@ -107,8 +107,6 @@ export default function Navbar() {
   };
 
   const handleToggleNetwork = (isOfflineToOnline: boolean) => {
-    console.log("???????? >>>>>>>", isOfflineToOnline);
-
     if (isOfflineToOnline && !navigator.onLine) {
       toast("Switching online is not possible when there is no network.", {
         type: "error",
@@ -134,10 +132,22 @@ export default function Navbar() {
     return str?.charAt(0).toUpperCase() + str?.toLowerCase().slice(1);
   };
 
+  const getRootHref = () => {
+    switch (userRole) {
+      case "ROOT":
+        return "/server";
+      case "ADMIN":
+      case "CUSTOMER":
+      case "GUEST":
+      default:
+        return "/model";
+    }
+  };
+
   return (
     <nav className={styles.nav}>
       <div className={styles.left}>
-        <Link href={"/"} className={styles.logo}>
+        <Link href={getRootHref()} className={styles.logo}>
           <Image src={logo} alt="synctrack" />
           {mounted && (
             <div className={styles.role}>{`${replaceFirstLetterToUppercase(
