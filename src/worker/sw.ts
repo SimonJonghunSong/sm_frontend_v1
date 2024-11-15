@@ -285,7 +285,7 @@ const handleOfflineCaching = (
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
         const errorResponse = new Response(
-          JSON.stringify({ message: "No network connection", code: 500 }),
+          JSON.stringify({ message: "No network connection", code: 400 }),
           {
             status: 400, // HTTP 상태 코드 설정
             headers: {
