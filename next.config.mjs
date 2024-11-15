@@ -2,6 +2,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import ts from "typescript";
+import createNextIntlPlugin from "next-intl/plugin";
+import withSerwistInit from "@serwist/next";
 
 const buildTimestamp = new Date().getTime().toString();
 
@@ -9,7 +11,9 @@ const buildTimestamp = new Date().getTime().toString();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-export default {
+const withNextIntl = createNextIntlPlugin();
+
+export default withNextIntl({
   reactStrictMode: false,
   typescript: {
     ignoreBuildErrors: true,
@@ -52,4 +56,4 @@ export default {
   env: {
     BUILD_TIMESTAMP: buildTimestamp,
   },
-};
+});

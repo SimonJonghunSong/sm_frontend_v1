@@ -34,6 +34,25 @@ const urlsToCache = [
 
   "/offline.html",
 ];
+// const urlsToCache = [
+//   "/",
+//   "/404",
+
+//   "/login",
+
+//   "/device",
+//   "/device/list",
+
+//   "/configuration",
+//   "/configuration/geofence",
+//   "/configuration/geofence/add",
+//   "/configuration/geofence/edit/circular",
+//   "/configuration/geofence/edit/polygon",
+//   "/configuration/fw-update",
+//   "/configuration/edit-profile",
+
+//   "/offline.html",
+// ];
 
 // broadcase
 const swToClientBroadcast = new BroadcastChannel("sw-to-client");
@@ -265,7 +284,17 @@ const handleOfflineCaching = (
   } else {
     event.respondWith(
       caches.match(request).then((cachedResponse) => {
-        return cachedResponse || caches.match("/offline.html");
+        const errorResponse = new Response(
+          JSON.stringify({ message: "No network connection", code: 500 }),
+          {
+            status: 400, // HTTP 상태 코드 설정
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        return cachedResponse || errorResponse;
       })
     );
   }

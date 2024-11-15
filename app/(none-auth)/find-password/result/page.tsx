@@ -1,8 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import logo from "/public/images/logo-dark.svg";
 
 import { Button, Divider, Stack } from "@mui/material";
@@ -10,12 +9,13 @@ import { Button, Divider, Stack } from "@mui/material";
 export default function page() {
   const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleResend = (e) => {
     e.preventDefault();
-    router.push("/find-id/result");
+    router.push("/find-password/result");
   };
 
-  const handleClickLogin = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     router.push("/login");
   };
 
@@ -32,7 +32,7 @@ export default function page() {
       </div>
 
       <div className="content">
-        <form onSubmit={handleClickLogin}>
+        <form onSubmit={handleSubmit}>
           <Stack direction={"column"}>
             <Button
               type="submit"
@@ -45,7 +45,12 @@ export default function page() {
 
             <Divider sx={{ my: 5 }} />
             <div className="description">Didn’t receive the link?</div>
-            <Button variant="outlined" fullWidth onClick={handleSubmit}>
+            <Button
+              variant="outlined"
+              fullWidth
+              type="button"
+              onClick={handleResend}
+            >
               Resend
             </Button>
           </Stack>

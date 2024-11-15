@@ -33,7 +33,7 @@ const delModel = (uid_list: string[]) => {
 
 const getModelPkg = (body: PostModelPkgBody) => {
   return post<{ count: number; records: ModelPkg[] }, PostModelPkgBody>(
-    "/api/v1/models_pkg",
+    "/api/v1/models_load_pkg",
     body
   );
 };

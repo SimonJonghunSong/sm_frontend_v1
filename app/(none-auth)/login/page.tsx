@@ -22,9 +22,13 @@ import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
 import GlobalLoading from "@/components/GlobalLoading";
+import useLangStore from "@/utils/useLangStore";
+import { useTranslations } from "next-intl";
 
 export default function page() {
   const router = useRouter();
+  const { lang, setLang } = useLangStore();
+  const t = useTranslations("HomePage");
   const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -38,7 +42,6 @@ export default function page() {
   });
 
   const [inputId, setInputId] = useState<string>("");
-  const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [inputPassword, setInputPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -50,17 +53,29 @@ export default function page() {
     event.preventDefault();
   };
 
+  const getCountryByLang = () => {
+    switch (lang) {
+      case "en":
+        return "usa";
+      case "pt":
+        return "portugal";
+      case "es":
+        return "spain";
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     mutate({
       user_id: inputId,
-      country: selectedCountry,
+      country: getCountryByLang(),
       password: inputPassword,
     });
   };
 
   return (
     <>
+      {/* <h1>{t("title")}</h1> */}
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
@@ -85,7 +100,21 @@ export default function page() {
             </InputBox.Head>
             <InputBox.Body>
               <FormControl sx={{ width: "100%" }} size="small">
-                <SelectCountry setCountryData={setSelectedCountry} />
+                <SelectCountry
+                  defaultCountry={
+                    lang === "en" ? "usa" : lang === "es" ? "spain" : "portugal"
+                  }
+                  setCountryData={(country) => {
+                    // setSelectedCountry(country);
+                    setLang(
+                      country === "usa"
+                        ? "en"
+                        : country === "portugal"
+                        ? "pt"
+                        : "es"
+                    );
+                  }}
+                />
               </FormControl>
             </InputBox.Body>
           </InputBox>
@@ -162,17 +191,12 @@ export default function page() {
               background: "var(--primary-gradient)",
               mt: 2,
               opacity:
-                selectedCountry.length === 0 ||
-                inputId.length === 0 ||
-                inputPassword.length === 0
+                inputId.length === 0 || inputPassword.length === 0
                   ? "0.5"
                   : undefined,
             }}
             disabled={
-              selectedCountry.length === 0 ||
-              inputId.length === 0 ||
-              inputPassword.length === 0 ||
-              isPending
+              inputId.length === 0 || inputPassword.length === 0 || isPending
             }
           >
             Login
