@@ -68,6 +68,10 @@ export default function ServiceWorkerRegister() {
             registration.scope
           );
 
+          if (navigator.serviceWorker.controller.state === "activated") {
+            handleGlobalLoadingOff();
+          }
+
           return navigator.serviceWorker.ready;
         })
         .then((registration) => {
