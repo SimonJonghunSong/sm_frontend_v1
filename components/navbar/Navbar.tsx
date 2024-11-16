@@ -29,10 +29,16 @@ import useNetworkMonitor from "../../utils/useNetworkMonitorStore";
 import { toast } from "react-toastify";
 
 const rootMenus = [
-  { name: "Server", href: "/server", icon: () => <StorageIcon /> },
+  {
+    name: "Server",
+    href: "/server",
+    offlineEnable: false,
+    icon: () => <StorageIcon />,
+  },
   {
     name: "Account",
     href: "/account",
+    offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
   },
 ];
@@ -40,40 +46,58 @@ const adminMenus = [
   {
     name: "Model",
     href: "/model/admin",
+    offlineEnable: false,
     icon: () => <WidgetsOutlinedIcon />,
   },
   {
     name: "Device",
     href: "/device",
+    offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
   },
   {
     name: "Account",
     href: "/account",
+    offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
   },
-  { name: "CMD Tool", icon: () => <TerminalOutlinedIcon /> },
+  {
+    name: "CMD Tool",
+    offlineEnable: true,
+    icon: () => <TerminalOutlinedIcon />,
+  },
 ];
 const customerMenus = [
   {
     name: "Device",
     href: "/device",
+    offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
   },
   {
     name: "Account",
     href: "/account",
+    offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
   },
-  { name: "CMD Tool", icon: () => <TerminalOutlinedIcon /> },
+  {
+    name: "CMD Tool",
+    offlineEnable: true,
+    icon: () => <TerminalOutlinedIcon />,
+  },
 ];
 const guestMenus = [
   {
     name: "Device",
     href: "/device",
+    offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
   },
-  { name: "CMD Tool", icon: () => <TerminalOutlinedIcon /> },
+  {
+    name: "CMD Tool",
+    offlineEnable: true,
+    icon: () => <TerminalOutlinedIcon />,
+  },
 ];
 
 export default function Navbar() {
@@ -171,7 +195,24 @@ export default function Navbar() {
                           : undefined
                       }
                     >
-                      <Link href={link.href}>
+                      <Link
+                        className={
+                          !isOnline &&
+                          !link.offlineEnable &&
+                          !pathname.startsWith(link.href)
+                            ? "disabled"
+                            : ""
+                        }
+                        onClick={
+                          !isOnline && !link.offlineEnable
+                            ? (e) => {
+                                e.preventDefault();
+                              }
+                            : undefined
+                        }
+                        href={link.href}
+                        aria-disabled
+                      >
                         <link.icon />
                         <span>{link.name}</span>
                       </Link>
@@ -220,12 +261,32 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/info">
+            <Link
+              href="/info"
+              className={!isOnline ? "disabled" : ""}
+              onClick={
+                !isOnline
+                  ? (e) => {
+                      e.preventDefault();
+                    }
+                  : undefined
+              }
+            >
               <HelpSharpIcon />
             </Link>
           </li>
           <li>
-            <Link href="/support">
+            <Link
+              href="/support"
+              className={!isOnline ? "disabled" : ""}
+              onClick={
+                !isOnline
+                  ? (e) => {
+                      e.preventDefault();
+                    }
+                  : undefined
+              }
+            >
               <HeadsetMicIcon />
             </Link>
           </li>

@@ -9,6 +9,7 @@ import Navbar from "../../components/navbar/Navbar";
 import FullLoading from "@/components/FullLoading";
 import AuthCheck from "./AuthCheck";
 import GlobalLoading from "@/components/GlobalLoading";
+import ServiceWorkerRegister from "@/src/worker/ServiceWorkerRegister";
 
 const AuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
@@ -30,6 +31,7 @@ const AuthLayout = ({ children }) => {
       <AuthCheck />
       <Navbar />
       <section>{children}</section>
+      {process.env.NODE_ENV !== "development" && <ServiceWorkerRegister />}
       <GlobalLoading />
     </div>
   );

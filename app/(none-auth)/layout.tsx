@@ -20,7 +20,6 @@ const NoneAuthLayout = ({ children }) => {
     <div className="noneAuthWrap">
       <AuthCheck />
       {children}
-      <GlobalLoading />
     </div>
   );
 };

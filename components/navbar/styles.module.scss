@@ -1,259 +1,255 @@
 .nav {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 32px;
-    min-width: 1280px;
-    height: 104px;
-    padding: 0 32px;
-    color: var(--grey5);
-    background-color: var(--black-deep);
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  min-width: 1280px;
+  height: 104px;
+  padding: 0 32px;
+  color: var(--grey5);
+  background-color: var(--black-deep);
 }
 
 .logo {
-    position: relative;
+  position: relative;
 
-    .role {
-        position: absolute;
-        bottom: -8px;
-        right: 8px;
-        font-size: 13px;
-    }
+  .role {
+    position: absolute;
+    bottom: -8px;
+    right: 8px;
+    font-size: 13px;
+  }
 }
 
-
 .left {
-    display: flex;
-    align-items: center;
-    gap: 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
 }
 
 .right {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 }
 
 @keyframes expand {
-    from {
-        width: 0;
-    }
+  from {
+    width: 0;
+  }
 
-    to {
-        width: 48px;
-    }
-
+  to {
+    width: 48px;
+  }
 }
 
 .mainMenu {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 
-    li {
-        position: relative;
+  li {
+    position: relative;
 
-        &.active {
-            color: var(--white);
+    &.active {
+      color: var(--white);
 
-            a::after,
-            button::after {
-                animation-name: expand;
-                animation-duration: .3s;
-                animation-fill-mode: forwards;
-                animation-timing-function: ease-in-out;
-                position: absolute;
-                bottom: -24px;
-                left: 0;
-                content: '';
-                display: block;
-                height: 4px;
-                width: 0;
-                border-radius: 4px;
-                background-color: var(--primary);
-            }
-        }
-
-        a, button {
-            background-color: transparent;
-            border: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 16px 0;
-            transition: opacity .3s;
-
-            &:hover {
-                opacity: 0.7;
-            }
-        }
+      a::after,
+      button::after {
+        animation-name: expand;
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+        animation-timing-function: ease-in-out;
+        position: absolute;
+        bottom: -24px;
+        left: 0;
+        content: "";
+        display: block;
+        height: 4px;
+        width: 0;
+        border-radius: 4px;
+        background-color: var(--primary);
+      }
     }
+
+    a,
+    button {
+      background-color: transparent;
+      border: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 16px 0;
+      transition: opacity 0.3s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
 }
 
 .subMenu {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
 
-    li {
-        a, button {
-            display: flex;
-            align-items: center;
-            transition: opacity .3s;
-            background-color: transparent;
-            border: 0;
+  li {
+    a,
+    button {
+      display: flex;
+      align-items: center;
+      transition: opacity 0.3s;
+      background-color: transparent;
+      border: 0;
 
-            &:hover {
-                opacity: 0.7;
-            }
-        }
+      &:hover {
+        opacity: 0.7;
+      }
     }
+  }
 }
 
 .toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--black);
+  width: max-content;
+  height: 40px;
+  padding: 4px;
+  border-radius: 32px;
+
+  position: relative;
+
+  &::after {
+    z-index: 1;
+    transition: transform 0.2s;
+    transform-origin: center;
+    content: "";
+    position: absolute;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: var(--black);
-    width: max-content;
-    height: 40px;
-    padding: 4px;
+    width: 65px;
+    height: 32px;
+    left: 0;
+    transform: translate(4px, 0);
     border-radius: 32px;
+    background-color: var(--primary);
+  }
 
-    position: relative;
-
+  &.offline {
     &::after {
-        z-index: 1;
-        transition: transform .2s;
-        transform-origin: center;
-        content: '';
-        position: absolute;
-        display: flex;
-        width: 65px;
-        height: 32px;
-        left: 0;
-        transform: translate(4px, 0);
-        border-radius: 32px;
-        background-color: var(--primary);
-
+      background-color: var(--grey7);
     }
+  }
 
-    &.offline {
-        &::after {
-            background-color: var(--grey7);
-        }
+  div:nth-child(1) {
+    color: var(--white);
+  }
+
+  div:nth-child(2) {
+    color: var(--grey5);
+  }
+
+  &.active {
+    &::after {
+      transform: translate(69px, 0);
     }
 
     div:nth-child(1) {
-        color: var(--white);
+      color: var(--grey5);
     }
 
     div:nth-child(2) {
-        color: var(--grey5);
+      color: var(--white);
     }
+  }
 
-    &.active {
+  > div {
+    transition: color 0.5s;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 65px;
+    height: 32px;
+    border-radius: 32px;
+    background-color: transparent;
 
-        &::after {
-            transform: translate(69px, 0);
-        }
-
-        div:nth-child(1) {
-            color: var(--grey5);
-        }
-
-        div:nth-child(2) {
-            color: var(--white);
-        }
-    }
-
-    >div {
-        transition: color .5s;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 65px;
-        height: 32px;
-        border-radius: 32px;
-        background-color: transparent;
-
-        z-index: 2;
-
-    }
+    z-index: 2;
+  }
 }
 
+.search,
+.notification {
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .list {
+    width: 100%;
+    li {
+      cursor: pointer;
+      padding: 16px;
+      border-bottom: 1px solid var(--grey4);
 
-.search, .notification {
-    .title {
-        font-size: 16px;
-        font-weight: 600;
-        margin-bottom: 8px;
+      .subTitle {
+        color: black;
+        font-weight: 500;
+        margin-bottom: 4px;
+      }
+
+      .description {
+        font-size: 13px;
+        color: var(--grey5);
+      }
     }
-    .list {
-        width: 100%;
-        li {
-            cursor: pointer;
-            padding: 16px;
-            border-bottom: 1px solid var(--grey4);
-
-
-            .subTitle {
-                color: black;
-                font-weight: 500;
-                margin-bottom: 4px;
-            }
-
-            .description {
-                font-size: 13px;
-                color: var(--grey5);
-            }
-        }
-    }
+  }
 }
 
 .notificationModal {
-position: fixed;
-right: 0;
-top: 90px;
-z-index: 999;
-width: 720px;
-height: 650px;
-background-color: #fff;
-border-radius: 8px;
-padding: 16px 20px;
-box-shadow: 0 0 5px rgba(0,0,0,0.25);
+  position: fixed;
+  right: 0;
+  top: 90px;
+  z-index: 999;
+  width: 720px;
+  height: 650px;
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px 20px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.25);
 }
 .notiTitle {
-    font-size: 16px;
-    font-weight: 700;
-    color: black;
-    margin-bottom: 24px;
+  font-size: 16px;
+  font-weight: 700;
+  color: black;
+  margin-bottom: 24px;
 }
 .notification {
-    height: calc(100% - 48px);
-    .notificationListWrap{
-        height: calc(100% - 40px);
-        overflow-y: scroll;
+  height: calc(100% - 48px);
+  .notificationListWrap {
+    height: calc(100% - 40px);
+    overflow-y: scroll;
+  }
+  li.active {
+    position: relative;
+    &::after {
+      top: 12px;
+      left: 4px;
+      position: absolute;
+      content: "";
+      display: block;
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary);
+      border-radius: 4px;
     }
-    li.active {
-        position: relative;
-        &::after {
-        top: 12px;
-        left: 4px;
-            position: absolute;
-            content: '';
-            display: block;
-            width: 6px;
-            height: 6px;
-            background-color: var(--primary);
-            border-radius: 4px;
-        }
-    }
-    .date {
+  }
+  .date {
     font-size: 13px;
     color: var(--grey5);
-    }
+  }
 }

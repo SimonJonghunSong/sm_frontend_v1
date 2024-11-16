@@ -4,16 +4,19 @@ const CACHE_NAME = `sync-master-cache-${new Date().getTime()}`;
 const urlsToCache = [
   "/",
   "/404",
+  "/offline",
 
   "/login",
 
   "/model",
-  "/model/admin",
+  // "/model/admin",
 
   "/device",
   "/device/list",
 
-  "/account",
+  "/cmd",
+
+  // "/account",
 
   "/configuration",
   "/configuration/geofence",
@@ -23,14 +26,14 @@ const urlsToCache = [
   "/configuration/fw-update",
   "/configuration/edit-profile",
 
-  "/server",
-  "/server/mqtt",
-  "/server/scuti",
+  // "/server",
+  // "/server/mqtt",
+  // "/server/scuti",
 
   "/settings",
   "/settings/languages",
-  "/settings/my-info",
-  "/settings/privacy-policy",
+  // "/settings/my-info",
+  // "/settings/privacy-policy",
 
   "/offline.html",
 ];
@@ -102,7 +105,6 @@ async function generateCacheOnSetup(cacheName: string, urlsToCache: string[]) {
   }
 
   console.log("service worker skipWaiting...");
-  isInstallFinish = true;
 
   swSelf.skipWaiting();
 }
@@ -189,6 +191,7 @@ const handleServiceWorkerActivate = (event) => {
   swToClientBroadcast.postMessage({
     type: "INSTALL_END",
   });
+  isInstallFinish = true;
 
   event.waitUntil(clearOldCacheOnActivate(CACHE_NAME));
 };
@@ -253,7 +256,7 @@ const handleOnlineCaching = (event) => {
         // 네트워크 요청이 실패하면 캐시에서 반환
         return caches.match(request).then((cachedResponse) => {
           // 캐시된 리스폰스가 있다면 보여주고, 없으면 오프라인 페이지를 보여줌
-          return cachedResponse || caches.match("/offline.html");
+          return cachedResponse || caches.match("/offline");
         });
       })
   );
@@ -278,7 +281,12 @@ const handleOfflineCaching = (
 
     event.respondWith(
       caches.match(normalizedUrl).then((cachedResponse) => {
-        return cachedResponse || caches.match("/offline.html");
+        // urlsToCache에 없는 경로 진입시 오프라인 페이지 표시
+        if (urlsToCache.findIndex((path) => normalizedUrl) === -1) {
+          return caches.match("/offline");
+        }
+
+        return cachedResponse || caches.match("/offline");
       })
     );
   } else {

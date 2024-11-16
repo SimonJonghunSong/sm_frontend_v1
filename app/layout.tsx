@@ -10,8 +10,6 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import theme from "../src/theme";
 import Hydration from "../utils/hydration";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
-import GlobalLoading from "@/components/GlobalLoading";
-import ServiceWorkerRegister from "@/src/worker/ServiceWorkerRegister";
 import NetworkStatusCheck from "@/components/NetworkStatusCheck";
 import NextIntlProvider from "@/src/contexts/NextIntlProvider";
 
@@ -78,7 +76,6 @@ export default async function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               {children}
-              <ServiceWorkerRegister />
               <NetworkStatusCheck />
             </ThemeProvider>
             <ToastContainer pauseOnFocusLoss={false} />

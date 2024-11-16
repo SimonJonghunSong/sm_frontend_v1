@@ -228,3 +228,13 @@ div:where(.swal2-container)
   border-radius: 4px;
   margin-bottom: 16px;
 }
+
+button.disabled,
+a.disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+
+  &:hover {
+    opacity: 0.3 !important;
+  }
+}

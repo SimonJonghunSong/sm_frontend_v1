@@ -1,25 +1,51 @@
 .notFound {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    p {
-        font-size: 80px;
-        font-weight: 800;
-        color: var(--grey5);
-        margin: 0;
-    }
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  p {
+    font-size: 80px;
+    font-weight: 800;
+    color: var(--grey5);
+    margin: 0;
+  }
 
-    span {
-        display: block;
-        margin-bottom: 24px;
-        font-size: 18px;
-        font-weight: 800;
-        color: var(--black);
-    }
+  span {
+    display: block;
+    margin-bottom: 24px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--black);
+  }
+}
+
+.offline {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  p {
+    font-size: 80px;
+    font-weight: 800;
+    color: var(--grey5);
+    margin: 0;
+  }
+
+  span {
+    display: block;
+    margin-bottom: 24px;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--black);
+  }
 }

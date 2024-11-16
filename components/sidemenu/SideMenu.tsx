@@ -15,11 +15,13 @@ import useAuthStore from "@/utils/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "@/src/api/services/auth";
 import { toast } from "react-toastify";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 
 type sideMenuItem = {
   name: string;
   href?: string;
   icon?: () => React.ReactNode;
+  offlineEnable?: boolean;
   onClick?: (name: string) => void;
   isActive?: boolean;
 };
@@ -38,6 +40,7 @@ export default function SideMenu({
   const pathname = usePathname();
   const router = useRouter();
   const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
+  const { isOnline } = useNetworkMonitor();
 
   const loginMutation = useMutation({
     mutationFn: logout,
@@ -91,6 +94,8 @@ export default function SideMenu({
     return `${href}${queryData}`;
   };
 
+  console.log("sideMenuItems >>", sideMenuItems);
+
   return (
     <aside className={styles.sideMenuWrap}>
       <ul className={styles.sideMenu}>
@@ -102,12 +107,36 @@ export default function SideMenu({
                 className={link?.isActive ? styles.active : undefined}
               >
                 {link?.onClick ? (
-                  <button type="button" onClick={() => link.onClick(link.name)}>
+                  <button
+                    type="button"
+                    className={
+                      !isOnline && !link.offlineEnable ? "disabled" : ""
+                    }
+                    onClick={() =>
+                      !isOnline && !link.offlineEnable
+                        ? undefined
+                        : link.onClick(link.name)
+                    }
+                  >
                     {link.icon && <link.icon />}
                     <span>{link.name}</span>
                   </button>
                 ) : (
-                  <Link href={link.href}>
+                  <Link
+                    href={link.href}
+                    className={
+                      !isOnline && !link.offlineEnable && !link?.isActive
+                        ? "disabled"
+                        : ""
+                    }
+                    onClick={
+                      !isOnline && !link.offlineEnable
+                        ? (e) => {
+                            e.preventDefault();
+                          }
+                        : undefined
+                    }
+                  >
                     {link.icon && <link.icon />}
                     <span>{link.name}</span>
                   </Link>
@@ -122,7 +151,10 @@ export default function SideMenu({
                   pathname.startsWith(link.href) ? styles.active : undefined
                 }
               >
-                <button onClick={handleLogout}>
+                <button
+                  className={!isOnline ? "disabled" : ""}
+                  onClick={!isOnline ? undefined : handleLogout}
+                >
                   {link.icon && <link.icon />}
                   <span>{link.name}</span>
                 </button>

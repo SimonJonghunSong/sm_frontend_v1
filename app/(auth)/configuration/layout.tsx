@@ -84,12 +84,14 @@ const ConfigurationLayout = ({ children }) => {
                 name: key,
                 isActive: tab === key,
                 href: "/configuration",
+                offlineEnable: true,
                 onClick: handleTabClick,
               };
             }),
             {
               name: "Geofence",
               href: "/configuration",
+              offlineEnable: true,
               isActive: tab === "geofence",
               onClick: handleTabClick,
             },
