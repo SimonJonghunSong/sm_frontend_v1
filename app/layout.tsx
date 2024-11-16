@@ -8,7 +8,6 @@ import { ThemeProvider } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import theme from "../src/theme";
-import Hydration from "../utils/hydration";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
 import NetworkStatusCheck from "@/components/NetworkStatusCheck";
 import NextIntlProvider from "@/src/contexts/NextIntlProvider";
@@ -70,9 +69,6 @@ export default async function RootLayout({
         style={{ backgroundColor: "#F3F3F3" }}
       >
         <ReactQueryProvider>
-          {/* ? 정리 대상 1순위 */}
-          <Hydration />
-          {/* ? 정리 대상 1순위 */}
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               {children}

@@ -98,6 +98,7 @@ async function generateCacheOnSetup(cacheName: string, urlsToCache: string[]) {
   for (const url of urlsToCache) {
     try {
       const response = await fetch(url);
+
       cache.put(url, response);
     } catch (error) {
       console.error(`Error fetching ${url}:`, error);
@@ -187,7 +188,7 @@ swSelf.addEventListener("install", handleServiceWorkerInstall);
  * @param {ExtendableEvent} event
  */
 const handleServiceWorkerActivate = (event) => {
-  console.log("service worker activate evnet fire!!!");
+  console.log("service worker activate event fire!!!");
   swToClientBroadcast.postMessage({
     type: "INSTALL_END",
   });
@@ -282,7 +283,9 @@ const handleOfflineCaching = (
     event.respondWith(
       caches.match(normalizedUrl).then((cachedResponse) => {
         // urlsToCache에 없는 경로 진입시 오프라인 페이지 표시
-        if (urlsToCache.findIndex((path) => normalizedUrl) === -1) {
+        if (
+          urlsToCache.findIndex((path) => path === requestUrl.pathname) === -1
+        ) {
           return caches.match("/offline");
         }
 

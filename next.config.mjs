@@ -3,7 +3,6 @@ import { fileURLToPath } from "url";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 import ts from "typescript";
 import createNextIntlPlugin from "next-intl/plugin";
-import withSerwistInit from "@serwist/next";
 
 const buildTimestamp = new Date().getTime().toString();
 
