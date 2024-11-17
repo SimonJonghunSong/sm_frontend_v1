@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
@@ -14,6 +15,7 @@ import { findId } from "@/src/api/services/auth";
 
 export default function page() {
   const router = useRouter();
+  const t = useTranslations("login");
   const [step, setStep] = useState(1);
   const [country, setCountry] = useState<string>();
   const [email, setEmail] = useState<string>();
@@ -60,18 +62,18 @@ export default function page() {
           <div className="logo">
             <Image src={logo} alt="synctrack" />
           </div>
-          <div className="pageTitle">Forgot your ID?</div>
-          <div className="description">
-            Please enter your registered email
-            <br />
-            address to find your ID first.
+          <div className="pageTitle">{t("find_id.forgot_your_id?")}</div>
+          <div className="description" style={{ width: 230 }}>
+            {t(
+              "find_id.please_enter_your_registered_email_address_to_find_your_id_first"
+            )}
           </div>
 
           <div className="content">
             <form onSubmit={handleFindIdSubmit}>
               <InputBox>
                 <InputBox.Head>
-                  <InputBox.Title>Country</InputBox.Title>
+                  <InputBox.Title>{t("find_id.country")}</InputBox.Title>
                 </InputBox.Head>
                 <InputBox.Body>
                   <FormControl sx={{ width: "100%" }} size="small">
@@ -83,7 +85,7 @@ export default function page() {
               </InputBox>
               <InputBox>
                 <InputBox.Head>
-                  <InputBox.Title>E-mail</InputBox.Title>
+                  <InputBox.Title>{t("find_id.e-mail")}</InputBox.Title>
                 </InputBox.Head>
                 <InputBox.Body>
                   <TextField
@@ -104,7 +106,7 @@ export default function page() {
                   fullWidth
                   sx={{ background: "var(--primary-gradient)", mt: 2 }}
                 >
-                  Find ID
+                  {t("find_id.find_id")}
                 </Button>
                 <Button
                   variant="outlined"
@@ -112,7 +114,7 @@ export default function page() {
                   sx={{ mt: 2 }}
                   onClick={handleClickLogin}
                 >
-                  Login
+                  {t("find_id.login")}
                 </Button>
               </Stack>
             </form>
@@ -126,7 +128,9 @@ export default function page() {
           <div className="logo">
             <Image src={logo} alt="synctrack" />
           </div>
-          <div className="pageTitle">Your ID has been found!</div>
+          <div className="pageTitle">
+            {t("id_found.your_id_has_been_found!")}
+          </div>
           <div className="content">
             <form onSubmit={handleSubmit}>
               <Box
@@ -147,7 +151,7 @@ export default function page() {
                   fullWidth
                   sx={{ background: "var(--primary-gradient)", mt: 2 }}
                 >
-                  Login
+                  {t("id_found.login")}
                 </Button>
                 <Button
                   variant="outlined"
@@ -155,7 +159,7 @@ export default function page() {
                   sx={{ mt: 2 }}
                   onClick={handleClickFindPassword}
                 >
-                  Find password
+                  {t("id_found.find_password")}
                 </Button>
               </Stack>
             </form>

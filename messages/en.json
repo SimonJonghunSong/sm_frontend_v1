@@ -33,9 +33,7 @@
     },
     "find_id": {
       "forgot_your_id?": "Forgot your ID?",
-      "please_enter_your_registered_email_address_to_find_your_id_first": {
-        "": "Please enter your registered email address to find your ID first."
-      },
+      "please_enter_your_registered_email_address_to_find_your_id_first": "Please enter your registered email address to find your ID first.",
       "country": "Country",
       "select,_나라명": "Select, 나라명",
       "e-mail": "E-mail",

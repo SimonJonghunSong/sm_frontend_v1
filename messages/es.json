@@ -33,9 +33,7 @@
     },
     "find_id": {
       "forgot_your_id?": "¿Olvidaste tu ID?",
-      "please_enter_your_registered_email_address_to_find_your_id_first": {
-        "": "Por favor ingresa tu dirección de correo electrónico registrada para encontrar tu ID primero."
-      },
+      "please_enter_your_registered_email_address_to_find_your_id_first": "Por favor ingresa tu dirección de correo electrónico registrada para encontrar tu ID primero.",
       "country": "País",
       "select,_나라명": "Seleccionar, nombre del país",
       "e-mail": "Correo electrónico",
@@ -273,7 +271,10 @@
       "network_*": "Red *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -316,7 +317,10 @@
       "network_*": "Red *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
