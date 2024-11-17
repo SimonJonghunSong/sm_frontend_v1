@@ -17,9 +17,9 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import Modal from "../../../../components/Modal";
-import InputBox from "../../../../components/inputbox/InputBox";
-import { SwitchPrimary } from "../../../../components/switches";
+import Modal from "@/components/Modal";
+import InputBox from "@/components/inputbox/InputBox";
+import { SwitchPrimary } from "@/components/switches";
 import { addModel } from "@/src/api/services/model";
 
 export interface FormState {

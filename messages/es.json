@@ -84,14 +84,10 @@
       "model": "Modelo",
       "device": "Dispositivo",
       "account": "Cuenta",
-      "search": {
-        "": {
-          "": {
-            "": "Buscar..."
-          }
-        }
-      },
-      "offline/online": "Desconectado/Conectado"
+      "search": "Buscar...",
+      "offline/online": "Desconectado/Conectado",
+      "offline": "Desconectado",
+      "online": "Conectado"
     }
   },
   "footer": {
@@ -265,10 +261,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -312,10 +305,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -335,7 +325,7 @@
       "obd": "OBD",
       "indoor": "Interior",
       "motorcycle_tracker": "Rastreador de Motocicletas",
-      "setting_file_*": "Archivo de Configuración *",
+      "setting_file_*": "Archivo de Configuración",
       "hide_from_list": "Ocultar de la Lista",
       "cancel": "Cancelar",
       "save": "Guardar"

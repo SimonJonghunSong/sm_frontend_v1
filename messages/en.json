@@ -84,14 +84,10 @@
       "model": "Model",
       "device": "Device",
       "account": "Account",
-      "search": {
-        "": {
-          "": {
-            "": "Search..."
-          }
-        }
-      },
-      "offline/online": "Offline/Online"
+      "search": "Search...",
+      "offline/online": "Offline/Online",
+      "offline": "Offline",
+      "online": "Online"
     }
   },
   "footer": {
@@ -265,10 +261,7 @@
       "network_*": "Network",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -312,10 +305,7 @@
       "network_*": "Network",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -1568,5 +1558,8 @@
         "": "Device is not connected."
       }
     }
+  },
+  "list_type": {
+    "f/w": "F/W"
   }
 }

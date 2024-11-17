@@ -41,6 +41,7 @@ import useModelPkgStore from "@/src/stores/useModelPkgStore";
 import useCustomPagination from "@/src/hooks/useCustomPagination";
 import useLangStore from "@/utils/useLangStore";
 import getLocalizedString from "@/utils/getLocalizedString";
+import { featureTransition } from "./admin/page";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -82,7 +83,7 @@ export default function Model() {
   const getColumns: () => GridColDef[] = () => [
     {
       field: "col1",
-      headerName: "Image",
+      headerName: t("list_type.image"),
       minWidth: 200,
       headerAlign: "center",
       align: "center",
@@ -107,21 +108,21 @@ export default function Model() {
     },
     {
       field: "col2",
-      headerName: "Model Name",
+      headerName: t("list_type.model_name"),
       minWidth: 120,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col3",
-      headerName: "F/W",
+      headerName: t("list_type.f/w"),
       width: 80,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col4",
-      headerName: "Features",
+      headerName: t("list_type.features"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -144,7 +145,7 @@ export default function Model() {
     },
     {
       field: "col5",
-      headerName: "Configuration",
+      headerName: t("list_type.configuration"),
       width: 180,
       headerAlign: "center",
       align: "center",
@@ -161,7 +162,7 @@ export default function Model() {
     },
     {
       field: "col7",
-      headerName: "Date",
+      headerName: t("list_type.date"),
       minWidth: 180,
       headerAlign: "center",
       align: "center",
@@ -188,7 +189,9 @@ export default function Model() {
       if (selectedTab) {
         const features = item.col4.split(",");
 
-        return features.includes(selectedTab);
+        return features
+          .map((ft) => featureTransition(lang, ft))
+          .includes(selectedTab);
       }
 
       return true;
@@ -263,10 +266,10 @@ export default function Model() {
       const supportedFeatures = cur.supported_features;
 
       supportedFeatures.forEach((item) => {
-        if (acc[item]) {
-          acc[item] += 1;
+        if (acc[featureTransition(lang, item)]) {
+          acc[featureTransition(lang, item)] += 1;
         } else {
-          acc[item] = 1;
+          acc[featureTransition(lang, item)] = 1;
         }
       });
 

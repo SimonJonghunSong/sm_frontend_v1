@@ -2,6 +2,7 @@
 
 import React, { useEffect, useReducer, useState } from "react";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
@@ -16,9 +17,9 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import Modal from "../../../../components/Modal";
-import InputBox from "../../../../components/inputbox/InputBox";
-import { SwitchPrimary } from "../../../../components/switches";
+import Modal from "@/components/Modal";
+import InputBox from "@/components/inputbox/InputBox";
+import { SwitchPrimary } from "@/components/switches";
 import { editModel } from "@/src/api/services/model";
 import { Model } from "@/src/api/services/model/type";
 
@@ -86,6 +87,7 @@ interface Props {
 }
 
 export default function EditModal({ handleCloseModal, selectedData }: Props) {
+  const t = useTranslations("model");
   // forms
   const [state, dispatch] = useReducer(reducer, initialState);
   const queryClient = useQueryClient();
@@ -220,9 +222,10 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     <Modal
       open={true}
       toggleOpen={handleCloseModal}
-      title="Edit Model"
+      title={t("edit_model_pop_up.edit_model")}
       confirm={handleEditConfirm}
-      confirmButtonText="Save"
+      confirmButtonText={t("edit_model_pop_up.save")}
+      cancelButtonText={t("edit_model_pop_up.cancel")}
       width="720px"
       disabled={
         !devName ||
@@ -235,7 +238,8 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Image<i>*</i>
+              {t("edit_model_pop_up.image_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -268,11 +272,13 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
                     accept=".jpg, .jpeg, .png"
                     onChange={handleImageChange}
                   />
-                  Upload
+                  {t("edit_model_pop_up.upload")}
                 </Button>
               </Stack>
               <span className="text-grey-5">
-                PNG or JPG only, 1000x1000px recommended, max 5MB
+                {t(
+                  "edit_model_pop_up.png_or_jpg_only,_1000x1000px_recommended,_max_5mb"
+                )}
               </span>
             </Stack>
           </InputBox.Body>
@@ -281,7 +287,8 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Model Name<i>*</i>
+              {t("edit_model_pop_up.model_name_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -300,7 +307,8 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Country<i>*</i>
+              {t("edit_model_pop_up.country_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -330,7 +338,8 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Network<i>*</i>
+              {t("edit_model_pop_up.network_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -397,28 +406,43 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Features</InputBox.Title>
+            <InputBox.Title>{t("edit_model_pop_up.features")}</InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <FormControl
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
               {[
-                { label: "Advanced", value: "Advanced" },
-                { label: "Low-cost", value: "Low-cost" },
+                { label: t("add_model_pop_up.advanced"), value: "Advanced" },
+                { label: t("add_model_pop_up.low-cost"), value: "Low-cost" },
                 {
-                  label: "Low-power consumption",
+                  label: t("add_model_pop_up.low-power_consumption"),
                   value: "Low-power consumption",
                 },
-                { label: "Compact-size", value: "Compact-size" },
-                { label: "BoxTracker", value: "BoxTracker" },
-                { label: "Waterproof", value: "Waterproof" },
-                { label: "Geofence", value: "Geofence" },
-                { label: "Jamming Detection", value: "Jamming Detection" },
-                { label: "Accelerometer", value: "Accelerometer" },
-                { label: "Ignition", value: "Ignition" },
-                { label: "Solar", value: "Solar" },
-                { label: "OBD", value: "OBD" },
+                {
+                  label: t("add_model_pop_up.compact-size"),
+                  value: "Compact-size",
+                },
+                {
+                  label: t("add_model_pop_up.boxtracker"),
+                  value: "BoxTracker",
+                },
+                {
+                  label: t("add_model_pop_up.waterproof"),
+                  value: "Waterproof",
+                },
+                { label: t("add_model_pop_up.geofence"), value: "Geofence" },
+                {
+                  label: t("add_model_pop_up.jamming_detection"),
+                  value: "Jamming Detection",
+                },
+                {
+                  label: t("add_model_pop_up.accelerometer"),
+                  value: "Accelerometer",
+                },
+                { label: t("add_model_pop_up.ignition"), value: "Ignition" },
+                { label: t("add_model_pop_up.solar"), value: "Solar" },
+                { label: t("add_model_pop_up.obd"), value: "OBD" },
               ].map(({ label, value }) => {
                 return (
                   <FormControlLabel
@@ -442,13 +466,13 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Setting File<i>*</i>
+              {t("edit_model_pop_up.setting_file_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <Stack direction="row" gap="8px">
               <TextField
-                placeholder="Choose file to upload"
                 fullWidth
                 value={file?.name || selectedData.default_profile}
                 inputProps={{ readOnly: true }}
@@ -460,7 +484,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
                   hidden
                   onChange={handleFileChange}
                 />
-                Upload
+                {t("edit_model_pop_up.upload")}
               </Button>
             </Stack>
           </InputBox.Body>
@@ -476,7 +500,7 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
                 width="100%"
                 gap={1}
               >
-                <span>Hide from List</span>
+                <span>{t("edit_model_pop_up.hide_from_list")}</span>
                 <SwitchPrimary
                   checked={hide}
                   onChange={(e) => {

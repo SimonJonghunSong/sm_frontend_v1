@@ -25,7 +25,10 @@ import EditModal from "app/(auth)/model/admin/EditModal";
 import getLocalizedString from "@/utils/getLocalizedString";
 import useLangStore from "@/utils/useLangStore";
 
-const featureTransition = (lang: "en" | "pt" | "es", feature: string) => {
+export const featureTransition = (
+  lang: "en" | "pt" | "es",
+  feature: string
+) => {
   const features = {
     "2G": {
       en: "2G",
@@ -355,7 +358,9 @@ export default function Model() {
                 if (selectedTab) {
                   const features = item.col4.split(",");
 
-                  return features.includes(selectedTab);
+                  return features
+                    .map((ft) => featureTransition(lang, ft))
+                    .includes(selectedTab);
                 }
 
                 return true;

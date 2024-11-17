@@ -8,6 +8,9 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 
 import { Model } from "@/src/api/services/model/type";
 import { SwitchPrimary } from "../../../components/switches";
+import useLangStore from "@/utils/useLangStore";
+import { featureTransition } from "./admin/page";
+import getLocalizedString from "@/utils/getLocalizedString";
 
 export const getAdminColumns: (
   onEditClick: (id: string) => void,
@@ -16,7 +19,10 @@ export const getAdminColumns: (
 ) => GridColDef[] = (onEditClick, onDeleteClick, onHideClick) => [
   {
     field: "col1",
-    headerName: "Image",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(lang, "Image", "Imagem", "Imagen");
+    },
     minWidth: 200,
     headerAlign: "center",
     align: "center",
@@ -44,44 +50,67 @@ export const getAdminColumns: (
   },
   {
     field: "col2",
-    headerName: "Model Name",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(
+        lang,
+        "Model Name",
+        "Nome do Modelo",
+        "Nombre del Modelo"
+      );
+    },
     minWidth: 120,
     headerAlign: "center",
     align: "center",
   },
   {
     field: "col3",
-    headerName: "F/W",
+    renderHeader: () => {
+      return "F/W";
+    },
     width: 80,
     headerAlign: "center",
     align: "center",
   },
   {
     field: "col4",
-    headerName: "Features",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(
+        lang,
+        "Features",
+        "Características",
+        "Características"
+      );
+    },
     flex: 1,
     headerAlign: "center",
     align: "center",
-    renderCell: (params) => (
-      <Stack
-        direction="row"
-        gap="4px"
-        justifyContent="center"
-        alignItems="center"
-        flexWrap="wrap"
-        height="100%"
-      >
-        {params?.value.split(",").map((item) => (
-          <span key={item} className="chip">
-            {item}
-          </span>
-        ))}
-      </Stack>
-    ),
+    renderCell: (params) => {
+      return (
+        <Stack
+          direction="row"
+          gap="4px"
+          justifyContent="center"
+          alignItems="center"
+          flexWrap="wrap"
+          height="100%"
+        >
+          {params?.value.split(",").map((item) => (
+            <span key={item} className="chip">
+              {featureTransition(params.row.lang, item)}
+            </span>
+          ))}
+        </Stack>
+      );
+    },
   },
   {
     field: "col6",
-    headerName: "Hide",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(lang, "Hide", "Ocultar", "Ocultar");
+    },
     width: 80,
     headerAlign: "center",
     align: "center",
@@ -94,14 +123,20 @@ export const getAdminColumns: (
   },
   {
     field: "col7",
-    headerName: "Date",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(lang, "Date", "Data", "Fecha");
+    },
     minWidth: 180,
     headerAlign: "center",
     align: "center",
   },
   {
     field: "col8",
-    headerName: "Edit",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(lang, "Edit", "Editar", "Editar");
+    },
     width: 80,
     headerAlign: "center",
     align: "center",
@@ -117,7 +152,10 @@ export const getAdminColumns: (
   },
   {
     field: "col9",
-    headerName: "Delete",
+    renderHeader: () => {
+      const { lang } = useLangStore();
+      return getLocalizedString(lang, "Delete", "Excluir", "Eliminar");
+    },
     width: 80,
     headerAlign: "center",
     align: "center",
@@ -133,8 +171,9 @@ export const getAdminColumns: (
   },
 ];
 
-export const getAdminRows = (data?: Model[]) =>
-  (data || []).map((item, idx) => ({
+export const getAdminRows = (data?: Model[]) => {
+  const { lang } = useLangStore.getState();
+  return (data || []).map((item) => ({
     id: item.uid,
     col1: item.image_file,
     col2: item.dev_name,
@@ -145,7 +184,9 @@ export const getAdminRows = (data?: Model[]) =>
     col8: { id: "1" },
     col9: { id: "1" },
     loaded: false,
+    lang,
   }));
+};
 
 export const getRows = (data?: (Model & { loaded: boolean })[]) =>
   (data || []).map((item, idx) => ({

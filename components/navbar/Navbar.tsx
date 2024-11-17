@@ -1,62 +1,65 @@
 "use client";
-import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 
 import React, { useState, useEffect, useRef } from "react";
 import StorageIcon from "@mui/icons-material/Storage";
-import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
-import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
-import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
-import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
-import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
-import NotificationsSharpIcon from "@mui/icons-material/NotificationsSharp";
 import HelpSharpIcon from "@mui/icons-material/HelpSharp";
 import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
-import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
+import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
+import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
+import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
+import NotificationsSharpIcon from "@mui/icons-material/NotificationsSharp";
+import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import logo from "/public/images/logo-light.svg";
 import { Button, IconButton, Stack, Tab, Tabs, TextField } from "@mui/material";
-import Modal from "../../components/Modal";
-import useModal from "../../utils/useModal";
+import Modal from "@/components/Modal";
+import useModal from "@/utils/useModal";
 import Confirm from "../Confirm";
 import CmdTool from "../../app/(auth)/_cmd-tool/CmdTool";
-import useAuthStore from "../../utils/useAuthStore";
-import useNetworkMonitor from "../../utils/useNetworkMonitorStore";
-import { toast } from "react-toastify";
+import useAuthStore from "@/utils/useAuthStore";
+import useLangStore from "@/utils/useLangStore";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
+import getLocalizedString from "@/utils/getLocalizedString";
+import { useTranslations } from "next-intl";
 
-const rootMenus = [
+const rootMenus = (lang: "en" | "pt" | "es") => [
   {
-    name: "Server",
+    name: getLocalizedString(lang, "Server", "Servidor", "Servidor"),
     href: "/server",
     offlineEnable: false,
     icon: () => <StorageIcon />,
   },
   {
-    name: "Account",
+    name: getLocalizedString(lang, "Account", "Conta", "Cuenta"),
     href: "/account",
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
   },
 ];
-const adminMenus = [
+const adminMenus = (lang: "en" | "pt" | "es") => [
   {
-    name: "Model",
+    name: getLocalizedString(lang, "Model", "Modelo", "Modelo"),
     href: "/model/admin",
     offlineEnable: false,
     icon: () => <WidgetsOutlinedIcon />,
   },
   {
-    name: "Device",
+    name: getLocalizedString(lang, "Device", "Dispositivo", "Dispositivo"),
     href: "/device",
     offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
   },
   {
-    name: "Account",
+    name: getLocalizedString(lang, "Account", "Conta", "Cuenta"),
     href: "/account",
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
@@ -67,15 +70,15 @@ const adminMenus = [
     icon: () => <TerminalOutlinedIcon />,
   },
 ];
-const customerMenus = [
+const customerMenus = (lang: "en" | "pt" | "es") => [
   {
-    name: "Device",
+    name: getLocalizedString(lang, "Device", "Dispositivo", "Dispositivo"),
     href: "/device",
     offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
   },
   {
-    name: "Account",
+    name: getLocalizedString(lang, "Account", "Conta", "Cuenta"),
     href: "/account",
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
@@ -86,9 +89,9 @@ const customerMenus = [
     icon: () => <TerminalOutlinedIcon />,
   },
 ];
-const guestMenus = [
+const guestMenus = (lang: "en" | "pt" | "es") => [
   {
-    name: "Device",
+    name: getLocalizedString(lang, "Device", "Dispositivo", "Dispositivo"),
     href: "/device",
     offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
@@ -101,7 +104,9 @@ const guestMenus = [
 ];
 
 export default function Navbar() {
+  const t = useTranslations("gnb");
   const pathname = usePathname();
+  const { lang } = useLangStore();
   const { userRole } = useAuthStore();
 
   const [cmdModal, cmdModalToggle] = useModal();
@@ -111,12 +116,12 @@ export default function Navbar() {
 
   const navLinkes =
     userRole && userRole === "ROOT"
-      ? rootMenus
+      ? rootMenus(lang)
       : userRole === "ADMIN"
-      ? adminMenus
+      ? adminMenus(lang)
       : userRole === "CUSTOMER"
-      ? customerMenus
-      : guestMenus;
+      ? customerMenus(lang)
+      : guestMenus(lang);
 
   const [mounted, setMounted] = useState<boolean>(false);
   const [notificationModal, setNotificationModal] = useState(false);
@@ -147,13 +152,8 @@ export default function Navbar() {
     }).then((result) => {
       if (result.isConfirmed) {
         setIsOnline(isOfflineToOnline);
-        console.log("change~!");
       }
     });
-  };
-
-  const replaceFirstLetterToUppercase = (str: string) => {
-    return str?.charAt(0).toUpperCase() + str?.toLowerCase().slice(1);
   };
 
   const getRootHref = () => {
@@ -168,16 +168,27 @@ export default function Navbar() {
     }
   };
 
+  const getRole = (role: string) => {
+    switch (role.toLowerCase()) {
+      case "root":
+        return t("pw_set.root");
+      case "admin":
+        return t("pw_set.admin");
+      case "customer":
+        return t("pw_set.customer");
+      case "guest":
+        return t("pw_set.guest");
+      default:
+        return role;
+    }
+  };
+
   return (
     <nav className={styles.nav}>
       <div className={styles.left}>
         <Link href={getRootHref()} className={styles.logo}>
           <Image src={logo} alt="synctrack" />
-          {mounted && (
-            <div className={styles.role}>{`${replaceFirstLetterToUppercase(
-              userRole
-            )}`}</div>
-          )}
+          {mounted && <div className={styles.role}>{getRole(userRole)}</div>}
         </Link>
         <ul className={styles.mainMenu}>
           {!mounted ? (
@@ -295,7 +306,7 @@ export default function Navbar() {
         <TextField
           variant="outlined"
           size="small"
-          placeholder="Search..."
+          placeholder={`${t("pw_set.search")}`}
           id="search"
           sx={{
             "& .MuiOutlinedInput-root": {
@@ -323,10 +334,10 @@ export default function Navbar() {
           }
         >
           <div onClick={() => isOnline && handleToggleNetwork(false)}>
-            Offline
+            {t("pw_set.offline")}
           </div>
           <div onClick={() => !isOnline && handleToggleNetwork(true)}>
-            Online
+            {t("pw_set.online")}
           </div>
         </div>
       </div>
