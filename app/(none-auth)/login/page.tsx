@@ -28,7 +28,7 @@ import { useTranslations } from "next-intl";
 export default function page() {
   const router = useRouter();
   const { lang, setLang } = useLangStore();
-  const t = useTranslations("HomePage");
+  const t = useTranslations("login");
   const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -75,20 +75,21 @@ export default function page() {
 
   return (
     <>
-      {/* <h1>{t("title")}</h1> */}
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
-      <div className="pageTitle">Sign in to your SyncMaster account!</div>
+      <div className="pageTitle">
+        {t("login.sign_in_to_your_syncmaster_account!")}
+      </div>
       <div className="description">
-        You can log in with your Scuti ID!
+        {t("login.you_can_log_in_with_your_scuti_id!")}
         <br />
-        Don’t have an account yet?
+        {t("login.don’t_have_an_account_yet?")}
         <Link
           href="http://www.wizardlab.co.kr/main/index_06_1"
           className="underlineTextButton"
         >
-          Contact us
+          {t("login.contact_us")}
         </Link>
       </div>
 
@@ -96,7 +97,7 @@ export default function page() {
         <form onSubmit={handleSubmit}>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Country</InputBox.Title>
+              <InputBox.Title>{t("login.country")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <FormControl sx={{ width: "100%" }} size="small">
@@ -105,7 +106,6 @@ export default function page() {
                     lang === "en" ? "usa" : lang === "es" ? "spain" : "portugal"
                   }
                   setCountryData={(country) => {
-                    // setSelectedCountry(country);
                     setLang(
                       country === "usa"
                         ? "en"
@@ -120,7 +120,7 @@ export default function page() {
           </InputBox>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>ID</InputBox.Title>
+              <InputBox.Title>{t("login.id")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -135,7 +135,7 @@ export default function page() {
           </InputBox>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Password</InputBox.Title>
+              <InputBox.Title>{t("login.password")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -172,15 +172,18 @@ export default function page() {
           <div className={styles.loginHelpWrap}>
             <div>
               <Link className="underlineTextButton" href="/find-id">
-                Find ID
+                {t("login.find_id")}
               </Link>
               /
               <Link className="underlineTextButton" href="/find-password">
-                Find Password
+                {t("login.find_password")}
               </Link>
             </div>
             <div>
-              <FormControlLabel control={<Checkbox />} label="Remember me" />
+              <FormControlLabel
+                control={<Checkbox />}
+                label={t("login.remember_me")}
+              />
             </div>
           </div>
           <Button
@@ -199,7 +202,7 @@ export default function page() {
               inputId.length === 0 || inputPassword.length === 0 || isPending
             }
           >
-            Login
+            {t("login.login")}
           </Button>
         </form>
       </div>

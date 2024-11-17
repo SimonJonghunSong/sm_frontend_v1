@@ -19,6 +19,9 @@
     "login": {
       "sign_in_to_your_syncmaster_account!": "Sign in to your SyncMaster account!",
       "you_can_log_in_with_your_scuti_id!_don’t_have_an_account_yet?_contact_us": "You can log in with your Scuti ID!\nDon’t have an account yet? Contact us",
+      "you_can_log_in_with_your_scuti_id!": "You can log in with your Scuti ID!",
+      "don’t_have_an_account_yet?": "Don’t have an account yet?",
+      "contact_us": "Contact us",
       "country": "Country",
       "select,_나라명": "Select, 나라명",
       "id": "ID",
@@ -270,10 +273,7 @@
       "network_*": "Network *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -316,10 +316,7 @@
       "network_*": "Network *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
