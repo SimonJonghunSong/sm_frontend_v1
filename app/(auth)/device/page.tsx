@@ -7,12 +7,12 @@ import UsbOffIcon from "@mui/icons-material/UsbOff";
 import { redirect } from "next/navigation";
 import useSerial from "@/src/hooks/useSerial";
 import { SerialPortState } from "@/src/stores/useSerialStore";
+import { useTranslations } from "next-intl";
 
 type Steps = "BEFORE" | "ING" | "FAILED" | "SUCCESS";
 
 export default function page() {
   const [step, setStep] = useState<Steps>("BEFORE");
-
   const {
     func: { requestPort },
     state: { portList: portState },
@@ -44,6 +44,7 @@ export default function page() {
 }
 
 function Before({ setStep, requestPort }) {
+  const t = useTranslations("device");
   const {
     state: { portList },
   } = useSerial();
@@ -67,7 +68,9 @@ function Before({ setStep, requestPort }) {
           }}
         />
       </div>
-      <div className={styles.title}>Please plug devices into the USB ports</div>
+      <div className={styles.title}>
+        {t("device_detecting.please_plug_devices_into_the_usb_ports")}
+      </div>
       <div className={styles.title}>
         현재 연결된 USB ports 개수 {portList.length}개
       </div>
@@ -77,7 +80,7 @@ function Before({ setStep, requestPort }) {
           sx={{ width: 200, background: "var(--primary-gradient)" }}
           onClick={() => handleDetectDevice()}
         >
-          Detect Device
+          {t("device_detecting.detect_device")}
         </Button>
       </Stack>
     </>
@@ -91,6 +94,7 @@ function Ing({
   setStep: (step: Steps) => void;
   portState: SerialPortState[];
 }) {
+  const t = useTranslations("device");
   const [uiState, setUiState] = useState<"loading" | "error">("loading");
   const timeoutIdRef = useRef<NodeJS.Timeout>();
 
@@ -122,14 +126,16 @@ function Ing({
         <div className={styles.icon}>
           <div className={styles.loader}></div>
         </div>
-        <div className={styles.title}>Detecting devices...</div>
+        <div className={styles.title}>
+          {t("device_detecting.detecting_devices")}
+        </div>
         <Stack justifyContent="center" alignItems="center" gap="16px">
           <Button
             variant="outlined"
             sx={{ width: 200 }}
             onClick={() => setStep("BEFORE")}
           >
-            Cancel
+            {t("device_detecting.cancel")}
           </Button>
           <FormControlLabel
             value="AutoConnect"
@@ -154,6 +160,7 @@ function Ing({
 }
 
 function Failed({ setStep }) {
+  const t = useTranslations("device");
   return (
     <>
       <div className={styles.icon}>
@@ -164,19 +171,21 @@ function Failed({ setStep }) {
           }}
         />
       </div>
-      <div className={styles.title}>No devices detetcted</div>
+      <div className={styles.title}>
+        {t("device_detecting.no_devices_detected")}
+      </div>
       <Stack justifyContent="center" alignItems="center" gap="16px">
         <Button
           variant="outlined"
           sx={{ width: 200 }}
           onClick={() => setStep("ING")}
         >
-          Retry
+          {t("device_detecting.retry")}
         </Button>
         <FormControlLabel
           value="AutoConnect"
           control={<Checkbox />}
-          label="Auto-Connect"
+          label={t("device_detecting.auto-connect")}
         />
       </Stack>
     </>

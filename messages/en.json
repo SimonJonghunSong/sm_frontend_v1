@@ -333,22 +333,12 @@
   },
   "device": {
     "device_detecting": {
-      "please_plug_devices_into_the_usb_ports": {
-        "": "Please plug devices into the USB ports."
-      },
+      "please_plug_devices_into_the_usb_ports": "Please plug devices into the USB ports.",
       "detect_device": "Detect Device",
       "auto-connect": "Auto-Connect",
-      "detecting_devices": {
-        "": {
-          "": {
-            "": "Detecting devices..."
-          }
-        }
-      },
+      "detecting_devices": "Detecting devices...",
       "cancel": "Cancel",
-      "no_devices_detected": {
-        "": "No devices detected."
-      },
+      "no_devices_detected": "No devices detected.",
       "retry": "Retry"
     },
     "device_list": {

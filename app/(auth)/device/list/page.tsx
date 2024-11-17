@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Button, IconButton, Skeleton, Stack } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
@@ -46,6 +47,7 @@ const RowSkeleton = () => {
 };
 
 export default function DeviceList() {
+  const t = useTranslations("device");
   const {
     state: { portList, connectingPortCount },
     func: { requestPort, forget, write, close },
@@ -57,7 +59,7 @@ export default function DeviceList() {
   const columns: GridColDef[] = [
     {
       field: "col1",
-      headerName: "Model Name",
+      headerName: t("device_list.model_name"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -83,7 +85,7 @@ export default function DeviceList() {
     },
     {
       field: "col3",
-      headerName: "Country",
+      headerName: t("device_list.country"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -96,7 +98,7 @@ export default function DeviceList() {
     },
     {
       field: "col4",
-      headerName: "F/W",
+      headerName: t("device_list.f/w"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -109,7 +111,7 @@ export default function DeviceList() {
     },
     {
       field: "col5",
-      headerName: "Connection",
+      headerName: t("device_list.connection"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -128,7 +130,7 @@ export default function DeviceList() {
                 forget(params.value.port.port);
               }}
             >
-              Connect
+              {t("device_list.connect")}
             </Button>
           ) : (
             <Button
@@ -137,7 +139,7 @@ export default function DeviceList() {
               sx={{ width: "120px" }}
               onClick={(e) => e.stopPropagation()}
             >
-              Disconnect
+              {t("device_list.disconnect")}
             </Button>
           )
         ) : (
@@ -154,7 +156,7 @@ export default function DeviceList() {
     },
     {
       field: "col6",
-      headerName: "Configuration",
+      headerName: t("device_list.configuration"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -201,7 +203,7 @@ export default function DeviceList() {
                   );
                 }}
               >
-                Configure
+                {t("device_list.configure")}
               </Button>
               <Button
                 disabled={
@@ -276,7 +278,7 @@ export default function DeviceList() {
       <article className="contentWrap">
         <div className="pageTitle">
           <Stack direction="row" alignItems="center">
-            <span>Device List</span>
+            <span>{t("device_list.device_list")}</span>
             <IconButton onClick={requestPort}>
               <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
             </IconButton>
@@ -301,10 +303,10 @@ export default function DeviceList() {
           <Button
             variant="contained"
             color="secondary"
-            sx={{ width: 200, mt: "24px" }}
+            sx={{ maxWidth: 300, mt: "24px" }}
             onClick={modalToggle}
           >
-            Configure Multi-Device
+            {t("device_list.configure_multi-device")}
           </Button>
         </Stack>
       </article>
@@ -415,6 +417,7 @@ function Before({
   profile?: string[];
   onFileChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
+  const t = useTranslations("device");
   const uploadFileInputRef = useRef<HTMLInputElement | null>(null);
 
   return (
@@ -427,7 +430,7 @@ function Before({
           height="56px"
           borderBottom="1px solid var(--grey3)"
         >
-          <div className="list-title">Model Name</div>
+          <div className="list-title">{t("device_list.model_name")}</div>
           <div>{profile ? profile[0].split("=")[1] : "-"}</div>
         </Stack>
         <Stack
@@ -447,7 +450,9 @@ function Before({
           height="56px"
           borderBottom="1px solid var(--grey3)"
         >
-          <div className="list-title">File Name</div>
+          <div className="list-title">
+            {t("configure_multi-device_pop_up_(profile_load).file_name")}
+          </div>
           <div>{selectedFile ? selectedFile.name : "-"}</div>
         </Stack>
         <Stack
@@ -457,7 +462,7 @@ function Before({
           height="56px"
           borderBottom="1px solid var(--grey3)"
         >
-          <div className="list-title">Country</div>
+          <div className="list-title">{t("device_list.country")}</div>
           <div>{step === "LOADED" ? "USA" : "-"}</div>
         </Stack>
         <Stack
@@ -467,7 +472,9 @@ function Before({
           height="56px"
           borderBottom="1px solid var(--grey3)"
         >
-          <div className="list-title">F/W</div>
+          <div className="list-title">
+            {t("configure_multi-device_pop_up_(profile_load).f/w")}
+          </div>
           <div>{profile ? profile[1].split("=")[1] : "-"}</div>
         </Stack>
         <Stack
@@ -477,7 +484,9 @@ function Before({
           height="56px"
           borderBottom="1px solid var(--grey3)"
         >
-          <div className="list-title">Date</div>
+          <div className="list-title">
+            {t("configure_multi-device_pop_up_(profile_load).date")}
+          </div>
           <div>
             {selectedFile
               ? new Date(selectedFile.lastModified).toLocaleDateString() +
@@ -501,7 +510,7 @@ function Before({
             uploadFileInputRef.current?.click();
           }}
         >
-          Load Profile
+          {t("configure_multi-device_pop_up_(profile_load).load_profile")}
         </Button>
         <Button
           disabled={!selectedFile || !profile}
@@ -510,7 +519,7 @@ function Before({
           sx={{ width: 200 }}
           onClick={() => setStep("APPLY")}
         >
-          Next
+          {t("configure_multi-device_pop_up_(profile_load).next")}
         </Button>
 
         <input
@@ -548,6 +557,7 @@ function Apply({
     callback?: () => void;
   }) => Promise<boolean>;
 }) {
+  const t = useTranslations("device");
   const { portList } = useSerialStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
@@ -630,7 +640,7 @@ function Apply({
           sx={{ width: 200 }}
           onClick={() => setStep("LOADED")}
         >
-          Prev
+          {t("configure_multi-device_pop_up_(device_list).back")}
         </Button>
         <Button
           disabled={step === "BEFORE"}
@@ -639,7 +649,7 @@ function Apply({
           sx={{ width: 200 }}
           onClick={handleApply}
         >
-          Apply
+          {t("configure_multi-device_pop_up_(device_list).apply")}
         </Button>
       </Stack>
     </>
