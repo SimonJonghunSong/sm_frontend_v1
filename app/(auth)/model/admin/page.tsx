@@ -142,7 +142,7 @@ export interface FormState {
 export default function Model() {
   const queryClient = useQueryClient();
   const { lang } = useLangStore();
-  const t = useTranslations("model");
+  const t = useTranslations();
   const { data } = useQuery({
     queryKey: ["model"],
     queryFn: getModels,
@@ -151,7 +151,7 @@ export default function Model() {
     mutationFn: delModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      toast("Successfully deleted!", {
+      toast(t("common.message.delete-success"), {
         type: "success",
       });
     },
@@ -160,7 +160,7 @@ export default function Model() {
     mutationFn: editModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      toast("Successfully edited!", {
+      toast(t("common.message.edit-success"), {
         type: "success",
       });
     },
@@ -348,7 +348,7 @@ export default function Model() {
                 color="secondary"
                 onClick={handleAddModel}
               >
-                {t("model.add")}
+                {t("model.model.add")}
               </Button>
             </Stack>
           </Stack>
@@ -389,7 +389,7 @@ export default function Model() {
             }}
             footerButton={
               <Button variant="text" color="info" onClick={handleDeleteModels}>
-                {t("model.delete")}
+                {t("model.model.delete")}
               </Button>
             }
           />
