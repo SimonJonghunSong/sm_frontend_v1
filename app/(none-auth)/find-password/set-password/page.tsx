@@ -1,24 +1,20 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import logo from "/public/images/logo-dark.svg";
-import {
-  Button,
-  IconButton,
-  Stack,
-  TextField,
-  } from "@mui/material";
-import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import { Button, IconButton, Stack, TextField } from "@mui/material";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import InputBox from "../../../../components/inputbox/InputBox";
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function page() {
   const router = useRouter();
-
+  const t = useTranslations("login");
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -40,14 +36,16 @@ export default function page() {
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
-      <div className="pageTitle">Set your password!</div>
-      <div className="description">Set a password for your account</div>
+      <div className="pageTitle">{t("pw_settings.set_your_password!")}</div>
+      <div className="description">
+        {t("pw_settings.set_a_password_for_your_account")}
+      </div>
 
       <div className="content">
         <form onSubmit={handleSubmit}>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Password</InputBox.Title>
+              <InputBox.Title>{t("pw_settings.password")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -82,7 +80,9 @@ export default function page() {
 
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Confirm Password</InputBox.Title>
+              <InputBox.Title>
+                {t("pw_settings.confirm_password")}
+              </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -116,27 +116,45 @@ export default function page() {
           </InputBox>
 
           {true && (
-            <Stack direction="row" gap="6px" sx={{color: 'var(--error)', mb: "8px"}}>
+            <Stack
+              direction="row"
+              gap="6px"
+              sx={{ color: "var(--error)", mb: "8px" }}
+            >
               <CloseIcon />
-              <span style={{fontWeight: 500}}>At least 8 characters</span>
+              <span style={{ fontWeight: 500 }}>At least 8 characters</span>
             </Stack>
           )}
           {true && (
-            <Stack direction="row" gap="6px" sx={{color: 'var(--error)', mb: "8px"}}>
+            <Stack
+              direction="row"
+              gap="6px"
+              sx={{ color: "var(--error)", mb: "8px" }}
+            >
               <CloseIcon />
-              <span style={{fontWeight: 500}}>At least 1 upper/lowercase</span>
+              <span style={{ fontWeight: 500 }}>
+                At least 1 upper/lowercase
+              </span>
             </Stack>
           )}
           {true && (
-            <Stack direction="row" gap="6px" sx={{color: 'var(--success)', mb: "8px"}}>
+            <Stack
+              direction="row"
+              gap="6px"
+              sx={{ color: "var(--success)", mb: "8px" }}
+            >
               <CheckIcon />
-              <span style={{fontWeight: 500}}>At least 1 number</span>
+              <span style={{ fontWeight: 500 }}>At least 1 number</span>
             </Stack>
           )}
           {true && (
-            <Stack direction="row" gap="6px" sx={{color: 'var(--error)', mb: "8px"}}>
+            <Stack
+              direction="row"
+              gap="6px"
+              sx={{ color: "var(--error)", mb: "8px" }}
+            >
               <CloseIcon />
-              <span style={{fontWeight: 500}}>Password do not match</span>
+              <span style={{ fontWeight: 500 }}>Password do not match</span>
             </Stack>
           )}
 
@@ -146,7 +164,7 @@ export default function page() {
             fullWidth
             sx={{ background: "var(--primary-gradient)", mt: 1 }}
           >
-            Set Password
+            {t("pw_settings.set_password")}
           </Button>
         </form>
       </div>

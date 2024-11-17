@@ -63,18 +63,14 @@
     },
     "pw_settings": {
       "set_your_password!": "¡Establece tu contraseña!",
-      "set_a_password_for_your_account": {
-        "": "Establece una contraseña para tu cuenta."
-      },
+      "set_a_password_for_your_account": "Establece una contraseña para tu cuenta.",
       "password": "Contraseña",
       "confirm_password": "Confirmar Contraseña",
       "set_password": "Establecer Contraseña"
     },
     "pw_set": {
       "your_password_has_been_set!": "¡Tu contraseña ha sido establecida!",
-      "please_login_with_the_email_address_and_password_you_have_set": {
-        "": "Por favor inicia sesión con la dirección de correo electrónico y la contraseña que has establecido."
-      },
+      "please_login_with_the_email_address_and_password_you_have_set": "Por favor inicia sesión con la dirección de correo electrónico y la contraseña que has establecido.",
       "login": "Iniciar sesión"
     }
   },

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
@@ -11,7 +12,6 @@ import InputBox from "../../../components/inputbox/InputBox";
 import { Button, FormControl, Stack, TextField } from "@mui/material";
 import SelectCountry from "../../../components/SelectCountry";
 import { findPassword } from "@/src/api/services/auth";
-import { useTranslations } from "next-intl";
 
 export default function page() {
   const router = useRouter();

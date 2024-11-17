@@ -1,14 +1,13 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
-import { useState } from "react";
 import Image from "next/image";
+import { Button } from "@mui/material";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
 import logo from "/public/images/logo-dark.svg";
-import {
-  Button,
-  } from "@mui/material";
 
 export default function page() {
+  const t = useTranslations("login");
   const router = useRouter();
 
   const handleClickLogin = () => {
@@ -20,11 +19,11 @@ export default function page() {
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
-      <div className="pageTitle">Your password has been set!</div>
-      <div className="description">
-        Please login with the email address
-        <br />
-        and password you have set
+      <div className="pageTitle">{t("pw_set.your_password_has_been_set!")}</div>
+      <div className="description" style={{ width: 230 }}>
+        {t(
+          "pw_set.please_login_with_the_email_address_and_password_you_have_set"
+        )}
       </div>
 
       <div className="content">
@@ -35,7 +34,7 @@ export default function page() {
           sx={{ background: "var(--primary-gradient)", mt: 1 }}
           onClick={handleClickLogin}
         >
-          Login
+          {t("pw_set.login")}
         </Button>
       </div>
     </>

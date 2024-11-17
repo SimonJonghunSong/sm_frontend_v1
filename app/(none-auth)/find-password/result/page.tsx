@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import logo from "/public/images/logo-dark.svg";
-
+import { useTranslations } from "next-intl";
 import { Button, Divider, Stack } from "@mui/material";
+import logo from "/public/images/logo-dark.svg";
 
 export default function page() {
   const router = useRouter();
-
+  const t = useTranslations("login");
   const handleResend = (e) => {
     e.preventDefault();
     router.push("/find-password/result");
@@ -24,11 +24,9 @@ export default function page() {
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
-      <div className="pageTitle">Check your email!</div>
-      <div className="description">
-        Password reset link has been sent
-        <br />
-        to your email!
+      <div className="pageTitle">{t("email_sent.check_your_email!")}</div>
+      <div className="description" style={{ width: 230 }}>
+        {t("email_sent.password_reset_link_has_been_sent_to_your_email!")}
       </div>
 
       <div className="content">
@@ -40,7 +38,7 @@ export default function page() {
               fullWidth
               sx={{ background: "var(--primary-gradient)" }}
             >
-              Login
+              {t("email_sent.login")}
             </Button>
 
             <Divider sx={{ my: 5 }} />
@@ -51,7 +49,7 @@ export default function page() {
               type="button"
               onClick={handleResend}
             >
-              Resend
+              {t("email_sent.resend")}
             </Button>
           </Stack>
         </form>
