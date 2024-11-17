@@ -254,9 +254,7 @@ function AddServerModal({ onClose }) {
     <Modal
       open
       toggleOpen={onClose}
-      title={`${t("server.add_scuti_server_pop_up.add")}${t(
-        "server.server_sidebar.scuti_server"
-      )}`}
+      title={`${t("server.scuti_server.add_scuti_server")}`}
       confirm={handleAdd}
       confirmButtonText="Add"
       width="400px"
@@ -373,9 +371,7 @@ function EditServerModal({
     <Modal
       open
       toggleOpen={onClose}
-      title={`${t("server.scuti_server.edit")} ${t(
-        "server.server_sidebar.scuti_server"
-      )}`}
+      title={`${t("server.scuti_server.edit_scuti_server")}`}
       confirm={handleModify}
       confirmButtonText={t("server.edit_scuti_server_pop_up.save")}
       width="400px"

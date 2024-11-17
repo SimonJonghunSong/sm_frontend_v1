@@ -260,9 +260,7 @@ function AddServerModal({
     <Modal
       open={open}
       toggleOpen={onClose}
-      title={`${t("server.mqtt_server.add")} ${t(
-        "server.server_sidebar.mqtt_server"
-      )}`}
+      title={`${t("server.mqtt_server.add_mqtt_server")}`}
       confirm={handleAdd}
       confirmButtonText={t("server.mqtt_server.add")}
       width="400px"
@@ -383,9 +381,7 @@ function EditServerModal({
     <Modal
       open
       toggleOpen={onClose}
-      title={`${t("server.mqtt_server.edit")} ${t(
-        "server.server_sidebar.mqtt_server"
-      )}`}
+      title={`${t("server.mqtt_server.edit_mqtt_server")}`}
       confirm={handleModify}
       confirmButtonText={t("server.edit_mqtt_server_pop_up.save")}
       width="400px"

@@ -142,7 +142,9 @@
       "server_ip": "Server IP",
       "port": "Port",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "add_scuti_server": "Add Scuti Server",
+      "edit_scuti_server": "Edit Scuti Server"
     },
     "add_scuti_server_pop_up": {
       "country": "Country",
@@ -170,7 +172,9 @@
       "server_ip": "Server IP",
       "port": "Port",
       "edit": "Edit",
-      "delete": "Delete"
+      "delete": "Delete",
+      "add_mqtt_server": "Add MQTT Server",
+      "edit_mqtt_server": "Edit MQTT Server"
     },
     "add_mqtt_server_pop_up": {
       "country": "Country",
