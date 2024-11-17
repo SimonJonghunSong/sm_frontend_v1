@@ -21,8 +21,10 @@ import {
   getScutiServer,
   modifyScutiServer,
 } from "@/src/api/services/scuti";
+import { useTranslations } from "next-intl";
 
 export default function Server() {
+  const t = useTranslations();
   const { data, error } = useQuery({
     queryKey: ["scuti-server"],
     queryFn: getScutiServer,
@@ -40,7 +42,7 @@ export default function Server() {
     mutationFn: deleteScutiServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
-      toast("Successfully deleted!", {
+      toast(t("common.message.delete-success"), {
         type: "success",
       });
     },
@@ -49,35 +51,35 @@ export default function Server() {
   const columns: GridColDef[] = [
     {
       field: "col1",
-      headerName: "Country",
+      headerName: t("server.scuti_server.country"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col2",
-      headerName: "Region",
+      headerName: t("server.scuti_server.region"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col3",
-      headerName: "ServerIP",
+      headerName: t("server.scuti_server.server_ip"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col4",
-      headerName: "Port",
+      headerName: t("server.scuti_server.port"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col5",
-      headerName: "Edit",
+      headerName: t("server.scuti_server.edit"),
       width: 80,
       headerAlign: "center",
       align: "center",
@@ -95,7 +97,7 @@ export default function Server() {
     },
     {
       field: "col6",
-      headerName: "Delete",
+      headerName: t("server.scuti_server.delete"),
       width: 80,
       headerAlign: "center",
       align: "center",
@@ -137,7 +139,9 @@ export default function Server() {
     <div className="pageWrap">
       <SideMenu sideMenuItems={sideMenuItems} />
       <article className="contentWrap">
-        <div className="pageTitle">Scuti Server List</div>
+        <div className="pageTitle">
+          {t("server.scuti_server.scuti_server_list")}
+        </div>
 
         <Stack
           direction="row"
@@ -151,7 +155,7 @@ export default function Server() {
             color="secondary"
             onClick={addModalToggle}
           >
-            Add
+            {t("server.add_mqtt_server_pop_up.add")}
           </Button>
         </Stack>
 
@@ -163,7 +167,7 @@ export default function Server() {
           }
           footerButton={
             <Button variant="text" color="info" onClick={handleDeleteRows}>
-              Delete
+              {t("server.scuti_server.delete")}
             </Button>
           }
         />
@@ -213,6 +217,7 @@ function reducer(state: State, action: Action): State {
 }
 
 function AddServerModal({ onClose }) {
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const [state, dispatch] = useReducer(reducer, {
     country: "",
@@ -225,7 +230,7 @@ function AddServerModal({ onClose }) {
     mutationFn: addScutiServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
-      toast("Successfully added!", {
+      toast(t("common.message.add-success"), {
         type: "success",
       });
       onClose();
@@ -249,7 +254,9 @@ function AddServerModal({ onClose }) {
     <Modal
       open
       toggleOpen={onClose}
-      title="Add Scuti Server"
+      title={`${t("server.add_scuti_server_pop_up.add")}${t(
+        "server.server_sidebar.scuti_server"
+      )}`}
       confirm={handleAdd}
       confirmButtonText="Add"
       width="400px"
@@ -257,7 +264,9 @@ function AddServerModal({ onClose }) {
       <Stack>
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Country</InputBox.Title>
+            <InputBox.Title>
+              {t("server.add_scuti_server_pop_up.country")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <SelectCountry
@@ -268,7 +277,7 @@ function AddServerModal({ onClose }) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Region</InputBox.Title>
+            <InputBox.Title>{t("server.scuti_server.region")}</InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -281,7 +290,9 @@ function AddServerModal({ onClose }) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Server IP</InputBox.Title>
+            <InputBox.Title>
+              {t("server.scuti_server.server_ip")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -294,7 +305,7 @@ function AddServerModal({ onClose }) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Port</InputBox.Title>
+            <InputBox.Title>{t("server.scuti_server.port")}</InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -324,11 +335,15 @@ function EditServerModal({
   uid: string;
   onClose: () => void;
 }) {
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: modifyScutiServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
+      toast(t("common.message.edit-success"), {
+        type: "success",
+      });
       onClose();
     },
   });
@@ -358,15 +373,19 @@ function EditServerModal({
     <Modal
       open
       toggleOpen={onClose}
-      title="Edit Scuti Server"
+      title={`${t("server.scuti_server.edit")} ${t(
+        "server.server_sidebar.scuti_server"
+      )}`}
       confirm={handleModify}
-      confirmButtonText="Save"
+      confirmButtonText={t("server.edit_scuti_server_pop_up.save")}
       width="400px"
     >
       <Stack>
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Country</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_scuti_server_pop_up.country")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <SelectCountry
@@ -378,7 +397,9 @@ function EditServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Region</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_scuti_server_pop_up.region")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -391,7 +412,9 @@ function EditServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Server IP</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_scuti_server_pop_up.server_ip")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -404,7 +427,9 @@ function EditServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Port</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_scuti_server_pop_up.port")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField

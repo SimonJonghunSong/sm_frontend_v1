@@ -21,8 +21,10 @@ import {
   deleteMqttServer,
 } from "@/src/api/services/mqtt";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 
 export default function Server() {
+  const t = useTranslations();
   const { data, error, isPending } = useQuery({
     queryKey: ["mqtt-server"],
     queryFn: getMqttServer,
@@ -40,7 +42,7 @@ export default function Server() {
     mutationFn: deleteMqttServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
-      toast("Successfully deleted!", {
+      toast(t("common.message.delete-success"), {
         type: "success",
       });
     },
@@ -49,35 +51,35 @@ export default function Server() {
   const columns: GridColDef[] = [
     {
       field: "col1",
-      headerName: "Country",
+      headerName: t("server.mqtt_server.country"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col2",
-      headerName: "Region",
+      headerName: t("server.mqtt_server.region"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col3",
-      headerName: "ServerIP",
+      headerName: t("server.mqtt_server.server_ip"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col4",
-      headerName: "Port",
+      headerName: t("server.mqtt_server.port"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col5",
-      headerName: "Edit",
+      headerName: t("server.mqtt_server.edit"),
       width: 80,
       headerAlign: "center",
       align: "center",
@@ -95,7 +97,7 @@ export default function Server() {
     },
     {
       field: "col6",
-      headerName: "Delete",
+      headerName: t("server.mqtt_server.delete"),
       width: 80,
       headerAlign: "center",
       align: "center",
@@ -137,7 +139,9 @@ export default function Server() {
     <div className="pageWrap">
       <SideMenu sideMenuItems={sideMenuItems} />
       <article className="contentWrap">
-        <div className="pageTitle">MQTT Server List</div>
+        <div className="pageTitle">
+          {t("server.mqtt_server.mqtt_server_list")}
+        </div>
 
         <Stack
           direction="row"
@@ -151,7 +155,7 @@ export default function Server() {
             color="secondary"
             onClick={addModalToggle}
           >
-            Add
+            {t("server.mqtt_server.add")}
           </Button>
         </Stack>
 
@@ -163,7 +167,7 @@ export default function Server() {
           }
           footerButton={
             <Button variant="text" color="info" onClick={handleDeleteRows}>
-              Delete
+              {t("server.mqtt_server.delete")}
             </Button>
           }
         />
@@ -219,6 +223,7 @@ function AddServerModal({
   open: boolean;
   onClose: () => void;
 }) {
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const [state, dispatch] = useReducer(reducer, {
     country: "",
@@ -231,7 +236,7 @@ function AddServerModal({
     mutationFn: addMqttServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
-      toast("Successfully added!", {
+      toast(t("common.message.add-success"), {
         type: "success",
       });
       onClose();
@@ -255,15 +260,19 @@ function AddServerModal({
     <Modal
       open={open}
       toggleOpen={onClose}
-      title="Add MQTT Server"
+      title={`${t("server.mqtt_server.add")} ${t(
+        "server.server_sidebar.mqtt_server"
+      )}`}
       confirm={handleAdd}
-      confirmButtonText="Add"
+      confirmButtonText={t("server.mqtt_server.add")}
       width="400px"
     >
       <Stack>
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Country</InputBox.Title>
+            <InputBox.Title>
+              {t("server.add_mqtt_server_pop_up.country")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <SelectCountry
@@ -274,7 +283,9 @@ function AddServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Region</InputBox.Title>
+            <InputBox.Title>
+              {t("server.add_mqtt_server_pop_up.region")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -287,7 +298,9 @@ function AddServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Server IP</InputBox.Title>
+            <InputBox.Title>
+              {t("server.add_mqtt_server_pop_up.server_ip")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -300,7 +313,9 @@ function AddServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Port</InputBox.Title>
+            <InputBox.Title>
+              {t("server.add_mqtt_server_pop_up.port")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -330,11 +345,15 @@ function EditServerModal({
   uid: string;
   onClose: () => void;
 }) {
+  const t = useTranslations();
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: modifyMqttServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
+      toast(t("common.message.edit-success"), {
+        type: "success",
+      });
       onClose();
     },
   });
@@ -364,15 +383,19 @@ function EditServerModal({
     <Modal
       open
       toggleOpen={onClose}
-      title="Edit MQTT Server"
+      title={`${t("server.mqtt_server.edit")} ${t(
+        "server.server_sidebar.mqtt_server"
+      )}`}
       confirm={handleModify}
-      confirmButtonText="Save"
+      confirmButtonText={t("server.edit_mqtt_server_pop_up.save")}
       width="400px"
     >
       <Stack>
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Country</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_mqtt_server_pop_up.country")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <SelectCountry
@@ -384,7 +407,9 @@ function EditServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Region</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_mqtt_server_pop_up.region")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -397,7 +422,9 @@ function EditServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Server IP</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_mqtt_server_pop_up.server_ip")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
@@ -410,7 +437,9 @@ function EditServerModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Port</InputBox.Title>
+            <InputBox.Title>
+              {t("server.edit_mqtt_server_pop_up.port")}
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
