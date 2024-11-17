@@ -47,9 +47,7 @@
     },
     "find_pw": {
       "forgot_your_password?": "Esqueceu sua Senha?",
-      "please_enter_your_registered_email_address_to_reset_your_password": {
-        "": "Por favor, insira seu endereço de e-mail registrado para redefinir sua senha."
-      },
+      "please_enter_your_registered_email_address_to_reset_your_password": "Por favor, insira seu endereço de e-mail registrado para redefinir sua senha.",
       "country": "País",
       "select,_나라명": "Selecione, país",
       "e-mail": "E-mail",

@@ -47,9 +47,7 @@
     },
     "find_pw": {
       "forgot_your_password?": "¿Olvidaste tu Contraseña?",
-      "please_enter_your_registered_email_address_to_reset_your_password": {
-        "": "Por favor ingresa tu dirección de correo electrónico registrada para restablecer tu contraseña."
-      },
+      "please_enter_your_registered_email_address_to_reset_your_password": "Por favor ingresa tu dirección de correo electrónico registrada para restablecer tu contraseña.",
       "country": "País",
       "select,_나라명": "Seleccionar, nombre del país",
       "e-mail": "Correo electrónico",
@@ -271,10 +269,7 @@
       "network_*": "Red *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -317,10 +312,7 @@
       "network_*": "Red *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",

@@ -11,9 +11,11 @@ import InputBox from "../../../components/inputbox/InputBox";
 import { Button, FormControl, Stack, TextField } from "@mui/material";
 import SelectCountry from "../../../components/SelectCountry";
 import { findPassword } from "@/src/api/services/auth";
+import { useTranslations } from "next-intl";
 
 export default function page() {
   const router = useRouter();
+  const t = useTranslations("login");
   const [country, setCountry] = useState<string>();
   const [email, setEmail] = useState<string>();
 
@@ -48,18 +50,18 @@ export default function page() {
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
-      <div className="pageTitle">Forgot your Password?</div>
-      <div className="description">
-        Please enter your registered email
-        <br />
-        address to reset your password
+      <div className="pageTitle">{t("find_pw.forgot_your_password?")}</div>
+      <div className="description" style={{ width: 230 }}>
+        {t(
+          "find_pw.please_enter_your_registered_email_address_to_reset_your_password"
+        )}
       </div>
 
       <div className="content">
         <form onSubmit={handleSubmit}>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Country</InputBox.Title>
+              <InputBox.Title>{t("find_pw.country")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <FormControl sx={{ width: "100%" }} size="small">
@@ -71,7 +73,7 @@ export default function page() {
           </InputBox>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>E-mail</InputBox.Title>
+              <InputBox.Title>{t("find_pw.e-mail")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -91,7 +93,7 @@ export default function page() {
               fullWidth
               sx={{ background: "var(--primary-gradient)", mt: 2 }}
             >
-              Find Password
+              {t("find_pw.send_e-mail")}
             </Button>
             <Button
               variant="outlined"
@@ -99,7 +101,7 @@ export default function page() {
               sx={{ mt: 2 }}
               onClick={handleClickLogin}
             >
-              Login
+              {t("find_pw.login")}
             </Button>
           </Stack>
         </form>
