@@ -8,34 +8,56 @@ import {
   RadioGroup,
   Stack,
 } from "@mui/material";
-import React  from "react";
+import React, { useState } from "react";
 import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
+import useLangStore, { Lang } from "@/utils/useLangStore";
+import { useTranslations } from "next-intl";
 
-export default function Server() {
+export default function LanguagePage() {
+  const t = useTranslations("settings");
+  const { setLang, lang } = useLangStore();
+  const [localLang, setLocalLang] = useState<Lang>(lang);
 
+  const handleSave = (lang: Lang) => {
+    setLang(lang);
+  };
 
   return (
     <div className="pageWrap">
-      <SideMenu sideMenuItems={sideMenuItems} />
+      <SideMenu sideMenuItems={sideMenuItems(lang)} />
       <article className="contentWrap">
-        <div className="pageTitle">Languages</div>
+        <div className="pageTitle">{t("languages.languages")}</div>
         <Stack height="300px">
           <FormControl>
             <RadioGroup
               aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="english"
+              defaultValue={lang}
+              value={localLang}
               name="radio-buttons-group"
+              onChange={(e) => {
+                if (e.target.value) {
+                  setLocalLang(e.target.value as Lang);
+                }
+              }}
               row
               sx={{ gap: "24px" }}
             >
               <FormControlLabel
-                value="english"
+                value="en"
                 control={<Radio />}
-                label="English"
+                label={t("languages.english")}
               />
-              <FormControlLabel value="spanish" control={<Radio />} label="Spanish" />
-              <FormControlLabel value="portuguese" control={<Radio />} label="Portuguese" />
+              <FormControlLabel
+                value="es"
+                control={<Radio />}
+                label={t("languages.spanish")}
+              />
+              <FormControlLabel
+                value="pt"
+                control={<Radio />}
+                label={t("languages.portuguese")}
+              />
             </RadioGroup>
           </FormControl>
         </Stack>
@@ -45,10 +67,11 @@ export default function Server() {
           justifyContent="flex-end"
           marginTop="40px"
         >
-          <Button variant="outlined" color="secondary">
-            Cancel
-          </Button>
-          <Button variant="contained" color="secondary">
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => handleSave(localLang)}
+          >
             Save
           </Button>
         </Stack>

@@ -1,16 +1,20 @@
 "use client";
 
+import React, { useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import { Button, IconButton, Stack, TextField } from "@mui/material";
-import React, { useState } from "react";
 import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { me, modifyMyAccount } from "@/src/api/services/auth";
-import { toast } from "react-toastify";
+import useLangStore from "@/utils/useLangStore";
 
-export default function Server() {
+export default function MyInfoPage() {
+  const { lang } = useLangStore();
+  const t = useTranslations();
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState<string>();
   const [confirmedPassword, setConfirmedPassword] = useState<string>();
@@ -26,7 +30,7 @@ export default function Server() {
   const { mutate } = useMutation({
     mutationFn: modifyMyAccount,
     onSuccess: () => {
-      toast("Your information has been successfully updated.", {
+      toast(t("common.message.edit-success"), {
         type: "success",
       });
     },
@@ -63,9 +67,9 @@ export default function Server() {
 
   return (
     <div className="pageWrap">
-      <SideMenu sideMenuItems={sideMenuItems} />
+      <SideMenu sideMenuItems={sideMenuItems(lang)} />
       <article className="contentWrap">
-        <div className="pageTitle">My Info</div>
+        <div className="pageTitle">{t("settings.my_info.my_info")}</div>
         <Stack>
           <Stack
             direction="row"
@@ -74,7 +78,7 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Company</div>
+            <div className="list-title">{t("settings.my_info.company")}</div>
             <div>James Franco</div>
           </Stack>
           <Stack
@@ -84,7 +88,7 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">ID</div>
+            <div className="list-title">{t("settings.my_info.id")}</div>
             <div>{data.user_id}</div>
           </Stack>
           <Stack
@@ -94,7 +98,7 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">E-mail</div>
+            <div className="list-title">{t("settings.my_info.e-mail")}</div>
             <div>{data.email}</div>
           </Stack>
           <Stack
@@ -104,10 +108,10 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Password</div>
+            <div className="list-title">{t("settings.my_info.password")}</div>
             <div>
               <TextField
-                placeholder="Change password"
+                placeholder={t("settings.my_info.change_password")}
                 id="input2"
                 variant="outlined"
                 size="small"
@@ -145,10 +149,12 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Confirm Password</div>
+            <div className="list-title">
+              {t("settings.my_info.confirm_password")}
+            </div>
             <div>
               <TextField
-                placeholder="Change password"
+                placeholder={t("settings.my_info.change_password")}
                 id="input1"
                 variant="outlined"
                 size="small"
@@ -186,7 +192,7 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Country</div>
+            <div className="list-title">{t("settings.my_info.country")}</div>
             <div>{data.country}</div>
           </Stack>
           <Stack
@@ -196,7 +202,7 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Role</div>
+            <div className="list-title">{t("settings.my_info.role")}</div>
             <div>{data.role.name.toUpperCase()}</div>
           </Stack>
           <Stack
@@ -206,7 +212,9 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Affiliation</div>
+            <div className="list-title">
+              {t("settings.my_info.affiliation")}
+            </div>
             <div>
               {/* TODO 기존 Select로 이루어짐
                <Select
@@ -226,7 +234,7 @@ export default function Server() {
             height="56px"
             borderBottom="1px solid var(--grey3)"
           >
-            <div className="list-title">Department</div>
+            <div className="list-title">{t("settings.my_info.department")}</div>
             <div>
               <TextField
                 sx={{ width: 320 }}
@@ -243,7 +251,7 @@ export default function Server() {
           marginTop="40px"
         >
           <Button variant="outlined" color="secondary">
-            Cancel
+            {t("settings.my_info.cancel")}
           </Button>
           <Button
             variant="contained"
@@ -251,7 +259,7 @@ export default function Server() {
             disabled={!password || !confirmedPassword}
             onClick={handleSave}
           >
-            Save
+            {t("settings.my_info.save")}
           </Button>
         </Stack>
       </article>

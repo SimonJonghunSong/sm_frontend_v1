@@ -169,6 +169,7 @@ export default function Navbar() {
   };
 
   const getRole = (role: string) => {
+    if (!role) return "";
     switch (role.toLowerCase()) {
       case "root":
         return t("pw_set.root");
