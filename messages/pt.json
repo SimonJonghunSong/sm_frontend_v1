@@ -253,19 +253,22 @@
     },
     "add_model_pop_up": {
       "add_model": "Adicionar Modelo",
-      "image_*": "Imagem *",
+      "image_*": "Imagem",
       "upload": "Enviar",
       "png_or_jpg_only,_1000x1000px_recommended,_max_5mb": "Apenas PNG ou JPG, recomendado 1000x1000px, máximo 5MB",
-      "model_name_*": "Nome do Modelo *",
-      "country_*": "País *",
+      "model_name_*": "Nome do Modelo",
+      "country_*": "País",
       "su": "SU",
       "sb": "SB",
       "sm": "SM",
       "se": "SE",
-      "network_*": "Rede *",
+      "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -285,14 +288,15 @@
       "obd": "OBD",
       "indoor": "Interno",
       "motorcycle_tracker": "Rastreador de Motocicletas",
-      "setting_file_*": "Arquivo de Configuração *",
+      "setting_file_*": "Arquivo de Configuração",
       "choose_file_to_upload": "Escolha o arquivo para enviar",
       "hide_from_list": "Ocultar da Lista",
       "cancel": "Cancelar",
       "add": "Adicionar",
       "all_required_fields_have_not_been_filled_out": {
         "": "Todos os campos obrigatórios não foram preenchidos."
-      }
+      },
+      "save": "Salvar"
     },
     "edit_model_pop_up": {
       "edit_model": "Editar Modelo",
@@ -308,7 +312,10 @@
       "network_*": "Rede *",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",

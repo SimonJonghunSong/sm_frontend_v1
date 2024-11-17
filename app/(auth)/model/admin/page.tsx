@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+import { useRouter } from "next/navigation";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
 import {
   Button,
@@ -11,24 +14,118 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material";
-import DataTable from "../../../../components/dataTable";
-import useModal from "../../../../utils/useModal";
-import { useRouter } from "next/navigation";
+import DataTable from "@/components/dataTable";
+import useModal from "@/utils/useModal";
 import { getAdminColumns, getAdminRows } from "../tableData";
-import useAuthStore from "../../../../utils/useAuthStore";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import useAuthStore from "@/utils/useAuthStore";
 import { delModel, editModel, getModels } from "@/src/api/services/model";
 import AddModal from "app/(auth)/model/admin/AddModal";
 import { Model as ModelType } from "@/src/api/services/model/type";
 import EditModal from "app/(auth)/model/admin/EditModal";
-import { AxiosError } from "axios";
+import getLocalizedString from "@/utils/getLocalizedString";
+import useLangStore from "@/utils/useLangStore";
 
-const selectSortData = [
-  { label: "Newest", value: "Newest" },
-  { label: "Oldest", value: "Oldest" },
-  { label: "A-Z", value: "A-Z" },
+const featureTransition = (lang: "en" | "pt" | "es", feature: string) => {
+  const features = {
+    "2G": {
+      en: "2G",
+      pt: "2G",
+      es: "2G",
+    },
+    "3G": {
+      en: "3G",
+      pt: "3G",
+      es: "3G",
+    },
+    Advanced: {
+      en: "Advanced",
+      pt: "Avançado",
+      es: "Avanzado",
+    },
+    "Low-cost": {
+      en: "Low-cost",
+      pt: "Baixo-custo",
+      es: "Bajo costo",
+    },
+    "Low-power consumption": {
+      en: "Low-power consumption",
+      pt: "Baixo-consumo",
+      es: "Bajo consumo",
+    },
+    "Compact-size": {
+      en: "Compact-size",
+      pt: "Compacto",
+      es: "Tamaño compacto",
+    },
+    BoxTracker: {
+      en: "BoxTracker",
+      pt: "BoxTracker",
+      es: "BoxTracker",
+    },
+    Waterproof: {
+      en: "Waterproof",
+      pt: "Impermeável",
+      es: "Impermeable",
+    },
+    Geofence: {
+      en: "Geofence",
+      pt: "Geofence",
+      es: "Geocerca",
+    },
+    "Jamming Detection": {
+      en: "Jamming Detection",
+      pt: "Detecção de Jamming",
+      es: "Detección de jamming",
+    },
+    Accelerometer: {
+      en: "Accelerometer",
+      pt: "Acelerômetro",
+      es: "Acelerómetro",
+    },
+    Ignition: {
+      en: "Ignition",
+      pt: "Ignição",
+      es: "Ignición",
+    },
+    Solar: {
+      en: "Solar",
+      pt: "Solar",
+      es: "Solar",
+    },
+    OBD: {
+      en: "OBD",
+      pt: "OBD",
+      es: "OBD",
+    },
+    Indoor: {
+      en: "Indoor",
+      pt: "Interno",
+      es: "Interior",
+    },
+    "Motorcycle Tracker": {
+      en: "Motorcycle Tracker",
+      pt: "Rastreador de Motocicletas",
+      es: "Rastreador de Motocicletas",
+    },
+  };
+
+  return features[feature]?.[lang] || feature;
+};
+
+const selectSortData = (lang: "en" | "pt" | "es") => [
+  {
+    label: getLocalizedString(lang, "Newest", "Mais recente", "Más reciente"),
+    value: "Newest",
+  },
+  {
+    label: getLocalizedString(lang, "Oldest", "Mais antigo", "Más antiguo"),
+    value: "Oldest",
+  },
+  {
+    label: "A-Z",
+    value: "A-Z",
+  },
 ];
-
 export interface FormState {
   devName: string;
   country: string;
@@ -39,30 +136,10 @@ export interface FormState {
   hide: boolean;
 }
 
-// 액션 타입 정의
-type FormAction =
-  | { type: "RESET" }
-  | { type: "SET_DATA"; value: FormState }
-  | { type: "SET_DEV_NAME"; value: string }
-  | { type: "SET_COUNTRY"; value: string }
-  | { type: "SET_IMAGE_FILE"; value: string }
-  | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
-  | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
-  | { type: "SET_SETTING_FILE"; value: string }
-  | { type: "SET_HIDE"; value: boolean };
-
-const initialState: FormState = {
-  devName: "",
-  country: "",
-  imageFile: "",
-  supportedNetworkType: [],
-  supportedFeatures: [],
-  settingFile: "",
-  hide: false,
-};
-
 export default function Model() {
   const queryClient = useQueryClient();
+  const { lang } = useLangStore();
+  const t = useTranslations("model");
   const { data } = useQuery({
     queryKey: ["model"],
     queryFn: getModels,
@@ -191,10 +268,10 @@ export default function Model() {
       const supportedFeatures = cur.supported_features;
 
       supportedFeatures.forEach((item) => {
-        if (acc[item]) {
-          acc[item] += 1;
+        if (acc[featureTransition(lang, item)]) {
+          acc[featureTransition(lang, item)] += 1;
         } else {
-          acc[item] = 1;
+          acc[featureTransition(lang, item)] = 1;
         }
       });
 
@@ -254,7 +331,7 @@ export default function Model() {
                 onChange={(e) => handleSelectChange(e, setFilter)}
                 sx={{ minWidth: 160 }}
               >
-                {selectSortData.map((item) => (
+                {selectSortData(lang).map((item) => (
                   <MenuItem key={item.value} value={item.value}>
                     {item.label}
                   </MenuItem>
@@ -268,7 +345,7 @@ export default function Model() {
                 color="secondary"
                 onClick={handleAddModel}
               >
-                Add
+                {t("model.add")}
               </Button>
             </Stack>
           </Stack>
@@ -307,7 +384,7 @@ export default function Model() {
             }}
             footerButton={
               <Button variant="text" color="info" onClick={handleDeleteModels}>
-                Delete
+                {t("model.delete")}
               </Button>
             }
           />

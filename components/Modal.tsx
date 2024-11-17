@@ -12,6 +12,7 @@ type ModalProps = {
   children?: React.ReactNode;
   confirm?(): void;
   confirmButtonText?: string;
+  cancelButtonText?: string;
   open: boolean;
   toggleOpen: () => void;
   width: string;
@@ -24,6 +25,7 @@ export default function Modal({
   children,
   confirm,
   confirmButtonText = "확인",
+  cancelButtonText = "Cancel",
   title,
   open,
   toggleOpen,
@@ -78,7 +80,7 @@ export default function Modal({
                 sx={{ width: 80, height: 32, fontSize: 13 }}
                 onClick={toggleOpen}
               >
-                Cancel
+                {cancelButtonText}
               </Button>
             )}
             <Button

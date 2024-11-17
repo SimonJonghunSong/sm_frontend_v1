@@ -3,6 +3,7 @@
 import React, { useReducer, useState } from "react";
 import Image from "next/image";
 import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";
 import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
@@ -86,6 +87,7 @@ interface Props {
 }
 
 export default function AddModal({ handleCloseModal }: Props) {
+  const t = useTranslations("model");
   // forms
   const [state, dispatch] = useReducer(reducer, initialState);
   const queryClient = useQueryClient();
@@ -199,9 +201,10 @@ export default function AddModal({ handleCloseModal }: Props) {
     <Modal
       open={true}
       toggleOpen={handleCloseModal}
-      title="Add Model"
+      title={t("add_model_pop_up.add_model")}
       confirm={handleAddConfirm}
-      confirmButtonText="Save"
+      cancelButtonText={t("add_model_pop_up.cancel")}
+      confirmButtonText={t("add_model_pop_up.save")}
       width="720px"
       disabled={
         !imageFile ||
@@ -216,7 +219,8 @@ export default function AddModal({ handleCloseModal }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Image<i>*</i>
+              {t("add_model_pop_up.image_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -244,11 +248,13 @@ export default function AddModal({ handleCloseModal }: Props) {
                     accept=".jpg, .jpeg, .png"
                     onChange={handleImageChange}
                   />
-                  Upload
+                  {t("add_model_pop_up.upload")}
                 </Button>
               </Stack>
               <span className="text-grey-5">
-                PNG or JPG only, 1000x1000px recommended, max 5MB
+                {t(
+                  "add_model_pop_up.png_or_jpg_only,_1000x1000px_recommended,_max_5mb"
+                )}
               </span>
             </Stack>
           </InputBox.Body>
@@ -257,7 +263,8 @@ export default function AddModal({ handleCloseModal }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Model Name<i>*</i>
+              {t("add_model_pop_up.model_name_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -275,7 +282,8 @@ export default function AddModal({ handleCloseModal }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Country<i>*</i>
+              {t("add_model_pop_up.country_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -305,7 +313,7 @@ export default function AddModal({ handleCloseModal }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Network <i>*</i>
+              {t("add_model_pop_up.network_*")} <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
 
@@ -380,21 +388,36 @@ export default function AddModal({ handleCloseModal }: Props) {
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
               {[
-                { label: "Advanced", value: "Advanced" },
-                { label: "Low-cost", value: "Low-cost" },
+                { label: t("add_model_pop_up.advanced"), value: "Advanced" },
+                { label: t("add_model_pop_up.low-cost"), value: "Low-cost" },
                 {
-                  label: "Low-power consumption",
+                  label: t("add_model_pop_up.low-power_consumption"),
                   value: "Low-power consumption",
                 },
-                { label: "Compact-size", value: "Compact-size" },
-                { label: "BoxTracker", value: "BoxTracker" },
-                { label: "Waterproof", value: "Waterproof" },
-                { label: "Geofence", value: "Geofence" },
-                { label: "Jamming Detection", value: "Jamming Detection" },
-                { label: "Accelerometer", value: "Accelerometer" },
-                { label: "Ignition", value: "Ignition" },
-                { label: "Solar", value: "Solar" },
-                { label: "OBD", value: "OBD" },
+                {
+                  label: t("add_model_pop_up.compact-size"),
+                  value: "Compact-size",
+                },
+                {
+                  label: t("add_model_pop_up.boxtracker"),
+                  value: "BoxTracker",
+                },
+                {
+                  label: t("add_model_pop_up.waterproof"),
+                  value: "Waterproof",
+                },
+                { label: t("add_model_pop_up.geofence"), value: "Geofence" },
+                {
+                  label: t("add_model_pop_up.jamming_detection"),
+                  value: "Jamming Detection",
+                },
+                {
+                  label: t("add_model_pop_up.accelerometer"),
+                  value: "Accelerometer",
+                },
+                { label: t("add_model_pop_up.ignition"), value: "Ignition" },
+                { label: t("add_model_pop_up.solar"), value: "Solar" },
+                { label: t("add_model_pop_up.obd"), value: "OBD" },
               ].map(({ label, value }) => {
                 return (
                   <FormControlLabel
@@ -418,13 +441,14 @@ export default function AddModal({ handleCloseModal }: Props) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Setting File<i>*</i>
+              {t("add_model_pop_up.setting_file_*")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <Stack direction="row" gap="8px">
               <TextField
-                placeholder="Choose file to upload"
+                placeholder={t("add_model_pop_up.choose_file_to_upload")}
                 fullWidth
                 value={file?.name || ""}
                 inputProps={{ readOnly: true }}
@@ -436,7 +460,7 @@ export default function AddModal({ handleCloseModal }: Props) {
                   hidden
                   onChange={handleFileChange}
                 />
-                Upload
+                {t("add_model_pop_up.upload")}
               </Button>
             </Stack>
           </InputBox.Body>
@@ -451,7 +475,7 @@ export default function AddModal({ handleCloseModal }: Props) {
                 alignItems="center"
                 gap={1}
               >
-                <span>Hide from List</span>
+                <span>{t("add_model_pop_up.hide_from_list")}</span>
                 <SwitchPrimary
                   checked={hide}
                   onChange={(e) => {
