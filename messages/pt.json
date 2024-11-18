@@ -261,10 +261,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -308,10 +305,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -480,14 +474,10 @@
   "notifications": {
     "privacy_policy": {
       "notifications": "Notificações",
-      "new(0)": "Novas(0)",
-      "all(0)": "Todas(0)",
-      "no_new_notifications": {
-        "": "Sem novas notificações."
-      },
-      "no_notifications_yet": {
-        "": "Nenhuma notificação ainda."
-      }
+      "new": "Novas",
+      "all": "Todas",
+      "no_new_notifications": "Sem novas notificações.",
+      "no_notifications_yet": "Nenhuma notificação ainda."
     }
   },
   "configuration": {

@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import StorageIcon from "@mui/icons-material/Storage";
 import HelpSharpIcon from "@mui/icons-material/HelpSharp";
 import HeadsetMicIcon from "@mui/icons-material/HeadsetMic";
-import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -20,7 +19,7 @@ import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import logo from "/public/images/logo-light.svg";
-import { Button, IconButton, Stack, Tab, Tabs, TextField } from "@mui/material";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import Modal from "@/components/Modal";
 import useModal from "@/utils/useModal";
 import Confirm from "../Confirm";
@@ -30,6 +29,7 @@ import useLangStore from "@/utils/useLangStore";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import getLocalizedString from "@/utils/getLocalizedString";
 import { useTranslations } from "next-intl";
+import NotificationModal from "./NotificationModal";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -366,7 +366,7 @@ export default function Navbar() {
       </Modal>
 
       {notificationModal && (
-        <NotificationModal setNotificationModal={setNotificationModal} />
+        <NotificationModal onClose={() => setNotificationModal(false)} />
       )}
     </nav>
   );
@@ -485,245 +485,4 @@ function CmdModal() {
   }, []);
 
   return <CmdTool />;
-}
-
-function NotificationModal({ setNotificationModal }) {
-  const modalRef = useRef(null);
-
-  const handleClickOutside = (event) => {
-    if (modalRef.current && !modalRef.current.contains(event.target)) {
-      setNotificationModal(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const [value, setValue] = useState("new");
-
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
-  return (
-    <div className={styles.notificationModal} ref={modalRef}>
-      <div className={styles.notiTitle}>Notifications</div>
-      <IconButton
-        onClick={() => setNotificationModal(false)}
-        sx={{
-          position: "absolute",
-          right: "6px",
-          top: "6px",
-          zIndex: 30,
-        }}
-      >
-        <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
-      </IconButton>
-      <Stack className={styles.notification}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="notification"
-          sx={{
-            borderBottom: "1px solid var(--grey4)",
-          }}
-        >
-          <Tab value="new" label={`New (${3})`} sx={{ width: "50%" }} />
-          <Tab value="all" label={`All (${100})`} sx={{ width: "50%" }} />
-        </Tabs>
-        {value === "new" ? (
-          <Stack width="100%" className={styles.notificationListWrap}>
-            <ul className={styles.list}>
-              <li className={styles.active}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li className={styles.active}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li className={styles.active}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li className={styles.active}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      sx={{ marginTop: 1, width: 100 }}
-                    >
-                      Upload
-                    </Button>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-            </ul>
-          </Stack>
-        ) : (
-          <Stack width="100%" className={styles.notificationListWrap}>
-            <ul className={styles.list}>
-              <li>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-              <li>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
-                  <Stack>
-                    <div className={styles.subTitle}>
-                      SyncMaster update is available
-                    </div>
-                    <div className={styles.description}>
-                      SyncMaster update is available
-                    </div>
-                  </Stack>
-                  <Stack>
-                    <span className={styles.date}>Jan/19/2024 18:08</span>
-                  </Stack>
-                </Stack>
-              </li>
-            </ul>
-          </Stack>
-        )}
-      </Stack>
-    </div>
-  );
 }

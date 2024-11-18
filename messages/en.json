@@ -475,14 +475,10 @@
   "notifications": {
     "privacy_policy": {
       "notifications": "Notifications",
-      "new(0)": "New(0)",
-      "all(0)": "All(0)",
-      "no_new_notifications": {
-        "": "No new notifications."
-      },
-      "no_notifications_yet": {
-        "": "No notifications yet."
-      }
+      "new": "New",
+      "all": "All",
+      "no_new_notifications": "No new notifications.",
+      "no_notifications_yet": "No notifications yet."
     }
   },
   "configuration": {
