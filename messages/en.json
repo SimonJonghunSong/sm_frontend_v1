@@ -382,9 +382,14 @@
   },
   "account": {
     "account": {
+      "add_account": "Add Account",
+      "edit_account": "Edit Account",
       "account": "Account",
-      "all,_admin,_customer,_guest": "All, Admin, Customer, Guest",
-      "all,_id,_email,_user,_company": "All, ID, Email, User, Company",
+      "all": "All",
+      "admin": "Admin",
+      "customer": "Customer",
+      "guest": "Guest",
+      "company": "Company",
       "search": "Search",
       "add": "Add",
       "email": "Email",
@@ -404,8 +409,12 @@
       }
     },
     "add_account_pop_up": {
+      "name": "Name",
       "role": "Role",
-      "select,_admin,_customer,_guest": "Select, Admin, Customer, Guest",
+      "select": "Select",
+      "admin": "Admin",
+      "customer": "Customer",
+      "guest": "Guest",
       "id": "ID",
       "e-mail": "E-mail",
       "password": "Password",
@@ -420,7 +429,8 @@
       "nda_contract": "NDA Contract",
       "upload": "Upload",
       "cancel": "Cancel",
-      "add": "Add"
+      "add": "Add",
+      "password_confirm_error": "Password confirmation is incorrect. Please enter the same password"
     }
   },
   "settings": {

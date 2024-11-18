@@ -9,7 +9,13 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import React, { Dispatch, SetStateAction, useReducer, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useReducer,
+  useRef,
+  useState,
+} from "react";
 import dayjs from "dayjs";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../../components/dataTable";
@@ -28,68 +34,63 @@ import {
 } from "@/src/api/services/user";
 import { toast } from "react-toastify";
 import useAuthStore from "@/utils/useAuthStore";
-
-const selectRoleData = [
-  { label: "Root", value: "root" },
-  { label: "Admin", value: "admin" },
-  { label: "Customer", value: "customer" },
-  { label: "Guest", value: "guest" },
-];
+import { useTranslations } from "next-intl";
 
 export default function Account() {
+  const t = useTranslations();
   const columns: GridColDef[] = [
     {
       field: "col1",
-      headerName: "E-mail",
+      headerName: t("account.account.email"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col2",
-      headerName: "ID",
+      headerName: t("account.account.id"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col3",
-      headerName: "Username",
+      headerName: t("account.account.user"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col4",
-      headerName: "Company(Account)",
+      headerName: t("account.account.company(account)"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col5",
-      headerName: "Country",
+      headerName: t("account.account.country"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col6",
-      headerName: "Role",
+      headerName: t("account.account.role"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col7",
-      headerName: "Date",
+      headerName: t("account.account.date"),
       minWidth: 240,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col8",
-      headerName: "Edit",
+      headerName: t("account.account.edit"),
       width: 80,
       headerAlign: "center",
       align: "center",
@@ -109,7 +110,7 @@ export default function Account() {
     },
     {
       field: "col9",
-      headerName: "Delete",
+      headerName: t("account.account.delete"),
       width: 80,
       headerAlign: "center",
       align: "center",
@@ -145,7 +146,7 @@ export default function Account() {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast("Successfully deleted!", {
+      toast(t("common.message.add-success"), {
         type: "success",
       });
     },
@@ -171,7 +172,7 @@ export default function Account() {
   return (
     <div className="pageWrap">
       <article className="contentWrap">
-        <div className="pageTitle">Account</div>
+        <div className="pageTitle">{t("account.account.account")}</div>
         <Stack>
           <Stack
             direction="row"
@@ -185,10 +186,16 @@ export default function Account() {
                 onChange={(e) => handleSelectChange(e, setRoleFilter)}
                 sx={{ minWidth: 160 }}
               >
-                <MenuItem value={"All"}>All</MenuItem>
-                <MenuItem value={"Admin"}>Admin</MenuItem>
-                <MenuItem value={"Customer"}>Customer</MenuItem>
-                <MenuItem value={"Guest"}>Guest</MenuItem>
+                <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+                <MenuItem value={"Admin"}>
+                  {t("account.account.admin")}
+                </MenuItem>
+                <MenuItem value={"Customer"}>
+                  {t("account.account.customer")}
+                </MenuItem>
+                <MenuItem value={"Guest"}>
+                  {t("account.account.guest")}
+                </MenuItem>
               </Select>
 
               <Select
@@ -196,21 +203,27 @@ export default function Account() {
                 onChange={(e) => handleSelectChange(e, setUserFilter)}
                 sx={{ minWidth: 160 }}
               >
-                <MenuItem value={"All"}>All</MenuItem>
-                <MenuItem value={"E-mail"}>E-mail</MenuItem>
-                <MenuItem value={"Username"}>Username</MenuItem>
-                <MenuItem value={"CompanyName"}>Company</MenuItem>
+                <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+                <MenuItem value={"E-mail"}>
+                  {t("account.account.email")}
+                </MenuItem>
+                <MenuItem value={"Username"}>
+                  {t("account.account.user")}
+                </MenuItem>
+                <MenuItem value={"CompanyName"}>
+                  {t("account.account.company")}
+                </MenuItem>
               </Select>
 
               <TextField sx={{ width: 160 }} />
 
               <Button variant="contained" color="secondary">
-                Search
+                {t("account.account.search")}
               </Button>
             </Stack>
 
             <Button variant="contained" color="secondary" onClick={modalToggle}>
-              Add
+              {t("account.account.add")}
             </Button>
           </Stack>
           <DataTable
@@ -242,7 +255,7 @@ export default function Account() {
             }}
             footerButton={
               <Button variant="text" color="info" onClick={handleDeleteUsers}>
-                Delete
+                {t("account.account.delete")}
               </Button>
             }
           />
@@ -409,6 +422,13 @@ const getFieldsByRole = (userRole: string) => {
 };
 
 function AddAcountModal({ onClose }: { onClose: () => void }) {
+  const t = useTranslations();
+  const selectRoleData = useRef([
+    { label: t("account.account.all"), value: "root" },
+    { label: t("account.account.admin"), value: "admin" },
+    { label: t("account.account.customer"), value: "customer" },
+    { label: t("account.account.guest"), value: "guest" },
+  ]);
   const { userRole } = useAuthStore();
 
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -445,10 +465,10 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = () => {
     if (password !== confirmPassword) {
-      return toast(
-        "Password confirmation is incorrect. Please enter the same password",
-        { type: "error", position: "top-center" }
-      );
+      return toast(t("account.add_account_pop_up.password_confirm_error"), {
+        type: "error",
+        position: "top-center",
+      });
     }
 
     mutate({
@@ -513,7 +533,7 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
     <Modal
       open
       toggleOpen={onClose}
-      title="Add Account"
+      title={t("account.account.add_account")}
       confirm={handleSubmit}
       confirmButtonText="Add"
       width="400px"
@@ -524,7 +544,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Role<i>*</i>
+              {t("account.add_account_pop_up.role")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -533,9 +554,12 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
                 displayEmpty
                 renderValue={(v) =>
                   v?.length ? (
-                    selectRoleData.find((item) => item.value === v).label
+                    selectRoleData.current.find((item) => item.value === v)
+                      .label
                   ) : (
-                    <span className="text-grey-5">Select</span>
+                    <span className="text-grey-5">
+                      {t("account.add_account_pop_up.select")}
+                    </span>
                   )
                 }
                 value={state.role}
@@ -543,7 +567,7 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
                   dispatch({ type: "SET_ROLE", value: e.target.value })
                 }
               >
-                {selectRoleData.map((item) => (
+                {selectRoleData.current.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
                     {item.label}
                   </MenuItem>
@@ -556,7 +580,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              ID<i>*</i>
+              {t("account.add_account_pop_up.id")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -573,7 +598,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              E-mail<i>*</i>
+              {t("account.add_account_pop_up.e-mail")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -590,7 +616,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Name<i>*</i>
+                {t("account.add_account_pop_up.name")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -608,7 +635,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Password<i>*</i>
+              {t("account.add_account_pop_up.password")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -625,7 +653,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Confirm Password<i>*</i>
+              {t("account.add_account_pop_up.password_confirm")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -646,7 +675,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Country<i>*</i>
+                {t("account.add_account_pop_up.country")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -662,7 +692,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Company<i>*</i>
+                {t("account.account.company")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -679,7 +710,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         {getFieldsByRole(userRole).includes("department") && (
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Department</InputBox.Title>
+              <InputBox.Title>
+                {t("account.add_account_pop_up.department")}
+              </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -696,7 +729,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Tax ID<i>*</i>
+                {t("account.add_account_pop_up.tax_id")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -714,7 +748,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Alias<i>*</i>
+                {t("account.add_account_pop_up.alias")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -783,6 +818,13 @@ function EditAcountModal({
   department: string;
   onClose: () => void;
 }) {
+  const t = useTranslations();
+  const selectRoleData = useRef([
+    { label: t("account.account.all"), value: "root" },
+    { label: t("account.account.admin"), value: "admin" },
+    { label: t("account.account.customer"), value: "customer" },
+    { label: t("account.account.guest"), value: "guest" },
+  ]);
   const { userRole } = useAuthStore();
   const [state, dispatch] = useReducer(reducer, {
     ...initialState,
@@ -803,7 +845,7 @@ function EditAcountModal({
     mutationFn: modifyUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast("Successfully Edited!", {
+      toast(t("common.message.edit-success"), {
         type: "success",
       });
       onClose();
@@ -864,10 +906,10 @@ function EditAcountModal({
 
   const handleSubmit = () => {
     if (state.password !== state.confirmPassword) {
-      return toast(
-        "Password confirmation is incorrect. Please enter the same password",
-        { type: "error", position: "top-center" }
-      );
+      return toast(t("account.add_account_pop_up.password_confirm_error"), {
+        type: "error",
+        position: "top-center",
+      });
     }
 
     mutate({
@@ -892,7 +934,7 @@ function EditAcountModal({
     <Modal
       open
       toggleOpen={onClose}
-      title="Edit Account"
+      title={t("account.account.edit_account")}
       confirm={handleSubmit}
       confirmButtonText="Add"
       width="400px"
@@ -903,7 +945,8 @@ function EditAcountModal({
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Role<i>*</i>
+              {t("account.add_account_pop_up.role")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -912,9 +955,12 @@ function EditAcountModal({
                 displayEmpty
                 renderValue={(v) =>
                   v?.length ? (
-                    selectRoleData.find((item) => item.value === v).label
+                    selectRoleData.current.find((item) => item.value === v)
+                      .label
                   ) : (
-                    <span className="text-grey-5">Select</span>
+                    <span className="text-grey-5">
+                      {t("account.add_account_pop_up.select")}
+                    </span>
                   )
                 }
                 value={state.role}
@@ -922,7 +968,7 @@ function EditAcountModal({
                   dispatch({ type: "SET_ROLE", value: e.target.value })
                 }
               >
-                {selectRoleData.map((item) => (
+                {selectRoleData.current.map((item) => (
                   <MenuItem key={item.value} value={item.value}>
                     {item.label}
                   </MenuItem>
@@ -935,7 +981,8 @@ function EditAcountModal({
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              ID<i>*</i>
+              {t("account.add_account_pop_up.id")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -952,7 +999,8 @@ function EditAcountModal({
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              E-mail<i>*</i>
+              {t("account.add_account_pop_up.e-mail")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -970,7 +1018,8 @@ function EditAcountModal({
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Name<i>*</i>
+                {t("account.add_account_pop_up.name")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -988,7 +1037,8 @@ function EditAcountModal({
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Password<i>*</i>
+              {t("account.add_account_pop_up.password")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -1005,7 +1055,8 @@ function EditAcountModal({
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              Confirm Password<i>*</i>
+              {t("account.add_account_pop_up.password_confirm")}
+              <i>*</i>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -1025,7 +1076,8 @@ function EditAcountModal({
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Country<i>*</i>
+                {t("account.add_account_pop_up.country")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -1043,7 +1095,8 @@ function EditAcountModal({
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Company<i>*</i>
+                {t("account.account.company")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -1061,7 +1114,9 @@ function EditAcountModal({
         {getFieldsByRole(userRole).includes("department") && (
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>Department</InputBox.Title>
+              <InputBox.Title>
+                {t("account.add_account_pop_up.department")}
+              </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -1079,7 +1134,8 @@ function EditAcountModal({
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Tax ID<i>*</i>
+                {t("account.add_account_pop_up.tax_id")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -1098,7 +1154,8 @@ function EditAcountModal({
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                Alias<i>*</i>
+                {t("account.add_account_pop_up.alias")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>

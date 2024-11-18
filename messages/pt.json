@@ -261,7 +261,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -305,7 +308,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -383,8 +389,11 @@
   "account": {
     "account": {
       "account": "Conta",
-      "all,_admin,_customer,_guest": "Todos, Admin, Cliente, Convidado",
-      "all,_id,_email,_user,_company": "Todos, ID, E-mail, Usuário, Empresa",
+      "all": "Todos",
+      "admin": "Admin",
+      "customer": "Cliente",
+      "guest": "Convidado",
+      "company": "Empresa",
       "search": "Pesquisar",
       "add": "Adicionar",
       "email": "E-mail",
@@ -401,11 +410,16 @@
       },
       "no_results_found": {
         "": "Nenhum resultado encontrado."
-      }
+      },
+      "add_account": "Adicionar conta"
     },
     "add_account_pop_up": {
+      "name": "Nome",
       "role": "Função",
-      "select,_admin,_customer,_guest": "Selecione, Admin, Cliente, Convidado",
+      "select": "Selecione",
+      "admin": "Admin",
+      "customer": "Cliente",
+      "guest": "Convidado",
       "id": "ID",
       "e-mail": "E-mail",
       "password": "Senha",
@@ -420,7 +434,8 @@
       "nda_contract": "Contrato NDA",
       "upload": "Enviar",
       "cancel": "Cancelar",
-      "add": "Adicionar"
+      "add": "Adicionar",
+      "password_confirm_error": "A confirmação da senha está incorreta. \nPor favor insira a mesma senha"
     }
   },
   "settings": {
