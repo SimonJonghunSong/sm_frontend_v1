@@ -153,6 +153,7 @@ export default function Account() {
   });
   const [roleFilter, setRoleFilter] = useState<string>("All");
   const [userFilter, setUserFilter] = useState<string>("All");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const [modal, modalToggle] = useModal();
   const [editmodal, editmodalToggle] = useModal();
@@ -215,7 +216,11 @@ export default function Account() {
                 </MenuItem>
               </Select>
 
-              <TextField sx={{ width: 160 }} />
+              <TextField
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                sx={{ width: 160 }}
+              />
 
               <Button variant="contained" color="secondary">
                 {t("account.account.search")}
@@ -235,20 +240,37 @@ export default function Account() {
                     user.role.name.toUpperCase() === roleFilter.toUpperCase()
                   );
                 }) || []
-            ).map(({ email, user_id, name, country, role, reg_date }) => {
-              return {
-                id: user_id,
-                col1: email,
-                col2: user_id,
-                col3: name,
-                col4: "-",
-                col5: country,
-                col6: role.name,
-                col7: dayjs(reg_date).format("MMM/DD/YYYY HH:mm"),
-                col8: { id: "1" },
-                col9: { id: "1" },
-              };
-            })}
+            )
+              .filter((item) => {
+                if (!searchValue) return true;
+
+                switch (userFilter) {
+                  case "All":
+                    return item;
+                  case "E-mail":
+                    return item.email?.includes(searchValue);
+                  case "Username":
+                    return item.name?.includes(searchValue);
+                  case "CompanyName":
+                    return false;
+                  default:
+                    return item;
+                }
+              })
+              .map(({ email, user_id, name, country, role, reg_date }) => {
+                return {
+                  id: user_id,
+                  col1: email,
+                  col2: user_id,
+                  col3: name,
+                  col4: "-",
+                  col5: country,
+                  col6: role.name,
+                  col7: dayjs(reg_date).format("MMM/DD/YYYY HH:mm"),
+                  col8: { id: "1" },
+                  col9: { id: "1" },
+                };
+              })}
             columns={columns}
             onRowSelectionModelChange={(list) => {
               setSelectedRowIdList(list as string[]);
