@@ -1,13 +1,13 @@
 "use client";
 
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "react-toastify";
 import useSerial from "@/src/hooks/useSerial";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { Button, Stack } from "@mui/material";
 import FieldRenderer from "./components/FieldRenderer";
 import Controller from "./components/Controller";
-import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
+import { AT_CMD, AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
@@ -52,13 +52,40 @@ export default function page() {
       toast("Save Success!", { type: "success" });
     };
 
-    getEditDataForPage(tab).forEach((item) => {
-      write({
-        data: `${AT_EDIT_PREFIX}${imei};${item}`,
-        port: currentPort.port,
-        writer: currentPort.writer,
+    if (tab === "Command String") {
+      const list = formData.find(({ info }) => info.hdr === "CMD").fields[0]
+        .list;
+      const index = getEditDataForPage(tab)[0]
+        ? Number(getEditDataForPage(tab)[0].split("#")[1])
+        : 0;
+      const item = list[0][index].split(";")[4];
+
+      let message = "";
+
+      currentPort.port.onbuffervalue = (value) => {
+        console.log(value, "value onbuffervalue");
+        message += value;
+        if (value.includes(CR)) {
+          toast(message, { type: "default" });
+        }
+      };
+
+      if (list) {
+        write({
+          data: `${AT_CMD}${imei};${item.slice(0, 2)};${item.slice(2)}`,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
+      }
+    } else {
+      getEditDataForPage(tab).forEach((item) => {
+        write({
+          data: `${AT_EDIT_PREFIX}${imei};${item}`,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
       });
-    });
+    }
   };
 
   useEffect(() => {
@@ -83,10 +110,10 @@ export default function page() {
         {true && (
           <Button
             variant="contained"
-            disabled={isSaveDisabled}
+            disabled={tab !== "Command String" && isSaveDisabled}
             onClick={() => handleSaveSettings()}
           >
-            Save Settings
+            Save
           </Button>
         )}
       </Stack>
@@ -132,15 +159,7 @@ export default function page() {
             })}
         </Stack>
       </Stack>
-      <Button onClick={resetData}>Reset Test</Button>
-      <Button
-        onClick={() => {
-          console.log("editData >>>>", getEditDataForPage(tab));
-        }}
-        disabled={!getEditDataForPage(tab).length}
-      >
-        Save Test
-      </Button>
+      <Button onClick={resetData}>Reset</Button>
     </form>
   );
 }

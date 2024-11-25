@@ -172,6 +172,9 @@ const useSerial = () => {
         );
 
         if (value) {
+          if (port?.onbuffervalue) {
+            port?.onbuffervalue(value);
+          }
           // HEALTH CHECK & MODEL INFO
           if (value.includes("PST;Rdy")) {
             const dataField = value.trim().split(";")[2];

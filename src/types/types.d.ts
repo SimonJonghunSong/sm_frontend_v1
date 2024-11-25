@@ -20,6 +20,7 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  onbuffervalue(value: string): unknown;
   circleoutputactivehandler(value: string): unknown;
   iscircleoutputactivefetching: boolean;
   onread(value: string): unknown;
