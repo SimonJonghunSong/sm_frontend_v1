@@ -391,7 +391,7 @@ export default function Page() {
   }, [isCircularFetchReady]);
 
   return (
-    <div className="pageWrap">
+    <div className="pageWrap" style={{ flex: 1 }}>
       {isFullLoading && <FullLoading />}
       <article className="contentWrap">
         <Controller />
