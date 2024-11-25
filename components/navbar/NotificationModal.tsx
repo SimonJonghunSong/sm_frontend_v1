@@ -12,6 +12,7 @@ interface NotificationModalProps {
 }
 
 const NotificationModal = ({ onClose }: NotificationModalProps) => {
+  const modalRef = useRef(null);
   const t = useTranslations("notifications");
   const [tabs, setTabs] = useState<"new" | "all">("new");
 
@@ -35,8 +36,6 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
       queryClient.invalidateQueries({ queryKey: ["notification"] });
     },
   });
-
-  const modalRef = useRef(null);
 
   const handleClickOutside = (event) => {
     if (modalRef.current && !modalRef.current.contains(event.target)) {
@@ -65,6 +64,14 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleCloseOnEscPress);
+    };
+  }, []);
+
+  useEffect(() => {
+    window.document.body.style.overflow = "hidden";
+
+    return () => {
+      window.document.body.style.overflow = "visible";
     };
   }, []);
 
