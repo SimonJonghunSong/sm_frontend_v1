@@ -5,19 +5,65 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button, Divider, Stack } from "@mui/material";
 import logo from "/public/images/logo-dark.svg";
+import { useMutation } from "@tanstack/react-query";
+import { findPassword } from "@/src/api/services/auth";
+import { AxiosError } from "axios";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 export default function page() {
   const router = useRouter();
   const t = useTranslations("login");
+
+  const { mutate } = useMutation({
+    mutationFn: findPassword,
+    onError: ({
+      response,
+    }: AxiosError<{ response: { code: number; reason: string } }>) => {
+      toast(response.data.response.reason, {
+        type: "error",
+      });
+    },
+  });
+
   const handleResend = (e) => {
-    e.preventDefault();
-    router.push("/find-password/result");
+    mutate(
+      {
+        country: history.state.country,
+        email: history.state.email,
+      },
+      {
+        onSuccess: ({ data }) => {
+          const message = (data as any)?.response?.reason;
+          toast(message, { type: "success" });
+        },
+      }
+    );
+
+    // router.push("/find-password/result");
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     router.push("/login");
   };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const country = searchParams.get("country");
+    const email = searchParams.get("email");
+
+    if (country && email) {
+      history.replaceState(
+        {
+          country,
+          email,
+        },
+        null,
+        location.pathname
+      );
+    }
+  }, []);
 
   return (
     <>

@@ -22,7 +22,7 @@ export default function page() {
   const { mutate } = useMutation({
     mutationFn: findPassword,
     onSuccess: () => {
-      router.push("/find-password/result");
+      router.push(`/find-password/result?country=${country}&email=${email}`);
     },
     onError: ({
       response,
@@ -35,10 +35,18 @@ export default function page() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({
-      country,
-      email,
-    });
+    mutate(
+      {
+        country,
+        email,
+      },
+      {
+        onSuccess: ({ data }) => {
+          const message = (data as any)?.response?.reason;
+          toast(message, { type: "success" });
+        },
+      }
+    );
   };
 
   const handleClickLogin = () => {
