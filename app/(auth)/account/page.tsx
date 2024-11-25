@@ -512,7 +512,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
   };
 
   const getDisableState = () => {
-    switch (userRole) {
+    if (!state.role) return true;
+
+    switch (state.role?.toUpperCase() || "") {
       case "ROOT":
         return !role || !id || !email || !password || !confirmPassword;
       case "ADMIN":
@@ -550,6 +552,8 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
         );
     }
   };
+
+  console.log("state >>>", state);
 
   return (
     <Modal
@@ -634,7 +638,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             />
           </InputBox.Body>
         </InputBox>
-        {getFieldsByRole(userRole).includes("name") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "name"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -693,7 +699,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           </InputBox.Body>
         </InputBox>
 
-        {getFieldsByRole(userRole).includes("country") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "country"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -710,7 +718,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Body>
           </InputBox>
         )}
-        {getFieldsByRole(userRole).includes("company") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "company"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -729,7 +739,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Body>
           </InputBox>
         )}
-        {getFieldsByRole(userRole).includes("department") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "department"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -747,7 +759,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Body>
           </InputBox>
         )}
-        {getFieldsByRole(userRole).includes("taxId") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "taxId"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -766,7 +780,9 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Body>
           </InputBox>
         )}
-        {getFieldsByRole(userRole).includes("alias") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "alias"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -881,7 +897,7 @@ function EditAcountModal({
   // };
 
   const getDisableState = () => {
-    switch (userRole) {
+    switch (state.role?.toUpperCase() || "") {
       case "ROOT":
         return (
           !state.role ||
@@ -1036,7 +1052,9 @@ function EditAcountModal({
           </InputBox.Body>
         </InputBox>
 
-        {getFieldsByRole(userRole).includes("name") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "name"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1094,7 +1112,9 @@ function EditAcountModal({
             />
           </InputBox.Body>
         </InputBox>
-        {getFieldsByRole(userRole).includes("country") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "country"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1104,7 +1124,9 @@ function EditAcountModal({
             </InputBox.Head>
             <InputBox.Body>
               <SelectCountry
-                defaultCountry={state.country.toLowerCase()}
+                defaultCountry={
+                  state.country ? state.country.toLowerCase() : ""
+                }
                 setCountryData={(value) =>
                   dispatch({ type: "SET_COUNTRY", value: value as string })
                 }
@@ -1113,7 +1135,9 @@ function EditAcountModal({
           </InputBox>
         )}
 
-        {getFieldsByRole(userRole).includes("company") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "company"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1133,7 +1157,9 @@ function EditAcountModal({
           </InputBox>
         )}
 
-        {getFieldsByRole(userRole).includes("department") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "department"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1152,7 +1178,9 @@ function EditAcountModal({
           </InputBox>
         )}
 
-        {getFieldsByRole(userRole).includes("taxId") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "taxId"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1172,7 +1200,9 @@ function EditAcountModal({
           </InputBox>
         )}
 
-        {getFieldsByRole(userRole).includes("alias") && (
+        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+          "alias"
+        ) && (
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
