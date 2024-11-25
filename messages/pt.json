@@ -72,6 +72,11 @@
       "your_password_has_been_set!": "Sua senha foi definida!",
       "please_login_with_the_email_address_and_password_you_have_set": "Por favor, faça login com o endereço de e-mail e a senha que você definiu.",
       "login": "Entrar"
+    },
+    "common": {
+      "message": {
+        "no-network-connection": "Sem conexão de rede"
+      }
     }
   },
   "gnb": {

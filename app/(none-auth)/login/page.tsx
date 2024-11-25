@@ -24,6 +24,10 @@ import { login } from "@/src/api/services/auth";
 import GlobalLoading from "@/components/GlobalLoading";
 import useLangStore from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
+import { toast } from "react-toastify";
+
+const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
 export default function page() {
   const router = useRouter();
@@ -40,10 +44,19 @@ export default function page() {
       router.replace("/");
     },
   });
+  const [isRemberberMe, setIsRememberMe] = useState(
+    typeof window !== "undefined"
+      ? !!localStorage.getItem(REMEMBER_ME_STORAGE_KEY)
+      : false
+  );
 
-  const [inputId, setInputId] = useState<string>("");
+  const [inputId, setInputId] = useState<string>(
+    isRemberberMe ? localStorage.getItem(REMEMBER_ME_STORAGE_KEY) : ""
+  );
   const [inputPassword, setInputPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
+
+  const { isOnline } = useNetworkMonitor();
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -64,13 +77,35 @@ export default function page() {
     }
   };
 
+  const handleOfflineClickBlock = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    if (!isOnline) {
+      e.preventDefault();
+      toast(t("common.message.no-network-connection"), {
+        type: "error",
+      });
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    mutate({
-      user_id: inputId,
-      country: getCountryByLang(),
-      password: inputPassword,
-    });
+    mutate(
+      {
+        user_id: inputId,
+        country: getCountryByLang(),
+        password: inputPassword,
+      },
+      {
+        onSuccess: () => {
+          if (isRemberberMe) {
+            localStorage.setItem(REMEMBER_ME_STORAGE_KEY, inputId);
+          } else {
+            localStorage.removeItem(REMEMBER_ME_STORAGE_KEY);
+          }
+        },
+      }
+    );
   };
 
   return (
@@ -171,17 +206,30 @@ export default function page() {
           </InputBox>
           <div className={styles.loginHelpWrap}>
             <div>
-              <Link className="underlineTextButton" href="/find-id">
+              <Link
+                className="underlineTextButton"
+                href="/find-id"
+                onClick={handleOfflineClickBlock}
+              >
                 {t("login.find_id")}
               </Link>
               /
-              <Link className="underlineTextButton" href="/find-password">
+              <Link
+                className="underlineTextButton"
+                href="/find-password"
+                onClick={handleOfflineClickBlock}
+              >
                 {t("login.find_password")}
               </Link>
             </div>
             <div>
               <FormControlLabel
-                control={<Checkbox />}
+                control={
+                  <Checkbox
+                    checked={isRemberberMe}
+                    onChange={(e) => setIsRememberMe(e.target.checked)}
+                  />
+                }
                 label={t("login.remember_me")}
               />
             </div>

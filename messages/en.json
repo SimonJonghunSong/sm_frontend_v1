@@ -16,6 +16,11 @@
     }
   },
   "login": {
+    "common": {
+      "message": {
+        "no-network-connection": "No network connection"
+      }
+    },
     "login": {
       "sign_in_to_your_syncmaster_account!": "Sign in to your SyncMaster account!",
       "you_can_log_in_with_your_scuti_id!_don’t_have_an_account_yet?_contact_us": "You can log in with your Scuti ID!\nDon’t have an account yet? Contact us",
