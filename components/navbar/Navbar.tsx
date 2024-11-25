@@ -264,14 +264,14 @@ export default function Navbar() {
       <div className={styles.right}>
         <ul className={styles.subMenu}>
           <li>
-            <button onClick={() => setNotificationModal(!notificationModal)}>
-              <NotificationsSharpIcon />
-            </button>
-          </li>
-          <li>
             <Link href="/settings">
               <SettingsSharpIcon />
             </Link>
+          </li>
+          <li>
+            <button onClick={() => setNotificationModal(!notificationModal)}>
+              <NotificationsSharpIcon />
+            </button>
           </li>
           <li>
             <Link
@@ -288,60 +288,66 @@ export default function Navbar() {
               <HelpSharpIcon />
             </Link>
           </li>
-          <li>
-            <Link
-              href="/support"
-              className={!isOnline ? "disabled" : ""}
-              onClick={
-                !isOnline
-                  ? (e) => {
-                      e.preventDefault();
-                    }
-                  : undefined
-              }
-            >
-              <HeadsetMicIcon />
-            </Link>
-          </li>
+          {(userRole === "CUSTOMER" || userRole === "GUEST") && (
+            <li>
+              <Link
+                href="/support"
+                className={!isOnline ? "disabled" : ""}
+                onClick={
+                  !isOnline
+                    ? (e) => {
+                        e.preventDefault();
+                      }
+                    : undefined
+                }
+              >
+                <HeadsetMicIcon />
+              </Link>
+            </li>
+          )}
         </ul>
 
-        <TextField
-          variant="outlined"
-          size="small"
-          placeholder={`${t("pw_set.search")}`}
-          id="search"
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              paddingRight: 0,
-              color: "var(--grey5)",
-            },
-            backgroundColor: "var(--black)",
-          }}
-          InputProps={{
-            endAdornment: (
-              <IconButton type="submit">
-                <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
-              </IconButton>
-            ),
-          }}
-          onClick={handleSearchClick}
-          inputProps={{ readOnly: true }}
-        />
+        {userRole !== "ROOT" && (
+          <>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder={`${t("pw_set.search")}`}
+              id="search"
+              sx={{
+                "& .MuiOutlinedInput-root": {
+                  paddingRight: 0,
+                  color: "var(--grey5)",
+                },
+                backgroundColor: "var(--black)",
+              }}
+              InputProps={{
+                endAdornment: (
+                  <IconButton type="submit">
+                    <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  </IconButton>
+                ),
+              }}
+              onClick={handleSearchClick}
+              inputProps={{ readOnly: true }}
+            />
 
-        <div
-          className={
-            isOnline
-              ? `${styles.toggle} ${styles.active}`
-              : `${styles.toggle} ${styles.offline}`
-          }
-        >
-          <div onClick={() => isOnline && handleToggleNetwork(false)}>
-            {t("pw_set.offline")}
-          </div>
-          <div onClick={() => !isOnline && handleToggleNetwork(true)}>
-            {t("pw_set.online")}
-          </div>
-        </div>
+            <div
+              className={
+                isOnline
+                  ? `${styles.toggle} ${styles.active}`
+                  : `${styles.toggle} ${styles.offline}`
+              }
+            >
+              <div onClick={() => isOnline && handleToggleNetwork(false)}>
+                {t("pw_set.offline")}
+              </div>
+              <div onClick={() => !isOnline && handleToggleNetwork(true)}>
+                {t("pw_set.online")}
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
       <Modal

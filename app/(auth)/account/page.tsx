@@ -446,7 +446,7 @@ const getFieldsByRole = (userRole: string) => {
 function AddAcountModal({ onClose }: { onClose: () => void }) {
   const t = useTranslations();
   const selectRoleData = useRef([
-    { label: t("account.account.all"), value: "root" },
+    { label: t("account.account.root"), value: "root" },
     { label: t("account.account.admin"), value: "admin" },
     { label: t("account.account.customer"), value: "customer" },
     { label: t("account.account.guest"), value: "guest" },
@@ -858,7 +858,7 @@ function EditAcountModal({
 }) {
   const t = useTranslations();
   const selectRoleData = useRef([
-    { label: t("account.account.all"), value: "root" },
+    { label: t("account.account.root"), value: "root" },
     { label: t("account.account.admin"), value: "admin" },
     { label: t("account.account.customer"), value: "customer" },
     { label: t("account.account.guest"), value: "guest" },
