@@ -10,6 +10,7 @@ import FullLoading from "@/components/FullLoading";
 import AuthCheck from "./AuthCheck";
 import GlobalLoading from "@/components/GlobalLoading";
 import ServiceWorkerRegister from "@/src/worker/ServiceWorkerRegister";
+import Footer from "@/components/Footer";
 
 const AuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
@@ -33,6 +34,7 @@ const AuthLayout = ({ children }) => {
       <section>{children}</section>
       {process.env.NODE_ENV !== "development" && <ServiceWorkerRegister />}
       <GlobalLoading />
+      <Footer />
     </div>
   );
 };
