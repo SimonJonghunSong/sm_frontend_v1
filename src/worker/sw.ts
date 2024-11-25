@@ -325,7 +325,7 @@ const handleServiceWorkerFetch = (
     // 정적 자산 파일을 Cache-first 방식으로 캐싱
     handleCachingStatic(event);
   } else {
-    if (!isInstallFinish || isOnline) {
+    if (isOnline) {
       console.log("first time online mode(menual offline mode)");
 
       // 온라인 요청에 대해서는 Network-first 방식 사용
