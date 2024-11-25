@@ -9,7 +9,7 @@ const FORCE_ONLINE_MODE_PATHS = ["/login"];
 
 export default function NetworkStatusCheck() {
   const { sendMessage } = useServiceWorkerMessage();
-  const { isOnline, setIsOnline } = useNetworkMonitor();
+  const { isOnline, isSelfOffline, setIsOnline } = useNetworkMonitor();
   const pathname = usePathname();
 
   // 실제 네트워크 이벤트 감지
@@ -19,13 +19,20 @@ export default function NetworkStatusCheck() {
         setIsOnline(false);
       }
     };
+    const handleNetworkOn = () => {
+      if (!isSelfOffline) {
+        setIsOnline(true);
+      }
+    };
 
+    window.addEventListener("online", handleNetworkOn);
     window.addEventListener("offline", handleNetworkOff);
 
     return () => {
+      window.removeEventListener("online", handleNetworkOn);
       window.removeEventListener("offline", handleNetworkOff);
     };
-  }, []);
+  }, [isOnline, isSelfOffline]);
 
   // 로그인 페이지 접근시 온라인으로 전환(인터넷 연결 있을시)
   useEffect(() => {

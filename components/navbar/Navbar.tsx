@@ -112,7 +112,7 @@ export default function Navbar() {
   const [cmdModal, cmdModalToggle] = useModal();
   const [networkModal, networkModalToggle] = useModal();
 
-  const { isOnline, setIsOnline } = useNetworkMonitor();
+  const { isOnline, setIsOnline, setIsSelfOffline } = useNetworkMonitor();
 
   const navLinkes =
     userRole && userRole === "ROOT"
@@ -152,6 +152,7 @@ export default function Navbar() {
     }).then((result) => {
       if (result.isConfirmed) {
         setIsOnline(isOfflineToOnline);
+        setIsSelfOffline(!isOfflineToOnline);
       }
     });
   };
