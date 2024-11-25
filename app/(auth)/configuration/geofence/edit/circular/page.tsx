@@ -143,7 +143,7 @@ export default function Page() {
   }, [currentPort.port.readable, currentPort.port.writable]);
 
   return (
-    <div className="pageWrap">
+    <div className="pageWrap" style={{ flex: 1 }}>
       {isFullLoading && <FullLoading />}
       <article className="contentWrap">
         <Controller />
