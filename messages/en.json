@@ -7,7 +7,9 @@
       "jan,_feb,_mar,_apr,_may,_jun,_jul,_aug,_sep,_oct,_nov,_dec": "Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec"
     },
     "popup": {
-      "error_<ok>,_confirm_<cancel>_<yes>,_success_<ok>": "Error <OK>, Confirm <Cancel> <Yes>, Success <OK>"
+      "error_<ok>,_confirm_<cancel>_<yes>,_success_<ok>": "Error <OK>, Confirm <Cancel> <Yes>, Success <OK>",
+      "confrim": "Confirm",
+      "yes": "Yes"
     },
     "message": {
       "add-success": "Successfully added!",

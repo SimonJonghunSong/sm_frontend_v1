@@ -7,7 +7,9 @@
       "jan,_feb,_mar,_apr,_may,_jun,_jul,_aug,_sep,_oct,_nov,_dec": "Jan, Fev, Mar, Abr, Mai, Jun, Jul, Ago, Set, Out, Nov, Dez"
     },
     "popup": {
-      "error_<ok>,_confirm_<cancel>_<yes>,_success_<ok>": "Erro <OK>, Confirmar <Cancelar> <Sim>, Sucesso <OK>"
+      "error_<ok>,_confirm_<cancel>_<yes>,_success_<ok>": "Erro <OK>, Confirmar <Cancelar> <Sim>, Sucesso <OK>",
+      "confrim": "Confirmar",
+      "yes": "Sim"
     },
     "message": {
       "add-success": "Adicionado com sucesso!",
@@ -266,10 +268,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -313,10 +312,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
