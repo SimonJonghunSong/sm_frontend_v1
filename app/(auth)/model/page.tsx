@@ -42,6 +42,8 @@ import useCustomPagination from "@/src/hooks/useCustomPagination";
 import useLangStore from "@/utils/useLangStore";
 import getLocalizedString from "@/utils/getLocalizedString";
 import { featureTransition } from "./admin/page";
+import OfflineErrorDialog from "@/components/OfflineErrorDialog";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -62,6 +64,9 @@ export default function Model() {
   const t = useTranslations("home");
   const { lang } = useLangStore();
   const { getIncludeUids, addDatas } = useModelPkgStore();
+  const { isOnline } = useNetworkMonitor();
+
+  const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const { data } = useQuery({
     queryKey: ["model"],
@@ -156,6 +161,9 @@ export default function Model() {
             toggleLoaded={() => {
               toggleLoaded(params.row.id);
             }}
+            onNetworkError={() => {
+              setOfflineErrorDialog(true);
+            }}
           />
         );
       },
@@ -238,6 +246,12 @@ export default function Model() {
   };
 
   const handleLoadAllModel = async () => {
+    if (!isOnline) {
+      setOfflineErrorDialog(true);
+
+      return;
+    }
+
     getModelPkgRequest.mutate(
       { uid_list: ["all"] },
       {
@@ -334,101 +348,114 @@ export default function Model() {
   );
 
   return (
-    <div className="pageWrap">
-      <article className="contentWrap">
-        {renderTabs()}
-        <Stack>
-          <Stack
-            direction="row"
-            gap="8px"
-            justifyContent="space-between"
-            mb="40px"
-          >
+    <>
+      <div className="pageWrap">
+        <article className="contentWrap">
+          {renderTabs()}
+          <Stack>
             <Stack
               direction="row"
               gap="8px"
               justifyContent="space-between"
-              alignItems="center"
+              mb="40px"
             >
-              <Select
-                value={filter}
-                onChange={(e) => handleSelectChange(e, setFilter)}
-                sx={{ minWidth: 160 }}
+              <Stack
+                direction="row"
+                gap="8px"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                {selectSortData(lang).map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
+                <Select
+                  value={filter}
+                  onChange={(e) => handleSelectChange(e, setFilter)}
+                  sx={{ minWidth: 160 }}
+                >
+                  {selectSortData(lang).map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Stack>
+
+              <Stack direction="row" gap="24px" alignItems="center">
+                <Button
+                  color="secondary"
+                  onClick={handleLoadAllModel}
+                  startIcon={
+                    <DownloadingOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  }
+                >
+                  {t("home.load_all_models")}
+                </Button>
+
+                <FormControlLabel
+                  sx={{ marginLeft: 0 }}
+                  control={
+                    <SwitchPrimary
+                      checked={showLoadedModels}
+                      onChange={toggleShowLoadedModels}
+                    />
+                  }
+                  label={
+                    <span style={{ marginLeft: "8px" }}>
+                      {t("home.show_only_loaded_models")}
+                    </span>
+                  }
+                />
+                <ToggleButtonGroup
+                  value={viewType}
+                  exclusive
+                  onChange={handleViewType}
+                  aria-label="viewType"
+                >
+                  <ToggleButton
+                    value="listType"
+                    aria-label="listType"
+                    size="small"
+                  >
+                    <FormatListBulletedOutlinedIcon />
+                  </ToggleButton>
+                  <ToggleButton
+                    value="galleryType"
+                    aria-label="galleryType"
+                    size="small"
+                  >
+                    <GridViewOutlinedIcon />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Stack>
             </Stack>
 
-            <Stack direction="row" gap="24px" alignItems="center">
-              <Button
-                color="secondary"
-                onClick={handleLoadAllModel}
-                startIcon={
-                  <DownloadingOutlinedIcon sx={{ color: "var(--grey5)" }} />
-                }
-              >
-                {t("home.load_all_models")}
-              </Button>
-
-              <FormControlLabel
-                sx={{ marginLeft: 0 }}
-                control={
-                  <SwitchPrimary
-                    checked={showLoadedModels}
-                    onChange={toggleShowLoadedModels}
-                  />
-                }
-                label={
-                  <span style={{ marginLeft: "8px" }}>
-                    {t("home.show_only_loaded_models")}
-                  </span>
-                }
+            {viewType === "listType" ? (
+              <DataTable
+                checkbox={false}
+                rows={filteredRowData}
+                columns={columnData}
+                rowHeight={120}
               />
-              <ToggleButtonGroup
-                value={viewType}
-                exclusive
-                onChange={handleViewType}
-                aria-label="viewType"
-              >
-                <ToggleButton
-                  value="listType"
-                  aria-label="listType"
-                  size="small"
-                >
-                  <FormatListBulletedOutlinedIcon />
-                </ToggleButton>
-                <ToggleButton
-                  value="galleryType"
-                  aria-label="galleryType"
-                  size="small"
-                >
-                  <GridViewOutlinedIcon />
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Stack>
+            ) : (
+              <GalleryView
+                rows={filteredRowData}
+                setRows={setRowData}
+                toggleLoaded={toggleLoaded}
+                onNetworkError={() => {
+                  setOfflineErrorDialog(true);
+                }}
+              />
+            )}
           </Stack>
+        </article>
+      </div>
 
-          {viewType === "listType" ? (
-            <DataTable
-              checkbox={false}
-              rows={filteredRowData}
-              columns={columnData}
-              rowHeight={120}
-            />
-          ) : (
-            <GalleryView
-              rows={filteredRowData}
-              setRows={setRowData}
-              toggleLoaded={toggleLoaded}
-            />
-          )}
-        </Stack>
-      </article>
-    </div>
+      {offlineErrorDialog && (
+        <OfflineErrorDialog
+          onClose={() => {
+            setOfflineErrorDialog(false);
+          }}
+        />
+      )}
+    </>
   );
 }
 
@@ -436,9 +463,15 @@ type DataTableProps = {
   rows: any;
   setRows: any;
   toggleLoaded: any;
+  onNetworkError?: () => void;
 };
 
-function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
+function GalleryView({
+  rows,
+  setRows,
+  toggleLoaded,
+  onNetworkError,
+}: DataTableProps) {
   const { paginatedRows, page, pageCount, handleChangePage } =
     useCustomPagination({ rows });
 
@@ -464,6 +497,7 @@ function GalleryView({ rows, setRows, toggleLoaded }: DataTableProps) {
             <ModelButton
               loaded={rows[index].loaded}
               toggleLoaded={() => toggleLoaded(item.id)}
+              onNetworkError={onNetworkError}
             />
           </li>
         ))}
@@ -530,9 +564,10 @@ function LinearDeterminate({ setEndLoaded }) {
   );
 }
 
-function ModelButton({ loaded, toggleLoaded }) {
+function ModelButton({ loaded, toggleLoaded, onNetworkError }) {
   const t = useTranslations("home");
   const [startLoaded, setStartLoaded] = useState<boolean>(false);
+  const { isOnline } = useNetworkMonitor();
 
   const router = useRouter();
   const handleConfigurationClick = (e) => {
@@ -566,6 +601,10 @@ function ModelButton({ loaded, toggleLoaded }) {
           sx={{ width: "100%" }}
           onClick={(e) => {
             e.stopPropagation();
+            if (!isOnline) {
+              onNetworkError?.();
+              return;
+            }
             setStartLoaded(true);
           }}
           endIcon={<FileDownloadOutlinedIcon />}
