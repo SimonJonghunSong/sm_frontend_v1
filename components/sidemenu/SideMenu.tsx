@@ -17,6 +17,8 @@ import { logout } from "@/src/api/services/auth";
 import { toast } from "react-toastify";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
+import useConfirmDialog from "@/src/hooks/useConfirmDialog";
+import { useTranslations } from "next-intl";
 
 type sideMenuItem = {
   name: string;
@@ -38,26 +40,26 @@ export default function SideMenu({
   configuration = false,
   queries,
 }: SideMenuProps) {
-  const pathname = usePathname();
   const router = useRouter();
-  const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
+  const t = useTranslations();
+  const pathname = usePathname();
   const { isOnline } = useNetworkMonitor();
+  const { hiddenParameter, toggleHiddenParameter } = useParameterStore();
+
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
+  const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
+
+  const { renderConfirmModal: renderLogoutModal, toggle: toggleLogoutModal } =
+    useConfirmDialog({
+      description: t("popup.settings.logout.are_you_sure_you_want_to_log_out?"),
+      onYes: () => {
+        purgeAuthSetting();
+      },
+    });
 
   const loginMutation = useMutation({
     mutationFn: logout,
   });
-
-  function handleLogout() {
-    Confirm({
-      title: "Confirm",
-      text: "Are you sure you want to log out?",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        purgeAuthSetting();
-      }
-    });
-  }
 
   const purgeAuthSetting = async () => {
     try {
@@ -75,15 +77,6 @@ export default function SideMenu({
     }
   };
 
-  function handleDeleteModel() {
-    Confirm({
-      title: "Confirm",
-      text: "Are you sure you want to delete this model from loaded model list? If there is any unsaved data, it will be lost.",
-    });
-  }
-
-  const { hiddenParameter, toggleHiddenParameter } = useParameterStore();
-
   const getSubHref = (href: string) => {
     const queryData = queries
       ? Object.entries(queries).reduce((acc, cur, idx) => {
@@ -95,6 +88,13 @@ export default function SideMenu({
 
     return `${href}${queryData}`;
   };
+
+  function handleDeleteModel() {
+    Confirm({
+      title: "Confirm",
+      text: "Are you sure you want to delete this model from loaded model list? If there is any unsaved data, it will be lost.",
+    });
+  }
 
   return (
     <>
@@ -140,7 +140,7 @@ export default function SideMenu({
                 >
                   <button
                     className={!isOnline ? "disabled" : ""}
-                    onClick={!isOnline ? undefined : handleLogout}
+                    onClick={!isOnline ? undefined : toggleLogoutModal}
                   >
                     {link.icon && <link.icon />}
                     <span>{link.name}</span>
@@ -227,6 +227,7 @@ export default function SideMenu({
         </ul>
       </aside>
 
+      {renderLogoutModal()}
       {offlineErrorDialog && (
         <OfflineErrorDialog
           onClose={() => {
