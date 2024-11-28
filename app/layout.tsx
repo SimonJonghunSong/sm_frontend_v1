@@ -11,6 +11,7 @@ import theme from "../src/theme";
 import ReactQueryProvider from "@/src/contexts/ReactQueryProvider";
 import NetworkStatusCheck from "@/components/NetworkStatusCheck";
 import NextIntlProvider from "@/src/contexts/NextIntlProvider";
+import ServiceWorkerRegister from "@/src/worker/ServiceWorkerRegister";
 
 /**적용하고자 하는 font*/
 const notoSans = Noto_Sans({
@@ -72,6 +73,9 @@ export default async function RootLayout({
           <AppRouterCacheProvider>
             <ThemeProvider theme={theme}>
               {children}
+              {process.env.NODE_ENV !== "development" && (
+                <ServiceWorkerRegister />
+              )}
               <NetworkStatusCheck />
             </ThemeProvider>
             <ToastContainer pauseOnFocusLoss={false} />

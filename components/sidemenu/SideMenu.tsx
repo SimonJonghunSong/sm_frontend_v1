@@ -107,36 +107,12 @@ export default function SideMenu({
                 className={link?.isActive ? styles.active : undefined}
               >
                 {link?.onClick ? (
-                  <button
-                    type="button"
-                    className={
-                      !isOnline && !link.offlineEnable ? "disabled" : ""
-                    }
-                    onClick={() =>
-                      !isOnline && !link.offlineEnable
-                        ? undefined
-                        : link.onClick(link.name)
-                    }
-                  >
+                  <button type="button" onClick={() => link.onClick(link.name)}>
                     {link.icon && <link.icon />}
                     <span>{link.name}</span>
                   </button>
                 ) : (
-                  <Link
-                    href={link.href}
-                    className={
-                      !isOnline && !link.offlineEnable && !link?.isActive
-                        ? "disabled"
-                        : ""
-                    }
-                    onClick={
-                      !isOnline && !link.offlineEnable
-                        ? (e) => {
-                            e.preventDefault();
-                          }
-                        : undefined
-                    }
-                  >
+                  <Link href={link.href}>
                     {link.icon && <link.icon />}
                     <span>{link.name}</span>
                   </Link>

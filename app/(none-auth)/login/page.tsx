@@ -21,13 +21,14 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
-import { login } from "@/src/api/services/auth";
+import { login, me } from "@/src/api/services/auth";
 import useLangStore from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import { toast } from "react-toastify";
 import styled from "@emotion/styled";
 import Modal from "@/components/Modal";
+import { getNoti } from "@/src/api/services/notification";
 
 const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
@@ -45,6 +46,10 @@ export default function page() {
       setRefreshToken(response.data.parameter.refreshToken);
       setUserRole(response.data.parameter.role);
       setUserId(response.data.parameter.email);
+
+      getNoti();
+      me();
+
       router.replace("/");
     },
     onError: () => {

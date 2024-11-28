@@ -11,6 +11,8 @@ import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import { me, modifyMyAccount } from "@/src/api/services/auth";
 import useLangStore from "@/utils/useLangStore";
+import OfflineErrorDialog from "@/components/OfflineErrorDialog";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 
 export default function MyInfoPage() {
   const { lang } = useLangStore();
@@ -19,6 +21,9 @@ export default function MyInfoPage() {
   const [password, setPassword] = useState<string>();
   const [confirmedPassword, setConfirmedPassword] = useState<string>();
   const [department, setDepartment] = useState<string>();
+
+  const { isOnline } = useNetworkMonitor();
+  const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const { data, isPending, error } = useQuery({
     queryKey: ["me"],
@@ -45,6 +50,11 @@ export default function MyInfoPage() {
   };
 
   const handleSave = () => {
+    if (!isOnline) {
+      setOfflineErrorDialog(true);
+      return;
+    }
+
     if (password !== confirmedPassword) {
       return toast(
         "Password confirmation is incorrect. Please enter the same password.",
@@ -66,157 +76,158 @@ export default function MyInfoPage() {
   }
 
   return (
-    <div className="pageWrap">
-      <SideMenu sideMenuItems={sideMenuItems(lang)} />
-      <article className="contentWrap">
-        <div className="pageTitle">{t("settings.my_info.my_info")}</div>
-        <Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">{t("settings.my_info.company")}</div>
-            <div>James Franco</div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">{t("settings.my_info.id")}</div>
-            <div>{data.user_id}</div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">{t("settings.my_info.e-mail")}</div>
-            <div>{data.email}</div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">{t("settings.my_info.password")}</div>
-            <div>
-              <TextField
-                placeholder={t("settings.my_info.change_password")}
-                id="input2"
-                variant="outlined"
-                size="small"
-                sx={{ width: 320 }}
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={({ target }) => setPassword(target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
-                      ) : (
-                        <VisibilityOffOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
-                      )}
-                    </IconButton>
-                  ),
-                }}
-              />
-            </div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">
-              {t("settings.my_info.confirm_password")}
-            </div>
-            <div>
-              <TextField
-                placeholder={t("settings.my_info.change_password")}
-                id="input1"
-                variant="outlined"
-                size="small"
-                sx={{ width: 320 }}
-                type={showPassword ? "text" : "password"}
-                value={confirmedPassword}
-                onChange={({ target }) => setConfirmedPassword(target.value)}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
-                      ) : (
-                        <VisibilityOffOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
-                      )}
-                    </IconButton>
-                  ),
-                }}
-              />
-            </div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">{t("settings.my_info.country")}</div>
-            <div>{data.country}</div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">{t("settings.my_info.role")}</div>
-            <div>{data.role.name.toUpperCase()}</div>
-          </Stack>
-          <Stack
-            direction="row"
-            alignItems="center"
-            gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
-          >
-            <div className="list-title">
-              {t("settings.my_info.affiliation")}
-            </div>
-            <div>
-              {/* TODO 기존 Select로 이루어짐
+    <>
+      <div className="pageWrap">
+        <SideMenu sideMenuItems={sideMenuItems(lang)} />
+        <article className="contentWrap">
+          <div className="pageTitle">{t("settings.my_info.my_info")}</div>
+          <Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">{t("settings.my_info.company")}</div>
+              <div>James Franco</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">{t("settings.my_info.id")}</div>
+              <div>{data.user_id}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">{t("settings.my_info.e-mail")}</div>
+              <div>{data.email}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">{t("settings.my_info.password")}</div>
+              <div>
+                <TextField
+                  placeholder={t("settings.my_info.change_password")}
+                  id="input2"
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 320 }}
+                  type={showPassword ? "text" : "password"}
+                  value={password}
+                  onChange={({ target }) => setPassword(target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOutlinedIcon
+                            sx={{ color: "var(--grey5)" }}
+                          />
+                        ) : (
+                          <VisibilityOffOutlinedIcon
+                            sx={{ color: "var(--grey5)" }}
+                          />
+                        )}
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">
+                {t("settings.my_info.confirm_password")}
+              </div>
+              <div>
+                <TextField
+                  placeholder={t("settings.my_info.change_password")}
+                  id="input1"
+                  variant="outlined"
+                  size="small"
+                  sx={{ width: 320 }}
+                  type={showPassword ? "text" : "password"}
+                  value={confirmedPassword}
+                  onChange={({ target }) => setConfirmedPassword(target.value)}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? (
+                          <VisibilityOutlinedIcon
+                            sx={{ color: "var(--grey5)" }}
+                          />
+                        ) : (
+                          <VisibilityOffOutlinedIcon
+                            sx={{ color: "var(--grey5)" }}
+                          />
+                        )}
+                      </IconButton>
+                    ),
+                  }}
+                />
+              </div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">{t("settings.my_info.country")}</div>
+              <div>{data.country}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">{t("settings.my_info.role")}</div>
+              <div>{data.role.name.toUpperCase()}</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">
+                {t("settings.my_info.affiliation")}
+              </div>
+              <div>
+                {/* TODO 기존 Select로 이루어짐
                <Select
                 value={affilication}
                 onChange={handleChange}
@@ -224,45 +235,56 @@ export default function MyInfoPage() {
               >
                 <MenuItem value={"su"}>SU</MenuItem> 
               </Select> */}
-              <div>{data.affiliation}</div>
-            </div>
+                <div>{data.affiliation}</div>
+              </div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">
+                {t("settings.my_info.department")}
+              </div>
+              <div>
+                <TextField
+                  sx={{ width: 320 }}
+                  defaultValue={data.department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                />
+              </div>
+            </Stack>
           </Stack>
           <Stack
             direction="row"
-            alignItems="center"
             gap="8px"
-            height="56px"
-            borderBottom="1px solid var(--grey3)"
+            justifyContent="flex-end"
+            marginTop="40px"
           >
-            <div className="list-title">{t("settings.my_info.department")}</div>
-            <div>
-              <TextField
-                sx={{ width: 320 }}
-                defaultValue={data.department}
-                onChange={(e) => setDepartment(e.target.value)}
-              />
-            </div>
+            <Button variant="outlined" color="secondary">
+              {t("settings.my_info.cancel")}
+            </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={!password || !confirmedPassword}
+              onClick={handleSave}
+            >
+              {t("settings.my_info.save")}
+            </Button>
           </Stack>
-        </Stack>
-        <Stack
-          direction="row"
-          gap="8px"
-          justifyContent="flex-end"
-          marginTop="40px"
-        >
-          <Button variant="outlined" color="secondary">
-            {t("settings.my_info.cancel")}
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            disabled={!password || !confirmedPassword}
-            onClick={handleSave}
-          >
-            {t("settings.my_info.save")}
-          </Button>
-        </Stack>
-      </article>
-    </div>
+        </article>
+      </div>
+
+      {offlineErrorDialog && (
+        <OfflineErrorDialog
+          onClose={() => {
+            setOfflineErrorDialog(false);
+          }}
+        />
+      )}
+    </>
   );
 }
