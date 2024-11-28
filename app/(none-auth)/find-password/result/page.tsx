@@ -83,7 +83,7 @@ export default function page() {
 
             <Divider sx={{ my: 5 }} />
             <div className="description">
-              {t("login.email_sent.didn’t_receive_the_link")}
+              {t("login.email_sent.didn’t_receive_the_link?")}
             </div>
             <Button
               variant="outlined"
