@@ -9,6 +9,7 @@
     "popup": {
       "error_<ok>,_confirm_<cancel>_<yes>,_success_<ok>": "Error <OK>, Confirm <Cancel> <Yes>, Success <OK>",
       "error": "Error",
+      "success": "Success",
       "confrim": "Confirm",
       "yes": "Yes"
     },
@@ -1705,6 +1706,9 @@
     }
   },
   "error": {
-    "invalid_email_format": "Invalid email format."
+    "invalid_email_format": "Invalid email format.",
+    "At_least_8_characters": "At least 8 characters",
+    "At_least_1_upper/lowercase": "At least 1 upper/lowercase",
+    "At_least_1_number": "At least 1 number"
   }
 }
