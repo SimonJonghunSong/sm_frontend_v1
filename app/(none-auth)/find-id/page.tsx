@@ -116,13 +116,12 @@ export default function page() {
                     name="email"
                     control={form.control}
                     rules={{
-                      required: true,
                       pattern: {
                         value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // 이메일 형식 정규식
                         message: t("error.invalid_email_format"), // 에러 메시지
                       },
                     }}
-                    render={({ field }) => {
+                    render={({ field, fieldState: { error } }) => {
                       return (
                         <TextField
                           type="email"
@@ -130,6 +129,7 @@ export default function page() {
                           variant="outlined"
                           size="small"
                           fullWidth
+                          error={!!error}
                           {...field}
                           onChange={(e) => {
                             const value = e.target.value;
