@@ -32,7 +32,6 @@ const AuthLayout = ({ children }) => {
       <AuthCheck />
       <Navbar />
       <section>{children}</section>
-      {process.env.NODE_ENV !== "development" && <ServiceWorkerRegister />}
       <GlobalLoading />
       <Footer />
     </div>

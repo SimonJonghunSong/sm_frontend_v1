@@ -13,7 +13,7 @@ import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import NotificationsSharpIcon from "@mui/icons-material/NotificationsSharp";
 import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
@@ -30,6 +30,8 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import getLocalizedString from "@/utils/getLocalizedString";
 import { useTranslations } from "next-intl";
 import NotificationModal from "./NotificationModal";
+import OfflineErrorDialog from "@/components/OfflineErrorDialog";
+import useErrorDialog from "@/src/hooks/useErrorDialog";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -105,9 +107,13 @@ const guestMenus = (lang: "en" | "pt" | "es") => [
 
 export default function Navbar() {
   const t = useTranslations("gnb");
+  const popupT = useTranslations();
   const pathname = usePathname();
   const { lang } = useLangStore();
   const { userRole } = useAuthStore();
+  const router = useRouter();
+
+  const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const [cmdModal, cmdModalToggle] = useModal();
   const [networkModal, networkModalToggle] = useModal();
@@ -125,6 +131,11 @@ export default function Navbar() {
 
   const [mounted, setMounted] = useState<boolean>(false);
   const [notificationModal, setNotificationModal] = useState(false);
+  const { renderErrorModal, toggle } = useErrorDialog({
+    description: popupT(
+      "popup.gnb.online/offline.switching_online_is_not_possible_when_there_is_no_network"
+    ),
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -137,10 +148,7 @@ export default function Navbar() {
 
   const handleToggleNetwork = (isOfflineToOnline: boolean) => {
     if (isOfflineToOnline && !navigator.onLine) {
-      toast("Switching online is not possible when there is no network.", {
-        type: "error",
-        position: "top-center",
-      });
+      toggle();
       return;
     }
 
@@ -186,196 +194,201 @@ export default function Navbar() {
   };
 
   return (
-    <nav className={styles.nav}>
-      <div className={styles.left}>
-        <Link href={getRootHref()} className={styles.logo}>
-          <Image src={logo} alt="synctrack" />
-          {mounted && <div className={styles.role}>{getRole(userRole)}</div>}
-        </Link>
-        <ul className={styles.mainMenu}>
-          {!mounted ? (
-            <></>
-          ) : (
-            <>
-              {navLinkes.map((link) => {
-                if (link.href) {
-                  return (
-                    <li
-                      key={link.name}
-                      className={
-                        pathname.startsWith(link.href)
-                          ? styles.active
-                          : undefined
-                      }
-                    >
-                      <Link
+    <>
+      <nav className={styles.nav}>
+        <div className={styles.left}>
+          <Link href={getRootHref()} className={styles.logo}>
+            <Image src={logo} alt="synctrack" />
+            {mounted && <div className={styles.role}>{getRole(userRole)}</div>}
+          </Link>
+          <ul className={styles.mainMenu}>
+            {!mounted ? (
+              <></>
+            ) : (
+              <>
+                {navLinkes.map((link) => {
+                  if (link.href) {
+                    return (
+                      <li
+                        key={link.name}
                         className={
-                          !isOnline &&
-                          !link.offlineEnable &&
-                          !pathname.startsWith(link.href)
-                            ? "disabled"
-                            : ""
-                        }
-                        onClick={
-                          !isOnline && !link.offlineEnable
-                            ? (e) => {
-                                e.preventDefault();
-                              }
+                          pathname.startsWith(link.href)
+                            ? styles.active
                             : undefined
                         }
-                        href={link.href}
-                        aria-disabled
                       >
-                        <link.icon />
-                        <span>{link.name}</span>
-                      </Link>
-                    </li>
-                  );
-                } else {
-                  return (
-                    <li
-                      key={link.name}
-                      className={
-                        pathname.startsWith(link.href)
-                          ? styles.active
-                          : undefined
-                      }
-                    >
-                      <button
-                        onClick={() => {
-                          window.open(
-                            `${window.location.origin}/cmd`,
-                            "_blank"
-                          );
-                        }}
-                      >
-                        <link.icon />
-                        <span>{link.name}</span>
-                      </button>
-                    </li>
-                  );
-                }
-              })}
-            </>
-          )}
-        </ul>
-      </div>
+                        <Link
+                          onClick={
+                            !isOnline && !link.offlineEnable
+                              ? (e) => {
+                                  e.preventDefault();
 
-      <div className={styles.right}>
-        <ul className={styles.subMenu}>
-          <li>
-            <Link href="/settings">
-              <SettingsSharpIcon />
-            </Link>
-          </li>
-          <li>
-            <button onClick={() => setNotificationModal(!notificationModal)}>
-              <NotificationsSharpIcon />
-            </button>
-          </li>
-          <li>
-            <Link
-              href="/info"
-              className={!isOnline ? "disabled" : ""}
-              onClick={
-                !isOnline
-                  ? (e) => {
-                      e.preventDefault();
-                    }
-                  : undefined
-              }
-            >
-              <HelpSharpIcon />
-            </Link>
-          </li>
-          {(userRole === "CUSTOMER" || userRole === "GUEST") && (
+                                  setOfflineErrorDialog(true);
+                                }
+                              : undefined
+                          }
+                          href={link.href}
+                          aria-disabled
+                        >
+                          <link.icon />
+                          <span>{link.name}</span>
+                        </Link>
+                      </li>
+                    );
+                  } else {
+                    return (
+                      <li
+                        key={link.name}
+                        className={
+                          pathname.startsWith(link.href)
+                            ? styles.active
+                            : undefined
+                        }
+                      >
+                        <button
+                          onClick={() => {
+                            window.open(
+                              `${window.location.origin}/cmd`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          <link.icon />
+                          <span>{link.name}</span>
+                        </button>
+                      </li>
+                    );
+                  }
+                })}
+              </>
+            )}
+          </ul>
+        </div>
+
+        <div className={styles.right}>
+          <ul className={styles.subMenu}>
+            <li>
+              <Link href="/settings">
+                <SettingsSharpIcon />
+              </Link>
+            </li>
+            <li>
+              <button onClick={() => setNotificationModal(!notificationModal)}>
+                <NotificationsSharpIcon />
+              </button>
+            </li>
             <li>
               <Link
-                href="/support"
-                className={!isOnline ? "disabled" : ""}
+                href="/info"
                 onClick={
                   !isOnline
                     ? (e) => {
                         e.preventDefault();
+                        router.push("/offline");
                       }
                     : undefined
                 }
               >
-                <HeadsetMicIcon />
+                <HelpSharpIcon />
               </Link>
             </li>
+            {(userRole === "CUSTOMER" || userRole === "GUEST") && (
+              <li>
+                <Link
+                  href="/support"
+                  onClick={
+                    !isOnline
+                      ? (e) => {
+                          e.preventDefault();
+                          router.push("/offline");
+                        }
+                      : undefined
+                  }
+                >
+                  <HeadsetMicIcon />
+                </Link>
+              </li>
+            )}
+          </ul>
+
+          {userRole !== "ROOT" && (
+            <>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder={`${t("pw_set.search")}`}
+                id="search"
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    paddingRight: 0,
+                    color: "var(--grey5)",
+                  },
+                  backgroundColor: "var(--black)",
+                }}
+                InputProps={{
+                  endAdornment: (
+                    <IconButton type="submit">
+                      <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                    </IconButton>
+                  ),
+                }}
+                onClick={handleSearchClick}
+                inputProps={{ readOnly: true }}
+              />
+
+              <div
+                className={
+                  isOnline
+                    ? `${styles.toggle} ${styles.active}`
+                    : `${styles.toggle} ${styles.offline}`
+                }
+              >
+                <div onClick={() => isOnline && handleToggleNetwork(false)}>
+                  {t("pw_set.offline")}
+                </div>
+                <div onClick={() => !isOnline && handleToggleNetwork(true)}>
+                  {t("pw_set.online")}
+                </div>
+              </div>
+            </>
           )}
-        </ul>
+        </div>
 
-        {userRole !== "ROOT" && (
-          <>
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder={`${t("pw_set.search")}`}
-              id="search"
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  paddingRight: 0,
-                  color: "var(--grey5)",
-                },
-                backgroundColor: "var(--black)",
-              }}
-              InputProps={{
-                endAdornment: (
-                  <IconButton type="submit">
-                    <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
-                  </IconButton>
-                ),
-              }}
-              onClick={handleSearchClick}
-              inputProps={{ readOnly: true }}
-            />
+        <Modal
+          closeButton
+          open={cmdModal}
+          toggleOpen={cmdModalToggle}
+          confirm={() => {}}
+          confirmButtonText="Add"
+          width="1240px"
+        >
+          <CmdModal />
+        </Modal>
 
-            <div
-              className={
-                isOnline
-                  ? `${styles.toggle} ${styles.active}`
-                  : `${styles.toggle} ${styles.offline}`
-              }
-            >
-              <div onClick={() => isOnline && handleToggleNetwork(false)}>
-                {t("pw_set.offline")}
-              </div>
-              <div onClick={() => !isOnline && handleToggleNetwork(true)}>
-                {t("pw_set.online")}
-              </div>
-            </div>
-          </>
+        <Modal
+          closeButton
+          open={networkModal}
+          toggleOpen={networkModalToggle}
+          confirm={() => {}}
+          confirmButtonText="Add"
+          width="720px"
+        >
+          <SearchModal />
+        </Modal>
+
+        {notificationModal && (
+          <NotificationModal onClose={() => setNotificationModal(false)} />
         )}
-      </div>
-
-      <Modal
-        closeButton
-        open={cmdModal}
-        toggleOpen={cmdModalToggle}
-        confirm={() => {}}
-        confirmButtonText="Add"
-        width="1240px"
-      >
-        <CmdModal />
-      </Modal>
-
-      <Modal
-        closeButton
-        open={networkModal}
-        toggleOpen={networkModalToggle}
-        confirm={() => {}}
-        confirmButtonText="Add"
-        width="720px"
-      >
-        <SearchModal />
-      </Modal>
-
-      {notificationModal && (
-        <NotificationModal onClose={() => setNotificationModal(false)} />
+      </nav>
+      {offlineErrorDialog && (
+        <OfflineErrorDialog
+          onClose={() => {
+            setOfflineErrorDialog(false);
+          }}
+        />
       )}
-    </nav>
+      {renderErrorModal()}
+    </>
   );
 }
 

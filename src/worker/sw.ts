@@ -32,8 +32,8 @@ const urlsToCache = [
 
   "/settings",
   "/settings/languages",
-  // "/settings/my-info",
-  // "/settings/privacy-policy",
+  "/settings/my-info",
+  "/settings/privacy-policy",
 
   "/offline.html",
 ];
