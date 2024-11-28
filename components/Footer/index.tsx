@@ -45,36 +45,28 @@ export default function Footer() {
           <li>
             <h2>Homepage</h2>
             <ul className={styles.footerLinks}>
-              <li>
-                <Link href={"#"} onClick={handleLinkClick}>
-                  HQ
-                </Link>
-              </li>
-              <li>
-                <Link href={"#"} onClick={handleLinkClick}>
-                  Suntech Brazil
-                </Link>
-              </li>
-              <li>
-                <Link href={"#"} onClick={handleLinkClick}>
-                  Suntech Mexico
-                </Link>
-              </li>
-              <li>
-                <Link href={"#"} onClick={handleLinkClick}>
-                  Suntech U.S.A
-                </Link>
-              </li>
-              <li>
-                <Link href={"#"} onClick={handleLinkClick}>
-                  Suntech STI
-                </Link>
-              </li>
-              <li>
-                <Link href={"#"} onClick={handleLinkClick}>
-                  Suntech FIN
-                </Link>
-              </li>
+              {[
+                { label: "HQ", herf: "#" },
+                {
+                  label: "Suntech Brazil",
+                  herf: "https://www.suntechdobrasil.com.br/",
+                },
+                {
+                  label: "Suntech Mexico",
+                  herf: "https://www.suntechlatam.com/",
+                },
+                { label: "Suntech U.S.A", herf: "https://suntechus.com/" },
+                { label: "Suntech STI", herf: "#" },
+                { label: "Suntech FIN", herf: "#" },
+              ].map(({ label, herf }) => {
+                return (
+                  <li key={label}>
+                    <Link href={herf} target="_blank" onClick={handleLinkClick}>
+                      {label}
+                    </Link>
+                  </li>
+                );
+              })}
             </ul>
           </li>
           <li>
@@ -113,7 +105,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href={"#"} onClick={handleLinkClick}>
+                <Link
+                  href={"https://www.facebook.com/SuntechDoBrasil"}
+                  target="_blank"
+                  onClick={handleLinkClick}
+                >
                   <svg
                     width="24"
                     height="24"
