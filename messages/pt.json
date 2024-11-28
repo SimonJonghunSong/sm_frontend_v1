@@ -1693,5 +1693,8 @@
         "saved_successfully!": "Salvo com sucesso!"
       }
     }
+  },
+  "error": {
+    "invalid_email_format": "Formato de e-mail inválido."
   }
 }
