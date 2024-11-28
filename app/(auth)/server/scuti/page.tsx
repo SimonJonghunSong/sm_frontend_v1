@@ -289,6 +289,7 @@ function AddServerModal({ onClose }) {
   return (
     <Modal
       open
+      closeButton
       toggleOpen={onClose}
       title={`${t("server.scuti_server.add_scuti_server")}`}
       confirm={handleAdd}

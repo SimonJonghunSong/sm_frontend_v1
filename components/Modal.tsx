@@ -87,30 +87,29 @@ export default function Modal({
           </IconButton>
         )}
         <DialogContent sx={{ lineHeight: 1.6 }}>{children}</DialogContent>
-        {!closeButton && (
-          <DialogActions>
-            {!!confirm && (
-              <Button
-                variant="outlined"
-                sx={{ width: 80, height: 32, fontSize: 13 }}
-                onClick={toggleOpen}
-              >
-                {cancelButtonText}
-              </Button>
-            )}
+
+        <DialogActions>
+          {!!confirm && (
             <Button
-              variant="contained"
-              disabled={disabled}
+              variant="outlined"
               sx={{ width: 80, height: 32, fontSize: 13 }}
-              onClick={() => {
-                confirm && confirm();
-                !manualToggleOpenWhenConfirm && toggleOpen();
-              }}
+              onClick={toggleOpen}
             >
-              {confirm ? confirmButtonText : "Ok"}
+              {cancelButtonText}
             </Button>
-          </DialogActions>
-        )}
+          )}
+          <Button
+            variant="contained"
+            disabled={disabled}
+            sx={{ width: 80, height: 32, fontSize: 13 }}
+            onClick={() => {
+              confirm && confirm();
+              !manualToggleOpenWhenConfirm && toggleOpen();
+            }}
+          >
+            {confirm ? confirmButtonText : "Ok"}
+          </Button>
+        </DialogActions>
       </Dialog>
     </Draggable>
   );
