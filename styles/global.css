@@ -238,3 +238,7 @@ a.disabled {
     opacity: 0.3 !important;
   }
 }
+
+strong.require {
+  color: var(--error);
+}
