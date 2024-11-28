@@ -86,9 +86,7 @@ export default function Modal({
             <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
           </IconButton>
         )}
-
         <DialogContent sx={{ lineHeight: 1.6 }}>{children}</DialogContent>
-
         {!closeButton && (
           <DialogActions>
             {!!confirm && (

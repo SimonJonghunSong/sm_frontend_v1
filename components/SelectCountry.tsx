@@ -11,7 +11,7 @@ export default function SelectCountry({
   setCountryData,
   defaultCountry,
 }: {
-  setCountryData?: Dispatch<SetStateAction<string>>;
+  setCountryData?: (country: string) => void;
   defaultCountry?: string;
 }) {
   const [country, setCountry] = useState<string>(defaultCountry || "");
