@@ -1710,6 +1710,7 @@
     "invalid_email_format": "Invalid email format.",
     "At_least_8_characters": "At least 8 characters",
     "At_least_1_upper/lowercase": "At least 1 upper/lowercase",
-    "At_least_1_number": "At least 1 number"
+    "At_least_1_number": "At least 1 number",
+    "Passwords_do_not_match": "Passwords do not match."
   }
 }

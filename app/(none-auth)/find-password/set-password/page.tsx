@@ -14,6 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import InputErrorText from "@/components/InputErrorText";
 import styled from "@emotion/styled";
+import { watch } from "fs";
 
 export default function page() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function page() {
       </div>
 
       <ConentDiv className="content">
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={form.handleSubmit(handleSubmit)}>
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>{t("login.pw_settings.password")}</InputBox.Title>
@@ -64,7 +65,6 @@ export default function page() {
                 name="pw"
                 control={form.control}
                 rules={{
-                  required: true,
                   validate: {
                     length: (value) =>
                       value.length >= 8 || t("error.At_least_8_characters"),
@@ -83,6 +83,7 @@ export default function page() {
                         variant="outlined"
                         size="small"
                         fullWidth
+                        error={!!error}
                         type={showPassword ? "text" : "password"}
                         {...field}
                         InputProps={{
@@ -124,41 +125,63 @@ export default function page() {
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
-              <TextField
-                id="input1"
-                variant="outlined"
-                size="small"
-                fullWidth
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
-                      ) : (
-                        <VisibilityOffOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
+              <Controller
+                name="confirmedPw"
+                control={form.control}
+                rules={{
+                  validate: {
+                    same: (value, { pw }) =>
+                      value === pw || t("error.Passwords_do_not_match"),
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => {
+                  return (
+                    <>
+                      <TextField
+                        id="input1"
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        error={!!error}
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                        InputProps={{
+                          endAdornment: (
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityOutlinedIcon
+                                  sx={{ color: "var(--grey5)" }}
+                                />
+                              ) : (
+                                <VisibilityOffOutlinedIcon
+                                  sx={{ color: "var(--grey5)" }}
+                                />
+                              )}
+                            </IconButton>
+                          ),
+                        }}
+                      />
+                      {error?.message && (
+                        <InputErrorText text={error.message} />
                       )}
-                    </IconButton>
-                  ),
+                    </>
+                  );
                 }}
               />
             </InputBox.Body>
           </InputBox>
 
           <Button
+            disabled={!form.watch("confirmedPw") || !form.watch("pw")}
             type="submit"
             variant="contained"
             fullWidth
-            sx={{ background: "var(--primary-gradient)", mt: 1 }}
+            sx={{ mt: 1 }}
           >
             {t("login.pw_settings.set_password")}
           </Button>

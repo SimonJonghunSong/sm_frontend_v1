@@ -1700,6 +1700,7 @@
     "invalid_email_format": "Formato de e-mail inválido.",
     "At_least_8_characters": "Deve ter pelo menos 8 caracteres",
     "At_least_1_upper/lowercase": "Pelo menos 1 letra maiúscula/minúscula",
-    "At_least_1_number": "Pelo menos 1 número"
+    "At_least_1_number": "Pelo menos 1 número",
+    "Passwords_do_not_match": "As senhas não coincidem."
   }
 }
