@@ -157,7 +157,8 @@ export default function page() {
         },
       });
     } else {
-      await handleOfflineLogin(requestBody);
+      handleOpenOfflineErrorDialog();
+      // await handleOfflineLogin(requestBody);
     }
   };
 
