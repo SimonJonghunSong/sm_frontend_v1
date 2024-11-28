@@ -18,10 +18,10 @@ const notoSans = Noto_Sans({
   subsets: ["latin"],
 });
 
-const APP_NAME = "ST Sync Master";
-const APP_DEFAULT_TITLE = "ST Sync Master";
-const APP_TITLE_TEMPLATE = "%s - ST Sync Master";
-const APP_DESCRIPTION = "ST Sync Master!";
+const APP_NAME = "SyncMaster";
+const APP_DEFAULT_TITLE = "SyncMaster";
+const APP_TITLE_TEMPLATE = "%s - SyncMaster";
+const APP_DESCRIPTION = "SyncMaster!";
 
 export const metadata: Metadata = {
   applicationName: APP_NAME,
