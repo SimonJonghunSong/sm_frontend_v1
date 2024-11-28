@@ -245,14 +245,7 @@ export default function Navbar() {
                             : undefined
                         }
                       >
-                        <button
-                          onClick={() => {
-                            window.open(
-                              `${window.location.origin}/cmd`,
-                              "_blank"
-                            );
-                          }}
-                        >
+                        <button onClick={cmdModalToggle}>
                           <link.icon />
                           <span>{link.name}</span>
                         </button>
@@ -354,16 +347,20 @@ export default function Navbar() {
           )}
         </div>
 
-        <Modal
-          closeButton
-          open={cmdModal}
-          toggleOpen={cmdModalToggle}
-          confirm={() => {}}
-          confirmButtonText="Add"
-          width="1240px"
-        >
-          <CmdModal />
-        </Modal>
+        {cmdModal && (
+          <Modal
+            isDraggable
+            hideBackdrop
+            hasMinimize
+            closeButton
+            open={cmdModal}
+            toggleOpen={cmdModalToggle}
+            width="1240px"
+            hasFooter={false}
+          >
+            <CmdModal />
+          </Modal>
+        )}
 
         <Modal
           closeButton

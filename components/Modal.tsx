@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Draggable from "react-draggable";
 import { IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -6,6 +6,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
+import RemoveIcon from "@mui/icons-material/Remove";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 type ModalProps = {
@@ -23,6 +24,8 @@ type ModalProps = {
   className?: string;
   isDraggable?: boolean;
   hideBackdrop?: boolean;
+  hasMinimize?: boolean;
+  hasFooter?: boolean;
 };
 
 export default function Modal({
@@ -40,18 +43,26 @@ export default function Modal({
   className,
   isDraggable = false,
   hideBackdrop = false,
+  hasMinimize = false,
+  hasFooter = true,
 }: ModalProps) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [isMinimize, setIsMinimize] = useState(false);
   const onClose = (_e, reason) =>
     reason !== "backdropClick" && open && toggleOpen();
 
+  const handleMinimize = () => {
+    setIsMinimize(true);
+  };
+
+  const handleMaxmize = () => {
+    setIsMinimize(false);
+  };
+
   return (
-    <Draggable
-      onDrag={(e) => e.preventDefault()}
-      cancel=".className"
-      onStart={() => console.log("dragStart")}
-      disabled={!isDraggable}
-    >
+    <Draggable onDrag={(e) => e.preventDefault()} disabled={!isDraggable}>
       <Dialog
+        ref={ref}
         hideBackdrop={hideBackdrop}
         className={className}
         open={open}
@@ -59,6 +70,7 @@ export default function Modal({
         fullWidth
         maxWidth={"sm"}
         sx={{
+          width: isMinimize ? "400px" : "100%",
           "& .MuiDialog-paper": {
             width,
           },
@@ -73,43 +85,74 @@ export default function Modal({
             <span>{title}</span>
           </DialogTitle>
         )}
-        {closeButton && (
-          <IconButton
-            onClick={toggleOpen}
-            sx={{
-              position: "absolute",
-              right: "6px",
-              top: "6px",
-              zIndex: 30,
-            }}
-          >
-            <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
-          </IconButton>
-        )}
-        <DialogContent sx={{ lineHeight: 1.6 }}>{children}</DialogContent>
 
-        <DialogActions>
-          {!!confirm && (
-            <Button
-              variant="outlined"
-              sx={{ width: 80, height: 32, fontSize: 13 }}
-              onClick={toggleOpen}
+        {closeButton && (
+          <>
+            {hasMinimize && (
+              <IconButton
+                onClick={isMinimize ? handleMaxmize : handleMinimize}
+                sx={{
+                  position: "absolute",
+                  right: "38px",
+                  top: "6px",
+                  zIndex: 30,
+                }}
+              >
+                <RemoveIcon sx={{ color: "var(--black)" }} />
+              </IconButton>
+            )}
+
+            <IconButton
+              onClick={() => {
+                toggleOpen();
+              }}
+              sx={{
+                position: "absolute",
+                right: "6px",
+                top: "6px",
+                zIndex: 30,
+              }}
             >
-              {cancelButtonText}
-            </Button>
-          )}
-          <Button
-            variant="contained"
-            disabled={disabled}
-            sx={{ width: 80, height: 32, fontSize: 13 }}
-            onClick={() => {
-              confirm && confirm();
-              !manualToggleOpenWhenConfirm && toggleOpen();
-            }}
-          >
-            {confirm ? confirmButtonText : "Ok"}
-          </Button>
-        </DialogActions>
+              <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
+            </IconButton>
+          </>
+        )}
+        <DialogContent
+          sx={{
+            lineHeight: 1.6,
+            height: isMinimize ? "60px" : "auto",
+            overflow: isMinimize ? "hidden" : "auto",
+          }}
+        >
+          {children}
+        </DialogContent>
+
+        {isMinimize || !hasFooter ? null : (
+          <>
+            <DialogActions>
+              {!!confirm && (
+                <Button
+                  variant="outlined"
+                  sx={{ width: 80, height: 32, fontSize: 13 }}
+                  onClick={toggleOpen}
+                >
+                  {cancelButtonText}
+                </Button>
+              )}
+              <Button
+                variant="contained"
+                disabled={disabled}
+                sx={{ width: 80, height: 32, fontSize: 13 }}
+                onClick={() => {
+                  confirm && confirm();
+                  !manualToggleOpenWhenConfirm && toggleOpen();
+                }}
+              >
+                {confirm ? confirmButtonText : "Ok"}
+              </Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </Draggable>
   );

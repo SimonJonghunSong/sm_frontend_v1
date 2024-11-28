@@ -10,13 +10,15 @@ import ConsoleLog from "./ConsoleLog";
 export default function CmdTool() {
   const [value, setValue] = useState("response");
 
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
   return (
     <div className={styles.cmdWrap}>
-      <div className={styles.cmdTitle}>Command Tool</div>
+      <div className={styles.cmdTitle} style={{ cursor: "move" }}>
+        Command Tool
+      </div>
       <Tabs
         value={value}
         onChange={handleChange}
