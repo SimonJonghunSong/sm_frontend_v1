@@ -11,7 +11,7 @@ import logo from "/public/images/logo-dark.svg";
 import { Box, Button, FormControl, Stack, TextField } from "@mui/material";
 import InputBox from "../../../components/inputbox/InputBox";
 import SelectCountry from "../../../components/SelectCountry";
-import { findId } from "@/src/api/services/auth";
+import { findId, findPassword } from "@/src/api/services/auth";
 import InputErrorText from "@/components/InputErrorText";
 import useErrorDialog from "@/src/hooks/useErrorDialog";
 
@@ -38,8 +38,20 @@ export default function page() {
     onError: ({}: AxiosError<{
       response: { code: number; reason: string };
     }>) => {
-      console.log("123error");
       toggle();
+    },
+  });
+
+  const findPasswordMutation = useMutation({
+    mutationFn: findPassword,
+    onSuccess: () => {
+      const { country, email } = form.getValues();
+      router.push(`/find-password/result?country=${country}&email=${email}`);
+    },
+    onError: ({
+      response,
+    }: AxiosError<{ response: { code: number; reason: string } }>) => {
+      console.error(response, ":: find password error");
     },
   });
 
@@ -60,7 +72,11 @@ export default function page() {
   };
 
   const handleClickFindPassword = () => {
-    router.push("/find-password");
+    const { country, email } = form.getValues();
+    findPasswordMutation.mutate({
+      country,
+      email,
+    });
   };
 
   const renderStepContent = () => {

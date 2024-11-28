@@ -130,7 +130,7 @@ export default function DeviceList() {
                 forget(params.value.port.port);
               }}
             >
-              {t("device_list.connect")}
+              {t("device_list.disconnect")}
             </Button>
           ) : (
             <Button
@@ -139,7 +139,7 @@ export default function DeviceList() {
               sx={{ width: "120px" }}
               onClick={(e) => e.stopPropagation()}
             >
-              {t("device_list.disconnect")}
+              {t("device_list.connect")}
             </Button>
           )
         ) : (

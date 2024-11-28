@@ -11,10 +11,20 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import InputBox from "../../../../components/inputbox/InputBox";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
+import { Controller, useForm } from "react-hook-form";
+import InputErrorText from "@/components/InputErrorText";
+import styled from "@emotion/styled";
 
 export default function page() {
   const router = useRouter();
-  const t = useTranslations("login");
+  const t = useTranslations();
+  const form = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      pw: undefined,
+      confirmedPw: undefined,
+    },
+  });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -28,7 +38,7 @@ export default function page() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    router.push("/");
+    router.replace("/");
   };
 
   return (
@@ -36,43 +46,72 @@ export default function page() {
       <div className="logo">
         <Image src={logo} alt="synctrack" />
       </div>
-      <div className="pageTitle">{t("pw_settings.set_your_password!")}</div>
+      <div className="pageTitle">
+        {t("login.pw_settings.set_your_password!")}
+      </div>
       <div className="description">
-        {t("pw_settings.set_a_password_for_your_account")}
+        {t("login.pw_settings.set_a_password_for_your_account")}
       </div>
 
-      <div className="content">
+      <ConentDiv className="content">
         <form onSubmit={handleSubmit}>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>{t("pw_settings.password")}</InputBox.Title>
+              <InputBox.Title>{t("login.pw_settings.password")}</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
-              <TextField
-                id="input1"
-                variant="outlined"
-                size="small"
-                fullWidth
-                type={showPassword ? "text" : "password"}
-                InputProps={{
-                  endAdornment: (
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
-                      ) : (
-                        <VisibilityOffOutlinedIcon
-                          sx={{ color: "var(--grey5)" }}
-                        />
+              <Controller
+                name="pw"
+                control={form.control}
+                rules={{
+                  required: true,
+                  validate: {
+                    length: (value) =>
+                      value.length >= 8 || t("error.At_least_8_characters"),
+                    case: (value) =>
+                      (/[A-Z]/.test(value) && /[a-z]/.test(value)) ||
+                      t("error.At_least_1_upper/lowercase"),
+                    number: (value) =>
+                      /\d/.test(value) || t("error.At_least_1_number"),
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => {
+                  return (
+                    <>
+                      <TextField
+                        id="input1"
+                        variant="outlined"
+                        size="small"
+                        fullWidth
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                        InputProps={{
+                          endAdornment: (
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={handleClickShowPassword}
+                              onMouseDown={handleMouseDownPassword}
+                              edge="end"
+                            >
+                              {showPassword ? (
+                                <VisibilityOutlinedIcon
+                                  sx={{ color: "var(--grey5)" }}
+                                />
+                              ) : (
+                                <VisibilityOffOutlinedIcon
+                                  sx={{ color: "var(--grey5)" }}
+                                />
+                              )}
+                            </IconButton>
+                          ),
+                        }}
+                      />
+
+                      {error?.message && (
+                        <InputErrorText text={error.message} />
                       )}
-                    </IconButton>
-                  ),
+                    </>
+                  );
                 }}
               />
             </InputBox.Body>
@@ -81,7 +120,7 @@ export default function page() {
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                {t("pw_settings.confirm_password")}
+                {t("login.pw_settings.confirm_password")}
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -115,59 +154,20 @@ export default function page() {
             </InputBox.Body>
           </InputBox>
 
-          {true && (
-            <Stack
-              direction="row"
-              gap="6px"
-              sx={{ color: "var(--error)", mb: "8px" }}
-            >
-              <CloseIcon />
-              <span style={{ fontWeight: 500 }}>At least 8 characters</span>
-            </Stack>
-          )}
-          {true && (
-            <Stack
-              direction="row"
-              gap="6px"
-              sx={{ color: "var(--error)", mb: "8px" }}
-            >
-              <CloseIcon />
-              <span style={{ fontWeight: 500 }}>
-                At least 1 upper/lowercase
-              </span>
-            </Stack>
-          )}
-          {true && (
-            <Stack
-              direction="row"
-              gap="6px"
-              sx={{ color: "var(--success)", mb: "8px" }}
-            >
-              <CheckIcon />
-              <span style={{ fontWeight: 500 }}>At least 1 number</span>
-            </Stack>
-          )}
-          {true && (
-            <Stack
-              direction="row"
-              gap="6px"
-              sx={{ color: "var(--error)", mb: "8px" }}
-            >
-              <CloseIcon />
-              <span style={{ fontWeight: 500 }}>Password do not match</span>
-            </Stack>
-          )}
-
           <Button
             type="submit"
             variant="contained"
             fullWidth
             sx={{ background: "var(--primary-gradient)", mt: 1 }}
           >
-            {t("pw_settings.set_password")}
+            {t("login.pw_settings.set_password")}
           </Button>
         </form>
-      </div>
+      </ConentDiv>
     </>
   );
 }
+
+const ConentDiv = styled.div`
+  width: 352px !important;
+`;
