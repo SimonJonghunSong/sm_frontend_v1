@@ -22,6 +22,7 @@ import {
   modifyScutiServer,
 } from "@/src/api/services/scuti";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
+import regexPatterns from "@/src/regex/regex";
 
 export default function Server() {
   const t = useTranslations();
@@ -290,6 +291,9 @@ function AddServerModal({ onClose }) {
     <Modal
       open
       closeButton
+      disabled={
+        !state.country || !state.port || !state.region || !state.serverIp
+      }
       toggleOpen={onClose}
       title={`${t("server.scuti_server.add_scuti_server")}`}
       confirm={handleAdd}
@@ -301,6 +305,7 @@ function AddServerModal({ onClose }) {
           <InputBox.Head>
             <InputBox.Title>
               {t("server.add_scuti_server_pop_up.country")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -312,13 +317,25 @@ function AddServerModal({ onClose }) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>{t("server.scuti_server.region")}</InputBox.Title>
+            <InputBox.Title>
+              {t("server.scuti_server.region")}
+              <strong className="require">&nbsp;*</strong>
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={state.region}
-              onChange={(e) => setField("SET_REGION", e.target.value)}
+              onChange={(e) => {
+                const regex = regexPatterns.englishWithSpacesRegex;
+                const value = e.target.value;
+
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(/[^a-zA-Z\s]/g, "");
+                }
+                setField("SET_REGION", e.target.value);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -327,26 +344,52 @@ function AddServerModal({ onClose }) {
           <InputBox.Head>
             <InputBox.Title>
               {t("server.scuti_server.server_ip")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={state.serverIp}
-              onChange={(e) => setField("SET_SERVER_IP", e.target.value)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                setField("SET_SERVER_IP", e.target.value);
+              }}
             />
           </InputBox.Body>
         </InputBox>
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>{t("server.scuti_server.port")}</InputBox.Title>
+            <InputBox.Title>
+              {t("server.scuti_server.port")}
+              <strong className="require">&nbsp;*</strong>
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={state.port}
-              onChange={(e) => setField("SET_PORT", e.target.value)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                setField("SET_PORT", e.target.value);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -407,6 +450,8 @@ function EditServerModal({
   return (
     <Modal
       open
+      closeButton
+      disabled={!inputRegion || !inputServerIp || !inputPort}
       toggleOpen={onClose}
       title={`${t("server.scuti_server.edit_scuti_server")}`}
       confirm={handleModify}
@@ -418,6 +463,7 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_scuti_server_pop_up.country")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -432,13 +478,23 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_scuti_server_pop_up.region")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={inputRegion}
-              onChange={(e) => handleChange(e, setRegion)}
+              onChange={(e) => {
+                const regex = regexPatterns.englishWithSpacesRegex;
+                const value = e.target.value;
+
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(/[^a-zA-Z\s]/g, "");
+                }
+                handleChange(e, setRegion);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -447,13 +503,25 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_scuti_server_pop_up.server_ip")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={inputServerIp}
-              onChange={(e) => handleChange(e, setServerIp)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                handleChange(e, setServerIp);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -462,13 +530,25 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_scuti_server_pop_up.port")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={inputPort}
-              onChange={(e) => handleChange(e, setPort)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                handleChange(e, setPort);
+              }}
             />
           </InputBox.Body>
         </InputBox>
