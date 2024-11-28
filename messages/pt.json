@@ -8,6 +8,7 @@
     },
     "popup": {
       "error_<ok>,_confirm_<cancel>_<yes>,_success_<ok>": "Erro <OK>, Confirmar <Cancelar> <Sim>, Sucesso <OK>",
+      "error": "Erro",
       "confrim": "Confirmar",
       "yes": "Sim"
     },
