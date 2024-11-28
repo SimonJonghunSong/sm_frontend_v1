@@ -1555,5 +1555,142 @@
         "": "El dispositivo no está conectado."
       }
     }
+  },
+  "popup": {
+    "common": {
+      "common": {
+        "an_error_has_occurred_please_try_again_later": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde.",
+        "internet_disconnected_please_check_your_internet_connection": "Conexión a Internet desconectada. Por favor, verifique su conexión a Internet.",
+        "please_switch_to_offline_mode": "Conexión a Internet desconectada. Por favor, cambie al modo sin conexión.",
+        "internet_connection_is_required": "Se requiere conexión a Internet."
+      }
+    },
+    "login": {
+      "login": {
+        "invalid_country_or_id_or_password_please_try_again": "País, ID o contraseña inválida. Por favor, inténtelo de nuevo.",
+        "your_account_has_been_locked_please_contact_us_to_unlock_your_account": "Su cuenta ha sido bloqueada. Por favor, contáctenos para desbloquear su cuenta.",
+        "an_initial_internet_connection_is_required_once_to_use_offline_mode": "Se requiere una conexión inicial a Internet una vez para usar el modo sin conexión.",
+        "the_root_account_can_only_be_used_in_online_mode": "La cuenta root solo se puede usar en modo en línea."
+      },
+      "find_id": {
+        "unregistered_information": "Información no registrada."
+      },
+      "find_pw": {
+        "unregistered_information": "Información no registrada.",
+        "password_reset_link_has_been_resent_to_your_email": "El enlace para restablecer la contraseña ha sido reenviado a su correo electrónico."
+      }
+    },
+    "gnb": {
+      "online/offline": {
+        "are_you_sure_you_want_to_switch_to_offline_usage?": "¿Está seguro de que desea cambiar al uso sin conexión?",
+        "this_page_is_not_available_in_offline_mode": "Esta página no está disponible en modo sin conexión.",
+        "are_you_sure_you_want_to_switch_to_online_usage?": "¿Está seguro de que desea cambiar al uso en línea?"
+      }
+    },
+    "server": {
+      "scuti_server": {
+        "are_you_sure_you_want_to_delete_this_server?": "¿Está seguro de que desea eliminar este servidor?",
+        "are_you_sure_you_want_to_delete_these_servers?": "¿Está seguro de que desea eliminar estos servidores?"
+      },
+      "mqtt_server": {
+        "are_you_sure_you_want_to_delete_this_server?": "¿Está seguro de que desea eliminar este servidor?",
+        "are_you_sure_you_want_to_delete_these_servers?": "¿Está seguro de que desea eliminar estos servidores?"
+      }
+    },
+    "home": {
+      "mqtt_server": {
+        "are_you_sure_you_want_to_load_all_the_models?_the_app_may_become_heavy": "¿Está seguro de que desea cargar todos los modelos? La aplicación puede volverse pesada."
+      }
+    },
+    "model": {
+      "model": {
+        "are_you_sure_you_want_to_delete_this_model?": "¿Está seguro de que desea eliminar este modelo?",
+        "are_you_sure_you_want_to_delete_these_models?": "¿Está seguro de que desea eliminar estos modelos?"
+      },
+      "add_model_pop_up": {
+        "added_successfully!": "¡Añadido exitosamente!",
+        "this_model_name_is_already_registered": "Este nombre de modelo ya está registrado.",
+        "are_you_sure_you_want_to_leave_this_page_without_adding?": "¿Está seguro de que desea salir de esta página sin añadir?"
+      },
+      "edit_model_pop_up": {
+        "saved_successfully!": "¡Guardado exitosamente!"
+      }
+    },
+    "device": {
+      "device_detection": {
+        "are_you_sure_you_want_to_leave_this_page?": "¿Está seguro de que desea salir de esta página?"
+      },
+      "device_list": {
+        "the_device_is_not_detected_anymore": "El dispositivo ya no se detecta."
+      },
+      "configure_multi-device_pop_up": {
+        "applied_successfully!": "¡Aplicado exitosamente!",
+        "not_applied_to_all_devices": "No aplicado a todos los dispositivos.",
+        "the_devices_disconnected_please_try_again_later": "Los dispositivos se desconectaron. Por favor, inténtelo de nuevo más tarde."
+      }
+    },
+    "account": {
+      "account": {
+        "are_you_sure_you_want_to_delete_this_account?": "¿Está seguro de que desea eliminar esta cuenta?",
+        "are_you_sure_you_want_to_delete_these_accounts?": "¿Está seguro de que desea eliminar estas cuentas?"
+      },
+      "add_account_pop_up": {
+        "added_successfully!": "¡Añadido exitosamente!",
+        "this_id_already_exists": "Este ID ya existe.",
+        "this_email_is_already_registered": "Este correo electrónico ya está registrado."
+      }
+    },
+    "settings": {
+      "logout": {
+        "are_you_sure_you_want_to_log_out?": "¿Está seguro de que desea cerrar sesión?",
+        "are_you_sure_you_want_to_log_out_without_saving?": "¿Está seguro de que desea cerrar sesión sin guardar?"
+      },
+      "my_info": {
+        "saved_successfully!": "¡Guardado exitosamente!",
+        "are_you_sure_you_want_to_leave_this_page_without_saving?": "¿Está seguro de que desea salir de esta página sin guardar?"
+      }
+    },
+    "configuration": {
+      "side_bar": {
+        "are_you_sure_you_want_to_delete_this_model_from_loaded_model_list?": "¿Está seguro de que desea eliminar este modelo de la lista de modelos cargados?"
+      },
+      "profile_menu": {
+        "applied_successfully!": "¡Aplicado exitosamente!",
+        "the_devices_disconnected_please_try_again_later": "Los dispositivos se desconectaron. Por favor, inténtelo de nuevo más tarde.",
+        "are_you_sure_you_want_to_save?": "¿Está seguro de que desea guardar?",
+        "path": "Ruta",
+        "show_changes": "Mostrar cambios",
+        "saved_successfully!": "¡Guardado exitosamente!",
+        "are_you_sure_you_want_to_delete_this_profile?": "¿Está seguro de que desea eliminar este perfil?",
+        "to_upload_a_profile_to_scuti,_log_in_with_the_same_account_as_syncmaster": "Para cargar un perfil en Scuti, inicie sesión con la misma cuenta que SyncMaster."
+      },
+      "device_refresh": {
+        "the_device_has_not_been_detected": "El dispositivo no ha sido detectado.",
+        "the_device_has_been_disconnected": "El dispositivo ha sido desconectado.",
+        "are_you_sure_you_want_to_disconnect_this_device?": "¿Está seguro de que desea desconectar este dispositivo?",
+        "connected_successfully!": "¡Conectado exitosamente!"
+      },
+      "load_profile_popup": {
+        "are_you_sure_you_want_to_delete_this_profile?": "¿Está seguro de que desea eliminar este perfil?"
+      },
+      "common": {
+        "are_you_sure_you_want_to_leave_this_page_without_saving?": "¿Está seguro de que desea salir de esta página sin guardar?"
+      },
+      "device_status": {
+        "are_you_sure_you_want_to_reboot?": "¿Está seguro de que desea reiniciar?"
+      },
+      "geofence": {
+        "are_you_sure_you_want_to_delete_this_geofence?": "¿Está seguro de que desea eliminar esta geocercas?",
+        "are_you_sure_you_want_to_delete_these_geofences?": "¿Está seguro de que desea eliminar estas geocercas?"
+      },
+      "ble": {
+        "are_you_sure_you_want_to_delete_this_ble?": "¿Está seguro de que desea eliminar este BLE?",
+        "are_you_sure_you_want_to_delete_these_bles?": "¿Está seguro de que desea eliminar estos BLEs?"
+      },
+      "edit_profile": {
+        "are_you_sure_you_want_to_save?": "¿Está seguro de que desea guardar?",
+        "saved_successfully!": "¡Guardado exitosamente!"
+      }
+    }
   }
 }
