@@ -204,7 +204,7 @@ export default function AddModal({ handleCloseModal }: Props) {
       title={t("model.add_model_pop_up.add_model")}
       confirm={handleAddConfirm}
       cancelButtonText={t("model.add_model_pop_up.cancel")}
-      confirmButtonText={t("model.add_model_pop_up.save")}
+      confirmButtonText={t("model.add_model_pop_up.add")}
       width="720px"
       disabled={
         !imageFile ||

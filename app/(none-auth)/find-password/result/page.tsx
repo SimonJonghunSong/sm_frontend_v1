@@ -1,14 +1,14 @@
 "use client";
 
+import { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { AxiosError } from "axios";
+import { useMutation } from "@tanstack/react-query";
 import { Button, Divider, Stack } from "@mui/material";
 import logo from "/public/images/logo-dark.svg";
-import { useMutation } from "@tanstack/react-query";
 import { findPassword } from "@/src/api/services/auth";
-import { AxiosError } from "axios";
-import { useEffect } from "react";
 import useSuccessDialog from "@/src/hooks/useSuccessDialog";
 
 export default function page() {
