@@ -47,7 +47,7 @@ export default function DataTable({
   getRowClassName,
 }: DataTableProps) {
   return (
-    <Box sx={{ display: "grid", gridTemplateColumns: "1fr" }}>
+    <Box sx={{ display: "grid", gridTemplateColumns: "1fr", flex: 1 }}>
       <DataGrid
         rows={rows}
         columns={columns}
@@ -73,6 +73,7 @@ export default function DataTable({
               alignItems="center"
               justifyContent="center"
               color="var(--grey5)"
+              py={10}
             >
               {noDataMessage}
             </Stack>
