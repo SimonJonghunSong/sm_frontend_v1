@@ -1,3 +1,5 @@
+import { useState } from "react";
+import Draggable from "react-draggable";
 import { IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -18,13 +20,16 @@ type ModalProps = {
   width: string;
   disabled?: boolean;
   manualToggleOpenWhenConfirm?: boolean;
+  className?: string;
+  isDraggable?: boolean;
+  hideBackdrop?: boolean;
 };
 
 export default function Modal({
   closeButton = false,
   children,
   confirm,
-  confirmButtonText = "확인",
+  confirmButtonText = "Ok",
   cancelButtonText = "Cancel",
   title,
   open,
@@ -32,13 +37,23 @@ export default function Modal({
   width,
   disabled,
   manualToggleOpenWhenConfirm,
+  className,
+  isDraggable = false,
+  hideBackdrop = false,
 }: ModalProps) {
   const onClose = (_e, reason) =>
     reason !== "backdropClick" && open && toggleOpen();
 
   return (
-    <>
+    <Draggable
+      onDrag={(e) => e.preventDefault()}
+      cancel=".className"
+      onStart={() => console.log("dragStart")}
+      disabled={!isDraggable}
+    >
       <Dialog
+        hideBackdrop={hideBackdrop}
+        className={className}
         open={open}
         onClose={onClose}
         fullWidth
@@ -71,7 +86,9 @@ export default function Modal({
             <CloseOutlinedIcon sx={{ color: "var(--black)" }} />
           </IconButton>
         )}
+
         <DialogContent sx={{ lineHeight: 1.6 }}>{children}</DialogContent>
+
         {!closeButton && (
           <DialogActions>
             {!!confirm && (
@@ -92,11 +109,11 @@ export default function Modal({
                 !manualToggleOpenWhenConfirm && toggleOpen();
               }}
             >
-              {confirm ? confirmButtonText : "닫기"}
+              {confirm ? confirmButtonText : "Ok"}
             </Button>
           </DialogActions>
         )}
       </Dialog>
-    </>
+    </Draggable>
   );
 }

@@ -14,6 +14,7 @@ import {
   FormControl,
   FormControlLabel,
   IconButton,
+  Stack,
   TextField,
 } from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
@@ -21,12 +22,12 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SelectCountry from "../../../components/SelectCountry";
 import useAuthStore from "../../../utils/useAuthStore";
 import { login } from "@/src/api/services/auth";
-import GlobalLoading from "@/components/GlobalLoading";
 import useLangStore from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import { toast } from "react-toastify";
 import styled from "@emotion/styled";
+import Modal from "@/components/Modal";
 
 const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
@@ -34,6 +35,8 @@ export default function page() {
   const router = useRouter();
   const { lang, setLang } = useLangStore();
   const t = useTranslations("login");
+  const [errorDialog, setErrorDialog] = useState(false);
+  const [isUndefinedCountry, setIsUndefinedCountry] = useState(true);
   const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -43,6 +46,9 @@ export default function page() {
       setUserRole(response.data.parameter.role);
       setUserId(response.data.parameter.email);
       router.replace("/");
+    },
+    onError: () => {
+      setErrorDialog(true);
     },
   });
   const [isRemberberMe, setIsRememberMe] = useState(
@@ -139,9 +145,16 @@ export default function page() {
               <FormControl sx={{ width: "100%" }} size="small">
                 <SelectCountry
                   defaultCountry={
-                    lang === "en" ? "usa" : lang === "es" ? "spain" : "portugal"
+                    isUndefinedCountry
+                      ? undefined
+                      : lang === "en"
+                      ? "usa"
+                      : lang === "es"
+                      ? "spain"
+                      : "portugal"
                   }
                   setCountryData={(country) => {
+                    setIsUndefinedCountry(false);
                     setLang(
                       country === "usa"
                         ? "en"
@@ -269,6 +282,8 @@ export default function page() {
           </Button>
         </StyledForm>
       </StyledDiv>
+
+      {errorDialog && <ErrorDialog onClose={() => setErrorDialog(false)} />}
     </>
   );
 }
@@ -281,3 +296,24 @@ const StyledDiv = styled.div`
 const StyledForm = styled.form`
   width: 352px;
 `;
+
+const ErrorDialog = ({ onClose }: { onClose: () => void }) => {
+  const t = useTranslations();
+  return (
+    <Modal
+      width={"357px"}
+      toggleOpen={onClose}
+      open
+      cancelButtonText="Ok"
+      title={t("common.popup.error")}
+    >
+      <Stack>
+        <span style={{ wordBreak: "keep-all" }}>
+          {t(
+            "popup.login.login.invalid_country_or_id_or_password_please_try_again"
+          )}
+        </span>
+      </Stack>
+    </Modal>
+  );
+};
