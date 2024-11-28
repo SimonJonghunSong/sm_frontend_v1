@@ -1,31 +1,55 @@
 "use client";
 
+import React, { useReducer, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+import { GridColDef } from "@mui/x-data-grid";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-
 import { Button, IconButton, Stack, TextField } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import React, { useReducer, useState } from "react";
-import DataTable from "../../../../components/dataTable";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import DataTable from "@/components/dataTable";
+import SideMenu from "@/components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
-import SelectCountry from "../../../../components/SelectCountry";
-import InputBox from "../../../../components/inputbox/InputBox";
-import useModal from "../../../../utils/useModal";
-import Modal from "../../../../components/Modal";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import SelectCountry from "@/components/SelectCountry";
+import InputBox from "@/components/inputbox/InputBox";
+import useModal from "@/utils/useModal";
+import Modal from "@/components/Modal";
 import {
   addMqttServer,
   getMqttServer,
   modifyMqttServer,
   deleteMqttServer,
 } from "@/src/api/services/mqtt";
-import { toast } from "react-toastify";
-import { useTranslations } from "next-intl";
+import useConfirmDialog from "@/src/hooks/useConfirmDialog";
+import regexPatterns from "@/src/regex/regex";
 
 export default function Server() {
   const t = useTranslations();
-  const { data, error, isPending } = useQuery({
+  const deleteCallback = useRef<() => void>();
+  const deleteModel = deleteCallback.current;
+  const { toggle, renderConfirmModal } = useConfirmDialog({
+    description: t(
+      "popup.server.mqtt_server.are_you_sure_you_want_to_delete_this_server?"
+    ),
+    onYes: () => {
+      deleteModel();
+      deleteCallback.current = undefined;
+    },
+  });
+  const {
+    toggle: multiDeleteDialogToggle,
+    renderConfirmModal: renderMultiDeleteModal,
+  } = useConfirmDialog({
+    description: t(
+      "popup.server.mqtt_server.are_you_sure_you_want_to_delete_these_servers?"
+    ),
+    onYes: () => {
+      deleteModel();
+      deleteCallback.current = undefined;
+    },
+  });
+  const { data, error } = useQuery({
     queryKey: ["mqtt-server"],
     queryFn: getMqttServer,
   });
@@ -36,7 +60,7 @@ export default function Server() {
     col4: string;
     id: string;
   }>();
-  const [selectedRows, setSelectedRows] = useState<string[]>();
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: deleteMqttServer,
@@ -105,7 +129,8 @@ export default function Server() {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            mutate([params.row.id]);
+            toggle();
+            deleteCallback.current = () => mutate([params.row.id]);
           }}
         >
           <DeleteForeverOutlinedIcon />
@@ -132,13 +157,17 @@ export default function Server() {
   const [editModal, editModalToggle] = useModal();
 
   const handleDeleteRows = () => {
-    mutate(selectedRows);
+    multiDeleteDialogToggle();
+    deleteCallback.current = () => mutate(selectedRows);
   };
 
   return (
     <div className="pageWrap">
       <SideMenu sideMenuItems={sideMenuItems} />
-      <article className="contentWrap">
+      <article
+        className="contentWrap"
+        style={{ display: "flex", flexDirection: "column" }}
+      >
         <div className="pageTitle">
           {t("server.mqtt_server.mqtt_server_list")}
         </div>
@@ -166,7 +195,12 @@ export default function Server() {
             setSelectedRows(data as string[])
           }
           footerButton={
-            <Button variant="text" color="info" onClick={handleDeleteRows}>
+            <Button
+              disabled={selectedRows.length === 0}
+              variant="text"
+              color="info"
+              onClick={handleDeleteRows}
+            >
               {t("server.mqtt_server.delete")}
             </Button>
           }
@@ -183,6 +217,8 @@ export default function Server() {
           uid={selectedMqttServer.id}
         />
       )}
+      {renderConfirmModal()}
+      {renderMultiDeleteModal()}
     </div>
   );
 }
@@ -258,6 +294,10 @@ function AddServerModal({
   return (
     <Modal
       open={open}
+      closeButton
+      disabled={
+        !state.country || !state.port || !state.region || !state.serverIp
+      }
       toggleOpen={onClose}
       title={`${t("server.mqtt_server.add_mqtt_server")}`}
       confirm={handleAdd}
@@ -269,6 +309,7 @@ function AddServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.add_mqtt_server_pop_up.country")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -282,13 +323,23 @@ function AddServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.add_mqtt_server_pop_up.region")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={state.region}
-              onChange={(e) => setField("SET_REGION", e.target.value)}
+              onChange={(e) => {
+                const regex = regexPatterns.englishWithSpacesRegex;
+                const value = e.target.value;
+
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(/[^a-zA-Z\s]/g, "");
+                }
+                setField("SET_REGION", e.target.value);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -297,13 +348,25 @@ function AddServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.add_mqtt_server_pop_up.server_ip")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={state.serverIp}
-              onChange={(e) => setField("SET_SERVER_IP", e.target.value)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                setField("SET_SERVER_IP", e.target.value);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -312,13 +375,25 @@ function AddServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.add_mqtt_server_pop_up.port")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={state.port}
-              onChange={(e) => setField("SET_PORT", e.target.value)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                setField("SET_PORT", e.target.value);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -379,6 +454,8 @@ function EditServerModal({
   return (
     <Modal
       open
+      closeButton
+      disabled={!inputRegion || !inputServerIp || !inputPort}
       toggleOpen={onClose}
       title={`${t("server.mqtt_server.edit_mqtt_server")}`}
       confirm={handleModify}
@@ -390,6 +467,7 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_mqtt_server_pop_up.country")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
@@ -404,13 +482,23 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_mqtt_server_pop_up.region")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={inputRegion}
-              onChange={(e) => handleChange(e, setRegion)}
+              onChange={(e) => {
+                const regex = regexPatterns.englishWithSpacesRegex;
+                const value = e.target.value;
+
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(/[^a-zA-Z\s]/g, "");
+                }
+                handleChange(e, setRegion);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -419,13 +507,25 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_mqtt_server_pop_up.server_ip")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={inputServerIp}
-              onChange={(e) => handleChange(e, setServerIp)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                handleChange(e, setServerIp);
+              }}
             />
           </InputBox.Body>
         </InputBox>
@@ -434,13 +534,25 @@ function EditServerModal({
           <InputBox.Head>
             <InputBox.Title>
               {t("server.edit_mqtt_server_pop_up.port")}
+              <strong className="require">&nbsp;*</strong>
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <TextField
               fullWidth
               value={inputPort}
-              onChange={(e) => handleChange(e, setPort)}
+              onChange={(e) => {
+                const regex = regexPatterns.onlyNumbersAndSpecialCharsRegex;
+                const value = e.target.value;
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(
+                    /[^0-9!@#$%^&*(),.?":{}|<>_-]/g,
+                    ""
+                  );
+                }
+                handleChange(e, setPort);
+              }}
             />
           </InputBox.Body>
         </InputBox>
