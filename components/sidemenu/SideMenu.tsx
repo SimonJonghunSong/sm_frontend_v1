@@ -96,8 +96,6 @@ export default function SideMenu({
     return `${href}${queryData}`;
   };
 
-  console.log("sideMenuItems >>", sideMenuItems);
-
   return (
     <>
       <aside className={styles.sideMenuWrap}>
@@ -118,7 +116,14 @@ export default function SideMenu({
                       <span>{link.name}</span>
                     </button>
                   ) : (
-                    <Link href={link.href}>
+                    <Link
+                      href={link.href}
+                      className={
+                        pathname.startsWith(link.href)
+                          ? styles.active
+                          : undefined
+                      }
+                    >
                       {link.icon && <link.icon />}
                       <span>{link.name}</span>
                     </Link>

@@ -172,7 +172,6 @@ export default function Server() {
           }
         />
       </article>
-
       {addModal && <AddServerModal open onClose={addModalToggle} />}
       {editModal && (
         <EditServerModal

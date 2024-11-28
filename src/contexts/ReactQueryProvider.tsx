@@ -36,9 +36,6 @@ export default function ReactQueryProvider({
             setRefreshToken(undefined);
             router.replace("/login");
           }
-          toast(error.response?.data?.response?.reason || "Error", {
-            type: "error",
-          });
         },
       }),
       defaultOptions: {

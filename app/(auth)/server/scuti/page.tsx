@@ -1,30 +1,53 @@
 "use client";
 
+import React, { useReducer, useRef, useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslations } from "next-intl";
+import { GridColDef } from "@mui/x-data-grid";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-
-import { Button, IconButton, Stack, TextField } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import React, { useReducer, useState } from "react";
-import DataTable from "../../../../components/dataTable";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import DataTable from "@/components/dataTable";
+import SideMenu from "@/components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
-import SelectCountry from "../../../../components/SelectCountry";
-import InputBox from "../../../../components/inputbox/InputBox";
-import useModal from "../../../../utils/useModal";
-import Modal from "../../../../components/Modal";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
+import SelectCountry from "@/components/SelectCountry";
+import InputBox from "@/components/inputbox/InputBox";
+import useModal from "@/utils/useModal";
+import Modal from "@/components/Modal";
 import {
   addScutiServer,
   deleteScutiServer,
   getScutiServer,
   modifyScutiServer,
 } from "@/src/api/services/scuti";
-import { useTranslations } from "next-intl";
+import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 
 export default function Server() {
   const t = useTranslations();
+  const deleteCallback = useRef<() => void>();
+  const deleteModel = deleteCallback.current;
+  const { toggle, renderConfirmModal } = useConfirmDialog({
+    description: t(
+      "popup.server.scuti_server.are_you_sure_you_want_to_delete_this_server?"
+    ),
+    onYes: () => {
+      deleteModel();
+      deleteCallback.current = undefined;
+    },
+  });
+  const {
+    toggle: multiDeleteDialogToggle,
+    renderConfirmModal: renderMultiDeleteModal,
+  } = useConfirmDialog({
+    description: t(
+      "popup.server.scuti_server.are_you_sure_you_want_to_delete_these_servers?"
+    ),
+    onYes: () => {
+      deleteModel();
+      deleteCallback.current = undefined;
+    },
+  });
   const { data, error } = useQuery({
     queryKey: ["scuti-server"],
     queryFn: getScutiServer,
@@ -36,7 +59,8 @@ export default function Server() {
     col4: string;
     id: string;
   }>();
-  const [selectedRows, setSelectedRows] = useState<string[]>();
+
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: deleteScutiServer,
@@ -105,7 +129,8 @@ export default function Server() {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            mutate([params.row.id]);
+            toggle();
+            deleteCallback.current = () => mutate([params.row.id]);
           }}
         >
           <DeleteForeverOutlinedIcon />
@@ -132,7 +157,8 @@ export default function Server() {
   const [editModal, editModalToggle] = useModal();
 
   const handleDeleteRows = () => {
-    mutate(selectedRows);
+    multiDeleteDialogToggle();
+    deleteCallback.current = () => mutate(selectedRows);
   };
 
   return (
@@ -166,7 +192,12 @@ export default function Server() {
             setSelectedRows(data as string[])
           }
           footerButton={
-            <Button variant="text" color="info" onClick={handleDeleteRows}>
+            <Button
+              disabled={selectedRows.length === 0}
+              variant="text"
+              color="info"
+              onClick={handleDeleteRows}
+            >
               {t("server.scuti_server.delete")}
             </Button>
           }
@@ -184,6 +215,8 @@ export default function Server() {
           uid={selectedMqttServer.id}
         />
       )}
+      {renderConfirmModal()}
+      {renderMultiDeleteModal()}
     </div>
   );
 }
@@ -354,7 +387,7 @@ function EditServerModal({
   const handleChange = (e, setState) => {
     setState(e.target.value);
   };
-  console.log(uid);
+
   const handleModify = () => {
     mutate({
       country: countryState,
