@@ -26,6 +26,7 @@ import useLangStore from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import { toast } from "react-toastify";
+import styled from "@emotion/styled";
 
 const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
@@ -121,15 +122,15 @@ export default function page() {
         <br />
         {t("login.don’t_have_an_account_yet?")}
         <Link
-          href="http://www.wizardlab.co.kr/main/index_06_1"
+          href="https://stsunlab.com/board/board_form?bd_id=CONTACT"
           className="underlineTextButton"
         >
           {t("login.contact_us")}
         </Link>
       </div>
 
-      <div className="content">
-        <form onSubmit={handleSubmit}>
+      <StyledDiv className="content">
+        <StyledForm onSubmit={handleSubmit}>
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>{t("login.country")}</InputBox.Title>
@@ -164,7 +165,16 @@ export default function page() {
                 size="small"
                 fullWidth
                 value={inputId}
-                onChange={(e) => setInputId(e.target.value)}
+                onChange={(e) => {
+                  const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
+                  const value = e.target.value;
+
+                  // 입력값 중 허용되지 않는 문자 제거
+                  if (!regex.test(value)) {
+                    e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
+                  }
+                  setInputId(e.target.value);
+                }}
               />
             </InputBox.Body>
           </InputBox>
@@ -180,7 +190,12 @@ export default function page() {
                 fullWidth
                 type={showPassword ? "text" : "password"}
                 value={inputPassword}
-                onChange={(e) => setInputPassword(e.target.value)}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                  e.target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                  setInputPassword(e.target.value);
+                }}
                 InputProps={{
                   endAdornment: (
                     <IconButton
@@ -252,8 +267,17 @@ export default function page() {
           >
             {t("login.login")}
           </Button>
-        </form>
-      </div>
+        </StyledForm>
+      </StyledDiv>
     </>
   );
 }
+
+const StyledDiv = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+const StyledForm = styled.form`
+  width: 352px;
+`;
