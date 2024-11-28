@@ -28,6 +28,8 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import { toast } from "react-toastify";
 import styled from "@emotion/styled";
 import Modal from "@/components/Modal";
+import OfflineErrorDialog from "@/components/OfflineErrorDialog";
+import { insertLoginUser, offlineLogin } from "@/utils/idbLoginUtil";
 
 const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
@@ -36,15 +38,32 @@ export default function page() {
   const { lang, setLang } = useLangStore();
   const t = useTranslations("login");
   const [errorDialog, setErrorDialog] = useState(false);
+  const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
+  const [offlineLoginErrorDialog, setOfflineLoginErrorDialog] = useState(false);
+  const [offlineRootLoginErrorDialog, setOfflineRootLoginErrorDialog] =
+    useState(false);
   const [isUndefinedCountry, setIsUndefinedCountry] = useState(true);
   const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
   const { mutate, isPending } = useMutation({
     mutationFn: login,
-    onSuccess: (response) => {
+    onSuccess: (response, body) => {
       setToken(response.data.parameter.accessToken);
       setRefreshToken(response.data.parameter.refreshToken);
       setUserRole(response.data.parameter.role);
       setUserId(response.data.parameter.email);
+
+      console.log("body ::::", body);
+
+      console.log("response ::::", response.data.parameter);
+      const data = response.data.parameter;
+
+      insertLoginUser({
+        id: body.user_id,
+        password: body.password,
+        country: body.country,
+        ...data,
+      });
+
       router.replace("/");
     },
     onError: () => {
@@ -89,21 +108,46 @@ export default function page() {
   ) => {
     if (!isOnline) {
       e.preventDefault();
-      toast(t("common.message.no-network-connection"), {
-        type: "error",
-      });
+      handleOpenOfflineErrorDialog();
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleOfflineLogin = async (requestBody: AuthLoginBody) => {
+    console.log("handleSubmit asD:ASASD: AS:D");
+
+    const result = await offlineLogin(requestBody);
+
+    if (!result) {
+      setOfflineLoginErrorDialog(true);
+      return;
+    }
+
+    if (result.response.role === "ROOT") {
+      setOfflineRootLoginErrorDialog(true);
+      return;
+    }
+
+    setToken(result.response.accessToken);
+    setRefreshToken(result.response.refreshToken);
+    setUserRole(result.response.role);
+    setUserId(result.response.email);
+
+    router.replace("/");
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    mutate(
-      {
-        user_id: inputId,
-        country: getCountryByLang(),
-        password: inputPassword,
-      },
-      {
+    e.stopPropagation();
+    console.log("preventDefault called");
+
+    const requestBody = {
+      user_id: inputId,
+      country: getCountryByLang(),
+      password: inputPassword,
+    };
+
+    if (isOnline) {
+      mutate(requestBody, {
         onSuccess: () => {
           if (isRemberberMe) {
             localStorage.setItem(REMEMBER_ME_STORAGE_KEY, inputId);
@@ -111,8 +155,24 @@ export default function page() {
             localStorage.removeItem(REMEMBER_ME_STORAGE_KEY);
           }
         },
-      }
-    );
+      });
+    } else {
+      await handleOfflineLogin(requestBody);
+    }
+  };
+
+  const handleContactUsClick = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  ) => {
+    if (!isOnline) {
+      e.preventDefault();
+
+      router.push("/offline");
+    }
+  };
+
+  const handleOpenOfflineErrorDialog = () => {
+    setOfflineErrorDialog(true);
   };
 
   return (
@@ -130,13 +190,15 @@ export default function page() {
         <Link
           href="https://stsunlab.com/board/board_form?bd_id=CONTACT"
           className="underlineTextButton"
+          target="_blank"
+          onClick={handleContactUsClick}
         >
           {t("login.contact_us")}
         </Link>
       </div>
 
       <StyledDiv className="content">
-        <StyledForm onSubmit={handleSubmit}>
+        <StyledForm onSubmit={handleSubmit} action="">
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>{t("login.country")}</InputBox.Title>
@@ -284,6 +346,19 @@ export default function page() {
       </StyledDiv>
 
       {errorDialog && <ErrorDialog onClose={() => setErrorDialog(false)} />}
+      {offlineErrorDialog && (
+        <OfflineErrorDialog onClose={() => setOfflineErrorDialog(false)} />
+      )}
+      {offlineLoginErrorDialog && (
+        <OfflineLoginErrorDialog
+          onClose={() => setOfflineLoginErrorDialog(false)}
+        />
+      )}
+      {offlineRootLoginErrorDialog && (
+        <OfflineRootLoginErrorDialog
+          onClose={() => setOfflineRootLoginErrorDialog(false)}
+        />
+      )}
     </>
   );
 }
@@ -311,6 +386,48 @@ const ErrorDialog = ({ onClose }: { onClose: () => void }) => {
         <span style={{ wordBreak: "keep-all" }}>
           {t(
             "popup.login.login.invalid_country_or_id_or_password_please_try_again"
+          )}
+        </span>
+      </Stack>
+    </Modal>
+  );
+};
+
+const OfflineLoginErrorDialog = ({ onClose }: { onClose: () => void }) => {
+  const t = useTranslations();
+  return (
+    <Modal
+      width={"357px"}
+      toggleOpen={onClose}
+      open
+      cancelButtonText="Ok"
+      title={t("common.popup.error")}
+    >
+      <Stack>
+        <span style={{ wordBreak: "keep-all" }}>
+          {t(
+            "popup.login.login.an_initial_internet_connection_is_required_once_to_use_offline_mode"
+          )}
+        </span>
+      </Stack>
+    </Modal>
+  );
+};
+
+const OfflineRootLoginErrorDialog = ({ onClose }: { onClose: () => void }) => {
+  const t = useTranslations();
+  return (
+    <Modal
+      width={"357px"}
+      toggleOpen={onClose}
+      open
+      cancelButtonText="Ok"
+      title={t("common.popup.error")}
+    >
+      <Stack>
+        <span style={{ wordBreak: "keep-all" }}>
+          {t(
+            "popup.login.login.the_root_account_can_only_be_used_in_online_mode"
           )}
         </span>
       </Stack>

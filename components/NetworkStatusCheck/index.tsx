@@ -35,11 +35,11 @@ export default function NetworkStatusCheck() {
   }, [isOnline, isSelfOffline]);
 
   // 로그인 페이지 접근시 온라인으로 전환(인터넷 연결 있을시)
-  useEffect(() => {
-    if (FORCE_ONLINE_MODE_PATHS.findIndex((path) => path === pathname) > -1) {
-      setIsOnline(navigator.onLine);
-    }
-  }, [pathname]);
+  // useEffect(() => {
+  //   if (FORCE_ONLINE_MODE_PATHS.findIndex((path) => path === pathname) > -1) {
+  //     setIsOnline(navigator.onLine);
+  //   }
+  // }, [pathname]);
 
   // Sync Service Worker
   useEffect(() => {

@@ -152,8 +152,8 @@ export default function SideMenu({
                 }
               >
                 <button
-                  className={!isOnline ? "disabled" : ""}
-                  onClick={!isOnline ? undefined : handleLogout}
+                  // className={!isOnline ? "disabled" : ""}
+                  onClick={handleLogout}
                 >
                   {link.icon && <link.icon />}
                   <span>{link.name}</span>
