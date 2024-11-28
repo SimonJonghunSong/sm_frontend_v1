@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { AxiosError } from "axios";
-import { toast } from "react-toastify";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -39,6 +38,7 @@ export default function page() {
     onError: ({}: AxiosError<{
       response: { code: number; reason: string };
     }>) => {
+      console.log("123error");
       toggle();
     },
   });
@@ -169,7 +169,7 @@ export default function page() {
             <Image src={logo} alt="synctrack" />
           </div>
           <div className="pageTitle">
-            {t("id_found.your_id_has_been_found!")}
+            {t("login.id_found.your_id_has_been_found!")}
           </div>
           <div className="content">
             <form onSubmit={handleSubmit}>
