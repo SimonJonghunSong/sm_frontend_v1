@@ -244,7 +244,6 @@ export default function Account() {
     <>
       <div className="pageWrap">
         <article className="contentWrap">
-          ss
           <div className="pageTitle">{t("account.account.account")}</div>
           <Stack>
             <Stack
