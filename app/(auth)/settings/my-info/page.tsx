@@ -13,17 +13,20 @@ import { me, modifyMyAccount } from "@/src/api/services/auth";
 import useLangStore from "@/utils/useLangStore";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
+import useAuthStore from "@/utils/useAuthStore";
 
 export default function MyInfoPage() {
-  const { lang } = useLangStore();
   const t = useTranslations();
-  const [showPassword, setShowPassword] = useState(false);
+  const { lang } = useLangStore();
+  const { userRole } = useAuthStore();
+  const { isOnline } = useNetworkMonitor();
   const [password, setPassword] = useState<string>();
+  const [showPassword, setShowPassword] = useState(false);
   const [confirmedPassword, setConfirmedPassword] = useState<string>();
   const [department, setDepartment] = useState<string>();
-
-  const { isOnline } = useNetworkMonitor();
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
+
+  const isRoot = userRole.toUpperCase() === "ROOT";
 
   const { data, isPending, error } = useQuery({
     queryKey: ["me"],
@@ -78,7 +81,15 @@ export default function MyInfoPage() {
   return (
     <>
       <div className="pageWrap">
-        <SideMenu sideMenuItems={sideMenuItems(lang)} />
+        <SideMenu
+          sideMenuItems={
+            isRoot
+              ? sideMenuItems(lang).filter(
+                  ({ key }) => key === "myInfo" || key === "logout"
+                )
+              : sideMenuItems(lang)
+          }
+        />
         <article className="contentWrap">
           <div className="pageTitle">{t("settings.my_info.my_info")}</div>
           <Stack>

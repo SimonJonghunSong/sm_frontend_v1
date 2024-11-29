@@ -13,11 +13,14 @@ import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import useLangStore, { Lang } from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
+import useAuthStore from "@/utils/useAuthStore";
 
 export default function LanguagePage() {
   const t = useTranslations("settings");
   const { setLang, lang } = useLangStore();
+  const { userRole } = useAuthStore();
   const [localLang, setLocalLang] = useState<Lang>(lang);
+  const isRoot = userRole.toUpperCase() === "ROOT";
 
   const handleSave = (lang: Lang) => {
     setLang(lang);
@@ -25,7 +28,15 @@ export default function LanguagePage() {
 
   return (
     <div className="pageWrap">
-      <SideMenu sideMenuItems={sideMenuItems(lang)} />
+      <SideMenu
+        sideMenuItems={
+          isRoot
+            ? sideMenuItems(lang).filter(
+                ({ key }) => key === "myInfo" || key === "logout"
+              )
+            : sideMenuItems(lang)
+        }
+      />
       <article className="contentWrap">
         <div className="pageTitle">{t("languages.languages")}</div>
         <Stack height="300px">
