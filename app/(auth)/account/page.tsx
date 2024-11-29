@@ -363,7 +363,12 @@ export default function Account() {
                 setSelectedRowIdList(list as string[]);
               }}
               footerButton={
-                <Button variant="text" color="info" onClick={handleDeleteUsers}>
+                <Button
+                  variant="text"
+                  color="info"
+                  onClick={handleDeleteUsers}
+                  disabled={!selectedRowIdList || !selectedRowIdList.length}
+                >
                   {t("account.account.delete")}
                 </Button>
               }
