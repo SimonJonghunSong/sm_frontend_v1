@@ -89,7 +89,7 @@ export default function Account() {
     },
     {
       field: "col7",
-      headerName: t("account.account.date"),
+      headerName: t("account.account.registered_date"),
       minWidth: 240,
       headerAlign: "center",
       align: "center",

@@ -424,7 +424,8 @@
       "add_account": "Adicionar conta",
       "root": "Raiz",
       "administrator": "Administrador",
-      "client": "Cliente"
+      "client": "Cliente",
+      "registered_date": "Data de registro"
     },
     "add_account_pop_up": {
       "name": "Nome",

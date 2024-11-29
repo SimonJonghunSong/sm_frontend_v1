@@ -413,6 +413,7 @@
       "country": "Country",
       "role": "Role",
       "date": "Date",
+      "registered_date": "Registered Date",
       "edit": "Edit",
       "delete": "Delete",
       "no_registered_accounts": {
