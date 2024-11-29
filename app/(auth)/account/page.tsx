@@ -35,6 +35,12 @@ import {
 import { toast } from "react-toastify";
 import useAuthStore from "@/utils/useAuthStore";
 import { useTranslations } from "next-intl";
+import { Controller, useForm } from "react-hook-form";
+import InputErrorText from "@/components/InputErrorText";
+import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import useErrorDialog from "@/src/hooks/useErrorDialog";
+import { AxiosError } from "axios";
 
 export default function Account() {
   const t = useTranslations();
@@ -62,7 +68,7 @@ export default function Account() {
     },
     {
       field: "col4",
-      headerName: t("account.account.company(account)"),
+      headerName: t("account.account.company"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -89,26 +95,6 @@ export default function Account() {
       align: "center",
     },
     {
-      field: "col8",
-      headerName: t("account.account.edit"),
-      width: 80,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (event) => {
-        return (
-          <IconButton
-            onClick={(e) => {
-              e.stopPropagation();
-              setSelectedUser(event.row);
-              editmodalToggle();
-            }}
-          >
-            <EditOutlinedIcon />
-          </IconButton>
-        );
-      },
-    },
-    {
       field: "col9",
       headerName: t("account.account.delete"),
       width: 80,
@@ -118,7 +104,16 @@ export default function Account() {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            mutate([event.row.id]);
+            openErrorPopup(
+              t("popup.account.delete_account_pop_up.delete_onec"),
+              {
+                title: t("common.popup.confrim"),
+                confirmText: t("common.popup.yes"),
+                onErrorPopupOk: () => {
+                  mutate([event.row.id]);
+                },
+              }
+            );
           }}
         >
           <DeleteForeverOutlinedIcon />
@@ -137,6 +132,32 @@ export default function Account() {
     col7: string; // date
   }>();
 
+  const errorTitle = useRef("");
+  const errorMessage = useRef("");
+  const confirmButtonText = useRef("");
+  const handleErrorPopupOk = useRef<() => void | null>(null);
+  const [isOpenErrorPopup, setIsOpenErrorPopup] = useState(false);
+
+  const openErrorPopup = (
+    message: string,
+    options?: {
+      title?: string;
+      confirmText?: string;
+      onErrorPopupOk?: () => void;
+    }
+  ) => {
+    errorTitle.current = options?.title || t("common.popup.error");
+    errorMessage.current = message;
+    confirmButtonText.current = options?.confirmText || t("common.popup.ok");
+    handleErrorPopupOk.current = options?.onErrorPopupOk;
+    setIsOpenErrorPopup(true);
+  };
+
+  const closeErrorPopup = () => {
+    errorMessage.current = "";
+    handleErrorPopupOk.current = null;
+    setIsOpenErrorPopup(false);
+  };
   const queryClient = useQueryClient();
   const { data, error } = useQuery({
     queryKey: ["user"],
@@ -146,7 +167,7 @@ export default function Account() {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast(t("common.message.add-success"), {
+      toast(t("popup.account.delete_account_pop_up.deleted_successfully!"), {
         type: "success",
       });
     },
@@ -156,7 +177,8 @@ export default function Account() {
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [modal, modalToggle] = useModal();
-  const [editmodal, editmodalToggle] = useModal();
+
+  const { userRole } = useAuthStore();
 
   const handleSelectChange = (
     e: SelectChangeEvent,
@@ -167,156 +189,213 @@ export default function Account() {
 
   const handleDeleteUsers = () => {
     if (!selectedRowIdList || !selectedRowIdList.length) return;
-    mutate(selectedRowIdList);
+
+    openErrorPopup(t("popup.account.delete_account_pop_up.delete_many"), {
+      title: t("common.popup.confrim"),
+      confirmText: t("common.popup.yes"),
+      onErrorPopupOk: () => {
+        mutate(selectedRowIdList);
+      },
+    });
+  };
+
+  const getCompanyText = (role: string, company: string) => {
+    switch (role) {
+      case "root":
+      case "admin":
+        return "ST sunlab";
+      case "guest":
+        return "No affiliation";
+      case "customer":
+      case "client":
+      default:
+        return company;
+    }
+  };
+
+  const renderMenuFilter = () => {
+    switch (userRole) {
+      case "ROOT":
+      case "ADMIN":
+      case "CUSTOMER":
+      case "GUEST":
+      default:
+        return (
+          <Select
+            value={roleFilter}
+            onChange={(e) => handleSelectChange(e, setRoleFilter)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+            <MenuItem value={"Administrator"}>
+              {t("account.account.administrator")}
+            </MenuItem>
+            <MenuItem value={"Customer"}>
+              {t("account.account.customer")}
+            </MenuItem>
+            <MenuItem value={"Client"}>{t("account.account.client")}</MenuItem>
+            <MenuItem value={"Guest"}>{t("account.account.guest")}</MenuItem>
+          </Select>
+        );
+    }
   };
 
   return (
-    <div className="pageWrap">
-      <article className="contentWrap">
-        <div className="pageTitle">{t("account.account.account")}</div>
-        <Stack>
-          <Stack
-            direction="row"
-            gap="8px"
-            justifyContent="space-between"
-            mb="16px"
-          >
-            <Stack direction="row" gap="8px">
-              <Select
-                value={roleFilter}
-                onChange={(e) => handleSelectChange(e, setRoleFilter)}
-                sx={{ minWidth: 160 }}
+    <>
+      <div className="pageWrap">
+        <article className="contentWrap">
+          ss
+          <div className="pageTitle">{t("account.account.account")}</div>
+          <Stack>
+            <Stack
+              direction="row"
+              gap="8px"
+              justifyContent="space-between"
+              mb="16px"
+            >
+              <Stack direction="row" gap="8px">
+                {renderMenuFilter()}
+
+                <Select
+                  value={userFilter}
+                  onChange={(e) => handleSelectChange(e, setUserFilter)}
+                  sx={{ minWidth: 160 }}
+                >
+                  <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+                  <MenuItem value={"E-mail"}>
+                    {t("account.account.email")}
+                  </MenuItem>
+                  <MenuItem value={"Username"}>
+                    {t("account.account.user")}
+                  </MenuItem>
+                  <MenuItem value={"CompanyName"}>
+                    {t("account.account.company")}
+                  </MenuItem>
+                </Select>
+
+                <TextField
+                  value={searchValue}
+                  onChange={(e) => setSearchValue(e.target.value)}
+                  sx={{ width: 160 }}
+                />
+
+                <Button variant="contained" color="secondary">
+                  {t("account.account.search")}
+                </Button>
+              </Stack>
+
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={modalToggle}
               >
-                <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
-                <MenuItem value={"Admin"}>
-                  {t("account.account.admin")}
-                </MenuItem>
-                <MenuItem value={"Customer"}>
-                  {t("account.account.customer")}
-                </MenuItem>
-                <MenuItem value={"Guest"}>
-                  {t("account.account.guest")}
-                </MenuItem>
-              </Select>
-
-              <Select
-                value={userFilter}
-                onChange={(e) => handleSelectChange(e, setUserFilter)}
-                sx={{ minWidth: 160 }}
-              >
-                <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
-                <MenuItem value={"E-mail"}>
-                  {t("account.account.email")}
-                </MenuItem>
-                <MenuItem value={"Username"}>
-                  {t("account.account.user")}
-                </MenuItem>
-                <MenuItem value={"CompanyName"}>
-                  {t("account.account.company")}
-                </MenuItem>
-              </Select>
-
-              <TextField
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                sx={{ width: 160 }}
-              />
-
-              <Button variant="contained" color="secondary">
-                {t("account.account.search")}
+                {t("account.account.add")}
               </Button>
             </Stack>
+            <DataTable
+              rows={(error
+                ? []
+                : data?.data?.user_list.filter((user) => {
+                    if (roleFilter === "All") return user;
+                    return (
+                      user.role?.name.toUpperCase() === roleFilter.toUpperCase()
+                    );
+                  }) || []
+              )
+                .filter((item) => {
+                  if (!searchValue) return true;
 
-            <Button variant="contained" color="secondary" onClick={modalToggle}>
-              {t("account.account.add")}
-            </Button>
+                  switch (userFilter) {
+                    case "All":
+                      return item;
+                    case "E-mail":
+                      return item.email?.includes(searchValue);
+                    case "Username":
+                      return item.name?.includes(searchValue);
+                    case "CompanyName":
+                      console.log(
+                        "ST sunlab :::",
+                        "ST sunlab".includes(searchValue)
+                      );
+                      console.log("searchValue :::", searchValue);
+                      console.log("item.role :::", item.role);
+
+                      if (
+                        "ST sunlab".includes(searchValue) &&
+                        (item.role.name === "root" ||
+                          item.role.name === "admin")
+                      ) {
+                        return true;
+                      }
+
+                      if (
+                        "No affiliation".includes(searchValue) &&
+                        item.role.name === "guest"
+                      ) {
+                        return true;
+                      }
+
+                      return false;
+                    default:
+                      return item;
+                  }
+                })
+                .map(({ email, user_id, name, country, role, reg_date }) => {
+                  return {
+                    id: user_id,
+                    col1: email,
+                    col2: user_id,
+                    col3: name,
+                    col4: getCompanyText(role.name, "-"),
+                    col5: country
+                      ? country.charAt(0).toUpperCase() + country.slice(1)
+                      : "-",
+                    col6: role
+                      ? role.name.charAt(0).toUpperCase() + role.name.slice(1)
+                      : "-",
+                    col7: dayjs(reg_date).format("MMM/DD/YYYY HH:mm"),
+                    col8: { id: "1" },
+                    col9: { id: "1" },
+                  };
+                })}
+              columns={columns}
+              onRowSelectionModelChange={(list) => {
+                setSelectedRowIdList(list as string[]);
+              }}
+              footerButton={
+                <Button variant="text" color="info" onClick={handleDeleteUsers}>
+                  {t("account.account.delete")}
+                </Button>
+              }
+            />
           </Stack>
-          <DataTable
-            rows={(error
-              ? []
-              : data?.data?.user_list.filter((user) => {
-                  if (roleFilter === "All") return user;
-                  return (
-                    user.role.name.toUpperCase() === roleFilter.toUpperCase()
-                  );
-                }) || []
-            )
-              .filter((item) => {
-                if (!searchValue) return true;
+        </article>
 
-                switch (userFilter) {
-                  case "All":
-                    return item;
-                  case "E-mail":
-                    return item.email?.includes(searchValue);
-                  case "Username":
-                    return item.name?.includes(searchValue);
-                  case "CompanyName":
-                    return false;
-                  default:
-                    return item;
-                }
-              })
-              .map(({ email, user_id, name, country, role, reg_date }) => {
-                return {
-                  id: user_id,
-                  col1: email,
-                  col2: user_id,
-                  col3: name,
-                  col4: "-",
-                  col5: country,
-                  col6: role.name,
-                  col7: dayjs(reg_date).format("MMM/DD/YYYY HH:mm"),
-                  col8: { id: "1" },
-                  col9: { id: "1" },
-                };
-              })}
-            columns={columns}
-            onRowSelectionModelChange={(list) => {
-              setSelectedRowIdList(list as string[]);
-            }}
-            footerButton={
-              <Button variant="text" color="info" onClick={handleDeleteUsers}>
-                {t("account.account.delete")}
-              </Button>
-            }
+        {modal && (
+          <AddAcountModal
+            onClose={modalToggle}
+            openErrorPopup={openErrorPopup}
           />
-        </Stack>
-      </article>
-
-      {modal && <AddAcountModal onClose={modalToggle} />}
-      {editmodal && (
-        <EditAcountModal
-          onClose={editmodalToggle}
-          role={selectedUser.col6}
-          email={selectedUser.col1}
-          id={selectedUser.col2}
-          name={selectedUser.col3}
-          department={
-            data.data.user_list.find(
-              ({ user_id }) => user_id === selectedUser.col2
-            ).department
-          }
-          taxId={
-            data.data.user_list.find(
-              ({ user_id }) => user_id === selectedUser.col2
-            ).tax_id
-          }
-          company=""
-          password=""
-          alias={
-            data.data.user_list.find(
-              ({ user_id }) => user_id === selectedUser.col2
-            ).alias
-          }
-          country={
-            data.data.user_list.find(
-              ({ user_id }) => user_id === selectedUser.col2
-            ).country
-          }
-        />
-      )}
-    </div>
+        )}
+        {isOpenErrorPopup && (
+          <Modal
+            open
+            width={"357px"}
+            toggleOpen={closeErrorPopup}
+            cancelButtonText={t("common.popup.cancel")}
+            confirmButtonText={confirmButtonText.current}
+            title={errorTitle.current}
+            confirm={handleErrorPopupOk.current}
+          >
+            <Stack>
+              <span style={{ wordBreak: "keep-all" }}>
+                {errorMessage.current}
+              </span>
+            </Stack>
+          </Modal>
+        )}
+      </div>
+    </>
   );
 }
 
@@ -415,6 +494,7 @@ const getFieldsByRole = (userRole: string) => {
         "department",
       ];
     case "CUSTOMER":
+    case "CLIENT":
       return [
         "role",
         "id",
@@ -443,38 +523,91 @@ const getFieldsByRole = (userRole: string) => {
   }
 };
 
-function AddAcountModal({ onClose }: { onClose: () => void }) {
+function AddAcountModal({
+  onClose,
+  openErrorPopup,
+}: {
+  onClose: () => void;
+  openErrorPopup: (
+    message: string,
+    options?: { title: string; onErrorPopupOk?: () => void }
+  ) => void;
+}) {
   const t = useTranslations();
   const selectRoleData = useRef([
     { label: t("account.account.root"), value: "root" },
-    { label: t("account.account.admin"), value: "admin" },
+    { label: t("account.account.administrator"), value: "admin" },
     { label: t("account.account.customer"), value: "customer" },
+    { label: t("account.account.client"), value: "client" },
     { label: t("account.account.guest"), value: "guest" },
   ]);
   const { userRole } = useAuthStore();
 
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const {
-    role,
-    id,
-    email,
-    name,
-    password,
-    confirmPassword,
-    company,
-    taxId,
-    alias,
-    country,
-  } = state;
+  const form = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      role: "",
+      user_id: "",
+      email: "",
+      name: "",
+      password: "",
+      confirm_password: "",
+      country: "",
+      company: "",
+      department: "",
+      tax_id: "",
+      alias: "",
+      affiliation: "",
+      profile: [],
+      nda_contract_contents: "",
+      nda_contract_path: "",
+      cmd_list: [],
+    },
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: addUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast("Successfully added!", {
-        type: "success",
-      });
+
+      openErrorPopup(
+        t("popup.account.add_account_pop_up.added_successfully!"),
+        {
+          title: t("common.popup.success"),
+        }
+      );
+
       onClose();
+    },
+    onError: (e: AxiosError) => {
+      const res = (e.response.data as any)?.response;
+
+      if (res?.code === 5302) {
+        openErrorPopup(
+          t("popup.account.add_account_pop_up.this_id_already_exists")
+        );
+        return;
+      }
+      if (res?.code === 5303) {
+        openErrorPopup(
+          t("popup.account.add_account_pop_up.this_email_is_already_registered")
+        );
+        return;
+      }
     },
   });
 
@@ -485,82 +618,122 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
   //   }
   // };
 
-  const handleSubmit = () => {
-    if (password !== confirmPassword) {
-      return toast(t("account.add_account_pop_up.password_confirm_error"), {
-        type: "error",
-        position: "top-center",
-      });
-    }
-
+  const handleSubmit = (values: any) => {
     mutate({
-      role: state.role,
-      user_id: state.id,
-      email: state.email,
-      name: state.name,
-      password: state.password,
-      country: state.country,
-      department: state.department,
-      tax_id: state.taxId,
-      alias: state.alias,
-      affiliation: "",
-      profile: [],
-      nda_contract_contents: "",
-      nda_contract_path: "",
-      cmd_list: [],
+      ...values,
     });
   };
 
-  const getDisableState = () => {
-    if (!state.role) return true;
+  const getDisableStateWithFormHelper = (
+    keys: (
+      | "role"
+      | "user_id"
+      | "email"
+      | "name"
+      | "password"
+      | "confirm_password"
+      | "country"
+      | "department"
+      | "tax_id"
+      | "alias"
+      | "affiliation"
+      | "nda_contract_contents"
+      | "nda_contract_path"
+      | "company"
+    )[]
+  ) => {
+    return (
+      form.watch(keys).filter((item) => item === "" || item?.length === 0)
+        .length > 0
+    );
+  };
 
-    switch (state.role?.toUpperCase() || "") {
+  console.log("form.watch :::", form.watch());
+
+  const getDisableState = () => {
+    console.log(" :::", form.watch("role"));
+
+    if (!form.watch("role")) return true;
+
+    switch (form.watch("role")?.toUpperCase() || "") {
       case "ROOT":
-        return !role || !id || !email || !password || !confirmPassword;
+        return (
+          !form.formState.isValid ||
+          getDisableStateWithFormHelper([
+            "role",
+            "user_id",
+            "email",
+            "password",
+            "confirm_password",
+          ])
+        );
       case "ADMIN":
         return (
-          !role ||
-          !id ||
-          !email ||
-          !password ||
-          !confirmPassword ||
-          !name ||
-          !country
+          !form.formState.isValid ||
+          getDisableStateWithFormHelper([
+            "role",
+            "user_id",
+            "email",
+            "password",
+            "confirm_password",
+            "name",
+            "country",
+          ])
         );
       case "CUSTOMER":
         return (
-          !role ||
-          !id ||
-          !email ||
-          !password ||
-          !confirmPassword ||
-          !name ||
-          !country ||
-          !company ||
-          !taxId ||
-          !alias
+          !form.formState.isValid ||
+          getDisableStateWithFormHelper([
+            "role",
+            "user_id",
+            "email",
+            "password",
+            "confirm_password",
+            "name",
+            "company",
+            "tax_id",
+            "alias",
+            "country",
+          ])
+        );
+      case "CLIENT":
+        return (
+          !form.formState.isValid ||
+          getDisableStateWithFormHelper([
+            "role",
+            "user_id",
+            "email",
+            "password",
+            "confirm_password",
+            "name",
+            "company",
+            "tax_id",
+            "alias",
+            "country",
+          ])
         );
       case "GUEST":
         return (
-          !role ||
-          !id ||
-          !email ||
-          !password ||
-          !confirmPassword ||
-          !name ||
-          !country
+          !form.formState.isValid ||
+          getDisableStateWithFormHelper([
+            "role",
+            "user_id",
+            "email",
+            "name",
+            "password",
+            "confirm_password",
+            "country",
+          ])
         );
     }
   };
-
-  console.log("state >>>", state);
 
   return (
     <Modal
       open
       toggleOpen={onClose}
       title={t("account.account.add_account")}
-      confirm={handleSubmit}
+      confirm={form.handleSubmit(handleSubmit)}
       confirmButtonText="Add"
       width="400px"
       manualToggleOpenWhenConfirm
@@ -576,29 +749,33 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
           </InputBox.Head>
           <InputBox.Body>
             <FormControl sx={{ width: "100%" }} size="small">
-              <Select
-                displayEmpty
-                renderValue={(v) =>
-                  v?.length ? (
-                    selectRoleData.current.find((item) => item.value === v)
-                      .label
-                  ) : (
-                    <span className="text-grey-5">
-                      {t("account.add_account_pop_up.select")}
-                    </span>
-                  )
-                }
-                value={state.role}
-                onChange={(e) =>
-                  dispatch({ type: "SET_ROLE", value: e.target.value })
-                }
-              >
-                {selectRoleData.current.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
+              <Controller
+                name="role"
+                control={form.control}
+                render={({ field }) => (
+                  <Select
+                    displayEmpty
+                    renderValue={(v) =>
+                      v?.length ? (
+                        selectRoleData.current.find((item) => item.value === v)
+                          .label
+                      ) : (
+                        <span className="text-grey-5">
+                          {t("account.add_account_pop_up.select")}
+                        </span>
+                      )
+                    }
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    {selectRoleData.current.map((item) => (
+                      <MenuItem key={item.value} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )}
+              />
             </FormControl>
           </InputBox.Body>
         </InputBox>
@@ -611,12 +788,26 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.id}
-              onChange={(e) =>
-                dispatch({ type: "SET_ID", value: e.target.value })
-              }
+            <Controller
+              name="user_id"
+              control={form.control}
+              render={({ field }) => (
+                <TextField
+                  fullWidth
+                  {...field}
+                  onChange={(e) => {
+                    const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
+                    const value = e.target.value;
+
+                    // 입력값 중 허용되지 않는 문자 제거
+                    if (!regex.test(value)) {
+                      e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
+                    }
+
+                    field.onChange(e.target.value);
+                  }}
+                />
+              )}
             />
           </InputBox.Body>
         </InputBox>
@@ -629,16 +820,45 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.email}
-              onChange={(e) =>
-                dispatch({ type: "SET_EMAIL", value: e.target.value })
-              }
+            <Controller
+              name="email"
+              control={form.control}
+              rules={{
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // 이메일 형식 정규식
+                  message: t("error.invalid_email_format"), // 에러 메시지
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <TextField
+                  fullWidth
+                  {...field}
+                  value={field.value}
+                  onChange={(e) => {
+                    const regex =
+                      /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
+                    const value = e.target.value;
+
+                    // 입력값 중 한글 및 자모 제거
+                    if (!regex.test(value)) {
+                      e.target.value = value.replace(
+                        /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
+                        ""
+                      ); // 한글과 자모 범위 제거
+                    }
+
+                    field.onChange(e.target.value);
+                  }}
+                  error={!!error}
+                />
+              )}
             />
+            {form.formState.errors.email?.type === "pattern" && (
+              <InputErrorText text={form.formState.errors.email?.message} />
+            )}
           </InputBox.Body>
         </InputBox>
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "name"
         ) && (
           <InputBox>
@@ -651,10 +871,18 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             <InputBox.Body>
               <TextField
                 fullWidth
-                value={state.name}
-                onChange={(e) =>
-                  dispatch({ type: "SET_NAME", value: e.target.value })
-                }
+                value={form.watch("name")}
+                onChange={(e) => {
+                  const regex = /^[a-zA-Z]*$/; // 영어 대소문자와 숫자만 허용
+                  const value = e.target.value;
+
+                  // 입력값 중 허용되지 않는 문자 제거
+                  if (!regex.test(value)) {
+                    e.target.value = value.replace(/[^a-zA-Z]/g, "");
+                  }
+
+                  form.setValue("name", e.target.value);
+                }}
               />
             </InputBox.Body>
           </InputBox>
@@ -668,12 +896,66 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.password}
-              onChange={(e) =>
-                dispatch({ type: "SET_PASSWORD", value: e.target.value })
-              }
+            <Controller
+              name="password"
+              control={form.control}
+              rules={{
+                validate: {
+                  minLength: (value) =>
+                    value.length >= 8 || t("error.At_least_8_characters"),
+                  upperLowerCase: (value) =>
+                    /(?=.*[a-z])(?=.*[A-Z])/.test(value) ||
+                    t("error.At_least_1_upper/lowercase"),
+                  containsNumber: (value) =>
+                    /(?=.*\d)/.test(value) || t("error.At_least_1_number"),
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <TextField
+                    fullWidth
+                    type={showPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showPassword ? (
+                            <VisibilityOutlinedIcon
+                              sx={{ color: "var(--grey5)" }}
+                            />
+                          ) : (
+                            <VisibilityOffOutlinedIcon
+                              sx={{ color: "var(--grey5)" }}
+                            />
+                          )}
+                        </IconButton>
+                      ),
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      const regex =
+                        /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
+                      const value = e.target.value;
+
+                      // 입력값 중 한글 및 자모 제거
+                      if (!regex.test(value)) {
+                        e.target.value = value.replace(
+                          /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
+                          ""
+                        ); // 한글과 자모 범위 제거
+                      }
+
+                      field.onChange(e.target.value);
+                    }}
+                    error={!!error}
+                  />
+                  {error?.message && <InputErrorText text={error.message} />}
+                </>
+              )}
             />
           </InputBox.Body>
         </InputBox>
@@ -686,20 +968,66 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.confirmPassword}
-              onChange={(e) =>
-                dispatch({
-                  type: "SET_CONFIRM_PASSWORD",
-                  value: e.target.value,
-                })
-              }
+            <Controller
+              name="confirm_password"
+              control={form.control}
+              rules={{
+                validate: {
+                  same: (value, { password }) =>
+                    value === password || t("error.Passwords_do_not_match"),
+                },
+              }}
+              render={({ field, fieldState: { error } }) => (
+                <>
+                  <TextField
+                    fullWidth
+                    type={showConfirmPassword ? "text" : "password"}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowConfirmPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOutlinedIcon
+                              sx={{ color: "var(--grey5)" }}
+                            />
+                          ) : (
+                            <VisibilityOffOutlinedIcon
+                              sx={{ color: "var(--grey5)" }}
+                            />
+                          )}
+                        </IconButton>
+                      ),
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      const regex =
+                        /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
+                      const value = e.target.value;
+
+                      // 입력값 중 한글 및 자모 제거
+                      if (!regex.test(value)) {
+                        e.target.value = value.replace(
+                          /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
+                          ""
+                        ); // 한글과 자모 범위 제거
+                      }
+
+                      field.onChange(e.target.value);
+                    }}
+                    error={!!error}
+                  />
+                  {error?.message && <InputErrorText text={error.message} />}
+                </>
+              )}
             />
           </InputBox.Body>
         </InputBox>
 
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "country"
         ) && (
           <InputBox>
@@ -711,14 +1039,14 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             </InputBox.Head>
             <InputBox.Body>
               <SelectCountry
-                setCountryData={(value) =>
-                  dispatch({ type: "SET_COUNTRY", value: value as string })
-                }
+                setCountryData={(value) => {
+                  form.setValue("country", value as string);
+                }}
               />
             </InputBox.Body>
           </InputBox>
         )}
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "company"
         ) && (
           <InputBox>
@@ -731,15 +1059,15 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             <InputBox.Body>
               <TextField
                 fullWidth
-                value={state.company}
-                onChange={(e) =>
-                  dispatch({ type: "SET_COMPANY", value: e.target.value })
-                }
+                value={form.watch("company")}
+                onChange={(e) => {
+                  form.setValue("company", e.target.value);
+                }}
               />
             </InputBox.Body>
           </InputBox>
         )}
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "department"
         ) && (
           <InputBox>
@@ -751,15 +1079,13 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             <InputBox.Body>
               <TextField
                 fullWidth
-                value={state.department}
-                onChange={(e) =>
-                  dispatch({ type: "SET_DEPARTMENT", value: e.target.value })
-                }
+                value={form.watch("department")}
+                onChange={(e) => form.setValue("department", e.target.value)}
               />
             </InputBox.Body>
           </InputBox>
         )}
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "taxId"
         ) && (
           <InputBox>
@@ -772,15 +1098,15 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             <InputBox.Body>
               <TextField
                 fullWidth
-                value={state.taxId}
-                onChange={(e) =>
-                  dispatch({ type: "SET_TAX_ID", value: e.target.value })
-                }
+                value={form.watch("tax_id")}
+                onChange={(e) => {
+                  form.setValue("tax_id", e.target.value);
+                }}
               />
             </InputBox.Body>
           </InputBox>
         )}
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "alias"
         ) && (
           <InputBox>
@@ -793,435 +1119,14 @@ function AddAcountModal({ onClose }: { onClose: () => void }) {
             <InputBox.Body>
               <TextField
                 fullWidth
-                value={state.alias}
-                onChange={(e) =>
-                  dispatch({ type: "SET_ALIAS", value: e.target.value })
-                }
+                value={form.watch("alias")}
+                onChange={(e) => {
+                  form.setValue("alias", e.target.value);
+                }}
               />
             </InputBox.Body>
           </InputBox>
         )}
-        {/* <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>
-            NDA Contract<i>*</i>
-          </InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <Stack direction="row" gap="8px">
-            <TextField
-              fullWidth
-              value={file?.name || ""}
-              inputProps={{ readOnly: true }}
-            />
-            <Button variant="contained" color="secondary" component="label">
-              <input
-                style={{ display: "none" }}
-                type="file"
-                hidden
-                onChange={handleFileChange}
-              />
-              Upload
-            </Button>
-          </Stack>
-        </InputBox.Body>
-      </InputBox> */}
-      </Stack>
-    </Modal>
-  );
-}
-
-function EditAcountModal({
-  onClose,
-  role,
-  email,
-  id,
-  name,
-  password,
-  company,
-  taxId,
-  alias,
-  country,
-  department,
-}: {
-  role: string;
-  email: string;
-  id: string;
-  name: string;
-  password: string;
-  company: string;
-  taxId: string;
-  alias: string;
-  country: string;
-  department: string;
-  onClose: () => void;
-}) {
-  const t = useTranslations();
-  const selectRoleData = useRef([
-    { label: t("account.account.root"), value: "root" },
-    { label: t("account.account.admin"), value: "admin" },
-    { label: t("account.account.customer"), value: "customer" },
-    { label: t("account.account.guest"), value: "guest" },
-  ]);
-  const { userRole } = useAuthStore();
-  const [state, dispatch] = useReducer(reducer, {
-    ...initialState,
-    role,
-    email,
-    id,
-    name,
-    password,
-    company,
-    taxId,
-    alias,
-    country,
-    department,
-  });
-
-  const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: modifyUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast(t("common.message.edit-success"), {
-        type: "success",
-      });
-      onClose();
-    },
-  });
-  // 일시적인 미사용
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     dispatch({ type: "SET_NDA_FILE", value: e.target.files[0] });
-  //   }
-  // };
-
-  const getDisableState = () => {
-    switch (state.role?.toUpperCase() || "") {
-      case "ROOT":
-        return (
-          !state.role ||
-          !state.id ||
-          !state.email ||
-          !state.password ||
-          !state.confirmPassword
-        );
-      case "ADMIN":
-        return (
-          !state.role ||
-          !state.id ||
-          !state.email ||
-          !state.password ||
-          !state.confirmPassword ||
-          !state.name ||
-          !state.country
-        );
-      case "CUSTOMER":
-        return (
-          !state.role ||
-          !state.id ||
-          !state.email ||
-          !state.password ||
-          !state.confirmPassword ||
-          !state.name ||
-          !state.country ||
-          !state.company ||
-          !state.taxId ||
-          !state.alias
-        );
-      case "GUEST":
-        return (
-          !state.role ||
-          !state.id ||
-          !state.email ||
-          !state.password ||
-          !state.confirmPassword ||
-          !state.name ||
-          !state.country
-        );
-    }
-  };
-
-  const handleSubmit = () => {
-    if (state.password !== state.confirmPassword) {
-      return toast(t("account.add_account_pop_up.password_confirm_error"), {
-        type: "error",
-        position: "top-center",
-      });
-    }
-
-    mutate({
-      role: state.role,
-      user_id: state.id,
-      email: state.email,
-      name: state.name,
-      password: state.password,
-      country: state.country,
-      department: state.department,
-      tax_id: state.taxId,
-      alias: state.alias,
-      affiliation: "",
-      profile: [],
-      nda_contract_contents: "",
-      nda_contract_path: "",
-      cmd_list: [],
-    });
-  };
-
-  return (
-    <Modal
-      open
-      toggleOpen={onClose}
-      title={t("account.account.edit_account")}
-      confirm={handleSubmit}
-      confirmButtonText="Add"
-      width="400px"
-      manualToggleOpenWhenConfirm
-      disabled={getDisableState()}
-    >
-      <Stack>
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.role")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <FormControl sx={{ width: "100%" }} size="small">
-              <Select
-                displayEmpty
-                renderValue={(v) =>
-                  v?.length ? (
-                    selectRoleData.current.find((item) => item.value === v)
-                      .label
-                  ) : (
-                    <span className="text-grey-5">
-                      {t("account.add_account_pop_up.select")}
-                    </span>
-                  )
-                }
-                value={state.role}
-                onChange={(e) =>
-                  dispatch({ type: "SET_ROLE", value: e.target.value })
-                }
-              >
-                {selectRoleData.current.map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.id")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.id}
-              onChange={(e) =>
-                dispatch({ type: "SET_ID", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.e-mail")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.email}
-              onChange={(e) =>
-                dispatch({ type: "SET_EMAIL", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
-          "name"
-        ) && (
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>
-                {t("account.add_account_pop_up.name")}
-                <i>*</i>
-              </InputBox.Title>
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                fullWidth
-                value={state.name}
-                onChange={(e) =>
-                  dispatch({ type: "SET_NAME", value: e.target.value })
-                }
-              />
-            </InputBox.Body>
-          </InputBox>
-        )}
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.password")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.password}
-              onChange={(e) =>
-                dispatch({ type: "SET_PASSWORD", value: e.target.value })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.password_confirm")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <TextField
-              fullWidth
-              value={state.confirmPassword}
-              onChange={(e) =>
-                dispatch({
-                  type: "SET_CONFIRM_PASSWORD",
-                  value: e.target.value,
-                })
-              }
-            />
-          </InputBox.Body>
-        </InputBox>
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
-          "country"
-        ) && (
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>
-                {t("account.add_account_pop_up.country")}
-                <i>*</i>
-              </InputBox.Title>
-            </InputBox.Head>
-            <InputBox.Body>
-              <SelectCountry
-                defaultCountry={
-                  state.country ? state.country.toLowerCase() : ""
-                }
-                setCountryData={(value) =>
-                  dispatch({ type: "SET_COUNTRY", value: value as string })
-                }
-              />
-            </InputBox.Body>
-          </InputBox>
-        )}
-
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
-          "company"
-        ) && (
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>
-                {t("account.account.company")}
-                <i>*</i>
-              </InputBox.Title>
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                fullWidth
-                value={state.company}
-                onChange={(e) =>
-                  dispatch({ type: "SET_COMPANY", value: e.target.value })
-                }
-              />
-            </InputBox.Body>
-          </InputBox>
-        )}
-
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
-          "department"
-        ) && (
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>
-                {t("account.add_account_pop_up.department")}
-              </InputBox.Title>
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                fullWidth
-                value={state.department}
-                onChange={(e) =>
-                  dispatch({ type: "SET_DEPARTMENT", value: e.target.value })
-                }
-              />
-            </InputBox.Body>
-          </InputBox>
-        )}
-
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
-          "taxId"
-        ) && (
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>
-                {t("account.add_account_pop_up.tax_id")}
-                <i>*</i>
-              </InputBox.Title>
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                fullWidth
-                value={state.taxId}
-                onChange={(e) =>
-                  dispatch({ type: "SET_TAX_ID", value: e.target.value })
-                }
-              />
-            </InputBox.Body>
-          </InputBox>
-        )}
-
-        {(getFieldsByRole(state?.role?.toUpperCase()) || "").includes(
-          "alias"
-        ) && (
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>
-                {t("account.add_account_pop_up.alias")}
-                <i>*</i>
-              </InputBox.Title>
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                fullWidth
-                value={state.alias}
-                onChange={(e) =>
-                  dispatch({ type: "SET_ALIAS", value: e.target.value })
-                }
-              />
-            </InputBox.Body>
-          </InputBox>
-        )}
-
         {/* <InputBox>
         <InputBox.Head>
           <InputBox.Title>

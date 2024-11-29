@@ -11,7 +11,8 @@
       "error": "Erro",
       "success": "Sucesso",
       "confrim": "Confirmar",
-      "yes": "Sim"
+      "yes": "Sim",
+      "cancel": "Cancelar"
     },
     "message": {
       "add-success": "Adicionado com sucesso!",
@@ -270,7 +271,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -314,7 +318,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -415,7 +422,9 @@
         "": "Nenhum resultado encontrado."
       },
       "add_account": "Adicionar conta",
-      "root": "Raiz"
+      "root": "Raiz",
+      "administrator": "Administrador",
+      "client": "Cliente"
     },
     "add_account_pop_up": {
       "name": "Nome",
@@ -1641,6 +1650,10 @@
         "added_successfully!": "Adicionado com sucesso!",
         "this_id_already_exists": "Este ID já existe.",
         "this_email_is_already_registered": "Este e-mail já está registrado."
+      },
+      "delete_account_pop_up": {
+        "delete_onec": "Tem certeza de que deseja excluir esta conta?",
+        "delete_many": "Tem certeza de que deseja excluir essas contas?"
       }
     },
     "settings": {
