@@ -195,6 +195,7 @@ export default function Server() {
           onRowSelectionModelChange={(data) =>
             setSelectedRows(data as string[])
           }
+          noDataMessage="No registered servers."
           footerButton={
             <Button
               disabled={selectedRows.length === 0}
