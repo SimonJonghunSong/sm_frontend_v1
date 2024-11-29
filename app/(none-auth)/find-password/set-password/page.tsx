@@ -86,6 +86,15 @@ export default function page() {
                         error={!!error}
                         type={showPassword ? "text" : "password"}
                         {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                          e.target.value = value.replace(
+                            /[\u3131-\uD79D]/g,
+                            ""
+                          );
+                          field.onChange(e.target.value);
+                        }}
                         InputProps={{
                           endAdornment: (
                             <IconButton
@@ -145,6 +154,15 @@ export default function page() {
                         error={!!error}
                         type={showPassword ? "text" : "password"}
                         {...field}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                          e.target.value = value.replace(
+                            /[\u3131-\uD79D]/g,
+                            ""
+                          );
+                          field.onChange(e.target.value);
+                        }}
                         InputProps={{
                           endAdornment: (
                             <IconButton
