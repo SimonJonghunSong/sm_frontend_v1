@@ -252,7 +252,7 @@ export default function Account() {
             <Stack
               direction="row"
               gap="8px"
-              justifyContent="flex-start"
+              justifyContent="space-between"
               mb="16px"
             >
               <Stack direction="row" gap="8px">
