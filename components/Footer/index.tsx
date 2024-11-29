@@ -49,18 +49,17 @@ export default function Footer() {
             <h2>Homepage</h2>
             <ul className={styles.footerLinks}>
               {[
-                { label: "HQ", herf: "https://stsunlab.com/" },
+                { label: "ST SUNLAB Ltd.", herf: "https://stsunlab.com/" },
+                { label: "Suntech US", herf: "https://suntechus.com/" },
                 {
-                  label: "Suntech Brazil",
+                  label: "Suntech do Brasil",
                   herf: "https://www.suntechdobrasil.com.br/",
                 },
                 {
-                  label: "Suntech Mexico",
+                  label: "STGPS Mexico",
                   herf: "https://www.suntechlatam.com/",
                 },
-                { label: "Suntech U.S.A", herf: "https://suntechus.com/" },
-                { label: "Suntech STI", herf: "#" },
-                { label: "Suntech FIN", herf: "#" },
+                { label: "ST SUNLAB EU", herf: "#" },
               ].map(({ label, herf }) => {
                 return (
                   <li key={label}>

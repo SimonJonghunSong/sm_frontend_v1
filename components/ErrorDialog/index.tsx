@@ -15,6 +15,7 @@ const ErrorDialog = ({
   return (
     <Modal
       open
+      closeButton
       width={"357px"}
       toggleOpen={onClose}
       cancelButtonText="Ok"
