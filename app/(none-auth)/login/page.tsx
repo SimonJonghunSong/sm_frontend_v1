@@ -133,6 +133,7 @@ export default function page() {
         <br />
         {t("login.don’t_have_an_account_yet?")}
         <Link
+          target="_blank"
           href="https://stsunlab.com/board/board_form?bd_id=CONTACT"
           className="underlineTextButton"
         >
