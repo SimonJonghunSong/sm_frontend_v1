@@ -72,6 +72,216 @@ export default function MyInfoPage() {
     });
   };
 
+  const renderCompany = () => {
+    if (userRole.toUpperCase() === "ROOT") return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.company")}</div>
+        <div>James Franco</div>
+      </Stack>
+    );
+  };
+
+  const renderId = () => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.id")}</div>
+        <div>{data.user_id}</div>
+      </Stack>
+    );
+  };
+
+  const renderEmail = () => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.e-mail")}</div>
+        <div>{data.email}</div>
+      </Stack>
+    );
+  };
+
+  const renderPassword = () => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.password")}</div>
+        <div>
+          <TextField
+            placeholder={t("settings.my_info.change_password")}
+            id="input2"
+            variant="outlined"
+            size="small"
+            sx={{ width: 320 }}
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={({ target }) => setPassword(target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? (
+                    <VisibilityOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  ) : (
+                    <VisibilityOffOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  )}
+                </IconButton>
+              ),
+            }}
+          />
+        </div>
+      </Stack>
+    );
+  };
+
+  const renderConfirmPassword = () => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">
+          {t("settings.my_info.confirm_password")}
+        </div>
+        <div>
+          <TextField
+            placeholder={t("settings.my_info.change_password")}
+            id="input1"
+            variant="outlined"
+            size="small"
+            sx={{ width: 320 }}
+            type={showPassword ? "text" : "password"}
+            value={confirmedPassword}
+            onChange={({ target }) => setConfirmedPassword(target.value)}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? (
+                    <VisibilityOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  ) : (
+                    <VisibilityOffOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  )}
+                </IconButton>
+              ),
+            }}
+          />
+        </div>
+      </Stack>
+    );
+  };
+
+  const renderCountry = () => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.country")}</div>
+        <div>{data.country}</div>
+      </Stack>
+    );
+  };
+
+  const renderRole = () => {
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.role")}</div>
+        <div>{data.role.name.toUpperCase()}</div>
+      </Stack>
+    );
+  };
+
+  const renderAffiliation = () => {
+    if (userRole.toUpperCase() === "ROOT") return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.affiliation")}</div>
+        <div>
+          {/* TODO 기존 Select로 이루어짐
+       <Select
+        value={affilication}
+        onChange={handleChange}
+        sx={{ width: 320 }}
+      >
+        <MenuItem value={"su"}>SU</MenuItem> 
+      </Select> */}
+          <div>{data.affiliation}</div>
+        </div>
+      </Stack>
+    );
+  };
+
+  const renderDepartment = () => {
+    if (userRole.toUpperCase() === "ROOT") return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.department")}</div>
+        <div>
+          <TextField
+            sx={{ width: 320 }}
+            defaultValue={data.department}
+            onChange={(e) => setDepartment(e.target.value)}
+          />
+        </div>
+      </Stack>
+    );
+  };
+
   if (isPending) return <>...</>;
 
   if (error) {
@@ -93,190 +303,17 @@ export default function MyInfoPage() {
         <article className="contentWrap">
           <div className="pageTitle">{t("settings.my_info.my_info")}</div>
           <Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">{t("settings.my_info.company")}</div>
-              <div>James Franco</div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">{t("settings.my_info.id")}</div>
-              <div>{data.user_id}</div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">{t("settings.my_info.e-mail")}</div>
-              <div>{data.email}</div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">{t("settings.my_info.password")}</div>
-              <div>
-                <TextField
-                  placeholder={t("settings.my_info.change_password")}
-                  id="input2"
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 320 }}
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={({ target }) => setPassword(target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOutlinedIcon
-                            sx={{ color: "var(--grey5)" }}
-                          />
-                        ) : (
-                          <VisibilityOffOutlinedIcon
-                            sx={{ color: "var(--grey5)" }}
-                          />
-                        )}
-                      </IconButton>
-                    ),
-                  }}
-                />
-              </div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">
-                {t("settings.my_info.confirm_password")}
-              </div>
-              <div>
-                <TextField
-                  placeholder={t("settings.my_info.change_password")}
-                  id="input1"
-                  variant="outlined"
-                  size="small"
-                  sx={{ width: 320 }}
-                  type={showPassword ? "text" : "password"}
-                  value={confirmedPassword}
-                  onChange={({ target }) => setConfirmedPassword(target.value)}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? (
-                          <VisibilityOutlinedIcon
-                            sx={{ color: "var(--grey5)" }}
-                          />
-                        ) : (
-                          <VisibilityOffOutlinedIcon
-                            sx={{ color: "var(--grey5)" }}
-                          />
-                        )}
-                      </IconButton>
-                    ),
-                  }}
-                />
-              </div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">{t("settings.my_info.country")}</div>
-              <div>{data.country}</div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">{t("settings.my_info.role")}</div>
-              <div>{data.role.name.toUpperCase()}</div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">
-                {t("settings.my_info.affiliation")}
-              </div>
-              <div>
-                {/* TODO 기존 Select로 이루어짐
-               <Select
-                value={affilication}
-                onChange={handleChange}
-                sx={{ width: 320 }}
-              >
-                <MenuItem value={"su"}>SU</MenuItem> 
-              </Select> */}
-                <div>{data.affiliation}</div>
-              </div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">
-                {t("settings.my_info.department")}
-              </div>
-              <div>
-                <TextField
-                  sx={{ width: 320 }}
-                  defaultValue={data.department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                />
-              </div>
-            </Stack>
+            {renderCompany()}
+            {renderId()}
+            {renderEmail()}
+            {renderPassword()}
+            {renderConfirmPassword()}
+            {renderCountry()}
+            {renderRole()}
+            {renderAffiliation()}
+            {renderDepartment()}
           </Stack>
-          <Stack
-            direction="row"
-            gap="8px"
-            justifyContent="flex-end"
-            marginTop="40px"
-          >
-            <Button variant="outlined" color="secondary">
-              {t("settings.my_info.cancel")}
-            </Button>
+          <Stack direction="row" justifyContent="flex-end" marginTop="40px">
             <Button
               variant="contained"
               color="secondary"
