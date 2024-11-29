@@ -243,14 +243,16 @@ export default function Account() {
   return (
     <>
       <div className="pageWrap">
-        <article className="contentWrap">
-          ss
+        <article
+          className="contentWrap"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
           <div className="pageTitle">{t("account.account.account")}</div>
-          <Stack>
+          <Stack style={{ flex: 1 }}>
             <Stack
               direction="row"
               gap="8px"
-              justifyContent="space-between"
+              justifyContent="flex-start"
               mb="16px"
             >
               <Stack direction="row" gap="8px">
