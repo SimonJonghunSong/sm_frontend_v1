@@ -9,12 +9,9 @@ import { Button, IconButton, Stack, TextField } from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import InputBox from "../../../../components/inputbox/InputBox";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import { Controller, useForm } from "react-hook-form";
 import InputErrorText from "@/components/InputErrorText";
 import styled from "@emotion/styled";
-import { watch } from "fs";
 
 export default function page() {
   const router = useRouter();

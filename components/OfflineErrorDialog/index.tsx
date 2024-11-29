@@ -15,6 +15,7 @@ export default function OfflineErrorDialog({
       open
       cancelButtonText="Ok"
       title={t("common.popup.error")}
+      closeButton
     >
       <Stack>
         <span style={{ wordBreak: "keep-all" }}>

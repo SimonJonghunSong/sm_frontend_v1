@@ -21,6 +21,7 @@ const ConfirmDialog = ({
       confirm={() => {
         onYes();
       }}
+      closeButton
       toggleOpen={() => {
         onClose();
       }}

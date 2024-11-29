@@ -30,6 +30,7 @@ const SuccessDialog = ({
       width={"357px"}
       toggleOpen={onClose}
       cancelButtonText="Ok"
+      closeButton
       title={t("popup.success")}
     >
       <Stack>

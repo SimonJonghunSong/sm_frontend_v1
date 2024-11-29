@@ -14,16 +14,21 @@ import { sideMenuItems } from "../sideMenuItems";
 import useLangStore, { Lang } from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
 import useAuthStore from "@/utils/useAuthStore";
+import useSuccessDialog from "@/src/hooks/useSuccessDialog";
 
 export default function LanguagePage() {
   const t = useTranslations("settings");
   const { setLang, lang } = useLangStore();
   const { userRole } = useAuthStore();
   const [localLang, setLocalLang] = useState<Lang>(lang);
+  const { toggle, renderSuccessModal } = useSuccessDialog({
+    description: t("popup.my_info.saved_successfully!"),
+  });
   const isRoot = userRole.toUpperCase() === "ROOT";
 
   const handleSave = (lang: Lang) => {
     setLang(lang);
+    toggle();
   };
 
   return (
@@ -57,17 +62,17 @@ export default function LanguagePage() {
               <FormControlLabel
                 value="en"
                 control={<Radio />}
-                label={t("languages.english")}
+                label={"English"}
               />
               <FormControlLabel
                 value="es"
                 control={<Radio />}
-                label={t("languages.spanish")}
+                label={"Español"}
               />
               <FormControlLabel
                 value="pt"
                 control={<Radio />}
-                label={t("languages.portuguese")}
+                label={"Português"}
               />
             </RadioGroup>
           </FormControl>
@@ -87,6 +92,7 @@ export default function LanguagePage() {
           </Button>
         </Stack>
       </article>
+      {renderSuccessModal()}
     </div>
   );
 }

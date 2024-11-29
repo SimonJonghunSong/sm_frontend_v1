@@ -86,9 +86,9 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
           .length === 0
       ) {
         return (
-          <Box textAlign={"center"} paddingTop={10}>
+          <Stack textAlign={"center"} height={"100%"} justifyContent={"center"}>
             {t("privacy_policy.no_new_notifications")}
-          </Box>
+          </Stack>
         );
       }
 
@@ -131,9 +131,9 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
     } else {
       if (notificationQuery.data.count === 0) {
         return (
-          <Box textAlign={"center"} paddingTop={10}>
+          <Stack justifyContent="center" height={"100%"} textAlign={"center"}>
             {t("privacy_policy.no_notifications_yet")}
-          </Box>
+          </Stack>
         );
       }
 

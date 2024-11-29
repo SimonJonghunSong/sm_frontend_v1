@@ -1,12 +1,18 @@
 import styled from "@emotion/styled";
-import React from "react";
+import React, { CSSProperties } from "react";
 
 interface InputErrorTextProps {
   text?: string;
+  className?: string;
+  style?: CSSProperties;
 }
 
-const InputErrorText = ({ text }: InputErrorTextProps) => {
-  return <Text>{text}</Text>;
+const InputErrorText = ({ text, className, style }: InputErrorTextProps) => {
+  return (
+    <Text className={className} style={style}>
+      {text}
+    </Text>
+  );
 };
 
 export default InputErrorText;
