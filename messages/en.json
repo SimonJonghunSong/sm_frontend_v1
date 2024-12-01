@@ -88,7 +88,7 @@
   "gnb": {
     "pw_set": {
       "root": "Root",
-      "admin": "Admin",
+      "admin": "Administrator",
       "customer": "Customer",
       "guest": "Guest",
       "server": "Server",

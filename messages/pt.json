@@ -87,7 +87,7 @@
   "gnb": {
     "pw_set": {
       "root": "Root",
-      "admin": "Admin",
+      "admin": "Administrador",
       "customer": "Cliente",
       "guest": "Convidado",
       "server": "Servidor",
@@ -271,10 +271,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -318,10 +315,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",

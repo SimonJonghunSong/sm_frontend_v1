@@ -224,7 +224,7 @@ export default function Account() {
             sx={{ minWidth: 160 }}
           >
             <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
-            <MenuItem value={"Administrator"}>
+            <MenuItem value={"Admin"}>
               {t("account.account.administrator")}
             </MenuItem>
             <MenuItem value={"Customer"}>
@@ -341,12 +341,14 @@ export default function Account() {
                     col1: email,
                     col2: user_id,
                     col3: name,
-                    col4: getCompanyText(role.name, "-"),
+                    col4: getCompanyText(role?.name, "-"),
                     col5: country
                       ? country.charAt(0).toUpperCase() + country.slice(1)
                       : "-",
                     col6: role
-                      ? role.name.charAt(0).toUpperCase() + role.name.slice(1)
+                      ? role.name.charAt(0).toUpperCase() +
+                        role.name.slice(1) +
+                        (role.name === "admin" ? "istrator" : "")
                       : "-",
                     col7: dayjs(reg_date).format("MMM/DD/YYYY HH:mm"),
                     col8: { id: "1" },
