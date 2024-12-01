@@ -437,7 +437,7 @@
       "id": "ID",
       "e-mail": "Correo electrónico",
       "password": "Contraseña",
-      "password_confirm": "Confirmar Contraseña",
+      "password_confirm": "confirmar Contraseña",
       "country": "País",
       "select,_나라명": "Seleccionar, nombre del país",
       "affiliation": "Afiliación",
@@ -1654,7 +1654,8 @@
       },
       "delete_account_pop_up": {
         "delete_onec": "¿Estás seguro de que deseas eliminar esta cuenta?",
-        "delete_many": "¿Estás seguro de que deseas eliminar estas cuentas?"
+        "delete_many": "¿Estás seguro de que deseas eliminar estas cuentas?",
+        "delete": "¿Estás seguro de que deseas eliminar?"
       }
     },
     "settings": {

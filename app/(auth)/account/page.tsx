@@ -104,16 +104,13 @@ export default function Account() {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            openErrorPopup(
-              t("popup.account.delete_account_pop_up.delete_onec"),
-              {
-                title: t("common.popup.confrim"),
-                confirmText: t("common.popup.yes"),
-                onErrorPopupOk: () => {
-                  mutate([event.row.id]);
-                },
-              }
-            );
+            openErrorPopup(t("popup.account.delete_account_pop_up.delete"), {
+              title: t("common.popup.confrim"),
+              confirmText: t("common.popup.yes"),
+              onErrorPopupOk: () => {
+                mutate([event.row.id]);
+              },
+            });
           }}
         >
           <DeleteForeverOutlinedIcon />
@@ -190,7 +187,7 @@ export default function Account() {
   const handleDeleteUsers = () => {
     if (!selectedRowIdList || !selectedRowIdList.length) return;
 
-    openErrorPopup(t("popup.account.delete_account_pop_up.delete_many"), {
+    openErrorPopup(t("popup.account.delete_account_pop_up.delete"), {
       title: t("common.popup.confrim"),
       confirmText: t("common.popup.yes"),
       onErrorPopupOk: () => {
@@ -203,7 +200,7 @@ export default function Account() {
     switch (role) {
       case "root":
       case "admin":
-        return "ST sunlab";
+        return "ST Sunlab";
       case "guest":
         return "No affiliation";
       case "customer":
@@ -264,6 +261,7 @@ export default function Account() {
                   sx={{ minWidth: 160 }}
                 >
                   <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+                  <MenuItem value={"ID"}>{t("account.account.id")}</MenuItem>
                   <MenuItem value={"E-mail"}>
                     {t("account.account.email")}
                   </MenuItem>
@@ -310,20 +308,15 @@ export default function Account() {
                   switch (userFilter) {
                     case "All":
                       return item;
+                    case "ID":
+                      return item.user_id?.includes(searchValue);
                     case "E-mail":
                       return item.email?.includes(searchValue);
                     case "Username":
                       return item.name?.includes(searchValue);
                     case "CompanyName":
-                      console.log(
-                        "ST sunlab :::",
-                        "ST sunlab".includes(searchValue)
-                      );
-                      console.log("searchValue :::", searchValue);
-                      console.log("item.role :::", item.role);
-
                       if (
-                        "ST sunlab".includes(searchValue) &&
+                        "ST Sunlab".includes(searchValue) &&
                         (item.role.name === "root" ||
                           item.role.name === "admin")
                       ) {
