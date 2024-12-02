@@ -71,9 +71,6 @@ function Before({ setStep, requestPort }) {
       <div className={styles.title}>
         {t("device_detecting.please_plug_devices_into_the_usb_ports")}
       </div>
-      <div className={styles.title}>
-        현재 연결된 USB ports 개수 {portList.length}개
-      </div>
       <Stack justifyContent="center" alignItems="center" gap="16px">
         <Button
           variant="contained"
