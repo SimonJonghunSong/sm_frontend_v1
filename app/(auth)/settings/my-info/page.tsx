@@ -73,6 +73,7 @@ export default function MyInfoPage() {
       pw: undefined,
       confirmedPw: undefined,
       affiliation: undefined,
+      department: undefined,
       taxId: undefined,
       alias: undefined,
     },
@@ -105,8 +106,15 @@ export default function MyInfoPage() {
     if (isFetched) {
       if (data.affiliation) {
         form.setValue("affiliation", data.affiliation);
+      }
+      if (data.tax_id) {
         form.setValue("taxId", data.tax_id);
+      }
+      if (data.alias) {
         form.setValue("alias", data.alias);
+      }
+      if (data.department) {
+        form.setValue("department", data.department);
       }
     }
   }, [isFetched]);
@@ -400,11 +408,6 @@ export default function MyInfoPage() {
             control={form.control}
             name="affiliation"
             render={({ field }) => {
-              console.log(
-                field.value || data.affiliation,
-                field.value,
-                data.affiliation
-              );
               return (
                 <Select
                   displayEmpty
@@ -449,15 +452,24 @@ export default function MyInfoPage() {
       >
         <div className="list-title">{t("settings.my_info.department")}</div>
         <div>
-          <TextField
-            sx={{ width: 320 }}
-            defaultValue={data.department}
-            onChange={({ target }) => {
-              const value = target.value;
+          <Controller
+            control={form.control}
+            name="department"
+            render={({ field }) => {
+              return (
+                <TextField
+                  sx={{ width: 320 }}
+                  {...field}
+                  value={field.value || data.department}
+                  onChange={({ target }) => {
+                    const value = target.value;
 
-              // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
-              target.value = value.replace(/[\u3131-\uD79D]/g, "");
-              setDepartment(value);
+                    // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                    target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                    field.onChange(value);
+                  }}
+                />
+              );
             }}
           />
         </div>
