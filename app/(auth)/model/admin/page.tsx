@@ -13,6 +13,7 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  TextField,
 } from "@mui/material";
 import DataTable from "@/components/dataTable";
 import useModal from "@/utils/useModal";
@@ -235,6 +236,7 @@ export default function Model() {
     getAdminColumns(handleClickEdit, handleClickDelete, handleClickHide)
   );
   const [filter, setFilter] = useState<string>("Newest");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const [modal, modalToggle] = useModal();
   const [editModal, editModalToggle] = useModal();
@@ -340,6 +342,22 @@ export default function Model() {
                   </MenuItem>
                 ))}
               </Select>
+              <TextField
+                name="searchValue"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                placeholder={getLocalizedString(
+                  lang,
+                  "Model Name",
+                  "Nome do Modelo",
+                  "Nombre del Modelo"
+                )}
+                sx={{ width: 160 }}
+              />
+
+              <Button variant="contained" color="secondary">
+                {t("account.account.search")}
+              </Button>
             </Stack>
 
             <Stack direction="row" gap="24px" alignItems="center">
@@ -364,6 +382,11 @@ export default function Model() {
                 }
 
                 return true;
+              })
+              .filter((item) => {
+                if (!searchValue) return true;
+
+                return item.col2.includes(searchValue);
               })
               .toSorted((a, b) => {
                 switch (filter) {

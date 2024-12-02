@@ -482,7 +482,7 @@ function reducer(state: FormState, action: FormAction): FormState {
 const getFieldsByRole = (userRole: string) => {
   switch (userRole) {
     case "ROOT":
-      return ["role", "id", "email", "password", "passwordConfirm"];
+      return ["role", "id", "email", "name", "password", "passwordConfirm"];
     case "ADMIN":
       return [
         "role",
@@ -665,6 +665,7 @@ function AddAcountModal({
             "role",
             "user_id",
             "email",
+            "name",
             "password",
             "confirm_password",
           ])
