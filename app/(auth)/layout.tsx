@@ -9,7 +9,6 @@ import Navbar from "../../components/navbar/Navbar";
 import FullLoading from "@/components/FullLoading";
 import AuthCheck from "./AuthCheck";
 import GlobalLoading from "@/components/GlobalLoading";
-import ServiceWorkerRegister from "@/src/worker/ServiceWorkerRegister";
 import Footer from "@/components/Footer";
 
 const AuthLayout = ({ children }) => {

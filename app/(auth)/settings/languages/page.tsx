@@ -24,7 +24,10 @@ export default function LanguagePage() {
   const { toggle, renderSuccessModal } = useSuccessDialog({
     description: t("popup.my_info.saved_successfully!"),
   });
-  const isRoot = userRole.toUpperCase() === "ROOT";
+
+  const isRoot = userRole?.toUpperCase() === "ROOT";
+  const isCustomer = userRole?.toUpperCase() === "CUSTOMER";
+  const isGuest = userRole?.toUpperCase() === "GUEST";
 
   const handleSave = (lang: Lang) => {
     setLang(lang);
@@ -39,6 +42,8 @@ export default function LanguagePage() {
             ? sideMenuItems(lang).filter(
                 ({ key }) => key === "myInfo" || key === "logout"
               )
+            : isCustomer || isGuest
+            ? sideMenuItems(lang).filter(({ key }) => key !== "privacyPolicy")
             : sideMenuItems(lang)
         }
       />

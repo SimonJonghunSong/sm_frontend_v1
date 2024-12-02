@@ -13,7 +13,10 @@ export default function PrivacyPolicyPage() {
   const { lang } = useLangStore();
 
   const { userRole } = useAuthStore();
-  const isRoot = userRole.toUpperCase() === "ROOT";
+
+  const isRoot = userRole?.toUpperCase() === "ROOT";
+  const isCustomer = userRole?.toUpperCase() === "CUSTOMER";
+  const isGuest = userRole?.toUpperCase() === "GUEST";
 
   return (
     <div className="pageWrap">
@@ -23,6 +26,8 @@ export default function PrivacyPolicyPage() {
             ? sideMenuItems(lang).filter(
                 ({ key }) => key === "myInfo" || key === "logout"
               )
+            : isCustomer || isGuest
+            ? sideMenuItems(lang).filter(({ key }) => key !== "privacyPolicy")
             : sideMenuItems(lang)
         }
       />

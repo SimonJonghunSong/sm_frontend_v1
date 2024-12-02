@@ -48,7 +48,7 @@ a:focus {
       display: flex;
       overflow: hidden;
       border-radius: 8px;
-      min-height: calc(100vh - 104px - 48px);
+      /* min-height: calc(100vh - 104px - 48px);  // min-height 풀어놓음  */
       background-color: var(--white);
 
       .contentWrap {
