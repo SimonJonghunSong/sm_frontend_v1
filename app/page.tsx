@@ -22,6 +22,9 @@ export default function Main() {
         case "CUSTOMER":
           router.replace("/model");
           return;
+        case "CLIENT":
+          router.replace("/model");
+          return;
         case "GUEST":
           router.replace("/model");
           return;

@@ -138,6 +138,7 @@ export default function MyInfoPage() {
       userRole?.toUpperCase() === "ROOT" ||
       userRole?.toUpperCase() === "ADMIN" ||
       userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "CLIENT" ||
       userRole?.toUpperCase() === "CUSTOMER"
     )
       return null;
@@ -378,6 +379,7 @@ export default function MyInfoPage() {
     if (
       userRole?.toUpperCase() === "ROOT" ||
       userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "CLIENT" ||
       userRole?.toUpperCase() === "CUSTOMER"
     )
       return null;
@@ -526,7 +528,7 @@ export default function MyInfoPage() {
         <div>
           <Controller
             control={form.control}
-            name="taxId"
+            name="alias"
             rules={{ required: true }}
             render={({ field, fieldState: { error } }) => {
               return (
