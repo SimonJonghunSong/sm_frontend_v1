@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
-import logo from "/public/icons/Logo.svg";
+import logo from "/public/icons/footer_logo.png";
 import styles from "./styles.module.scss";
 import Link from "next/link";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
@@ -26,7 +26,12 @@ export default function Footer() {
     <>
       <footer className={styles.mainFooter}>
         <div className={styles.logoArea}>
-          <Image width={200} height={40} src={logo} alt="synctrack" />
+          <Image
+            width={173}
+            height={57}
+            src={"/icons/footer_logo.png"}
+            alt="synctrack"
+          />
           <p>Copyright © 2024. ST SUNLAB Ltd. All rights reserved.</p>
         </div>
         <ul className={styles.navContainer}>
