@@ -17,12 +17,12 @@ import useAuthStore from "@/utils/useAuthStore";
 import useSuccessDialog from "@/src/hooks/useSuccessDialog";
 
 export default function LanguagePage() {
-  const t = useTranslations("settings");
+  const t = useTranslations();
   const { setLang, lang } = useLangStore();
   const { userRole } = useAuthStore();
   const [localLang, setLocalLang] = useState<Lang>(lang);
   const { toggle, renderSuccessModal } = useSuccessDialog({
-    description: t("popup.my_info.saved_successfully!"),
+    description: t("popup.settings.my_info.saved_successfully!"),
   });
 
   const isRoot = userRole?.toUpperCase() === "ROOT";
@@ -48,7 +48,7 @@ export default function LanguagePage() {
         }
       />
       <article className="contentWrap">
-        <div className="pageTitle">{t("languages.languages")}</div>
+        <div className="pageTitle">{t("settings.languages.languages")}</div>
         <Stack height="300px">
           <FormControl>
             <RadioGroup
@@ -93,7 +93,7 @@ export default function LanguagePage() {
             color="secondary"
             onClick={() => handleSave(localLang)}
           >
-            Save
+            {t("settings.my_info.save")}
           </Button>
         </Stack>
       </article>
