@@ -47,7 +47,14 @@ export default function DataTable({
   getRowClassName,
 }: DataTableProps) {
   return (
-    <Box sx={{ display: "grid", gridTemplateColumns: "1fr", flex: 1 }}>
+    <Box
+      sx={{
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        flex: 1,
+        minHeight: "697.5px",
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns}
@@ -57,6 +64,7 @@ export default function DataTable({
         disableRowSelectionOnClick={!checkbox || disableRowClick}
         getRowClassName={getRowClassName}
         rowHeight={rowHeight}
+        autoHeight
         disableColumnSorting
         hideFooterSelectedRowCount
         hideFooterPagination={disablePagination}
