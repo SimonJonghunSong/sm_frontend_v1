@@ -1622,6 +1622,7 @@
     },
     "model": {
       "model": {
+        "models_loaded_by_the_user_cannot_be_hidden": "Models loaded by the user cannot be hidden.",
         "are_you_sure_you_want_to_delete_this_model?": "Are you sure you want to delete this model?",
         "are_you_sure_you_want_to_delete_these_models?": "Are you sure you want to delete these models?"
       },

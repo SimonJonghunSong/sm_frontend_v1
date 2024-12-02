@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
@@ -25,6 +25,8 @@ import { Model as ModelType } from "@/src/api/services/model/type";
 import EditModal from "app/(auth)/model/admin/EditModal";
 import getLocalizedString from "@/utils/getLocalizedString";
 import useLangStore from "@/utils/useLangStore";
+import useModelPkgStore from "@/src/stores/useModelPkgStore";
+import Modal from "@/components/Modal";
 
 export const featureTransition = (
   lang: "en" | "pt" | "es",
@@ -166,6 +168,33 @@ export default function Model() {
       });
     },
   });
+  const { getIncludeUids } = useModelPkgStore();
+
+  const errorTitle = useRef("");
+  const errorMessage = useRef("");
+  const confirmButtonText = useRef("");
+  const handleErrorPopupOk = useRef<() => void | null>(null);
+  const [isOpenErrorPopup, setIsOpenErrorPopup] = useState(false);
+
+  const openErrorPopup = (
+    message: string,
+    options?: {
+      title?: string;
+      confirmText?: string;
+      onErrorPopupOk?: () => void;
+    }
+  ) => {
+    errorTitle.current = options?.title || t("common.popup.error");
+    errorMessage.current = message;
+    confirmButtonText.current = options?.confirmText || t("common.popup.ok");
+    handleErrorPopupOk.current = options?.onErrorPopupOk;
+    setIsOpenErrorPopup(true);
+  };
+  const closeErrorPopup = () => {
+    errorMessage.current = "";
+    handleErrorPopupOk.current = null;
+    setIsOpenErrorPopup(false);
+  };
 
   const [selectedData, setSelectedData] = useState<ModelType | null>(null);
 
@@ -200,6 +229,16 @@ export default function Model() {
     const targetData = (data?.data?.records || []).find(
       (item) => item.uid === id
     );
+
+    console.log("targetData :::", targetData);
+
+    if (getIncludeUids().includes(targetData.uid)) {
+      openErrorPopup(
+        t("popup.model.model.models_loaded_by_the_user_cannot_be_hidden")
+      );
+      return;
+    }
+
     if (targetData) {
       const {
         dev_name,
@@ -317,135 +356,158 @@ export default function Model() {
   }, [data]);
 
   return (
-    <div className="pageWrap">
-      <article className="contentWrap">
-        {renderTabs()}
-        <Stack>
-          <Stack
-            direction="row"
-            gap="8px"
-            justifyContent="space-between"
-            mb="40px"
-          >
+    <>
+      <div className="pageWrap">
+        <article className="contentWrap">
+          {renderTabs()}
+          <Stack>
             <Stack
               direction="row"
               gap="8px"
               justifyContent="space-between"
-              alignItems="center"
+              mb="40px"
             >
-              <Select
-                value={filter}
-                onChange={(e) => handleSelectChange(e, setFilter)}
-                sx={{ minWidth: 160 }}
+              <Stack
+                direction="row"
+                gap="8px"
+                justifyContent="space-between"
+                alignItems="center"
               >
-                {selectSortData(lang).map((item) => (
-                  <MenuItem key={item.value} value={item.value}>
-                    {item.label}
+                <Select
+                  value={filter}
+                  onChange={(e) => handleSelectChange(e, setFilter)}
+                  sx={{ minWidth: 160 }}
+                >
+                  {selectSortData(lang).map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Select
+                  value={searchFilter}
+                  onChange={(e) => handleSelectChange(e, setSearchFilter)}
+                  sx={{ minWidth: 160 }}
+                >
+                  <MenuItem value={"ModelName"}>
+                    {getLocalizedString(
+                      lang,
+                      "Model Name",
+                      "Nome do Modelo",
+                      "Nombre del Modelo"
+                    )}
                   </MenuItem>
-                ))}
-              </Select>
-              <Select
-                value={searchFilter}
-                onChange={(e) => handleSelectChange(e, setSearchFilter)}
-                sx={{ minWidth: 160 }}
-              >
-                <MenuItem value={"ModelName"}>
-                  {getLocalizedString(
-                    lang,
-                    "Model Name",
-                    "Nome do Modelo",
-                    "Nombre del Modelo"
-                  )}
-                </MenuItem>
-              </Select>
-              <TextField
-                name="searchValue"
-                value={searchInputValue}
-                onChange={(e) => setSearchInputValue(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                </Select>
+                <TextField
+                  name="searchValue"
+                  value={searchInputValue}
+                  onChange={(e) => setSearchInputValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setSearchValue(searchInputValue);
+                    }
+                  }}
+                  sx={{ width: 160 }}
+                />
+
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
                     setSearchValue(searchInputValue);
+                  }}
+                >
+                  {t("account.account.search")}
+                </Button>
+              </Stack>
+
+              <Stack direction="row" gap="24px" alignItems="center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleAddModel}
+                >
+                  {t("model.model.add")}
+                </Button>
+              </Stack>
+            </Stack>
+            <DataTable
+              rows={rowData
+                .filter((item) => {
+                  if (selectedTab) {
+                    const features = item.col4.split(",");
+
+                    return features
+                      .map((ft) => featureTransition(lang, ft))
+                      .includes(selectedTab);
                   }
-                }}
-                sx={{ width: 160 }}
-              />
 
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => {
-                  setSearchValue(searchInputValue);
-                }}
-              >
-                {t("account.account.search")}
-              </Button>
-            </Stack>
+                  return true;
+                })
+                .filter((item) => {
+                  if (!searchValue) return true;
 
-            <Stack direction="row" gap="24px" alignItems="center">
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleAddModel}
-              >
-                {t("model.model.add")}
-              </Button>
-            </Stack>
+                  return item.col2.includes(searchValue);
+                })
+                .toSorted((a, b) => {
+                  switch (filter) {
+                    case "A-Z":
+                      return a.col2.localeCompare(b.col2);
+                    case "Oldest":
+                      return (
+                        dayjs(a.col7).toDate().getTime() -
+                        dayjs(b.col7).toDate().getTime()
+                      );
+                    case "Newest":
+                    default:
+                      return (
+                        dayjs(b.col7).toDate().getTime() -
+                        dayjs(a.col7).toDate().getTime()
+                      );
+                  }
+                })}
+              columns={columnData}
+              rowHeight={120}
+              onRowSelectionModelChange={(list) => {
+                setSelectedRowIdList(list as string[]);
+              }}
+              footerButton={
+                <Button
+                  variant="text"
+                  color="info"
+                  onClick={handleDeleteModels}
+                >
+                  {t("model.model.delete")}
+                </Button>
+              }
+            />
           </Stack>
-          <DataTable
-            rows={rowData
-              .filter((item) => {
-                if (selectedTab) {
-                  const features = item.col4.split(",");
-
-                  return features
-                    .map((ft) => featureTransition(lang, ft))
-                    .includes(selectedTab);
-                }
-
-                return true;
-              })
-              .filter((item) => {
-                if (!searchValue) return true;
-
-                return item.col2.includes(searchValue);
-              })
-              .toSorted((a, b) => {
-                switch (filter) {
-                  case "A-Z":
-                    return a.col2.localeCompare(b.col2);
-                  case "Oldest":
-                    return (
-                      dayjs(a.col7).toDate().getTime() -
-                      dayjs(b.col7).toDate().getTime()
-                    );
-                  case "Newest":
-                  default:
-                    return (
-                      dayjs(b.col7).toDate().getTime() -
-                      dayjs(a.col7).toDate().getTime()
-                    );
-                }
-              })}
-            columns={columnData}
-            rowHeight={120}
-            onRowSelectionModelChange={(list) => {
-              setSelectedRowIdList(list as string[]);
-            }}
-            footerButton={
-              <Button variant="text" color="info" onClick={handleDeleteModels}>
-                {t("model.model.delete")}
-              </Button>
-            }
+        </article>
+        {modal && <AddModal handleCloseModal={handleCloseModal} />}
+        {editModal && selectedData && (
+          <EditModal
+            selectedData={selectedData}
+            handleCloseModal={handleCloseEditModal}
           />
-        </Stack>
-      </article>
-      {modal && <AddModal handleCloseModal={handleCloseModal} />}
-      {editModal && selectedData && (
-        <EditModal
-          selectedData={selectedData}
-          handleCloseModal={handleCloseEditModal}
-        />
+        )}
+      </div>
+      {isOpenErrorPopup && (
+        <Modal
+          open
+          width={"357px"}
+          toggleOpen={closeErrorPopup}
+          cancelButtonText={t("common.popup.cancel")}
+          confirmButtonText={confirmButtonText.current}
+          title={errorTitle.current}
+          confirm={handleErrorPopupOk.current}
+        >
+          <Stack>
+            <span style={{ wordBreak: "keep-all" }}>
+              {errorMessage.current}
+            </span>
+          </Stack>
+        </Modal>
       )}
-    </div>
+    </>
   );
 }
