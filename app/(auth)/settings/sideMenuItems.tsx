@@ -7,13 +7,6 @@ import { Lang } from "@/utils/useLangStore";
 
 export const sideMenuItems = (lang: Lang) => [
   {
-    key: "language", // 권한 별 필터링 하기위한 키값 생성 - 김덕기
-    name: getLocalizedString(lang, "Languages", "Idiomas", "Idiomas"),
-    offlineEnable: true,
-    href: "/settings/languages",
-    icon: () => <LanguageIcon />,
-  },
-  {
     key: "myInfo",
     name: getLocalizedString(
       lang,
@@ -24,6 +17,13 @@ export const sideMenuItems = (lang: Lang) => [
     offlineEnable: false,
     href: "/settings/my-info",
     icon: () => <PersonOutlineIcon />,
+  },
+  {
+    key: "language", // 권한 별 필터링 하기위한 키값 생성 - 김덕기
+    name: getLocalizedString(lang, "Languages", "Idiomas", "Idiomas"),
+    offlineEnable: true,
+    href: "/settings/languages",
+    icon: () => <LanguageIcon />,
   },
   {
     key: "privacyPolicy",

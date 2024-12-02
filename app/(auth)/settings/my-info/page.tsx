@@ -51,6 +51,8 @@ export default function MyInfoPage() {
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const isRoot = userRole?.toUpperCase() === "ROOT";
+  const isCustomer = userRole?.toUpperCase() === "CUSTOMER";
+  const isGuest = userRole?.toUpperCase() === "GUEST";
 
   const { data, isPending, error, isFetched } = useQuery({
     queryKey: ["me"],
@@ -71,6 +73,8 @@ export default function MyInfoPage() {
       pw: undefined,
       confirmedPw: undefined,
       affiliation: undefined,
+      taxId: undefined,
+      alias: undefined,
     },
   });
 
@@ -82,7 +86,7 @@ export default function MyInfoPage() {
     event.preventDefault();
   };
 
-  const handleSave = ({ pw, affiliation }) => {
+  const handleSave = ({ pw, affiliation, alias }) => {
     if (!isOnline) {
       setOfflineErrorDialog(true);
       return;
@@ -93,6 +97,7 @@ export default function MyInfoPage() {
       password: pw,
       department,
       affiliation,
+      alias,
     });
   };
 
@@ -100,6 +105,8 @@ export default function MyInfoPage() {
     if (isFetched) {
       if (data.affiliation) {
         form.setValue("affiliation", data.affiliation);
+        form.setValue("taxId", data.tax_id);
+        form.setValue("alias", data.alias);
       }
     }
   }, [isFetched]);
@@ -129,7 +136,9 @@ export default function MyInfoPage() {
   const renderCompany = () => {
     if (
       userRole?.toUpperCase() === "ROOT" ||
-      userRole?.toUpperCase() === "ADMIN"
+      userRole?.toUpperCase() === "ADMIN" ||
+      userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "CUSTOMER"
     )
       return null;
     return (
@@ -366,7 +375,13 @@ export default function MyInfoPage() {
   };
 
   const renderAffiliation = () => {
-    if (userRole?.toUpperCase() === "ROOT") return null;
+    if (
+      userRole?.toUpperCase() === "ROOT" ||
+      userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "CUSTOMER"
+    )
+      return null;
+
     return (
       <Stack
         direction="row"
@@ -417,7 +432,11 @@ export default function MyInfoPage() {
   };
 
   const renderDepartment = () => {
-    if (userRole?.toUpperCase() === "ROOT") return null;
+    if (
+      userRole?.toUpperCase() === "ROOT" ||
+      userRole?.toUpperCase() === "GUEST"
+    )
+      return null;
     return (
       <Stack
         direction="row"
@@ -444,6 +463,94 @@ export default function MyInfoPage() {
     );
   };
 
+  const renderTaxId = () => {
+    if (
+      userRole?.toUpperCase() === "ROOT" ||
+      userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "ADMIN"
+    )
+      return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.tax_id")}</div>
+        <div>
+          <Controller
+            control={form.control}
+            name="taxId"
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <TextField
+                  error={!!error}
+                  sx={{ width: 320 }}
+                  defaultValue={data.tax_id}
+                  {...field}
+                  onChange={({ target }) => {
+                    const value = target.value;
+
+                    // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                    target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                    field.onChange(value);
+                  }}
+                />
+              );
+            }}
+          />
+        </div>
+      </Stack>
+    );
+  };
+
+  const renderAlias = () => {
+    if (
+      userRole?.toUpperCase() === "ROOT" ||
+      userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "ADMIN"
+    )
+      return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.alias")}</div>
+        <div>
+          <Controller
+            control={form.control}
+            name="taxId"
+            rules={{ required: true }}
+            render={({ field, fieldState: { error } }) => {
+              return (
+                <TextField
+                  sx={{ width: 320 }}
+                  defaultValue={data.alias}
+                  error={!!error}
+                  {...field}
+                  onChange={({ target }) => {
+                    const value = target.value;
+
+                    // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                    target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                    field.onChange(value);
+                  }}
+                />
+              );
+            }}
+          />
+        </div>
+      </Stack>
+    );
+  };
+
   return (
     <>
       <div className="pageWrap">
@@ -453,6 +560,8 @@ export default function MyInfoPage() {
               ? sideMenuItems(lang).filter(
                   ({ key }) => key === "myInfo" || key === "logout"
                 )
+              : isCustomer || isGuest
+              ? sideMenuItems(lang).filter(({ key }) => key !== "privacyPolicy")
               : sideMenuItems(lang)
           }
         />
@@ -470,6 +579,8 @@ export default function MyInfoPage() {
               {renderRole()}
               {renderAffiliation()}
               {renderDepartment()}
+              {renderTaxId()}
+              {renderAlias()}
             </Stack>
             <Stack direction="row" justifyContent="flex-end" marginTop="40px">
               <Button

@@ -98,11 +98,6 @@ const guestMenus = (lang: "en" | "pt" | "es") => [
     offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
   },
-  {
-    name: "CMD Tool",
-    offlineEnable: true,
-    icon: () => <TerminalOutlinedIcon />,
-  },
 ];
 
 export default function Navbar() {
@@ -288,7 +283,8 @@ export default function Navbar() {
             {(userRole === "CUSTOMER" || userRole === "GUEST") && (
               <li>
                 <Link
-                  href="/support"
+                  target="_blank"
+                  href="https://stsunlab.com/board/board_form?bd_id=CONTACT"
                   onClick={
                     !isOnline
                       ? (e) => {
