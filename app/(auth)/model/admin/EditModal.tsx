@@ -311,7 +311,7 @@ export default function EditModal({
               </Stack>
               <span className="text-grey-5">
                 {t(
-                  "edit_model_pop_up.png_or_jpg_only,_1000x1000px_recommended,_max_5mb"
+                  "model.edit_model_pop_up.png_or_jpg_only_1000x1000px_recommended_max_5mb"
                 )}
               </span>
             </Stack>
@@ -408,7 +408,10 @@ export default function EditModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Wireless Technology</InputBox.Title>
+            <InputBox.Title>
+              {t("model.edit_model_pop_up.features")}
+              <i>*</i>
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <FormControl
@@ -419,36 +422,6 @@ export default function EditModal({
                 { label: "BLE", value: "BLE" },
                 { label: "RF", value: "RF" },
                 { label: "NB-IoT", value: "NB-IoT" },
-              ].map(({ label, value }) => {
-                return (
-                  <FormControlLabel
-                    value={value}
-                    control={
-                      <Checkbox
-                        onChange={handleSupportedFeaturesType}
-                        value={value}
-                        checked={supportedFeatures.includes(value)}
-                      />
-                    }
-                    label={label}
-                  />
-                );
-              })}
-            </FormControl>
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("model.edit_model_pop_up.features")}
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <FormControl
-              sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
-            >
-              {[
                 {
                   label: t("model.add_model_pop_up.advanced"),
                   value: "Advanced",
@@ -541,7 +514,11 @@ export default function EditModal({
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>
+            <InputBox.Title
+              style={{
+                width: "100%",
+              }}
+            >
               <Stack
                 direction="row"
                 justifyContent="space-between"

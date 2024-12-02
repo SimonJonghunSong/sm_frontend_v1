@@ -277,7 +277,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
               </Stack>
               <span className="text-grey-5">
                 {t(
-                  "add_model_pop_up.png_or_jpg_only,_1000x1000px_recommended,_max_5mb"
+                  "model.add_model_pop_up.png_or_jpg_only_1000x1000px_recommended_max_5mb"
                 )}
               </span>
             </Stack>
@@ -382,7 +382,9 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Features</InputBox.Title>
+            <InputBox.Title>
+              {t("model.add_model_pop_up.features")} <i>*</i>
+            </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <FormControl
