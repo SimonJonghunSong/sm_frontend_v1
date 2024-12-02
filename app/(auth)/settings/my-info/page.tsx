@@ -587,7 +587,7 @@ export default function MyInfoPage() {
                 type="submit"
                 variant="contained"
                 color="secondary"
-                disabled={!form.watch("pw") || !form.watch("confirmedPw")}
+                disabled={!form.formState.isValid}
               >
                 {t("settings.my_info.save")}
               </Button>
