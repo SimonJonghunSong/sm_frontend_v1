@@ -1,10 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { Button, IconButton, Stack, TextField } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import SideMenu from "@/components/sidemenu/SideMenu";
@@ -16,6 +23,19 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useAuthStore from "@/utils/useAuthStore";
 import InputErrorText from "@/components/InputErrorText";
 import useSuccessDialog from "@/src/hooks/useSuccessDialog";
+import { FilePresent } from "@mui/icons-material";
+
+type RoleType = "ROOT" | "CUSTOMER" | "ADMIN" | "CLIENT" | "GUEST";
+
+const affiliationList = [
+  { label: "HQ", value: "HQ" },
+  { label: "SB", value: "SB" },
+  { label: "STGPS", value: "STGPS" },
+  { label: "STI", value: "STI" },
+  { label: "SU", value: "SU" },
+  { label: "FIN", value: "FIN" },
+  { label: "Etc", value: "Etc" },
+];
 
 export default function MyInfoPage() {
   const t = useTranslations();
@@ -26,23 +46,16 @@ export default function MyInfoPage() {
     description: t("popup.settings.my_info.saved_successfully!"),
   });
 
-  const form = useForm({
-    mode: "onBlur",
-    defaultValues: {
-      pw: undefined,
-      confirmedPw: undefined,
-    },
-  });
-
   const [showPassword, setShowPassword] = useState(false);
   const [department, setDepartment] = useState<string>();
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const isRoot = userRole?.toUpperCase() === "ROOT";
 
-  const { data, isPending, error } = useQuery({
+  const { data, isPending, error, isFetched } = useQuery({
     queryKey: ["me"],
     queryFn: me,
+    refetchOnMount: true,
     select: (data) => {
       return data.data.parameter.user;
     },
@@ -50,6 +63,15 @@ export default function MyInfoPage() {
   const { mutate } = useMutation({
     mutationFn: modifyMyAccount,
     onSuccess: toggle,
+  });
+
+  const form = useForm({
+    mode: "onBlur",
+    defaultValues: {
+      pw: undefined,
+      confirmedPw: undefined,
+      affiliation: undefined,
+    },
   });
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -60,7 +82,7 @@ export default function MyInfoPage() {
     event.preventDefault();
   };
 
-  const handleSave = ({ pw }) => {
+  const handleSave = ({ pw, affiliation }) => {
     if (!isOnline) {
       setOfflineErrorDialog(true);
       return;
@@ -70,8 +92,17 @@ export default function MyInfoPage() {
       ...data,
       password: pw,
       department,
+      affiliation,
     });
   };
+
+  useEffect(() => {
+    if (isFetched) {
+      if (data.affiliation) {
+        form.setValue("affiliation", data.affiliation);
+      }
+    }
+  }, [isFetched]);
 
   if (isPending) return <>...</>;
 
@@ -79,7 +110,7 @@ export default function MyInfoPage() {
     return <></>;
   }
 
-  const renderCompany = () => {
+  const renderName = () => {
     if (userRole?.toUpperCase() === "ROOT") return null;
     return (
       <Stack
@@ -89,8 +120,28 @@ export default function MyInfoPage() {
         height="56px"
         borderBottom="1px solid var(--grey3)"
       >
+        <div className="list-title">{t("settings.my_info.name")}</div>
+        <div>{data.name}</div>
+      </Stack>
+    );
+  };
+
+  const renderCompany = () => {
+    if (
+      userRole?.toUpperCase() === "ROOT" ||
+      userRole?.toUpperCase() === "ADMIN"
+    )
+      return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
         <div className="list-title">{t("settings.my_info.company")}</div>
-        <div>James Franco</div>
+        <div>-</div>
       </Stack>
     );
   };
@@ -309,7 +360,7 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.role")}</div>
-        <div>{data.role.name.toUpperCase()}</div>
+        <div>{switchRole(data.role.name.toUpperCase() as RoleType)}</div>
       </Stack>
     );
   };
@@ -326,15 +377,40 @@ export default function MyInfoPage() {
       >
         <div className="list-title">{t("settings.my_info.affiliation")}</div>
         <div>
-          {/* TODO 기존 Select로 이루어짐
-       <Select
-        value={affilication}
-        onChange={handleChange}
-        sx={{ width: 320 }}
-      >
-        <MenuItem value={"su"}>SU</MenuItem> 
-      </Select> */}
-          <div>{data.affiliation}</div>
+          {/* TODO 기존 Select로 이루어짐 */}
+
+          <Controller
+            control={form.control}
+            name="affiliation"
+            render={({ field }) => {
+              console.log(
+                field.value || data.affiliation,
+                field.value,
+                data.affiliation
+              );
+              return (
+                <Select
+                  displayEmpty
+                  renderValue={(v) =>
+                    v?.length ? (
+                      affiliationList.find((item) => item.value === v).label
+                    ) : (
+                      <span className="text-grey-5">
+                        {t("account.add_account_pop_up.select")}
+                      </span>
+                    )
+                  }
+                  {...field}
+                  value={field.value || data.affiliation}
+                  sx={{ width: 320 }}
+                >
+                  {affiliationList.map(({ label, value }) => {
+                    return <MenuItem value={value}>{label}</MenuItem>;
+                  })}
+                </Select>
+              );
+            }}
+          />
         </div>
       </Stack>
     );
@@ -384,6 +460,7 @@ export default function MyInfoPage() {
           <form onSubmit={form.handleSubmit(handleSave)}>
             <div className="pageTitle">{t("settings.my_info.my_info")}</div>
             <Stack>
+              {renderName()}
               {renderCompany()}
               {renderId()}
               {renderEmail()}
@@ -420,3 +497,21 @@ export default function MyInfoPage() {
     </>
   );
 }
+
+const switchRole = (role: RoleType) => {
+  switch (role) {
+    case "ROOT":
+      return "Root";
+    case "ADMIN":
+      return "Administrator";
+    case "CUSTOMER":
+      return "Customer";
+    case "CLIENT":
+      return "Client";
+    case "GUEST":
+      return "Guest";
+
+    default:
+      break;
+  }
+};

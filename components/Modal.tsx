@@ -29,7 +29,7 @@ type ModalProps = {
 };
 
 export default function Modal({
-  closeButton = false,
+  closeButton = true,
   children,
   confirm,
   confirmButtonText = "Ok",

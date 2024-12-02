@@ -57,7 +57,6 @@ export default function DataTable({
         disableRowSelectionOnClick={!checkbox || disableRowClick}
         getRowClassName={getRowClassName}
         rowHeight={rowHeight}
-        autoHeight
         disableColumnSorting
         hideFooterSelectedRowCount
         hideFooterPagination={disablePagination}

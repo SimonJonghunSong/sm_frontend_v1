@@ -165,10 +165,7 @@ export default function Server() {
   return (
     <div className="pageWrap">
       <SideMenu sideMenuItems={sideMenuItems} />
-      <article
-        className="contentWrap"
-        style={{ display: "flex", flexDirection: "column" }}
-      >
+      <article className="contentWrap">
         <div className="pageTitle">
           {t("server.scuti_server.scuti_server_list")}
         </div>

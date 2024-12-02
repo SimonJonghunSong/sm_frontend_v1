@@ -23,7 +23,6 @@ import Modal from "../../../components/Modal";
 import useModal from "../../../utils/useModal";
 import InputBox from "../../../components/inputbox/InputBox";
 import SelectCountry from "../../../components/SelectCountry";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
@@ -39,7 +38,6 @@ import { Controller, useForm } from "react-hook-form";
 import InputErrorText from "@/components/InputErrorText";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
-import useErrorDialog from "@/src/hooks/useErrorDialog";
 import { AxiosError } from "axios";
 
 export default function Account() {
@@ -240,12 +238,9 @@ export default function Account() {
   return (
     <>
       <div className="pageWrap">
-        <article
-          className="contentWrap"
-          style={{ display: "flex", flexDirection: "column" }}
-        >
+        <article className="contentWrap">
           <div className="pageTitle">{t("account.account.account")}</div>
-          <Stack style={{ flex: 1 }}>
+          <Stack>
             <Stack
               direction="row"
               gap="8px"
