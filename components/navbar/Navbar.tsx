@@ -166,6 +166,7 @@ export default function Navbar() {
         return "/server";
       case "ADMIN":
       case "CUSTOMER":
+      case "CLIENT":
       case "GUEST":
       default:
         return "/model";
@@ -181,6 +182,8 @@ export default function Navbar() {
         return t("pw_set.admin");
       case "customer":
         return t("pw_set.customer");
+      case "client":
+        return "Client";
       case "guest":
         return t("pw_set.guest");
       default:
