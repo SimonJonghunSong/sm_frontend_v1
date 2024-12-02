@@ -1622,8 +1622,11 @@
     },
     "model": {
       "model": {
+        "models_loaded_by_the_user_cannot_be_hidden": "Models loaded by the user cannot be hidden.",
+        "models_loaded_by_the_user_cannot_be_deleted": "Models loaded by the user cannot be deleted.",
         "are_you_sure_you_want_to_delete_this_model?": "Are you sure you want to delete this model?",
-        "are_you_sure_you_want_to_delete_these_models?": "Are you sure you want to delete these models?"
+        "are_you_sure_you_want_to_delete_these_models?": "Are you sure you want to delete these models?",
+        "delete": "Are you sure you want to delete?"
       },
       "add_model_pop_up": {
         "added_successfully!": "Added successfully!",
@@ -1631,7 +1634,8 @@
         "are_you_sure_you_want_to_leave_this_page_without_adding?": "Are you sure you want to leave this page without adding?"
       },
       "edit_model_pop_up": {
-        "saved_successfully!": "Saved successfully!"
+        "edited_successfully!": "Edited successfully!",
+        "are_you_sure_you_want_to_change_this_option": "Are you sure you want to change this option?"
       }
     },
     "device": {

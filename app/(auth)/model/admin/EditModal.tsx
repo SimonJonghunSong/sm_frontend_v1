@@ -84,9 +84,21 @@ const initialState: FormState = {
 interface Props {
   handleCloseModal: () => void;
   selectedData: Model;
+  openErrorPopup: (
+    message: string,
+    options?: {
+      title?: string;
+      confirmText?: string;
+      onErrorPopupOk?: () => void;
+    }
+  ) => void;
 }
 
-export default function EditModal({ handleCloseModal, selectedData }: Props) {
+export default function EditModal({
+  handleCloseModal,
+  selectedData,
+  openErrorPopup,
+}: Props) {
   const t = useTranslations();
   // forms
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -95,8 +107,8 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
     mutationFn: editModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      toast(t("common.message.edit-success"), {
-        type: "success",
+      openErrorPopup(t("common.message.edit-success"), {
+        title: t("common.popup.success"),
       });
       handleCloseModal();
     },
@@ -177,46 +189,66 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
   };
 
   const handleEditConfirm = () => {
-    const formData = new FormData();
+    openErrorPopup(
+      t(
+        "popup.model.edit_model_pop_up.are_you_sure_you_want_to_change_this_option"
+      ),
+      {
+        title: t("common.popup.confrim"),
+        confirmText: t("common.popup.yes"),
+        onErrorPopupOk: () => {
+          const formData = new FormData();
 
-    if (imageFile) {
-      formData.append("image_file", imageFile);
-    }
-    if (settingFile) {
-      formData.append("default_profile", settingFile);
-    }
-    formData.append(
-      "json",
-      JSON.stringify({
-        uid: selectedData.uid,
-        dev_name: devName,
-        fw_ver: "1.1.0",
-        country,
-        supported_network_type: supportedNetworkType,
-        supported_features: supportedFeatures,
-        hide,
-        model_pkg: "model_pkg",
-      })
+          if (imageFile) {
+            formData.append("image_file", imageFile);
+          }
+          if (settingFile) {
+            formData.append("default_profile", settingFile);
+          }
+          formData.append(
+            "json",
+            JSON.stringify({
+              uid: selectedData.uid,
+              dev_name: devName,
+              fw_ver: "1.1.0",
+              country,
+              supported_network_type: supportedNetworkType,
+              supported_features: supportedFeatures,
+              hide,
+              model_pkg: "model_pkg",
+            })
+          );
+
+          editModelRequest.mutate(formData);
+        },
+      }
     );
-
-    editModelRequest.mutate(formData);
   };
 
+  const [initData, setInitData] = useState("");
+
   useEffect(() => {
+    const initValues = {
+      devName: selectedData.dev_name,
+      country: selectedData.country.name,
+      imageFile: undefined,
+      supportedNetworkType: selectedData.supported_network_type,
+      supportedFeatures: selectedData.supported_features,
+      settingFile: undefined,
+      hide: selectedData.hide,
+    };
+
+    setInitData(JSON.stringify(initValues));
+
     dispatch({
       type: "SET_DATA",
-      value: {
-        devName: selectedData.dev_name,
-        country: selectedData.country.name,
-        imageFile: undefined,
-        supportedNetworkType: selectedData.supported_network_type,
-        supportedFeatures: selectedData.supported_features,
-        settingFile: undefined,
-        hide: selectedData.hide,
-      },
+      value: initValues,
     });
     setThumbnailPreview(selectedData.image_file);
   }, [selectedData]);
+
+  console.log("initData :::", initData);
+  console.log("JSON.stringify(state) :::", JSON.stringify(state));
 
   return (
     <Modal
@@ -228,11 +260,13 @@ export default function EditModal({ handleCloseModal, selectedData }: Props) {
       cancelButtonText={t("model.edit_model_pop_up.cancel")}
       width="720px"
       disabled={
+        initData === JSON.stringify(state) ||
         !devName ||
         !country ||
         !supportedNetworkType.length ||
         !supportedFeatures.length
       }
+      manualToggleOpenWhenConfirm
     >
       <Stack>
         <InputBox>

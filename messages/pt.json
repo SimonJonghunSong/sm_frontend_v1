@@ -271,7 +271,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -315,7 +318,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1612,7 +1618,9 @@
     "model": {
       "model": {
         "are_you_sure_you_want_to_delete_this_model?": "Você tem certeza de que deseja excluir este modelo?",
-        "are_you_sure_you_want_to_delete_these_models?": "Você tem certeza de que deseja excluir estes modelos?"
+        "are_you_sure_you_want_to_delete_these_models?": "Você tem certeza de que deseja excluir estes modelos?",
+        "models_loaded_by_the_user_cannot_be_deleted": "Os modelos carregados pelo usuário não podem ser excluídos.",
+        "delete": "Tem certeza de que deseja excluir?"
       },
       "add_model_pop_up": {
         "added_successfully!": "Adicionado com sucesso!",

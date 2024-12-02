@@ -169,6 +169,7 @@ export default function Account() {
   });
   const [roleFilter, setRoleFilter] = useState<string>("All");
   const [userFilter, setUserFilter] = useState<string>("All");
+  const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [modal, modalToggle] = useModal();
@@ -269,12 +270,23 @@ export default function Account() {
                 </Select>
 
                 <TextField
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
+                  value={searchInputValue}
+                  onChange={(e) => setSearchInputValue(e.target.value)}
                   sx={{ width: 160 }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setSearchValue(searchInputValue);
+                    }
+                  }}
                 />
 
-                <Button variant="contained" color="secondary">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    setSearchValue(searchInputValue);
+                  }}
+                >
                   {t("account.account.search")}
                 </Button>
               </Stack>
@@ -477,7 +489,7 @@ function reducer(state: FormState, action: FormAction): FormState {
 const getFieldsByRole = (userRole: string) => {
   switch (userRole) {
     case "ROOT":
-      return ["role", "id", "email", "password", "passwordConfirm"];
+      return ["role", "id", "email", "name", "password", "passwordConfirm"];
     case "ADMIN":
       return [
         "role",
@@ -605,6 +617,12 @@ function AddAcountModal({
         );
         return;
       }
+
+      openErrorPopup(
+        (e.response.data as any)?.response?.reason ||
+          (e.response.data as any)?.message ||
+          "Error"
+      );
     },
   });
 
@@ -660,6 +678,7 @@ function AddAcountModal({
             "role",
             "user_id",
             "email",
+            "name",
             "password",
             "confirm_password",
           ])

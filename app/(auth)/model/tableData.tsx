@@ -198,4 +198,5 @@ export const getRows = (data?: (Model & { loaded: boolean })[]) =>
     col5: { id: item.uid },
     col7: dayjs(item.reg_date).format("MMM/DD/YYYY HH:mm"),
     loaded: item.loaded,
+    hide: item.hide,
   }));

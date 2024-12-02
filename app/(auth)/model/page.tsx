@@ -184,6 +184,10 @@ export default function Model() {
 
   const [rowData, setRowData] = useState(getRows(data?.data?.records));
   const filteredRowData = rowData
+    // Hide 숨기기
+    .filter((item) => {
+      return !item.hide;
+    })
     // 로드된 모델만 필터링
     .filter((item) => {
       if (showLoadedModels) {

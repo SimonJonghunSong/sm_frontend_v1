@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 import styles from "./styles.module.scss";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import { Tooltip } from "@mui/material";
@@ -22,12 +22,14 @@ InputBox.Head = function Head({ children }: ChildComponentProps) {
 InputBox.Title = function Title({
   children,
   warning = false,
-}: ChildComponentProps & { warning?: boolean }) {
+  style,
+}: ChildComponentProps & { warning?: boolean; style?: CSSProperties }) {
   return (
     <div
       className={
         warning ? `${styles.title} ${styles.warning}` : `${styles.title}`
       }
+      style={style}
     >
       {children}
     </div>
