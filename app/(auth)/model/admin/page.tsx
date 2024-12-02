@@ -510,6 +510,7 @@ export default function Model() {
           <EditModal
             selectedData={selectedData}
             handleCloseModal={handleCloseEditModal}
+            openErrorPopup={openErrorPopup}
           />
         )}
       </div>

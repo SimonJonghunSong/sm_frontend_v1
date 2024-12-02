@@ -1634,7 +1634,8 @@
         "are_you_sure_you_want_to_leave_this_page_without_adding?": "Are you sure you want to leave this page without adding?"
       },
       "edit_model_pop_up": {
-        "saved_successfully!": "Saved successfully!"
+        "edited_successfully!": "Edited successfully!",
+        "are_you_sure_you_want_to_change_this_option": "Are you sure you want to change this option?"
       }
     },
     "device": {
