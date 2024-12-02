@@ -1619,7 +1619,9 @@
       "model": {
         "are_you_sure_you_want_to_delete_this_model?": "¿Está seguro de que desea eliminar este modelo?",
         "are_you_sure_you_want_to_delete_these_models?": "¿Está seguro de que desea eliminar estos modelos?",
-        "models_loaded_by_the_user_cannot_be_hidden": "Los modelos cargados por el usuario no se pueden ocultar."
+        "models_loaded_by_the_user_cannot_be_hidden": "Los modelos cargados por el usuario no se pueden ocultar.",
+        "models_loaded_by_the_user_cannot_be_deleted": "Los modelos cargados por el usuario no se pueden eliminar.",
+        "delete": "¿Estás seguro de que deseas eliminar?"
       },
       "add_model_pop_up": {
         "added_successfully!": "¡Añadido exitosamente!",
