@@ -622,6 +622,12 @@ function AddAcountModal({
         );
         return;
       }
+
+      openErrorPopup(
+        (e.response.data as any)?.response?.reason ||
+          (e.response.data as any)?.message ||
+          "Error"
+      );
     },
   });
 

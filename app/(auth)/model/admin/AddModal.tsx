@@ -116,6 +116,12 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
         );
         return;
       }
+
+      openErrorPopup(
+        (e.response.data as any)?.response?.reason ||
+          (e.response.data as any)?.message ||
+          "Error"
+      );
     },
   });
 
