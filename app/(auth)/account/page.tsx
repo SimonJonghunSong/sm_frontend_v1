@@ -171,6 +171,7 @@ export default function Account() {
   });
   const [roleFilter, setRoleFilter] = useState<string>("All");
   const [userFilter, setUserFilter] = useState<string>("All");
+  const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [modal, modalToggle] = useModal();
@@ -274,12 +275,23 @@ export default function Account() {
                 </Select>
 
                 <TextField
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
+                  value={searchInputValue}
+                  onChange={(e) => setSearchInputValue(e.target.value)}
                   sx={{ width: 160 }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setSearchValue(searchInputValue);
+                    }
+                  }}
                 />
 
-                <Button variant="contained" color="secondary">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={() => {
+                    setSearchValue(searchInputValue);
+                  }}
+                >
                   {t("account.account.search")}
                 </Button>
               </Stack>

@@ -236,6 +236,8 @@ export default function Model() {
     getAdminColumns(handleClickEdit, handleClickDelete, handleClickHide)
   );
   const [filter, setFilter] = useState<string>("Newest");
+  const [searchFilter, setSearchFilter] = useState<string>("ModelName");
+  const [searchInputValue, setSearchInputValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
 
   const [modal, modalToggle] = useModal();
@@ -342,20 +344,39 @@ export default function Model() {
                   </MenuItem>
                 ))}
               </Select>
+              <Select
+                value={searchFilter}
+                onChange={(e) => handleSelectChange(e, setSearchFilter)}
+                sx={{ minWidth: 160 }}
+              >
+                <MenuItem value={"ModelName"}>
+                  {getLocalizedString(
+                    lang,
+                    "Model Name",
+                    "Nome do Modelo",
+                    "Nombre del Modelo"
+                  )}
+                </MenuItem>
+              </Select>
               <TextField
                 name="searchValue"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-                placeholder={getLocalizedString(
-                  lang,
-                  "Model Name",
-                  "Nome do Modelo",
-                  "Nombre del Modelo"
-                )}
+                value={searchInputValue}
+                onChange={(e) => setSearchInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    setSearchValue(searchInputValue);
+                  }
+                }}
                 sx={{ width: 160 }}
               />
 
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => {
+                  setSearchValue(searchInputValue);
+                }}
+              >
                 {t("account.account.search")}
               </Button>
             </Stack>
