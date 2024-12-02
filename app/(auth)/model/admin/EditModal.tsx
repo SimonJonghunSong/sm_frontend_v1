@@ -384,7 +384,7 @@ export default function EditModal({
                 { label: "2G", value: "2G" },
                 { label: "3G", value: "3G" },
                 { label: "LTE Cat.1", value: "LTEcat1" },
-                { label: "LTE Cat-M1", value: "LTECatM1" },
+                { label: "LTE Cat.M1", value: "LTECatM1" },
                 { label: "5G", value: "5G" },
               ].map(({ label, value }) => {
                 return (
