@@ -319,7 +319,14 @@ export default function Model() {
 
   const handleDeleteModels = () => {
     if (!selectedRowIdList || !selectedRowIdList.length) return;
-    deleteRequest.mutate(selectedRowIdList);
+
+    openErrorPopup(t("popup.model.model.delete"), {
+      title: t("common.popup.confrim"),
+      confirmText: t("common.popup.yes"),
+      onErrorPopupOk: () => {
+        deleteRequest.mutate(selectedRowIdList);
+      },
+    });
   };
 
   const [selectedTab, setSelectedTab] = useState("");
@@ -493,6 +500,7 @@ export default function Model() {
                   variant="text"
                   color="info"
                   onClick={handleDeleteModels}
+                  disabled={!selectedRowIdList || !selectedRowIdList.length}
                 >
                   {t("model.model.delete")}
                 </Button>
