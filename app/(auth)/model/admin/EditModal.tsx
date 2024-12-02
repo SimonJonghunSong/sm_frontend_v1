@@ -530,6 +530,7 @@ export default function EditModal({
                   style={{ display: "none" }}
                   type="file"
                   hidden
+                  accept=".json"
                   onChange={handleFileChange}
                 />
                 {t("model.edit_model_pop_up.upload")}

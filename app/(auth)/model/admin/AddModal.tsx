@@ -475,6 +475,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   style={{ display: "none" }}
                   type="file"
                   hidden
+                  accept=".json"
                   onChange={handleFileChange}
                 />
                 {t("model.add_model_pop_up.upload")}
