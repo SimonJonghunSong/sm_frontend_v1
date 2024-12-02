@@ -21,6 +21,7 @@ import Modal from "@/components/Modal";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { addModel } from "@/src/api/services/model";
+import { AxiosError } from "axios";
 
 export interface FormState {
   devName: string;
@@ -84,9 +85,13 @@ const initialState: FormState = {
 
 interface Props {
   handleCloseModal: () => void;
+  openErrorPopup: (
+    message: string,
+    options?: { title: string; onErrorPopupOk?: () => void }
+  ) => void;
 }
 
-export default function AddModal({ handleCloseModal }: Props) {
+export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
   const t = useTranslations();
   // forms
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -95,10 +100,22 @@ export default function AddModal({ handleCloseModal }: Props) {
     mutationFn: addModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      toast(t("model.common.message.add-success"), {
-        type: "success",
+      openErrorPopup(t("popup.model.add_model_pop_up.added_successfully!"), {
+        title: t("common.popup.success"),
       });
       handleCloseModal();
+    },
+    onError: (e: AxiosError) => {
+      const res = (e.response.data as any)?.response;
+
+      if (res?.code === 3001) {
+        openErrorPopup(
+          t(
+            "popup.model.add_model_pop_up.this_model_name_is_already_registered"
+          )
+        );
+        return;
+      }
     },
   });
 
@@ -206,6 +223,7 @@ export default function AddModal({ handleCloseModal }: Props) {
       cancelButtonText={t("model.add_model_pop_up.cancel")}
       confirmButtonText={t("model.add_model_pop_up.add")}
       width="720px"
+      manualToggleOpenWhenConfirm
       disabled={
         !imageFile ||
         !devName ||
@@ -270,9 +288,20 @@ export default function AddModal({ handleCloseModal }: Props) {
           <InputBox.Body>
             <TextField
               value={devName}
-              onChange={(e) =>
-                dispatch({ type: "SET_DEV_NAME", value: e.target.value })
-              }
+              onChange={(e) => {
+                const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
+                const value = e.target.value;
+
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
+                }
+
+                dispatch({
+                  type: "SET_DEV_NAME",
+                  value: e.target.value.toUpperCase(),
+                });
+              }}
               name="dev_name"
               fullWidth
             />
@@ -299,12 +328,10 @@ export default function AddModal({ handleCloseModal }: Props) {
                 row
                 sx={{ gap: "24px" }}
               >
-                <FormControlLabel value="USA" control={<Radio />} label="USA" />
-                <FormControlLabel
-                  value="LATAM"
-                  control={<Radio />}
-                  label="LATAM"
-                />
+                <FormControlLabel value="USA" control={<Radio />} label="SU" />
+                <FormControlLabel value="SB" control={<Radio />} label="SB" />
+                <FormControlLabel value="SM" control={<Radio />} label="SM" />
+                <FormControlLabel value="SE" control={<Radio />} label="SE" />
               </RadioGroup>
             </FormControl>
           </InputBox.Body>
@@ -325,7 +352,7 @@ export default function AddModal({ handleCloseModal }: Props) {
                 { label: "2G", value: "2G" },
                 { label: "3G", value: "3G" },
                 { label: "LTE Cat.1", value: "LTEcat1" },
-                { label: "LTE Cat-M1", value: "LTECatM1" },
+                { label: "LTE Cat.M1", value: "LTECatM1" },
                 { label: "5G", value: "5G" },
               ].map(({ label, value }) => {
                 return (
@@ -349,7 +376,7 @@ export default function AddModal({ handleCloseModal }: Props) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>Wireless Technology</InputBox.Title>
+            <InputBox.Title>Features</InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
             <FormControl
@@ -360,34 +387,6 @@ export default function AddModal({ handleCloseModal }: Props) {
                 { label: "BLE", value: "BLE" },
                 { label: "RF", value: "RF" },
                 { label: "NB-IoT", value: "NB-IoT" },
-              ].map(({ label, value }) => {
-                return (
-                  <FormControlLabel
-                    value={value}
-                    control={
-                      <Checkbox
-                        onChange={handleSupportedFeaturesType}
-                        value={value}
-                        checked={supportedFeatures.includes(value)}
-                      />
-                    }
-                    label={label}
-                  />
-                );
-              })}
-            </FormControl>
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>Features</InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <FormControl
-              sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
-            >
-              {[
                 {
                   label: t("model.add_model_pop_up.advanced"),
                   value: "Advanced",
@@ -480,12 +479,13 @@ export default function AddModal({ handleCloseModal }: Props) {
 
         <InputBox>
           <InputBox.Head>
-            <InputBox.Title>
+            <InputBox.Title style={{ width: "100%" }}>
               <Stack
                 direction="row"
                 justifyContent="space-between"
                 alignItems="center"
                 gap={1}
+                style={{ width: "100%" }}
               >
                 <span>{t("model.add_model_pop_up.hide_from_list")}</span>
                 <SwitchPrimary
