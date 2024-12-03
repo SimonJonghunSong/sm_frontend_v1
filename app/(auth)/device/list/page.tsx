@@ -315,9 +315,9 @@ export default function DeviceList() {
         closeButton
         open={modal}
         toggleOpen={modalToggle}
-        title="Profile to Multi-device"
+        title={t("device_list.configure_multi-device")}
         confirm={() => {}}
-        confirmButtonText="Add"
+        hasFooter={false}
         width="720px"
       >
         <ProfileModal modalToggle={modalToggle} write={write} />
@@ -440,30 +440,10 @@ function Before({
           height="56px"
           borderBottom="1px solid var(--grey3)"
         >
-          <div className="list-title">IMEI</div>
-          <div>{profile ? profile[0].split("=")[1] : "-"}</div>
-        </Stack>
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap="8px"
-          height="56px"
-          borderBottom="1px solid var(--grey3)"
-        >
           <div className="list-title">
             {t("configure_multi-device_pop_up_(profile_load).file_name")}
           </div>
           <div>{selectedFile ? selectedFile.name : "-"}</div>
-        </Stack>
-        <Stack
-          direction="row"
-          alignItems="center"
-          gap="8px"
-          height="56px"
-          borderBottom="1px solid var(--grey3)"
-        >
-          <div className="list-title">{t("device_list.country")}</div>
-          <div>{step === "LOADED" ? "USA" : "-"}</div>
         </Stack>
         <Stack
           direction="row"
