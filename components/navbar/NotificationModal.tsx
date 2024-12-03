@@ -67,14 +67,6 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
     };
   }, []);
 
-  useEffect(() => {
-    window.document.body.style.overflow = "hidden";
-
-    return () => {
-      window.document.body.style.overflow = "visible";
-    };
-  }, []);
-
   if (!notificationQuery.data) {
     return <></>;
   }

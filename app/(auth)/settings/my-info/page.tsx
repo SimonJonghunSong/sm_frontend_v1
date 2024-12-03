@@ -104,16 +104,16 @@ export default function MyInfoPage() {
 
   useEffect(() => {
     if (isFetched) {
-      if (data.affiliation) {
+      if (data?.affiliation) {
         form.setValue("affiliation", data.affiliation);
       }
-      if (data.tax_id) {
+      if (data?.tax_id) {
         form.setValue("taxId", data.tax_id);
       }
-      if (data.alias) {
+      if (data?.alias) {
         form.setValue("alias", data.alias);
       }
-      if (data.department) {
+      if (data?.department) {
         form.setValue("department", data.department);
       }
     }
