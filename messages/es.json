@@ -102,18 +102,8 @@
   },
   "footer": {
     "pw_set": {
-      "copyright_©_2024": {
-        "_st_sunlab_ltd": {
-          "_all_rights_reserved": {
-            "": "Copyright © 2024. ST SUNLAB Ltd. Todos los derechos reservados."
-          }
-        }
-      },
-      "syncmaster_supports_4g_or_higher_models_only": {
-        "_for_the_2g_and_3g_models,_please_download_and_use_synctrak": {
-          "": "SyncMaster solo admite modelos 4G o superiores. Para los modelos 2G y 3G, por favor descarga y usa Synctrak."
-        }
-      },
+      "copyright_©_2024_st_sunlab_ltd_all_rights_reserved": "Copyright © 2024. ST SUNLAB Ltd. Todos los derechos reservados.",
+      "syncmaster_supports_4g_or_higher_models_only_for_the_2g_and_3g_models_please_download_and_use_synctrak": "SyncMaster solo admite modelos 4G o superiores. Para los modelos 2G y 3G, por favor descarga y usa Synctrak.",
       "support": "Soporte",
       "synctrack": "Synctrack",
       "scuti": "Scuti",
