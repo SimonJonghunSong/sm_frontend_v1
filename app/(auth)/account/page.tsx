@@ -300,6 +300,7 @@ export default function Account() {
               </Button>
             </Stack>
             <DataTable
+              noDataMessage={t("account.account.no_results_found")}
               rows={(error
                 ? []
                 : data?.data?.user_list.filter((user) => {

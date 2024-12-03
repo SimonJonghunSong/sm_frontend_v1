@@ -263,10 +263,7 @@
       "network_*": "Network",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -310,10 +307,7 @@
       "network_*": "Network",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -416,9 +410,7 @@
       "no_registered_accounts": {
         "": "No registered accounts."
       },
-      "no_results_found": {
-        "": "No results found."
-      }
+      "no_results_found": "No results found."
     },
     "add_account_pop_up": {
       "name": "Name",

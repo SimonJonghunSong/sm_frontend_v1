@@ -421,20 +421,6 @@ export default function Model() {
                     </MenuItem>
                   ))}
                 </Select>
-                <Select
-                  value={searchFilter}
-                  onChange={(e) => handleSelectChange(e, setSearchFilter)}
-                  sx={{ minWidth: 160 }}
-                >
-                  <MenuItem value={"ModelName"}>
-                    {getLocalizedString(
-                      lang,
-                      "Model Name",
-                      "Nome do Modelo",
-                      "Nombre del Modelo"
-                    )}
-                  </MenuItem>
-                </Select>
                 <TextField
                   name="searchValue"
                   value={searchInputValue}
@@ -444,6 +430,12 @@ export default function Model() {
                       setSearchValue(searchInputValue);
                     }
                   }}
+                  placeholder={getLocalizedString(
+                    lang,
+                    "Model Name",
+                    "Nome do Modelo",
+                    "Nombre del Modelo"
+                  )}
                   sx={{ width: 160 }}
                 />
 
@@ -469,6 +461,7 @@ export default function Model() {
               </Stack>
             </Stack>
             <DataTable
+              noDataMessage={t("account.account.no_results_found")}
               rows={rowData
                 .filter((item) => {
                   if (selectedTab) {
