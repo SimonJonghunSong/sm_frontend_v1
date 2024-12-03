@@ -107,7 +107,7 @@ export default function EditModal({
     mutationFn: editModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      openErrorPopup(t("common.message.edit-success"), {
+      openErrorPopup(t("common.message.save-success"), {
         title: t("common.popup.success"),
       });
       handleCloseModal();

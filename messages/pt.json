@@ -261,7 +261,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -305,7 +308,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1612,7 +1618,8 @@
         "are_you_sure_you_want_to_leave_this_page_without_adding?": "Você tem certeza de que deseja sair desta página sem adicionar?"
       },
       "edit_model_pop_up": {
-        "saved_successfully!": "Salvo com sucesso!"
+        "saved_successfully!": "Salvo com sucesso!",
+        "are_you_sure_you_want_to_change_this_option": "Tem certeza de que deseja alterar a opção?"
       }
     },
     "device": {

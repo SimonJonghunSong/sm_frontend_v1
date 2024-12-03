@@ -18,6 +18,7 @@
     "message": {
       "add-success": "Successfully added!",
       "edit-success": "Successfully edited!",
+      "save-success": "Saved successfully!",
       "delete-success": "Successfully deleted!"
     }
   },
@@ -1625,7 +1626,7 @@
       },
       "edit_model_pop_up": {
         "edited_successfully!": "Edited successfully!",
-        "are_you_sure_you_want_to_change_this_option": "Are you sure you want to change this option?"
+        "are_you_sure_you_want_to_change_this_option": "Are you sure you want to change the option?"
       }
     },
     "device": {
