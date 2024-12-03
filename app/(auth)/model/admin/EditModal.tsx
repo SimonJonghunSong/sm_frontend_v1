@@ -22,6 +22,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { editModel } from "@/src/api/services/model";
 import { Model } from "@/src/api/services/model/type";
+import useModelPkgStore from "@/src/stores/useModelPkgStore";
 
 export interface FormState {
   devName: string;
@@ -113,6 +114,8 @@ export default function EditModal({
       handleCloseModal();
     },
   });
+
+  const { getIncludeUids } = useModelPkgStore();
 
   const {
     devName,
@@ -530,6 +533,15 @@ export default function EditModal({
                 <SwitchPrimary
                   checked={hide}
                   onChange={(e) => {
+                    if (getIncludeUids().includes(selectedData.uid)) {
+                      openErrorPopup(
+                        t(
+                          "popup.model.model.models_loaded_by_the_user_cannot_be_hidden"
+                        )
+                      );
+                      return;
+                    }
+
                     dispatch({
                       type: "SET_HIDE",
                       value: e.target.checked as boolean,
