@@ -17,7 +17,8 @@
     "message": {
       "add-success": "Adicionado com sucesso!",
       "edit-success": "Editado com sucesso!",
-      "delete-success": "Excluído com sucesso!"
+      "delete-success": "Excluído com sucesso!",
+      "save-success": "Salvo com sucesso!"
     }
   },
   "login": {
