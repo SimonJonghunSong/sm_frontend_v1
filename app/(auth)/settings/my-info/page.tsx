@@ -104,18 +104,12 @@ export default function MyInfoPage() {
 
   useEffect(() => {
     if (isFetched) {
-      if (data?.affiliation) {
-        form.setValue("affiliation", data.affiliation);
-      }
-      if (data?.tax_id) {
-        form.setValue("taxId", data.tax_id);
-      }
-      if (data?.alias) {
-        form.setValue("alias", data.alias);
-      }
-      if (data?.department) {
-        form.setValue("department", data.department);
-      }
+      form.reset({
+        affiliation: data?.affiliation,
+        taxId: data?.tax_id,
+        alias: data?.alias,
+        department: data?.department,
+      });
     }
   }, [isFetched]);
 
@@ -421,7 +415,6 @@ export default function MyInfoPage() {
                     )
                   }
                   {...field}
-                  value={field.value || data.affiliation}
                   sx={{ width: 320 }}
                 >
                   {affiliationList.map(({ label, value }) => {
@@ -460,7 +453,6 @@ export default function MyInfoPage() {
                 <TextField
                   sx={{ width: 320 }}
                   {...field}
-                  value={field.value || data.department}
                   onChange={({ target }) => {
                     const value = target.value;
 
@@ -503,7 +495,6 @@ export default function MyInfoPage() {
                 <TextField
                   error={!!error}
                   sx={{ width: 320 }}
-                  defaultValue={data.tax_id}
                   {...field}
                   onChange={({ target }) => {
                     const value = target.value;
@@ -546,7 +537,6 @@ export default function MyInfoPage() {
               return (
                 <TextField
                   sx={{ width: 320 }}
-                  defaultValue={data.alias}
                   error={!!error}
                   {...field}
                   onChange={({ target }) => {
