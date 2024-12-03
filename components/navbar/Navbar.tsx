@@ -294,6 +294,31 @@ export default function Navbar() {
 
           {userRole !== "ROOT" && (
             <>
+              {pathname.includes("configuration") && (
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  placeholder={`${t("pw_set.search")}`}
+                  id="search"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      paddingRight: 0,
+                      color: "var(--grey5)",
+                    },
+                    backgroundColor: "var(--black)",
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton type="submit">
+                        <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                      </IconButton>
+                    ),
+                  }}
+                  onClick={handleSearchClick}
+                  inputProps={{ readOnly: true }}
+                />
+              )}
+
               <div
                 className={
                   isOnline
