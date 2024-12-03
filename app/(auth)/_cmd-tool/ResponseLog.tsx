@@ -1,7 +1,7 @@
 import { Stack, TextField, Button, IconButton } from "@mui/material";
 import styles from "./styles.module.scss";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import KeyboardDoubleArrowRightOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowRightOutlined";
@@ -128,8 +128,11 @@ export default function ResponseLog({
   const [expand, setExpand] = useState(false);
   const toggleWidth = () => {
     setExpand(!expand);
-    setIsCmdModalWide(!expand);
   };
+
+  useEffect(() => {
+    setIsCmdModalWide(expand);
+  }, [expand]);
 
   return (
     <>
