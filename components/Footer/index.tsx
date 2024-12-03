@@ -17,7 +17,6 @@ export default function Footer() {
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const pathName = usePathname();
-  console.log(pathName.startsWith("/model"));
 
   const handleLinkClick = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
