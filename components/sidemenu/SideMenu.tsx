@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import styles from "./styles.module.scss";
 import Link from "next/link";
@@ -19,6 +19,10 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { useTranslations } from "next-intl";
+import Modal from "@/components/Modal";
+import CmdTool from "app/(auth)/_cmd-tool/CmdTool";
+import useModal from "@/utils/useModal";
+import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
 
 type sideMenuItem = {
   name: string;
@@ -48,6 +52,9 @@ export default function SideMenu({
 
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
   const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
+
+  const [cmdModal, cmdModalToggle] = useModal();
+  const [isCmdModalWide, setIsCmdModalWide] = useState(false);
 
   const { renderConfirmModal: renderLogoutModal, toggle: toggleLogoutModal } =
     useConfirmDialog({
@@ -163,6 +170,10 @@ export default function SideMenu({
                   sx={{ borderColor: "var(--grey7)", marginBottom: "16px" }}
                 />
 
+                <button onClick={cmdModalToggle}>
+                  <TerminalOutlinedIcon />
+                  <span>CMD Tool</span>
+                </button>
                 <Link href={getSubHref("/configuration/edit-profile")}>
                   <ModeEditIcon />
                   <span>Edit Profile</span>
@@ -235,6 +246,37 @@ export default function SideMenu({
           }}
         />
       )}
+
+      {cmdModal && (
+        <Modal
+          isDraggable
+          hideBackdrop
+          hasMinimize
+          closeButton
+          open={cmdModal}
+          toggleOpen={cmdModalToggle}
+          width={isCmdModalWide ? "1240px" : "700px"}
+          hasFooter={false}
+        >
+          <CmdModal setIsCmdModalWide={setIsCmdModalWide} />
+        </Modal>
+      )}
     </>
   );
+}
+
+function CmdModal({
+  setIsCmdModalWide,
+}: {
+  setIsCmdModalWide: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+  const searchRef = useRef<HTMLInputElement>();
+
+  useEffect(() => {
+    if (searchRef.current) {
+      searchRef.current.focus();
+    }
+  }, []);
+
+  return <CmdTool setIsCmdModalWide={setIsCmdModalWide} />;
 }

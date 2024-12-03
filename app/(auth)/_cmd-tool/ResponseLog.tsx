@@ -120,11 +120,17 @@ const rows = [
   },
 ];
 
-export default function ResponseLog() {
+export default function ResponseLog({
+  setIsCmdModalWide,
+}: {
+  setIsCmdModalWide?: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [expand, setExpand] = useState(false);
   const toggleWidth = () => {
     setExpand(!expand);
+    setIsCmdModalWide(!expand);
   };
+
   return (
     <>
       <Stack direction="row" gap={expand ? "16px" : 0} flexGrow={1}>

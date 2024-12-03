@@ -8,7 +8,6 @@ import SettingsSharpIcon from "@mui/icons-material/SettingsSharp";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
-import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import NotificationsSharpIcon from "@mui/icons-material/NotificationsSharp";
 import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
@@ -66,11 +65,6 @@ const adminMenus = (lang: "en" | "pt" | "es") => [
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
   },
-  {
-    name: "CMD Tool",
-    offlineEnable: true,
-    icon: () => <TerminalOutlinedIcon />,
-  },
 ];
 const customerMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -84,11 +78,6 @@ const customerMenus = (lang: "en" | "pt" | "es") => [
     href: "/account",
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
-  },
-  {
-    name: "CMD Tool",
-    offlineEnable: true,
-    icon: () => <TerminalOutlinedIcon />,
   },
 ];
 const guestMenus = (lang: "en" | "pt" | "es") => [
