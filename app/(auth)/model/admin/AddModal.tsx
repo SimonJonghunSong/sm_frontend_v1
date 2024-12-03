@@ -120,7 +120,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
       openErrorPopup(
         (e.response.data as any)?.response?.reason ||
           (e.response.data as any)?.message ||
-          "Error"
+          t("popup.common.common.an_error_has_occurred_please_try_again_later")
       );
     },
   });
