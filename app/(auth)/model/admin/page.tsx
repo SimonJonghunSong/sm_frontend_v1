@@ -320,6 +320,19 @@ export default function Model() {
   const handleDeleteModels = () => {
     if (!selectedRowIdList || !selectedRowIdList.length) return;
 
+    for (const id of selectedRowIdList) {
+      const targetData = (data?.data?.records || []).find(
+        (item) => item.uid === id
+      );
+
+      if (getIncludeUids().includes(targetData.uid)) {
+        openErrorPopup(
+          t("popup.model.model.models_loaded_by_the_user_cannot_be_deleted")
+        );
+        return;
+      }
+    }
+
     openErrorPopup(t("popup.model.model.delete"), {
       title: t("common.popup.confrim"),
       confirmText: t("common.popup.yes"),
