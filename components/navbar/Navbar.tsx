@@ -80,6 +80,20 @@ const customerMenus = (lang: "en" | "pt" | "es") => [
     icon: () => <PeopleAltOutlinedIcon />,
   },
 ];
+const clientMenus = (lang: "en" | "pt" | "es") => [
+  {
+    name: getLocalizedString(lang, "Device", "Dispositivo", "Dispositivo"),
+    href: "/device",
+    offlineEnable: true,
+    icon: () => <TrackChangesOutlinedIcon />,
+  },
+  {
+    name: getLocalizedString(lang, "Account", "Conta", "Cuenta"),
+    href: "/account",
+    offlineEnable: false,
+    icon: () => <PeopleAltOutlinedIcon />,
+  },
+];
 const guestMenus = (lang: "en" | "pt" | "es") => [
   {
     name: getLocalizedString(lang, "Device", "Dispositivo", "Dispositivo"),
@@ -111,6 +125,8 @@ export default function Navbar() {
       ? adminMenus(lang)
       : userRole === "CUSTOMER"
       ? customerMenus(lang)
+      : userRole === "CLIENT"
+      ? clientMenus(lang)
       : guestMenus(lang);
 
   const [mounted, setMounted] = useState<boolean>(false);
