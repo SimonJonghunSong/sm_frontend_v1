@@ -805,84 +805,92 @@ function AddAcountModal({
           </InputBox.Body>
         </InputBox>
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.id")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <Controller
-              name="user_id"
-              control={form.control}
-              render={({ field }) => (
-                <TextField
-                  fullWidth
-                  {...field}
-                  onChange={(e) => {
-                    const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
-                    const value = e.target.value;
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
+          "id"
+        ) && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                {t("account.add_account_pop_up.id")}
+                <i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <Controller
+                name="user_id"
+                control={form.control}
+                render={({ field }) => (
+                  <TextField
+                    fullWidth
+                    {...field}
+                    onChange={(e) => {
+                      const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
+                      const value = e.target.value;
 
-                    // 입력값 중 허용되지 않는 문자 제거
-                    if (!regex.test(value)) {
-                      e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
-                    }
+                      // 입력값 중 허용되지 않는 문자 제거
+                      if (!regex.test(value)) {
+                        e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
+                      }
 
-                    field.onChange(e.target.value);
-                  }}
-                />
+                      field.onChange(e.target.value);
+                    }}
+                  />
+                )}
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
+
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
+          "email"
+        ) && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                {t("account.add_account_pop_up.e-mail")}
+                <i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <Controller
+                name="email"
+                control={form.control}
+                rules={{
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // 이메일 형식 정규식
+                    message: t("error.invalid_email_format"), // 에러 메시지
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    fullWidth
+                    {...field}
+                    value={field.value}
+                    onChange={(e) => {
+                      const regex =
+                        /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
+                      const value = e.target.value;
+
+                      // 입력값 중 한글 및 자모 제거
+                      if (!regex.test(value)) {
+                        e.target.value = value.replace(
+                          /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
+                          ""
+                        ); // 한글과 자모 범위 제거
+                      }
+
+                      field.onChange(e.target.value);
+                    }}
+                    error={!!error}
+                  />
+                )}
+              />
+              {form.formState.errors.email?.type === "pattern" && (
+                <InputErrorText text={form.formState.errors.email?.message} />
               )}
-            />
-          </InputBox.Body>
-        </InputBox>
-
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.e-mail")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <Controller
-              name="email"
-              control={form.control}
-              rules={{
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, // 이메일 형식 정규식
-                  message: t("error.invalid_email_format"), // 에러 메시지
-                },
-              }}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  fullWidth
-                  {...field}
-                  value={field.value}
-                  onChange={(e) => {
-                    const regex =
-                      /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
-                    const value = e.target.value;
-
-                    // 입력값 중 한글 및 자모 제거
-                    if (!regex.test(value)) {
-                      e.target.value = value.replace(
-                        /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
-                        ""
-                      ); // 한글과 자모 범위 제거
-                    }
-
-                    field.onChange(e.target.value);
-                  }}
-                  error={!!error}
-                />
-              )}
-            />
-            {form.formState.errors.email?.type === "pattern" && (
-              <InputErrorText text={form.formState.errors.email?.message} />
-            )}
-          </InputBox.Body>
-        </InputBox>
+            </InputBox.Body>
+          </InputBox>
+        )}
         {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "name"
         ) && (
@@ -913,144 +921,152 @@ function AddAcountModal({
           </InputBox>
         )}
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.password")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <Controller
-              name="password"
-              control={form.control}
-              rules={{
-                validate: {
-                  minLength: (value) =>
-                    value.length >= 8 || t("error.At_least_8_characters"),
-                  upperLowerCase: (value) =>
-                    /(?=.*[a-z])(?=.*[A-Z])/.test(value) ||
-                    t("error.At_least_1_upper/lowercase"),
-                  containsNumber: (value) =>
-                    /(?=.*\d)/.test(value) || t("error.At_least_1_number"),
-                },
-              }}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <TextField
-                    fullWidth
-                    type={showPassword ? "text" : "password"}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? (
-                            <VisibilityOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          ) : (
-                            <VisibilityOffOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          )}
-                        </IconButton>
-                      ),
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      const regex =
-                        /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
-                      const value = e.target.value;
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
+          "password"
+        ) && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                {t("account.add_account_pop_up.password")}
+                <i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <Controller
+                name="password"
+                control={form.control}
+                rules={{
+                  validate: {
+                    minLength: (value) =>
+                      value.length >= 8 || t("error.At_least_8_characters"),
+                    upperLowerCase: (value) =>
+                      /(?=.*[a-z])(?=.*[A-Z])/.test(value) ||
+                      t("error.At_least_1_upper/lowercase"),
+                    containsNumber: (value) =>
+                      /(?=.*\d)/.test(value) || t("error.At_least_1_number"),
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <>
+                    <TextField
+                      fullWidth
+                      type={showPassword ? "text" : "password"}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? (
+                              <VisibilityOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            ) : (
+                              <VisibilityOffOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            )}
+                          </IconButton>
+                        ),
+                      }}
+                      {...field}
+                      onChange={(e) => {
+                        const regex =
+                          /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
+                        const value = e.target.value;
 
-                      // 입력값 중 한글 및 자모 제거
-                      if (!regex.test(value)) {
-                        e.target.value = value.replace(
-                          /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
-                          ""
-                        ); // 한글과 자모 범위 제거
-                      }
+                        // 입력값 중 한글 및 자모 제거
+                        if (!regex.test(value)) {
+                          e.target.value = value.replace(
+                            /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
+                            ""
+                          ); // 한글과 자모 범위 제거
+                        }
 
-                      field.onChange(e.target.value);
-                    }}
-                    error={!!error}
-                  />
-                  {error?.message && <InputErrorText text={error.message} />}
-                </>
-              )}
-            />
-          </InputBox.Body>
-        </InputBox>
+                        field.onChange(e.target.value);
+                      }}
+                      error={!!error}
+                    />
+                    {error?.message && <InputErrorText text={error.message} />}
+                  </>
+                )}
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
-        <InputBox>
-          <InputBox.Head>
-            <InputBox.Title>
-              {t("account.add_account_pop_up.password_confirm")}
-              <i>*</i>
-            </InputBox.Title>
-          </InputBox.Head>
-          <InputBox.Body>
-            <Controller
-              name="confirm_password"
-              control={form.control}
-              rules={{
-                validate: {
-                  same: (value, { password }) =>
-                    value === password || t("error.Passwords_do_not_match"),
-                },
-              }}
-              render={({ field, fieldState: { error } }) => (
-                <>
-                  <TextField
-                    fullWidth
-                    type={showConfirmPassword ? "text" : "password"}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowConfirmPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showConfirmPassword ? (
-                            <VisibilityOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          ) : (
-                            <VisibilityOffOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          )}
-                        </IconButton>
-                      ),
-                    }}
-                    {...field}
-                    onChange={(e) => {
-                      const regex =
-                        /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
-                      const value = e.target.value;
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
+          "passwordConfirm"
+        ) && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                {t("account.add_account_pop_up.password_confirm")}
+                <i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <Controller
+                name="confirm_password"
+                control={form.control}
+                rules={{
+                  validate: {
+                    same: (value, { password }) =>
+                      value === password || t("error.Passwords_do_not_match"),
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <>
+                    <TextField
+                      fullWidth
+                      type={showConfirmPassword ? "text" : "password"}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowConfirmPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showConfirmPassword ? (
+                              <VisibilityOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            ) : (
+                              <VisibilityOffOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            )}
+                          </IconButton>
+                        ),
+                      }}
+                      {...field}
+                      onChange={(e) => {
+                        const regex =
+                          /^[^\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]*$/; // 한글 및 자모 제거
+                        const value = e.target.value;
 
-                      // 입력값 중 한글 및 자모 제거
-                      if (!regex.test(value)) {
-                        e.target.value = value.replace(
-                          /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
-                          ""
-                        ); // 한글과 자모 범위 제거
-                      }
+                        // 입력값 중 한글 및 자모 제거
+                        if (!regex.test(value)) {
+                          e.target.value = value.replace(
+                            /[\uAC00-\uD7A3\u3131-\u318E\u1100-\u11FF]/g,
+                            ""
+                          ); // 한글과 자모 범위 제거
+                        }
 
-                      field.onChange(e.target.value);
-                    }}
-                    error={!!error}
-                  />
-                  {error?.message && <InputErrorText text={error.message} />}
-                </>
-              )}
-            />
-          </InputBox.Body>
-        </InputBox>
+                        field.onChange(e.target.value);
+                      }}
+                      error={!!error}
+                    />
+                    {error?.message && <InputErrorText text={error.message} />}
+                  </>
+                )}
+              />
+            </InputBox.Body>
+          </InputBox>
+        )}
 
         {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
           "country"
