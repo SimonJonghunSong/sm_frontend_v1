@@ -314,7 +314,16 @@ export default function Account() {
 
                   switch (userFilter) {
                     case "All":
-                      return item;
+                      return (
+                        item.user_id?.includes(searchValue) ||
+                        item.email?.includes(searchValue) ||
+                        item.name?.includes(searchValue) ||
+                        ("ST Sunlab".includes(searchValue) &&
+                          (item.role.name === "root" ||
+                            item.role.name === "admin")) ||
+                        ("No affiliation".includes(searchValue) &&
+                          item.role.name === "guest")
+                      );
                     case "ID":
                       return item.user_id?.includes(searchValue);
                     case "E-mail":
