@@ -31,6 +31,7 @@ import { useTranslations } from "next-intl";
 import NotificationModal from "./NotificationModal";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useErrorDialog from "@/src/hooks/useErrorDialog";
+import { DISABLED_OFFLINE_MODE_PATHS } from "@/components/NetworkStatusCheck";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -138,6 +139,14 @@ export default function Navbar() {
       "popup.gnb.online/offline.switching_online_is_not_possible_when_there_is_no_network"
     ),
   });
+  const {
+    renderErrorModal: renderOfflineChangeErrorModal,
+    toggle: renderOfflineChangeErrorModalToggle,
+  } = useErrorDialog({
+    description: t(
+      "popup.gnb.online/offline.this_page_is_not_available_in_offline_mode"
+    ),
+  });
 
   useEffect(() => {
     setMounted(true);
@@ -157,6 +166,11 @@ export default function Navbar() {
     if (isOfflineToOnline) {
       onlineChangeModalToggle();
     } else {
+      if (DISABLED_OFFLINE_MODE_PATHS.includes(pathname)) {
+        renderOfflineChangeErrorModalToggle();
+        return;
+      }
+
       offlineChangeModalToggle();
     }
 
@@ -399,6 +413,7 @@ export default function Navbar() {
         />
       )}
       {renderErrorModal()}
+      {renderOfflineChangeErrorModal()}
       {offlineChangeModal && (
         <Modal
           open

@@ -1,22 +1,32 @@
 "use client";
 
+import ErrorDialog from "@/components/ErrorDialog";
 import useServiceWorkerMessage from "@/src/hooks/useServiceWorkerMessage";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
-import { usePathname } from "next/navigation";
-import { useEffect } from "react";
+import { useTranslations } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const FORCE_ONLINE_MODE_PATHS = ["/login"];
+export const DISABLED_OFFLINE_MODE_PATHS = ["/account", "/model/admin"];
 
 export default function NetworkStatusCheck() {
   const { sendMessage } = useServiceWorkerMessage();
   const { isOnline, isSelfOffline, setIsOnline } = useNetworkMonitor();
   const pathname = usePathname();
+  const router = useRouter();
+  const t = useTranslations();
+
+  const [forceOfflineChangeModalOpen, setForceOfflineChangeModalOpen] =
+    useState(false);
 
   // 실제 네트워크 이벤트 감지
   useEffect(() => {
     const handleNetworkOff = () => {
       if (isOnline) {
         setIsOnline(false);
+
+        setForceOfflineChangeModalOpen(true);
       }
     };
     const handleNetworkOn = () => {
@@ -49,5 +59,22 @@ export default function NetworkStatusCheck() {
     });
   }, [isOnline]);
 
-  return null;
+  return (
+    <>
+      {forceOfflineChangeModalOpen && (
+        <ErrorDialog
+          text={t(
+            "popup.common.common.internet_disconnected_please_check_your_internet_connection"
+          )}
+          onClose={() => {
+            if (DISABLED_OFFLINE_MODE_PATHS.includes(pathname)) {
+              router.replace("/");
+            } else {
+              setForceOfflineChangeModalOpen(false);
+            }
+          }}
+        />
+      )}
+    </>
+  );
 }
