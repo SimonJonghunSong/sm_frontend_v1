@@ -399,7 +399,7 @@ export default function Model() {
                       variant="contained"
                       onClick={() => setFilterSearch(search)}
                     >
-                      Search
+                      {t("home.search")}
                     </Button>
                   </Stack>
                 </Stack>
