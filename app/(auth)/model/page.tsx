@@ -22,6 +22,7 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
 } from "@mui/material";
@@ -67,6 +68,8 @@ export default function Model() {
   const { isOnline } = useNetworkMonitor();
 
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filterSearch, setFilterSearch] = useState("");
 
   const { data } = useQuery({
     queryKey: ["model"],
@@ -184,6 +187,10 @@ export default function Model() {
 
   const [rowData, setRowData] = useState(getRows(data?.data?.records));
   const filteredRowData = rowData
+    // text field search 필터 추가
+    .filter((item) => {
+      return item.col2.toLowerCase().includes(filterSearch.toLowerCase());
+    })
     // Hide 숨기기
     .filter((item) => {
       return !item.hide;
@@ -369,17 +376,33 @@ export default function Model() {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Select
-                  value={filter}
-                  onChange={(e) => handleSelectChange(e, setFilter)}
-                  sx={{ minWidth: 160 }}
-                >
-                  {selectSortData(lang).map((item) => (
-                    <MenuItem key={item.value} value={item.value}>
-                      {item.label}
-                    </MenuItem>
-                  ))}
-                </Select>
+                <Stack alignItems={"center"} gap={4} flexDirection="row">
+                  <Select
+                    value={filter}
+                    onChange={(e) => handleSelectChange(e, setFilter)}
+                    sx={{ minWidth: 160 }}
+                  >
+                    {selectSortData(lang).map((item) => (
+                      <MenuItem key={item.value} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+
+                  <Stack gap={1} flexDirection="row">
+                    <TextField
+                      onChange={({ target }) => setSearch(target.value)}
+                      value={search}
+                    />
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      onClick={() => setFilterSearch(search)}
+                    >
+                      Search
+                    </Button>
+                  </Stack>
+                </Stack>
               </Stack>
 
               <Stack direction="row" gap="24px" alignItems="center">
