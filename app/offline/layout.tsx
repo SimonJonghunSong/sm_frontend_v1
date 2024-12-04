@@ -5,7 +5,9 @@ export default function OfflinePageLayout({ children }) {
     <div className="mainWrap">
       <Navbar />
       <section>
-        <div className="pageWrap">{children}</div>
+        <div style={{ height: "500px" }} className="pageWrap">
+          {children}
+        </div>
       </section>
     </div>
   );

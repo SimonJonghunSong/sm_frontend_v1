@@ -1,5 +1,8 @@
 "use client";
 
+import { me } from "@/src/api/services/auth";
+import { getModels } from "@/src/api/services/model";
+import { getNoti } from "@/src/api/services/notification";
 import useServiceWorkerMessage, {
   BoradcaseMessage,
 } from "@/src/hooks/useServiceWorkerMessage";
@@ -11,11 +14,17 @@ import {
   ClientToServiceWorkerResponseAction,
   ServiceWorkerToClientAction,
 } from "@/src/worker/types";
+import useAuthStore from "@/utils/useAuthStore";
 import { useEffect, useRef } from "react";
+
+const getPrefetchApiList = () => {
+  return [getModels, getNoti, me];
+};
 
 export default function ServiceWorkerRegister() {
   const isReadyServiceWorker = useRef(false);
   const { swToClientBroadcast, sendMessage } = useServiceWorkerMessage();
+  const { userRole } = useAuthStore();
 
   useEffect(() => {
     const handleMessage = (e) => {
@@ -39,6 +48,9 @@ export default function ServiceWorkerRegister() {
           handleGlobalLoadingOn();
           break;
         case "INSTALL_END":
+          getPrefetchApiList().forEach((func) => {
+            func?.();
+          });
           handleGlobalLoadingOff();
           break;
         default:

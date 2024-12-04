@@ -297,8 +297,6 @@ export default function Model() {
   const [modal, modalToggle] = useModal();
   const [editModal, editModalToggle] = useModal();
 
-  console.log("modal ::::", modal);
-
   const handleSelectChange = (
     e: SelectChangeEvent,
     setState: (value: string) => void
