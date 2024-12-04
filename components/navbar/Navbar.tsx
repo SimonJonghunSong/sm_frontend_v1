@@ -104,8 +104,7 @@ const guestMenus = (lang: "en" | "pt" | "es") => [
 ];
 
 export default function Navbar() {
-  const t = useTranslations("gnb");
-  const popupT = useTranslations();
+  const t = useTranslations();
   const pathname = usePathname();
   const { lang } = useLangStore();
   const { userRole } = useAuthStore();
@@ -117,6 +116,9 @@ export default function Navbar() {
   const [networkModal, networkModalToggle] = useModal();
 
   const { isOnline, setIsOnline, setIsSelfOffline } = useNetworkMonitor();
+
+  const [offlineChangeModal, offlineChangeModalToggle] = useModal();
+  const [onlineChangeModal, onlineChangeModalToggle] = useModal();
 
   const navLinkes =
     userRole && userRole === "ROOT"
@@ -132,7 +134,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [notificationModal, setNotificationModal] = useState(false);
   const { renderErrorModal, toggle } = useErrorDialog({
-    description: popupT(
+    description: t(
       "popup.gnb.online/offline.switching_online_is_not_possible_when_there_is_no_network"
     ),
   });
@@ -152,17 +154,23 @@ export default function Navbar() {
       return;
     }
 
-    Confirm({
-      title: "Confirm",
-      text: `Are you sure you want to switch to ${
-        isOfflineToOnline ? "online" : "offline"
-      } usage?`,
-    }).then((result) => {
-      if (result.isConfirmed) {
-        setIsOnline(isOfflineToOnline);
-        setIsSelfOffline(!isOfflineToOnline);
-      }
-    });
+    if (isOfflineToOnline) {
+      onlineChangeModalToggle();
+    } else {
+      offlineChangeModalToggle();
+    }
+
+    // Confirm({
+    //   title: "Confirm",
+    //   text: `Are you sure you want to switch to ${
+    //     isOfflineToOnline ? "online" : "offline"
+    //   } usage?`,
+    // }).then((result) => {
+    //   if (result.isConfirmed) {
+    //     setIsOnline(isOfflineToOnline);
+    //     setIsSelfOffline(!isOfflineToOnline);
+    //   }
+    // });
   };
 
   const getRootHref = () => {
@@ -182,15 +190,15 @@ export default function Navbar() {
     if (!role) return "";
     switch (role.toLowerCase()) {
       case "root":
-        return t("pw_set.root");
+        return t("gnb.pw_set.root");
       case "admin":
-        return t("pw_set.admin");
+        return t("gnb.pw_set.admin");
       case "customer":
-        return t("pw_set.customer");
+        return t("gnb.pw_set.customer");
       case "client":
         return "Client";
       case "guest":
-        return t("pw_set.guest");
+        return t("gnb.pw_set.guest");
       default:
         return role;
     }
@@ -314,7 +322,7 @@ export default function Navbar() {
                 <TextField
                   variant="outlined"
                   size="small"
-                  placeholder={`${t("pw_set.search")}`}
+                  placeholder={`${t("gnb.pw_set.search")}`}
                   id="search"
                   sx={{
                     "& .MuiOutlinedInput-root": {
@@ -343,10 +351,10 @@ export default function Navbar() {
                 }
               >
                 <div onClick={() => isOnline && handleToggleNetwork(false)}>
-                  {t("pw_set.offline")}
+                  {t("gnb.pw_set.offline")}
                 </div>
                 <div onClick={() => !isOnline && handleToggleNetwork(true)}>
-                  {t("pw_set.online")}
+                  {t("gnb.pw_set.online")}
                 </div>
               </div>
             </>
@@ -391,6 +399,48 @@ export default function Navbar() {
         />
       )}
       {renderErrorModal()}
+      {offlineChangeModal && (
+        <Modal
+          open
+          closeButton
+          width={"357px"}
+          toggleOpen={offlineChangeModalToggle}
+          confirm={() => {
+            setIsOnline(false);
+            setIsSelfOffline(true);
+          }}
+          title={t("common.popup.confrim")}
+        >
+          <Stack>
+            <span style={{ wordBreak: "keep-all" }}>
+              {t(
+                "popup.gnb.online/offline.are_you_sure_you_want_to_switch_to_offline_usage?"
+              )}
+            </span>
+          </Stack>
+        </Modal>
+      )}
+      {onlineChangeModal && (
+        <Modal
+          open
+          closeButton
+          width={"357px"}
+          toggleOpen={onlineChangeModalToggle}
+          confirm={() => {
+            setIsOnline(true);
+            setIsSelfOffline(false);
+          }}
+          title={t("common.popup.confrim")}
+        >
+          <Stack>
+            <span style={{ wordBreak: "keep-all" }}>
+              {t(
+                "popup.gnb.online/offline.are_you_sure_you_want_to_switch_to_online_usage?"
+              )}
+            </span>
+          </Stack>
+        </Modal>
+      )}
     </>
   );
 }
