@@ -21,6 +21,7 @@ export default function LanguagePage() {
   const { setLang, lang } = useLangStore();
   const { userRole } = useAuthStore();
   const [localLang, setLocalLang] = useState<Lang>(lang);
+  const isDirty = lang !== localLang;
   const { toggle, renderSuccessModal } = useSuccessDialog({
     description: t("popup.settings.my_info.saved_successfully!"),
   });
@@ -92,6 +93,7 @@ export default function LanguagePage() {
             variant="contained"
             color="secondary"
             onClick={() => handleSave(localLang)}
+            disabled={!isDirty}
           >
             {t("settings.my_info.save")}
           </Button>
