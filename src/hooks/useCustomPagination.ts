@@ -37,5 +37,10 @@ export default function useCustomPagination({
     setPage(value);
   };
 
-  return { paginatedRows, page, handleChangePage, pageCount };
+  return {
+    paginatedRows,
+    page,
+    handleChangePage,
+    pageCount: Math.floor(pageCount),
+  };
 }

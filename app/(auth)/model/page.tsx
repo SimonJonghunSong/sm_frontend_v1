@@ -470,12 +470,7 @@ type DataTableProps = {
   onNetworkError?: () => void;
 };
 
-function GalleryView({
-  rows,
-  setRows,
-  toggleLoaded,
-  onNetworkError,
-}: DataTableProps) {
+function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
   const { paginatedRows, page, pageCount, handleChangePage } =
     useCustomPagination({ rows });
 
@@ -506,6 +501,7 @@ function GalleryView({
           </li>
         ))}
       </ul>
+
       <Stack spacing={2} justifyContent="center" mt="40px">
         <Pagination
           page={page}
