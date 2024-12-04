@@ -87,7 +87,7 @@ export default function MyInfoPage() {
     event.preventDefault();
   };
 
-  const handleSave = ({ pw, affiliation, alias }) => {
+  const handleSave = ({ pw, affiliation, alias, department, taxId }) => {
     if (!isOnline) {
       setOfflineErrorDialog(true);
       return;
@@ -99,6 +99,7 @@ export default function MyInfoPage() {
       department,
       affiliation,
       alias,
+      tax_id: taxId,
     });
   };
 
