@@ -541,7 +541,7 @@ function Before({
           sx={{ width: 200 }}
           onClick={() => setStep("APPLY")}
         >
-          {t("device.configure_multi-device_pop_up_(profile_load).next")}
+          {t("device.device_list.next")}
         </Button>
 
         <input
@@ -579,7 +579,7 @@ function Apply({
     callback?: () => void;
   }) => Promise<boolean>;
 }) {
-  const t = useTranslations("device");
+  const t = useTranslations();
   const { portList } = useSerialStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
@@ -671,7 +671,7 @@ function Apply({
           sx={{ width: 200 }}
           onClick={handleApply}
         >
-          {t("device.configure_multi-device_pop_up_(device_list).apply")}
+          {t("configuration.profile_menu.apply")}
         </Button>
       </Stack>
     </>

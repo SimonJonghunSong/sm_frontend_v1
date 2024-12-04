@@ -11,8 +11,10 @@ import { AT_CMD, AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import { useTranslations } from "next-intl";
 
 export default function page() {
+  const t = useTranslations();
   const { getCurrentImei, getTab } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const tab = getTab();
@@ -113,7 +115,7 @@ export default function page() {
             disabled={tab !== "Command String" && isSaveDisabled}
             onClick={() => handleSaveSettings()}
           >
-            Save
+            {t("configuration.commands.send")}
           </Button>
         )}
       </Stack>

@@ -5,7 +5,7 @@ import { Button, Stack, TextField } from "@mui/material";
 
 export default function Page() {
   return (
-    <div className="pageWrap">
+    <div className="pageWrap" style={{ width: "100%" }}>
       <article className="contentWrap">
         <div className="pageTitle">Edit Profile</div>
         <Stack direction="row" gap="16px">

@@ -357,7 +357,8 @@
       "configure": "Configure",
       "disconnect": "Disconnect",
       "configure_multi-device": "Configure Multi-Device",
-      "models_that_are_not_supported_will_not_be_displayed_on_the_device_list": "Models that are not supported will not be displayed on the device list."
+      "models_that_are_not_supported_will_not_be_displayed_on_the_device_list": "Models that are not supported will not be displayed on the device list.",
+      "next": "Next"
     },
     "configure_multi-device_pop_up_(profile_load)": {
       "configure_multi-device": "Configure Multi-Device",
