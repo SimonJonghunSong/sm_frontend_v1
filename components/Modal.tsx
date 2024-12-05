@@ -142,7 +142,12 @@ export default function Modal({
               <Button
                 variant="contained"
                 disabled={disabled}
-                sx={{ width: 80, height: 32, fontSize: 13 }}
+                sx={{
+                  width: 80,
+                  height: 32,
+                  fontSize: 13,
+                  background: "var(--primary-gradient)",
+                }}
                 onClick={() => {
                   confirm && confirm();
                   !manualToggleOpenWhenConfirm && toggleOpen();
