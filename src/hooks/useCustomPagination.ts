@@ -41,6 +41,6 @@ export default function useCustomPagination({
     paginatedRows,
     page,
     handleChangePage,
-    pageCount: Math.floor(pageCount),
+    pageCount,
   };
 }

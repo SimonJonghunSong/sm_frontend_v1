@@ -527,8 +527,8 @@ function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
 
       <Stack spacing={2} justifyContent="center" mt="40px">
         <Pagination
-          page={page}
-          count={pageCount}
+          page={Math.floor(page)}
+          count={Math.floor(pageCount)}
           color="primary"
           variant="outlined"
           shape="rounded"
