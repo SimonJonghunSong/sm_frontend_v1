@@ -146,7 +146,9 @@ export default function Modal({
                   width: 80,
                   height: 32,
                   fontSize: 13,
-                  background: "var(--primary-gradient)",
+                  background: disabled
+                    ? "#0000001f"
+                    : "var(--primary-gradient)",
                 }}
                 onClick={() => {
                   confirm && confirm();
