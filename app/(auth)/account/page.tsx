@@ -907,12 +907,12 @@ function AddAcountModal({
                 fullWidth
                 value={form.watch("name")}
                 onChange={(e) => {
-                  const regex = /^[a-zA-Z]*$/; // 영어 대소문자와 숫자만 허용
+                  const regex = /^[a-zA-Z\s]*$/; // 영어 대소문자와 숫자만 허용
                   const value = e.target.value;
 
                   // 입력값 중 허용되지 않는 문자 제거
                   if (!regex.test(value)) {
-                    e.target.value = value.replace(/[^a-zA-Z]/g, "");
+                    e.target.value = value.replace(/[^a-zA-Z\s]/g, "");
                   }
 
                   form.setValue("name", e.target.value);
