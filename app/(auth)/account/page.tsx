@@ -528,6 +528,7 @@ const getFieldsByRole = (userRole: string) => {
         "alias",
         "affiliation",
         "department",
+        "nda_file",
       ];
     case "GUEST":
       return [
@@ -580,6 +581,7 @@ function AddAcountModal({
       profile: [],
       nda_contract_contents: "",
       nda_contract_path: "",
+      nda_file: null as File | null,
       cmd_list: [],
     },
   });
@@ -636,18 +638,19 @@ function AddAcountModal({
     },
   });
 
-  // 일시적인 미사용
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     dispatch({ type: "SET_NDA_FILE", value: e.target.files[0] });
-  //   }
-  // };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      form.setValue("nda_file", e.target.files?.[0]);
+    }
+  };
 
   const handleSubmit = (values: any) => {
     mutate({
       ...values,
     });
   };
+
+  console.log(":::::::", form.watch());
 
   const getDisableStateWithFormHelper = (
     keys: (
@@ -665,11 +668,29 @@ function AddAcountModal({
       | "nda_contract_contents"
       | "nda_contract_path"
       | "company"
+      | "nda_file"
     )[]
   ) => {
     return (
-      form.watch(keys).filter((item) => item === "" || item?.length === 0)
-        .length > 0
+      form.watch(keys).filter((item, index) => {
+        const key = keys[index];
+
+        if (item === "") {
+          return true;
+        }
+
+        if (Array.isArray(item) && item.length === 0) {
+          return true;
+        }
+
+        if (key === "nda_file" && !item) {
+          console.log("ASDAS");
+
+          return true;
+        }
+
+        return false;
+      }).length > 0
     );
   };
 
@@ -720,6 +741,7 @@ function AddAcountModal({
             "tax_id",
             "alias",
             "country",
+            "nda_file",
           ])
         );
       case "CLIENT":
@@ -736,6 +758,7 @@ function AddAcountModal({
             "tax_id",
             "alias",
             "country",
+            "nda_file",
           ])
         );
       case "GUEST":
@@ -1169,31 +1192,36 @@ function AddAcountModal({
             </InputBox.Body>
           </InputBox>
         )}
-        {/* <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>
-            NDA Contract<i>*</i>
-          </InputBox.Title>
-        </InputBox.Head>
-        <InputBox.Body>
-          <Stack direction="row" gap="8px">
-            <TextField
-              fullWidth
-              value={file?.name || ""}
-              inputProps={{ readOnly: true }}
-            />
-            <Button variant="contained" color="secondary" component="label">
-              <input
-                style={{ display: "none" }}
-                type="file"
-                hidden
-                onChange={handleFileChange}
-              />
-              Upload
-            </Button>
-          </Stack>
-        </InputBox.Body>
-      </InputBox> */}
+        {(getFieldsByRole(form.watch("role").toUpperCase()) || "").includes(
+          "nda_file"
+        ) && (
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                NDA Contract<i>*</i>
+              </InputBox.Title>
+            </InputBox.Head>
+            <InputBox.Body>
+              <Stack direction="row" gap="8px">
+                <TextField
+                  fullWidth
+                  value={form.watch("nda_file")?.name || ""}
+                  inputProps={{ readOnly: true }}
+                />
+                <Button variant="contained" color="secondary" component="label">
+                  <input
+                    style={{ display: "none" }}
+                    type="file"
+                    accept=".jpg, .jpeg, .png, .pdf"
+                    hidden
+                    onChange={handleFileChange}
+                  />
+                  Upload
+                </Button>
+              </Stack>
+            </InputBox.Body>
+          </InputBox>
+        )}
       </Stack>
     </Modal>
   );

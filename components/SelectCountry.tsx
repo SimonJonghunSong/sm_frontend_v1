@@ -2,9 +2,10 @@ import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
 const selectCountryData = [
-  { label: "USA", value: "usa" },
-  { label: "Portugal", value: "portugal" },
-  { label: "Spain", value: "spain" },
+  { label: "United States", value: "usa" },
+  { label: "Brasil", value: "brasil" },
+  { label: "México", value: "méxico" },
+  { label: "Europe", value: "europe" },
 ];
 
 export default function SelectCountry({

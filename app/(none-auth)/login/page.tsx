@@ -37,6 +37,8 @@ const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 export default function page() {
   const router = useRouter();
   const { lang, setLang } = useLangStore();
+  const [selectCountry, setSelectCountry] = useState("");
+
   const t = useTranslations("login");
   const [errorDialog, setErrorDialog] = useState(false);
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
@@ -143,7 +145,7 @@ export default function page() {
 
     const requestBody = {
       user_id: inputId,
-      country: getCountryByLang(),
+      country: selectCountry,
       password: inputPassword,
     };
 
@@ -214,18 +216,19 @@ export default function page() {
                       : lang === "en"
                       ? "usa"
                       : lang === "es"
-                      ? "spain"
-                      : "portugal"
+                      ? "méxico"
+                      : "brasil"
                   }
                   setCountryData={(country) => {
                     setIsUndefinedCountry(false);
                     setLang(
-                      country === "usa"
-                        ? "en"
-                        : country === "portugal"
+                      country === "brasil"
                         ? "pt"
-                        : "es"
+                        : country === "méxico"
+                        ? "es"
+                        : "en"
                     );
+                    setSelectCountry(country);
                   }}
                 />
               </FormControl>
