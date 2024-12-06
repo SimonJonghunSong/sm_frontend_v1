@@ -159,6 +159,15 @@ export default function SideMenu({
 
           {configuration && (
             <>
+              <li>
+                <Divider
+                  sx={{ borderColor: "var(--grey7)", marginBottom: "16px" }}
+                />
+                <button onClick={cmdModalToggle}>
+                  <TerminalOutlinedIcon />
+                  <span>CMD Tool</span>
+                </button>
+              </li>
               <li
                 className={
                   pathname.startsWith("/configuration/edit-profile")
@@ -166,14 +175,6 @@ export default function SideMenu({
                     : undefined
                 }
               >
-                <Divider
-                  sx={{ borderColor: "var(--grey7)", marginBottom: "16px" }}
-                />
-
-                <button onClick={cmdModalToggle}>
-                  <TerminalOutlinedIcon />
-                  <span>CMD Tool</span>
-                </button>
                 <Link href={getSubHref("/configuration/edit-profile")}>
                   <ModeEditIcon />
                   <span>Edit Profile</span>
