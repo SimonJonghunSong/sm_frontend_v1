@@ -72,11 +72,11 @@ const ConfigurationLayout = ({ children }) => {
           queries={{ imei }}
           configuration
           sideMenuItems={[
-            // {
-            //   name: "Device Status",
-            //   href: `/configuration/device-status?imei=${imei}`,
-            //   isActive: pathname === "/configuration/device-status",
-            // },
+            {
+              name: "Device Status",
+              href: `/configuration/device-status`,
+              isActive: pathname === "/configuration/device-status",
+            },
             ...formData.map((item) => {
               const key = item.tabName;
 

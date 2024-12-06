@@ -5,7 +5,7 @@ import { Box, Button, Stack, TextField } from "@mui/material";
 
 export default function Page() {
   return (
-    <div className="pageWrap">
+    <div className="pageWrap" style={{ width: "100%" }}>
       <article className="contentWrap">
         <div className="pageTitle">F/W Update</div>
         {/* // TODO: 업데이트 가능 분기 (true: 업데이트 가능 / false: 업데이트 없음 레이아웃) */}
@@ -24,10 +24,10 @@ export default function Page() {
                 justifyContent: "center",
               }}
             >
-              Firmware v.X.X.X update available
+              No update available
             </Stack>
             <Button>Firmware Update on Target Device</Button>
-            <Stack
+            {/* <Stack
               direction="row"
               gap="8px"
               justifyContent="flex-end"
@@ -40,7 +40,7 @@ export default function Page() {
               >
                 Download
               </Button>
-            </Stack>
+            </Stack> */}
           </>
         ) : (
           <Stack

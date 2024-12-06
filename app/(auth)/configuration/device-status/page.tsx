@@ -13,16 +13,25 @@ import React, { useState } from "react";
 import Controller from "../components/Controller";
 import Image from "next/image";
 import InputBox from "../../../../components/inputbox/InputBox";
+import useSerial from "@/src/hooks/useSerial";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 export default function Page() {
+  const { getCurrentImei } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
+  const {
+    state: { portList },
+  } = useSerial();
+  const currentPort = portList.find(({ port }) => port.imei === imei);
   const [version, setVersion] = useState<string>("1.1.1");
+  const modelName = currentPort.modelVersion?.split("_")[0] || "";
 
   const handleChange = (event: SelectChangeEvent) => {
     setVersion(event.target.value);
   };
 
   return (
-    <div className="pageWrap">
+    <div className="pageWrap" style={{ width: "100%" }}>
       <article className="contentWrap">
         <Controller />
 
@@ -37,7 +46,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Model Name</div>
-              <div>ST8300 (M)</div>
+              <div>{modelName}</div>
             </Stack>
             <Stack
               direction="row"
@@ -112,7 +121,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">IMEI</div>
-              <div>394893248032984029348</div>
+              <div>{currentPort.imei || ""}</div>
             </Stack>
             <Stack
               direction="row"
@@ -193,8 +202,10 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">Latitued</div>
-              <div>54.7968967</div>
+              <div className="list-title">Latitude</div>
+              <div>
+                {currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lat || ""}
+              </div>
             </Stack>
             <Stack
               direction="row"
@@ -204,7 +215,9 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Longitude</div>
-              <div>54.7968967</div>
+              <div>
+                {currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lng || ""}
+              </div>
             </Stack>
             <Stack
               direction="row"
