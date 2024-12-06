@@ -198,9 +198,7 @@ export default function DeviceList() {
                   e.stopPropagation();
                   setImei(params.value.port.port.imei);
                   resetTab();
-                  router.push(
-                    `/configuration` // 수정 부분 1014
-                  );
+                  router.push(`/configuration/device-status`);
                 }}
               >
                 {t("device.device_list.configure")}
