@@ -393,6 +393,7 @@ export default function Model() {
                     <TextField
                       onChange={({ target }) => setSearch(target.value)}
                       value={search}
+                      placeholder={t("list_type.model_name")}
                     />
                     <Button
                       color="secondary"
