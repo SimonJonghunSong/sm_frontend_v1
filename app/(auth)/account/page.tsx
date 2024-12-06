@@ -12,6 +12,7 @@ import {
 import React, {
   Dispatch,
   SetStateAction,
+  useCallback,
   useReducer,
   useRef,
   useState,
@@ -554,13 +555,28 @@ function AddAcountModal({
   ) => void;
 }) {
   const t = useTranslations();
-  const selectRoleData = useRef([
-    { label: t("account.account.root"), value: "root" },
-    { label: t("account.account.administrator"), value: "admin" },
-    { label: t("account.account.customer"), value: "customer" },
-    { label: t("account.account.client"), value: "client" },
-    { label: t("account.account.guest"), value: "guest" },
-  ]);
+  const selectRoleData = useCallback(() => {
+    switch (userRole) {
+      case "CUSTOMER":
+        return [
+          { label: t("account.account.customer"), value: "customer" },
+          { label: t("account.account.client"), value: "client" },
+          { label: t("account.account.guest"), value: "guest" },
+        ];
+      case "CLIENT":
+      case "ROOT":
+      case "ADMIN":
+      case "GUEST":
+      default:
+        return [
+          { label: t("account.account.root"), value: "root" },
+          { label: t("account.account.administrator"), value: "admin" },
+          { label: t("account.account.customer"), value: "customer" },
+          { label: t("account.account.client"), value: "client" },
+          { label: t("account.account.guest"), value: "guest" },
+        ];
+    }
+  }, []);
   const { userRole } = useAuthStore();
 
   const form = useForm({
@@ -806,8 +822,7 @@ function AddAcountModal({
                     displayEmpty
                     renderValue={(v) =>
                       v?.length ? (
-                        selectRoleData.current.find((item) => item.value === v)
-                          .label
+                        selectRoleData().find((item) => item.value === v).label
                       ) : (
                         <span className="text-grey-5">
                           {t("account.add_account_pop_up.select")}
@@ -817,7 +832,7 @@ function AddAcountModal({
                     value={field.value}
                     onChange={field.onChange}
                   >
-                    {selectRoleData.current.map((item) => (
+                    {selectRoleData().map((item) => (
                       <MenuItem key={item.value} value={item.value}>
                         {item.label}
                       </MenuItem>
