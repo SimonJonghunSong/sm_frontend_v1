@@ -85,19 +85,6 @@ export default function DeviceList() {
     },
     {
       field: "col3",
-      headerName: t("device.device_list.country"),
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => {
-        if (params.id === "skeleton") {
-          return <RowSkeleton />;
-        }
-        return <>{params.value}</>;
-      },
-    },
-    {
-      field: "col4",
       headerName: t("device.device_list.f/w"),
       flex: 1,
       headerAlign: "center",
@@ -110,7 +97,7 @@ export default function DeviceList() {
       },
     },
     {
-      field: "col5",
+      field: "col4",
       headerName: t("device.device_list.modem"),
       flex: 1,
       headerAlign: "center",
@@ -123,7 +110,7 @@ export default function DeviceList() {
       },
     },
     {
-      field: "col6",
+      field: "col5",
       headerName: t("device.device_list.connection"),
       flex: 1,
       headerAlign: "center",
@@ -168,7 +155,7 @@ export default function DeviceList() {
       },
     },
     {
-      field: "col7",
+      field: "col6",
       headerName: t("device.device_list.configuration"),
       flex: 1,
       headerAlign: "center",
@@ -270,11 +257,8 @@ export default function DeviceList() {
       col4: port.modelVersion?.split("_")[
         port.modelVersion?.split("_").length - 1
       ],
-      col5: port.modelVersion?.split("_")[
-        port.modelVersion?.split("_").length - 1
-      ],
-      col6: { connected: !!port.reader.read && !!port.writer.write, port },
-      col7: {
+      col5: { connected: !!port.reader.read && !!port.writer.write, port },
+      col6: {
         configure:
           port.isReadyUp &&
           !port.isPackageFetching &&
