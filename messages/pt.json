@@ -201,9 +201,7 @@
       "no_registered_models": {
         "": "Nenhum modelo registrado."
       },
-      "no_results_found": {
-        "": "Nenhum resultado encontrado."
-      },
+      "no_results_found": "Nenhum resultado encontrado.",
       "no_loaded_models": {
         "": "Nenhum modelo carregado."
       }
@@ -244,9 +242,7 @@
       "no_registered_models": {
         "": "Nenhum modelo registrado."
       },
-      "no_results_found": {
-        "": "Nenhum resultado encontrado."
-      }
+      "no_results_found": "Nenhum resultado encontrado."
     },
     "add_model_pop_up": {
       "add_model": "Adicionar Modelo",
@@ -506,9 +502,7 @@
       "show_all_result": "Mostrar todos os resultados",
       "show_less": "Mostrar menos",
       "parameters": "Parâmetros",
-      "no_results_found": {
-        "": "Nenhum resultado encontrado."
-      }
+      "no_results_found": "Nenhum resultado encontrado."
     },
     "profile_menu": {
       "profile": "Perfil",
