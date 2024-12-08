@@ -13,17 +13,24 @@ const readNoti = (uid_list: string[]) => {
   });
 };
 
-// const getScutiServer = () => {
-//   return get<{ count: number; records: unknown[] }>("/api/v1/scuti/servers");
-// };
-// const addScutiServer = (body: ScutiServerBody) => {
-//   return post("/api/v1/scuti/servers", body);
-// };
-// const modifyScutiServer = (body: ScutiServerBody & { uid: string }) => {
-//   return put("/api/v1/scuti/servers", body);
-// };
-// const deleteScutiServer = (body: string[]) => {
-//   return del("/api/v1/scuti/servers", { uid_list: body });
-// };
+const createNoti = ({
+  title,
+  message,
+  link,
+}: {
+  title: string;
+  message: string;
+  link?: string;
+}) => {
+  return post<
+    void,
+    { title: string; message: string; link?: string; isGlobal: boolean }
+  >("/api/v1/noti/publish", {
+    title,
+    message,
+    link,
+    isGlobal: true,
+  });
+};
 
-export { getNoti, readNoti };
+export { getNoti, readNoti, createNoti };
