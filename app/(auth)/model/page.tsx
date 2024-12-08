@@ -376,7 +376,7 @@ export default function Model() {
                 justifyContent="space-between"
                 alignItems="center"
               >
-                <Stack alignItems={"center"} gap={4} flexDirection="row">
+                <Stack alignItems={"center"} gap={1} flexDirection="row">
                   <Select
                     value={filter}
                     onChange={(e) => handleSelectChange(e, setFilter)}
@@ -394,6 +394,7 @@ export default function Model() {
                       onChange={({ target }) => setSearch(target.value)}
                       value={search}
                       placeholder={t("list_type.model_name")}
+                      sx={{ width: 160 }}
                     />
                     <Button
                       color="secondary"
@@ -495,38 +496,55 @@ type DataTableProps = {
 };
 
 function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
+  const t = useTranslations();
   const { paginatedRows, page, pageCount, handleChangePage } =
-    useCustomPagination({ rows });
+    useCustomPagination({ rows, limit: 30 });
+
+  useEffect(() => {
+    if (page > pageCount) {
+      handleChangePage(1);
+    }
+  }, [page, pageCount]);
+
+  if (paginatedRows.length === 0) {
+    return (
+      <Stack alignItems={"center"} py={5}>
+        {t("home.home.no_results_found")}
+      </Stack>
+    );
+  }
 
   return (
-    <Stack alignItems="center">
-      <ul className={styles.galleryWrap}>
-        {paginatedRows.map((item, index) => (
-          <li key={item.id}>
-            <div className={styles.galleryThumbnail}>
-              <Box width={195} height={172}>
-                <img
-                  src={item.col1}
-                  alt="model"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />
-              </Box>
-            </div>
-            <div className={styles.galleryTitle}>{item.col2}</div>
-            <ModelButton
-              loaded={rows[index].loaded}
-              toggleLoaded={() => toggleLoaded(item.id)}
-              onNetworkError={onNetworkError}
-            />
-          </li>
-        ))}
-      </ul>
+    <Stack>
+      <Stack style={{ overflow: "auto", alignItems: "normal" }}>
+        <ul style={{ width: "1740px" }} className={styles.galleryWrap}>
+          {paginatedRows.map((item, index) => (
+            <li key={item.id}>
+              <div className={styles.galleryThumbnail}>
+                <Box width={195} height={172}>
+                  <img
+                    src={item.col1}
+                    alt="model"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+              </div>
+              <div className={styles.galleryTitle}>{item.col2}</div>
+              <ModelButton
+                loaded={rows[index].loaded}
+                toggleLoaded={() => toggleLoaded(item.id)}
+                onNetworkError={onNetworkError}
+              />
+            </li>
+          ))}
+        </ul>
+      </Stack>
 
-      <Stack spacing={2} justifyContent="center" mt="40px">
+      <Stack spacing={2} justifyContent="center" mt="40px" alignItems="center">
         <Pagination
           page={Math.floor(page)}
           count={Math.floor(pageCount)}
