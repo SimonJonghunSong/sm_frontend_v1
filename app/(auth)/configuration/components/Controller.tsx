@@ -25,12 +25,14 @@ import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import { useTranslations } from "next-intl";
 
 const DELAY_MS = 100;
 
 export default function Controller() {
   const { getCurrentImei, setImei, resetTab } = useSerialConfigurationStore();
   const imei = getCurrentImei();
+  const t = useTranslations();
   const [modelName, setModelName] = useState<string>(imei);
   const [path, setPath] = useState<File>();
   const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
@@ -173,11 +175,8 @@ export default function Controller() {
             fontWeight: 700,
             marginRight: 16,
           }}
-          onClick={() => {
-            toast("dododndohd");
-          }}
         >
-          Profile
+          {t("configuration.profile_menu.profile")}
         </span>
         <Tooltip
           title="Apply to device"
@@ -198,27 +197,27 @@ export default function Controller() {
           <Button
             variant="contained"
             color="secondary"
-            sx={{ width: 80 }}
+            sx={{ width: 100 }}
             onClick={handleApply}
           >
-            Apply
+            {t("configuration.profile_menu.apply")}
           </Button>
         </Tooltip>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: 80 }}
+          sx={{ width: 100 }}
           onClick={handleSave}
         >
-          Save
+          {t("configuration.profile_menu.save")}
         </Button>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: 80 }}
+          sx={{ width: 100 }}
           onClick={handleLoad}
         >
-          Load
+          {t("configuration.profile_menu.load")}
         </Button>
         <Tooltip
           title="Scuti Upload"
@@ -239,10 +238,10 @@ export default function Controller() {
           <Button
             variant="contained"
             color="secondary"
-            sx={{ width: 80 }}
+            sx={{ width: 100 }}
             onClick={handleUpload}
           >
-            Upload
+            {t("configuration.profile_menu.upload")}
           </Button>
         </Tooltip>
         <IconButton onClick={getProfileAllData}>
@@ -269,7 +268,7 @@ export default function Controller() {
           disabled={!currentPort.port.readable && !currentPort.port.writable}
           onClick={handleClosePort}
         >
-          Disconnect
+          {t("configuration.profile_menu.disconnect")}
         </Button>
       </Stack>
 
@@ -314,11 +313,11 @@ export default function Controller() {
                 hidden
                 onChange={handlePathChange}
               />
-              Path
+              {t("popup.configuration.profile_menu.path")}
             </Button>
           </Stack>
           <Button sx={{ width: "fit-content" }} onClick={toggleSaveChanges}>
-            Show Changes
+            {t("popup.configuration.profile_menu.show_changes")}
           </Button>
           {showSaveChanges && (
             <TextField
@@ -366,7 +365,7 @@ export default function Controller() {
         <Stack>
           <span>Are you sure you want to upload profile to Scuti?</span>
           <Button sx={{ width: "fit-content" }} onClick={toggleUploadChanges}>
-            Show Changes
+            {t("popup.configuration.profile_menu.show_changes")}
           </Button>
           {showUploadChanges && (
             <TextField

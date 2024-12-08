@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 
 export default function Page() {
   return (
@@ -24,10 +24,11 @@ export default function Page() {
                 justifyContent: "center",
               }}
             >
-              No update available
+              {/* No update available */}
+              Firmware v.1.0.1 update available
             </Stack>
             <Button>Firmware Update on Target Device</Button>
-            {/* <Stack
+            <Stack
               direction="row"
               gap="8px"
               justifyContent="flex-end"
@@ -36,11 +37,11 @@ export default function Page() {
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ marginTop: "120px !important" }}
+                sx={{ marginTop: "120px !important", width: 200 }}
               >
                 Download
               </Button>
-            </Stack> */}
+            </Stack>
           </>
         ) : (
           <Stack
