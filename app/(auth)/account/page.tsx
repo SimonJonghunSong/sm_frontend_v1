@@ -118,15 +118,6 @@ export default function Account() {
     },
   ];
   const [selectedRowIdList, setSelectedRowIdList] = useState<string[]>();
-  const [selectedUser, setSelectedUser] = useState<{
-    col1: string; // email
-    col2: string; // id
-    col3: string; // username
-    col4: string; // company(account)
-    col5: string; // country
-    col6: string; // role
-    col7: string; // date
-  }>();
 
   const errorTitle = useRef("");
   const errorMessage = useRef("");
@@ -360,9 +351,12 @@ export default function Account() {
                     col2: user_id,
                     col3: name,
                     col4: getCompanyText(role?.name, "-"),
-                    col5: country
-                      ? country.charAt(0).toUpperCase() + country.slice(1)
-                      : "-",
+                    col5:
+                      country?.toUpperCase() === "USA"
+                        ? "United States" // tq
+                        : country
+                        ? country.charAt(0).toUpperCase() + country.slice(1)
+                        : "-",
                     col6: role
                       ? role.name.charAt(0).toUpperCase() +
                         role.name.slice(1) +
@@ -397,6 +391,7 @@ export default function Account() {
             openErrorPopup={openErrorPopup}
           />
         )}
+
         {isOpenErrorPopup && (
           <Modal
             open

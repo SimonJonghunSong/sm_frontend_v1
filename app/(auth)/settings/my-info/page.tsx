@@ -47,7 +47,6 @@ export default function MyInfoPage() {
   });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [department, setDepartment] = useState<string>();
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
   const isRoot = userRole?.toUpperCase() === "ROOT";
@@ -358,7 +357,13 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.country")}</div>
-        <div>{data.country}</div>
+        <div>
+          {data.country?.toUpperCase() === "USA"
+            ? "United States"
+            : data.country
+            ? data.country.charAt(0).toUpperCase() + data.country.slice(1)
+            : "-"}
+        </div>
       </Stack>
     );
   };
@@ -397,8 +402,6 @@ export default function MyInfoPage() {
       >
         <div className="list-title">{t("settings.my_info.affiliation")}</div>
         <div>
-          {/* TODO 기존 Select로 이루어짐 */}
-
           <Controller
             control={form.control}
             name="affiliation"
@@ -406,15 +409,16 @@ export default function MyInfoPage() {
               return (
                 <Select
                   displayEmpty
-                  renderValue={(v) =>
-                    v?.length ? (
-                      affiliationList.find((item) => item.value === v).label
+                  renderValue={() => {
+                    return field.value?.length ? (
+                      affiliationList.find((item) => item.value === field.value)
+                        .label
                     ) : (
                       <span className="text-grey-5">
                         {t("account.add_account_pop_up.select")}
                       </span>
-                    )
-                  }
+                    );
+                  }}
                   {...field}
                   sx={{ width: 320 }}
                 >
