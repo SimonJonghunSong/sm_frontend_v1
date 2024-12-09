@@ -56,7 +56,7 @@ export default function ReactQueryProvider({
             if (error.status === 401) {
               setToken(undefined);
               setRefreshToken(undefined);
-              router.push("/login");
+              router.replace("/login");
             }
 
             console.log("error >>>", error);
