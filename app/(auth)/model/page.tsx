@@ -361,7 +361,7 @@ export default function Model() {
   return (
     <>
       <div className="pageWrap">
-        <article className="contentWrap">
+        <article className="contentWrap" style={{ width: "100%" }}>
           {renderTabs()}
           <Stack>
             <Stack
