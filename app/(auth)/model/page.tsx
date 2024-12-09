@@ -516,7 +516,7 @@ function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
 
   return (
     <Stack>
-      <Stack style={{ overflow: "auto", alignItems: "normal" }}>
+      <Stack alignItems="center" style={{ overflow: "auto" }}>
         <ul style={{ width: "1740px" }} className={styles.galleryWrap}>
           {paginatedRows.map((item, index) => (
             <li key={item.id}>
