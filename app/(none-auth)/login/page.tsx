@@ -31,6 +31,7 @@ import Modal from "@/components/Modal";
 import { getNoti } from "@/src/api/services/notification";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import { insertLoginUser, offlineLogin } from "@/utils/idbLoginUtil";
+import { getModels } from "@/src/api/services/model";
 
 const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
@@ -55,17 +56,18 @@ export default function page() {
       setUserRole(response.data.parameter.role);
       setUserId(response.data.parameter.email);
 
+      getModels();
       getNoti();
       me();
 
       const data = response.data.parameter;
 
-      // insertLoginUser({
-      //   id: body.user_id,
-      //   password: body.password,
-      //   country: body.country,
-      //   ...data,
-      // });
+      insertLoginUser({
+        id: body.user_id,
+        password: body.password,
+        country: body.country,
+        ...data,
+      });
 
       router.replace("/");
     },
@@ -161,7 +163,7 @@ export default function page() {
       });
     } else {
       handleOpenOfflineErrorDialog();
-      // await handleOfflineLogin(requestBody);
+      await handleOfflineLogin(requestBody);
     }
   };
 

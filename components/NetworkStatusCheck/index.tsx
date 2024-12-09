@@ -2,10 +2,12 @@
 
 import ErrorDialog from "@/components/ErrorDialog";
 import useServiceWorkerMessage from "@/src/hooks/useServiceWorkerMessage";
+import { olineChangeWithLogin } from "@/utils/idbLoginUtil";
+import useAuthStore from "@/utils/useAuthStore";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const FORCE_ONLINE_MODE_PATHS = ["/login"];
 export const DISABLED_OFFLINE_MODE_PATHS = ["/account", "/model/admin"];
@@ -16,6 +18,8 @@ export default function NetworkStatusCheck() {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations();
+  const { userId, setUserId, setUserRole, setToken, setRefreshToken } =
+    useAuthStore();
 
   const [forceOfflineChangeModalOpen, setForceOfflineChangeModalOpen] =
     useState(false);
@@ -58,6 +62,30 @@ export default function NetworkStatusCheck() {
       data: isOnline,
     });
   }, [isOnline]);
+
+  const syncLogin = async (userId: string) => {
+    const response = await olineChangeWithLogin(userId);
+
+    console.log("response :::", response);
+
+    setToken(response.data.parameter.accessToken);
+    setRefreshToken(response.data.parameter.refreshToken);
+    setUserRole(response.data.parameter.role);
+    setUserId(response.data.parameter.email);
+  };
+
+  // 온라인 로그인 싱크
+  const onlineChangeRef = useRef(false);
+  useEffect(() => {
+    if (onlineChangeRef.current && isOnline && userId) {
+      syncLogin(userId);
+      onlineChangeRef.current = false;
+    }
+
+    if (!isOnline) {
+      onlineChangeRef.current = true;
+    }
+  }, [isOnline, userId]);
 
   return (
     <>

@@ -1,3 +1,4 @@
+import { login } from "@/src/api/services/auth";
 import useAuthStore from "@/utils/useAuthStore";
 import { openDB } from "idb";
 
@@ -23,6 +24,12 @@ const initDB = async () => {
         const store = db.createObjectStore(STORE_NAME, { keyPath: "key" });
 
         console.log("store.indexNames :::", store.indexNames);
+
+        if (!store.indexNames.contains("email")) {
+          store.createIndex("email", ["response.email"], {
+            unique: false,
+          });
+        }
 
         if (!store.indexNames.contains("key_passowrd")) {
           store.createIndex("key_passowrd", ["key", "password"], {
@@ -51,6 +58,26 @@ export const getUserByIdAndPassword = async (id: string, password: string) => {
     console.log("User found:", user);
   } else {
     console.log("No user found with ID and password:", id, password);
+  }
+
+  return user;
+};
+export const getUserByEmail = async (email: string) => {
+  const db = await initDB();
+  const transaction = db.transaction(STORE_NAME, "readonly");
+  const store = transaction.objectStore(STORE_NAME);
+
+  // 인덱스 접근
+  const index = store.index("email");
+
+  // id로 데이터 검색
+  const user = await index.get([email]);
+  await transaction.done;
+
+  if (user) {
+    console.log("User found:", user);
+  } else {
+    console.log("No user found with Email:", email);
   }
 
   return user;
@@ -96,7 +123,35 @@ export const offlineLogin = async (body: AuthLoginBody) => {
     return null;
   }
 
+  console.log("user :::", user);
+
   return user;
+};
+
+// 온라인 전환시 재로그인 처리
+export const olineChangeWithLogin = async (userId: string) => {
+  const loginUser = await getUserByEmail(userId);
+
+  console.log("loginUser ::", loginUser);
+
+  if (!loginUser) {
+    return null;
+  }
+
+  const res = await login({
+    user_id: loginUser.key,
+    password: base64Decoded(loginUser.password),
+    country: loginUser.country,
+  });
+
+  insertLoginUser({
+    id: loginUser.key,
+    password: base64Decoded(loginUser.password),
+    country: loginUser.country,
+    ...res.data.parameter,
+  });
+
+  return res;
 };
 
 const base64Encoded = (value: string) => {

@@ -145,10 +145,7 @@ export default function SideMenu({
                     pathname.startsWith(link.href) ? styles.active : undefined
                   }
                 >
-                  <button
-                    className={!isOnline ? "disabled" : ""}
-                    onClick={!isOnline ? undefined : toggleLogoutModal}
-                  >
+                  <button onClick={toggleLogoutModal}>
                     {link.icon && <link.icon />}
                     <span>{link.name}</span>
                   </button>
