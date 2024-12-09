@@ -135,9 +135,7 @@ export default function Navbar() {
   const [mounted, setMounted] = useState<boolean>(false);
   const [notificationModal, setNotificationModal] = useState(false);
   const { renderErrorModal, toggle } = useErrorDialog({
-    description: t(
-      "popup.gnb.online/offline.switching_online_is_not_possible_when_there_is_no_network"
-    ),
+    description: t("popup.common.common.internet_connection_is_required"),
   });
   const {
     renderErrorModal: renderOfflineChangeErrorModal,
