@@ -23,12 +23,14 @@ export default function PrivacyPolicyPage() {
       <SideMenu
         sideMenuItems={
           isRoot
-            ? sideMenuItems(lang).filter(
+            ? sideMenuItems(lang, userRole).filter(
                 ({ key }) => key === "myInfo" || key === "logout"
               )
             : isCustomer || isGuest
-            ? sideMenuItems(lang).filter(({ key }) => key !== "privacyPolicy")
-            : sideMenuItems(lang)
+            ? sideMenuItems(lang, userRole).filter(
+                ({ key }) => key !== "privacyPolicy"
+              )
+            : sideMenuItems(lang, userRole)
         }
       />
       <article className="contentWrap">
