@@ -6,7 +6,7 @@ import getLocalizedString from "@/utils/getLocalizedString";
 import { Lang } from "@/utils/useLangStore";
 
 export const sideMenuItems = (lang: Lang, role: string) => {
-  switch (role.toUpperCase()) {
+  switch (role?.toUpperCase()) {
     case "ADMIN":
     case "CLIENT":
       return [
