@@ -4,19 +4,19 @@ import "../../styles/variable.css";
 import "../../styles/reset.css";
 import "../../styles/global.css";
 import "react-toastify/dist/ReactToastify.css";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "../../components/navbar/Navbar";
 import FullLoading from "@/components/FullLoading";
 import AuthCheck from "./AuthCheck";
 import GlobalLoading from "@/components/GlobalLoading";
 import Footer from "@/components/Footer";
-import Modal from "@/components/Modal";
-import { Box, Stack, TextField } from "@mui/material";
 import CreateNotiModal from "@/components/CreateNotiModal";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 
 const AuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
   const [notiModal, setNotiModal] = useState(false);
+  const { setIsOnline, setIsSelfOffline } = useNetworkMonitor();
 
   useEffect(() => {
     setHydrated(true);
@@ -26,7 +26,11 @@ const AuthLayout = ({ children }) => {
     const handler = (e) => {
       if (e.shiftKey && e.code === "KeyN") {
         setNotiModal(true);
-        console.log("132");
+      }
+
+      if (e.shiftKey && e.code === "KeyR") {
+        setIsOnline(navigator.onLine);
+        setIsSelfOffline(false);
       }
     };
     window.addEventListener("keydown", handler);
