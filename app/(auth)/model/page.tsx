@@ -5,6 +5,7 @@ import React, {
   SetStateAction,
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from "react";
 import dayjs from "dayjs";
@@ -45,6 +46,7 @@ import getLocalizedString from "@/utils/getLocalizedString";
 import { featureTransition } from "./admin/page";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
+import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -62,10 +64,19 @@ const selectSortData = (lang: "en" | "pt" | "es") => [
 ];
 
 export default function Model() {
-  const t = useTranslations("home");
+  const t = useTranslations();
+  const callbackRef = useRef<() => Promise<void>>();
   const { lang } = useLangStore();
   const { getIncludeUids, addDatas } = useModelPkgStore();
   const { isOnline } = useNetworkMonitor();
+  const { renderConfirmModal, toggle } = useConfirmDialog({
+    onYes: () => {
+      callbackRef.current();
+    },
+    description: t(
+      "popup.home.mqtt_server.are_you_sure_you_want_to_load_all_the_models?_the_app_may_become_heavy"
+    ),
+  });
 
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
   const [search, setSearch] = useState("");
@@ -91,7 +102,7 @@ export default function Model() {
   const getColumns: () => GridColDef[] = () => [
     {
       field: "col1",
-      headerName: t("list_type.image"),
+      headerName: t("home.list_type.image"),
       minWidth: 200,
       headerAlign: "center",
       align: "center",
@@ -116,7 +127,7 @@ export default function Model() {
     },
     {
       field: "col2",
-      headerName: t("list_type.model_name"),
+      headerName: t("home.list_type.model_name"),
       minWidth: 120,
       headerAlign: "center",
       align: "center",
@@ -130,7 +141,7 @@ export default function Model() {
     },
     {
       field: "col4",
-      headerName: t("list_type.features"),
+      headerName: t("home.list_type.features"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -153,7 +164,7 @@ export default function Model() {
     },
     {
       field: "col5",
-      headerName: t("list_type.configuration"),
+      headerName: t("home.list_type.configuration"),
       width: 180,
       headerAlign: "center",
       align: "center",
@@ -173,7 +184,7 @@ export default function Model() {
     },
     {
       field: "col7",
-      headerName: t("list_type.date"),
+      headerName: t("home.list_type.date"),
       minWidth: 180,
       headerAlign: "center",
       align: "center",
@@ -393,7 +404,7 @@ export default function Model() {
                     <TextField
                       onChange={({ target }) => setSearch(target.value)}
                       value={search}
-                      placeholder={t("list_type.model_name")}
+                      placeholder={t("home.list_type.model_name")}
                       sx={{ width: 160 }}
                     />
                     <Button
@@ -401,7 +412,7 @@ export default function Model() {
                       variant="contained"
                       onClick={() => setFilterSearch(search)}
                     >
-                      {t("home.search")}
+                      {t("home.home.search")}
                     </Button>
                   </Stack>
                 </Stack>
@@ -410,12 +421,15 @@ export default function Model() {
               <Stack direction="row" gap="24px" alignItems="center">
                 <Button
                   color="secondary"
-                  onClick={handleLoadAllModel}
+                  onClick={() => {
+                    toggle();
+                    callbackRef.current = handleLoadAllModel;
+                  }}
                   startIcon={
                     <DownloadingOutlinedIcon sx={{ color: "var(--grey5)" }} />
                   }
                 >
-                  {t("home.load_all_models")}
+                  {t("home.home.load_all_models")}
                 </Button>
 
                 <FormControlLabel
@@ -428,7 +442,7 @@ export default function Model() {
                   }
                   label={
                     <span style={{ marginLeft: "8px" }}>
-                      {t("home.show_only_loaded_models")}
+                      {t("home.home.show_only_loaded_models")}
                     </span>
                   }
                 />
@@ -476,6 +490,8 @@ export default function Model() {
           </Stack>
         </article>
       </div>
+
+      {renderConfirmModal()}
 
       {offlineErrorDialog && (
         <OfflineErrorDialog
