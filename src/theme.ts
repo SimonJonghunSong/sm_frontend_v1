@@ -1,4 +1,5 @@
 "use client";
+
 import { Noto_Sans } from "next/font/google";
 import { createTheme } from "@mui/material/styles";
 
@@ -71,7 +72,7 @@ const theme = createTheme({
           fontWeight: 400,
           textTransform: "none",
           padding: "8px 24px",
-          transition: "none",
+
           "&:visited": {
             color: "white",
           },
@@ -79,8 +80,6 @@ const theme = createTheme({
             color: "white",
           },
           "&.MuiButton-contained:hover": {
-            background: "var(--primary-gradient)",
-            backgroundColor: "none",
             boxShadow: "2px 2px 4px 0 rgba(0,0,0,0.2)",
           },
           "&.MuiButton-text": {
