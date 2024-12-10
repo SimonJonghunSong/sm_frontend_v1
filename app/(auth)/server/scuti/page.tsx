@@ -11,7 +11,7 @@ import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined
 import DataTable from "@/components/dataTable";
 import SideMenu from "@/components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
-import SelectCountry from "@/components/SelectCountry";
+import SelectCountry, { selectCountryData } from "@/components/SelectCountry";
 import InputBox from "@/components/inputbox/InputBox";
 import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
@@ -144,7 +144,12 @@ export default function Server() {
     ({ uid, country, region, ip, port }) => {
       return {
         id: uid,
-        col1: country,
+        col1:
+          country?.toUpperCase() === "USA"
+            ? "United States" // tq
+            : country
+            ? country.charAt(0).toUpperCase() + country.slice(1).toLowerCase()
+            : "-",
         col2: region,
         col3: ip,
         col4: port,
@@ -209,7 +214,13 @@ export default function Server() {
       {addModal && <AddServerModal onClose={addModalToggle} />}
       {editModal && (
         <EditServerModal
-          country={selectedMqttServer.col1}
+          country={
+            selectedMqttServer.col1.toLowerCase() === "united states"
+              ? "usa"
+              : selectCountryData.find(
+                  (ctr) => ctr.value === selectedMqttServer.col1.toLowerCase()
+                )?.value
+          }
           region={selectedMqttServer.col2}
           serverIp={selectedMqttServer.col3}
           port={selectedMqttServer.col4}

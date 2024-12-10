@@ -1,7 +1,7 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import React, { Dispatch, SetStateAction, useState } from "react";
 
-const selectCountryData = [
+export const selectCountryData = [
   { label: "United States", value: "usa" },
   { label: "Brasil", value: "brasil" },
   { label: "México", value: "méxico" },
@@ -29,13 +29,13 @@ export default function SelectCountry({
   return (
     <Select
       displayEmpty
-      renderValue={(v) =>
-        v?.length ? (
-          selectCountryData.find((item) => item.value === v).label
-        ) : (
-          <span className="text-grey-5">Select</span>
-        )
-      }
+      // renderValue={(v) =>
+      //   v?.length ? (
+      //     selectCountryData.find((item) => item.value === v).label
+      //   ) : (
+      //     <span className="text-grey-5">Select</span>
+      //   )
+      // }
       value={country}
       onChange={(e) => handleSelectChange(e, setCountry)}
       sx={{ width: "100%" }}
