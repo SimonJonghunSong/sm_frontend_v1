@@ -17,7 +17,7 @@ const theme = createTheme({
       main: "#2F2F37",
     },
     info: {
-      main: "#4D4D56"
+      main: "#4D4D56",
     },
     error: {
       main: "#FB4343",
@@ -46,19 +46,17 @@ const theme = createTheme({
         root: {
           padding: 0,
           marginRight: 4,
-          marginLeft:11,
+          marginLeft: 11,
           "&.Mui-checked .MuiSvgIcon-root": {
             color: "var(--primary)",
           },
-          "&.Mui-checked .MuiSvgIcon-root svg": {
-
-          },
+          "&.Mui-checked .MuiSvgIcon-root svg": {},
           "& .MuiSvgIcon-root": {
             fontSize: 24,
             color: "var(--grey5)",
           },
           "&.Mui-disabled": {
-            opacity: .5
+            opacity: 0.5,
           },
         },
       },
@@ -73,6 +71,7 @@ const theme = createTheme({
           fontWeight: 400,
           textTransform: "none",
           padding: "8px 24px",
+          transition: "none",
           "&:visited": {
             color: "white",
           },
@@ -80,6 +79,8 @@ const theme = createTheme({
             color: "white",
           },
           "&.MuiButton-contained:hover": {
+            background: "var(--primary-gradient)",
+            backgroundColor: "none",
             boxShadow: "2px 2px 4px 0 rgba(0,0,0,0.2)",
           },
           "&.MuiButton-text": {
@@ -136,16 +137,16 @@ const theme = createTheme({
         root: {
           "& .Mui-selected": {
             fontWeight: 800,
-          }
-        }
-      }
+          },
+        },
+      },
     },
     MuiTab: {
       styleOverrides: {
         root: {
           textTransform: "none",
-        }
-      }
+        },
+      },
     },
     MuiFormHelperText: {
       styleOverrides: {
