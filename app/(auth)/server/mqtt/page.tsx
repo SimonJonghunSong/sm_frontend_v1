@@ -29,9 +29,7 @@ export default function Server() {
   const deleteCallback = useRef<() => void>();
   const deleteModel = deleteCallback.current;
   const { toggle, renderConfirmModal } = useConfirmDialog({
-    description: t(
-      "popup.server.mqtt_server.are_you_sure_you_want_to_delete_this_server?"
-    ),
+    description: t("popup.server.mqtt_server.delete"),
     onYes: () => {
       deleteModel();
       deleteCallback.current = undefined;
@@ -41,9 +39,7 @@ export default function Server() {
     toggle: multiDeleteDialogToggle,
     renderConfirmModal: renderMultiDeleteModal,
   } = useConfirmDialog({
-    description: t(
-      "popup.server.mqtt_server.are_you_sure_you_want_to_delete_these_servers?"
-    ),
+    description: t("popup.server.mqtt_server.delete"),
     onYes: () => {
       deleteModel();
       deleteCallback.current = undefined;

@@ -258,7 +258,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -302,7 +305,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1583,7 +1589,8 @@
       },
       "mqtt_server": {
         "are_you_sure_you_want_to_delete_this_server?": "Você tem certeza de que deseja excluir este servidor?",
-        "are_you_sure_you_want_to_delete_these_servers?": "Você tem certeza de que deseja excluir estes servidores?"
+        "are_you_sure_you_want_to_delete_these_servers?": "Você tem certeza de que deseja excluir estes servidores?",
+        "delete": "Tem certeza de que deseja excluir?"
       }
     },
     "home": {
