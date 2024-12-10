@@ -79,6 +79,10 @@ const theme = createTheme({
           "&.MuiButton-contained": {
             color: "white",
           },
+          "&.MuiButton-containedPrimary:hover": {
+            background: "var(--primary-gradient)",
+            backgroundColor: "none",
+          },
           "&.MuiButton-contained:hover": {
             boxShadow: "2px 2px 4px 0 rgba(0,0,0,0.2)",
           },
