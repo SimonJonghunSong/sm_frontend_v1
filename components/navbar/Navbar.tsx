@@ -288,11 +288,15 @@ export default function Navbar() {
                 <SettingsSharpIcon />
               </Link>
             </li>
-            <li>
-              <button onClick={() => setNotificationModal(!notificationModal)}>
-                <NotificationsSharpIcon />
-              </button>
-            </li>
+            {userRole !== "ROOT" && (
+              <li>
+                <button
+                  onClick={() => setNotificationModal(!notificationModal)}
+                >
+                  <NotificationsSharpIcon />
+                </button>
+              </li>
+            )}
             <li>
               <Link
                 href="/info"
