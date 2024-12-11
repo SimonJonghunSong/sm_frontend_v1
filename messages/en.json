@@ -203,9 +203,7 @@
         "": "No registered models."
       },
       "no_results_found": "No results found.",
-      "no_loaded_models": {
-        "": "No loaded models."
-      }
+      "no_loaded_models": "No loaded models."
     },
     "image_type": {
       "load_model": "Load Model",

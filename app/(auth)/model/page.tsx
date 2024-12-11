@@ -476,6 +476,7 @@ export default function Model() {
                 rows={filteredRowData}
                 columns={columnData}
                 rowHeight={120}
+                noDataMessage={t("home.home.no_loaded_models")}
               />
             ) : (
               <GalleryView
@@ -525,7 +526,7 @@ function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
   if (paginatedRows.length === 0) {
     return (
       <Stack alignItems={"center"} py={5}>
-        {t("home.home.no_results_found")}
+        {t("home.home.no_loaded_models")}
       </Stack>
     );
   }

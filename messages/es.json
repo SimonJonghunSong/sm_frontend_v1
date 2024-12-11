@@ -202,9 +202,7 @@
         "": "No hay modelos registrados."
       },
       "no_results_found": "No se encontraron resultados.",
-      "no_loaded_models": {
-        "": "No hay modelos cargados."
-      }
+      "no_loaded_models": "No hay modelos cargados."
     },
     "image_type": {
       "load_model": "Cargar Modelo",
@@ -258,10 +256,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -305,10 +300,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
