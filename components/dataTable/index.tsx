@@ -1,4 +1,6 @@
-import { Box, Button, Pagination, PaginationItem, Stack } from "@mui/material";
+import React, { useEffect, useRef, useState } from "react";
+import { GridApiCommunity } from "@mui/x-data-grid/internals";
+import { Box, Pagination, PaginationItem, Stack } from "@mui/material";
 import {
   DataGrid,
   GridCallbackDetails,
@@ -6,14 +8,9 @@ import {
   GridEventListener,
   GridFooter,
   GridFooterContainer,
-  gridPageCountSelector,
-  gridPageSelector,
   GridRowClassNameParams,
   GridRowSelectionModel,
-  useGridApiContext,
-  useGridSelector,
 } from "@mui/x-data-grid";
-import React from "react";
 
 type DataTableProps = {
   onRowClick?: GridEventListener<"rowClick">;
@@ -46,6 +43,15 @@ export default function DataTable({
   onRowSelectionModelChange = () => {},
   getRowClassName,
 }: DataTableProps) {
+  const apiRef = useRef<GridApiCommunity>();
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    if (rows.length <= page * 10 && rows.length > 0) {
+      setPage((prev) => prev - 1);
+    }
+  }, [rows.length, page, setPage]);
+
   return (
     <Box
       sx={{
@@ -56,7 +62,8 @@ export default function DataTable({
       }}
     >
       <DataGrid
-        rows={rows}
+        apiRef={apiRef}
+        rows={rows.slice(page * 10, (page + 1) * 10)}
         columns={columns}
         checkboxSelection={checkbox}
         disableColumnMenu
@@ -72,7 +79,13 @@ export default function DataTable({
         onRowClick={onRowClick}
         onRowSelectionModelChange={onRowSelectionModelChange}
         slots={{
-          pagination: CustomPagination,
+          pagination: () => (
+            <CustomPagination
+              page={page}
+              setPage={setPage}
+              pageCount={Math.ceil(rows?.length / 10) || 0}
+            />
+          ),
           footer: () => CustomFooter(footerButton),
           noRowsOverlay: () => (
             <Stack
@@ -154,11 +167,7 @@ function CustomFooter(footerButton: React.ReactNode) {
   );
 }
 
-export function CustomPagination() {
-  const apiRef = useGridApiContext();
-  const page = useGridSelector(apiRef, gridPageSelector);
-  const pageCount = useGridSelector(apiRef, gridPageCountSelector);
-
+export function CustomPagination({ page, setPage, pageCount }) {
   return (
     <Pagination
       color="primary"
@@ -175,7 +184,7 @@ export function CustomPagination() {
         />
       )}
       onChange={(event: React.ChangeEvent<unknown>, value: number) =>
-        apiRef.current.setPage(value - 1)
+        setPage(value - 1)
       }
     />
   );
