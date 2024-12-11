@@ -1208,7 +1208,8 @@ function AddAcountModal({
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
-                NDA Contract<i>*</i>
+                {t("account.add_account_pop_up.nda_contract")}
+                <i>*</i>
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -1226,7 +1227,7 @@ function AddAcountModal({
                     hidden
                     onChange={handleFileChange}
                   />
-                  Upload
+                  {t("account.add_account_pop_up.upload")}
                 </Button>
               </Stack>
             </InputBox.Body>

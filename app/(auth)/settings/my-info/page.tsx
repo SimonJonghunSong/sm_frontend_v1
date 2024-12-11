@@ -560,6 +560,39 @@ export default function MyInfoPage() {
     );
   };
 
+  const renderNdaContract = () => {
+    if (
+      userRole?.toUpperCase() === "ROOT" ||
+      userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "ADMIN"
+    )
+      return null;
+    return (
+      <Stack
+        direction="row"
+        alignItems="center"
+        gap="8px"
+        height="56px"
+        borderBottom="1px solid var(--grey3)"
+      >
+        <div className="list-title">{t("settings.my_info.nda_contract")}</div>
+        <Stack direction="row" gap={1}>
+          <TextField sx={{ width: 320 }} inputProps={{ readOnly: true }} />
+          <Button variant="contained" color="secondary" component="label">
+            <input
+              style={{ display: "none" }}
+              type="file"
+              accept=".jpg, .jpeg, .png, .pdf"
+              hidden
+              // onChange={handleFileChange} // TODO
+            />
+            {t("settings.my_info.upload")}
+          </Button>
+        </Stack>
+      </Stack>
+    );
+  };
+
   return (
     <>
       <div className="pageWrap">
@@ -592,6 +625,7 @@ export default function MyInfoPage() {
               {renderDepartment()}
               {renderTaxId()}
               {renderAlias()}
+              {renderNdaContract()}
             </Stack>
             <Stack direction="row" justifyContent="flex-end" marginTop="40px">
               <Button
