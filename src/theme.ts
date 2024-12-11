@@ -72,7 +72,7 @@ const theme = createTheme({
           fontWeight: 400,
           textTransform: "none",
           padding: "8px 24px",
-
+          transition: "none",
           "&:visited": {
             color: "white",
           },
