@@ -29,13 +29,13 @@ export default function SelectCountry({
   return (
     <Select
       displayEmpty
-      // renderValue={(v) =>
-      //   v?.length ? (
-      //     selectCountryData.find((item) => item.value === v).label
-      //   ) : (
-      //     <span className="text-grey-5">Select</span>
-      //   )
-      // }
+      renderValue={(v) =>
+        v?.length ? (
+          selectCountryData.find((item) => item.value === v).label
+        ) : (
+          <span className="text-grey-5">Select</span>
+        )
+      }
       value={country}
       onChange={(e) => handleSelectChange(e, setCountry)}
       sx={{ width: "100%" }}
