@@ -157,7 +157,11 @@ export default function page() {
                   type="submit"
                   variant="contained"
                   fullWidth
-                  disabled={!form.watch("country") || !form.watch("email")}
+                  disabled={
+                    !form.watch("country") ||
+                    !form.watch("email") ||
+                    !!form.formState.errors.email
+                  }
                   sx={{ mt: 2 }}
                 >
                   {t("login.find_id.find_id")}
