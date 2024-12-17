@@ -23,6 +23,7 @@ import Modal from "@/components/Modal";
 import CmdTool from "app/(auth)/_cmd-tool/CmdTool";
 import useModal from "@/utils/useModal";
 import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
+import useModelPkgStore from "@/src/stores/useModelPkgStore";
 
 type sideMenuItem = {
   name: string;
@@ -49,6 +50,7 @@ export default function SideMenu({
   const pathname = usePathname();
   const { isOnline } = useNetworkMonitor();
   const { hiddenParameter, toggleHiddenParameter } = useParameterStore();
+  const { resetData } = useModelPkgStore();
 
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
   const { setToken, setUserId, setUserRole, setRefreshToken } = useAuthStore();
@@ -61,6 +63,7 @@ export default function SideMenu({
       description: t("popup.settings.logout.are_you_sure_you_want_to_log_out?"),
       onYes: () => {
         purgeAuthSetting();
+        resetData();
       },
     });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslations } from "next-intl";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -23,6 +23,7 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useAuthStore from "@/utils/useAuthStore";
 import InputErrorText from "@/components/InputErrorText";
 import useSuccessDialog from "@/src/hooks/useSuccessDialog";
+import { getUserByEmail } from "@/utils/idbLoginUtil";
 
 type RoleType = "ROOT" | "CUSTOMER" | "ADMIN" | "CLIENT" | "GUEST";
 
@@ -39,7 +40,7 @@ const affiliationList = [
 export default function MyInfoPage() {
   const t = useTranslations();
   const { lang } = useLangStore();
-  const { userRole } = useAuthStore();
+  const { userRole, userId } = useAuthStore();
   const { isOnline } = useNetworkMonitor();
   const { toggle, renderSuccessModal } = useSuccessDialog({
     description: t("popup.settings.my_info.saved_successfully!"),
@@ -52,7 +53,12 @@ export default function MyInfoPage() {
   const isCustomer = userRole?.toUpperCase() === "CUSTOMER";
   const isGuest = userRole?.toUpperCase() === "GUEST";
 
-  const { data, isPending, error, isFetched } = useQuery({
+  const {
+    data: fetchData,
+    isPending,
+    error,
+    isFetched,
+  } = useQuery({
     queryKey: ["me"],
     queryFn: me,
     refetchOnMount: true,
@@ -60,6 +66,37 @@ export default function MyInfoPage() {
       return data.data.parameter.user;
     },
   });
+
+  const [offlineData, setOfflineData] = useState<UserResponse>(null);
+
+  useEffect(() => {
+    if (!isOnline) {
+      (async function () {
+        const user = await getUserByEmail(userId);
+
+        if (user.response.me) {
+          console.log(
+            "JSON.parse(user.response.me) ::::",
+            JSON.parse(user.response.me)
+          );
+
+          const userResponse: UserResponse = JSON.parse(user.response.me);
+
+          setOfflineData(userResponse);
+
+          form.reset({
+            affiliation: userResponse?.affiliation,
+            taxId: userResponse?.tax_id,
+            alias: userResponse?.alias,
+            department: userResponse?.department,
+          });
+        }
+      })();
+    }
+  }, []);
+
+  const data = isOnline ? fetchData : offlineData;
+
   const { mutate } = useMutation({
     mutationFn: modifyMyAccount,
     onSuccess: toggle,
@@ -114,7 +151,7 @@ export default function MyInfoPage() {
 
   if (isPending) return <>...</>;
 
-  if (error) {
+  if (error && isOnline) {
     return <></>;
   }
 
@@ -129,7 +166,7 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.name")}</div>
-        <div>{data.name}</div>
+        <div>{data?.name}</div>
       </Stack>
     );
   };
@@ -167,7 +204,7 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.id")}</div>
-        <div>{data.user_id}</div>
+        <div>{data?.user_id}</div>
       </Stack>
     );
   };
@@ -182,7 +219,7 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.e-mail")}</div>
-        <div>{data.email}</div>
+        <div>{data?.email}</div>
       </Stack>
     );
   };
@@ -357,10 +394,10 @@ export default function MyInfoPage() {
       >
         <div className="list-title">{t("settings.my_info.country")}</div>
         <div>
-          {data.country?.toUpperCase() === "USA"
+          {data?.country?.toUpperCase() === "USA"
             ? "United States"
-            : data.country
-            ? data.country.charAt(0).toUpperCase() + data.country.slice(1)
+            : data?.country
+            ? data?.country.charAt(0).toUpperCase() + data?.country.slice(1)
             : "-"}
         </div>
       </Stack>
@@ -377,7 +414,7 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.role")}</div>
-        <div>{switchRole(data.role.name.toUpperCase() as RoleType)}</div>
+        <div>{switchRole(data?.role.name.toUpperCase() as RoleType)}</div>
       </Stack>
     );
   };

@@ -47,6 +47,8 @@ import { featureTransition } from "./admin/page";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
+import { updateModelPkgDataByEmail } from "@/utils/idbLoginUtil";
+import useAuthStore from "@/utils/useAuthStore";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -67,7 +69,7 @@ export default function Model() {
   const t = useTranslations();
   const callbackRef = useRef<() => Promise<void>>();
   const { lang } = useLangStore();
-  const { getIncludeUids, addDatas } = useModelPkgStore();
+  const { getIncludeUids, addDatas, data: pkgData } = useModelPkgStore();
   const { isOnline } = useNetworkMonitor();
   const { renderConfirmModal, toggle } = useConfirmDialog({
     onYes: () => {
@@ -77,6 +79,7 @@ export default function Model() {
       "popup.home.mqtt_server.are_you_sure_you_want_to_load_all_the_models?_the_app_may_become_heavy"
     ),
   });
+  const { userId } = useAuthStore();
 
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
   const [search, setSearch] = useState("");
@@ -279,6 +282,16 @@ export default function Model() {
       {
         onSuccess: (res) => {
           const records = res.data.records;
+
+          const dbData = {
+            ...pkgData,
+            ...records.reduce((acc, cur) => {
+              return { ...acc, [cur.uid]: cur };
+            }, {}),
+          };
+
+          updateModelPkgDataByEmail(userId, dbData);
+
           addDatas(records);
 
           setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
@@ -351,6 +364,16 @@ export default function Model() {
         {
           onSuccess: (res) => {
             const records = res.data.records;
+
+            const dbData = {
+              ...pkgData,
+              ...records.reduce((acc, cur) => {
+                return { ...acc, [cur.uid]: cur };
+              }, {}),
+            };
+
+            updateModelPkgDataByEmail(userId, dbData);
+
             addDatas(records);
 
             setRowData((prev) =>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import styles from "../styles.module.scss";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
 import Link from "next/link";
@@ -30,8 +30,13 @@ import styled from "@emotion/styled";
 import Modal from "@/components/Modal";
 import { getNoti } from "@/src/api/services/notification";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
-import { insertLoginUser, offlineLogin } from "@/utils/idbLoginUtil";
+import {
+  getUserByEmail,
+  insertLoginUser,
+  offlineLogin,
+} from "@/utils/idbLoginUtil";
 import { getModels } from "@/src/api/services/model";
+import useModelPkgStore from "@/src/stores/useModelPkgStore";
 
 const REMEMBER_ME_STORAGE_KEY = "remember_user_id";
 
@@ -39,6 +44,7 @@ export default function page() {
   const router = useRouter();
   const { lang, setLang } = useLangStore();
   const [selectCountry, setSelectCountry] = useState("");
+  const { setData } = useModelPkgStore();
 
   const t = useTranslations("login");
   const [errorDialog, setErrorDialog] = useState(false);
@@ -47,10 +53,12 @@ export default function page() {
   const [offlineRootLoginErrorDialog, setOfflineRootLoginErrorDialog] =
     useState(false);
   const [isUndefinedCountry, setIsUndefinedCountry] = useState(true);
-  const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
+  const { setUserId, setUserRole, setToken, setRefreshToken, userId } =
+    useAuthStore();
+
   const { mutate, isPending } = useMutation({
     mutationFn: login,
-    onSuccess: (response, body) => {
+    onSuccess: async (response, body) => {
       setToken(response.data.parameter.accessToken);
       setRefreshToken(response.data.parameter.refreshToken);
       setUserRole(response.data.parameter.role);
@@ -58,7 +66,7 @@ export default function page() {
 
       getModels();
       getNoti();
-      me();
+      const meRes = await me();
 
       const data = response.data.parameter;
 
@@ -66,6 +74,7 @@ export default function page() {
         id: body.user_id,
         password: body.password,
         country: body.country,
+        me: JSON.stringify(meRes.data.parameter.user),
         ...data,
       });
 
@@ -122,8 +131,6 @@ export default function page() {
 
     const result = await offlineLogin(requestBody);
 
-    console.log("result :::", result);
-
     if (!result) {
       setOfflineLoginErrorDialog(true);
       return;
@@ -155,7 +162,11 @@ export default function page() {
 
     if (isOnline) {
       mutate(requestBody, {
-        onSuccess: () => {
+        onSuccess: async ({ data }) => {
+          const result = await getUserByEmail(data.parameter.email);
+
+          setData(result?.modelPkgData || {});
+
           if (isRemberberMe) {
             localStorage.setItem(REMEMBER_ME_STORAGE_KEY, inputId);
           } else {

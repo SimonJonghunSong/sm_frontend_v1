@@ -1,4 +1,5 @@
-import { login } from "@/src/api/services/auth";
+import { login, me } from "@/src/api/services/auth";
+import { ModelPkg } from "@/src/api/services/model/type";
 import useAuthStore from "@/utils/useAuthStore";
 import { openDB } from "idb";
 
@@ -72,6 +73,9 @@ export const getUserByEmail = async (email: string) => {
 
   // id로 데이터 검색
   const user = await index.get([email]);
+
+  console.log("user :::", user);
+
   await transaction.done;
 
   if (user) {
@@ -92,6 +96,7 @@ export const insertLoginUser = async (data: {
   email: string;
   refreshToken: string;
   role: string;
+  me: string;
 }) => {
   const { id, password, country, ...rest } = data;
 
@@ -99,17 +104,38 @@ export const insertLoginUser = async (data: {
   const transaction = db.transaction(STORE_NAME, "readwrite");
   const store = transaction.objectStore(STORE_NAME);
 
-  const user = {
-    key: id,
-    password: base64Encoded(password),
-    country,
-    response: rest,
-  };
+  try {
+    const index = store.index("email");
 
-  await store.put(user);
-  await transaction.done;
+    // id로 데이터 검색
+    const existingUser = await index.get([data.email]);
 
-  return user;
+    console.log("existingUser ::::", existingUser);
+
+    let user;
+
+    if (existingUser) {
+      user = {
+        ...existingUser,
+        response: { ...rest },
+      };
+    } else {
+      user = {
+        key: id,
+        password: base64Encoded(password),
+        country,
+        modelPkgData: {},
+        response: { ...rest },
+      };
+    }
+
+    await store.put(user);
+    await transaction.done;
+
+    return user;
+  } catch (e) {
+    throw e;
+  }
 };
 
 // 오프라인 로그인 처리
@@ -144,10 +170,13 @@ export const olineChangeWithLogin = async (userId: string) => {
     country: loginUser.country,
   });
 
+  const meRes = await me();
+
   insertLoginUser({
     id: loginUser.key,
     password: base64Decoded(loginUser.password),
     country: loginUser.country,
+    me: JSON.stringify(meRes.data.parameter.user),
     ...res.data.parameter,
   });
 
@@ -159,4 +188,38 @@ const base64Encoded = (value: string) => {
 };
 const base64Decoded = (value: string) => {
   return atob(value);
+};
+
+// email로 조회 후 modelPkgData만 업데이트
+export const updateModelPkgDataByEmail = async (
+  email: string,
+  modelPkgData: Record<string, ModelPkg>
+) => {
+  const db = await initDB();
+  const transaction = db.transaction(STORE_NAME, "readwrite");
+  const store = transaction.objectStore(STORE_NAME);
+
+  // email 인덱스로 유저 데이터 조회
+  const emailIndex = store.index("email");
+  const existingUser = await emailIndex.get([email]);
+
+  if (!existingUser) {
+    console.error(`No user found with email "${email}".`);
+    return null;
+  }
+
+  // modelPkgData만 업데이트
+  const updatedUser = {
+    ...existingUser,
+    modelPkgData: { ...modelPkgData }, // modelPkgData 필드만 덮어쓰기
+  };
+
+  // 업데이트된 데이터 저장
+  await store.put(updatedUser);
+  await transaction.done;
+
+  console.log(
+    `modelPkgData for user with email "${email}" updated successfully.`
+  );
+  return updatedUser;
 };

@@ -10,6 +10,8 @@ interface ModelPkgAction {
   addData: (data: ModelPkg) => void;
   addDatas: (data: ModelPkg[]) => void;
   getIncludeUids: () => string[];
+  setData: (data: Record<string, ModelPkg>) => void;
+  resetData: () => void;
 }
 
 const useModelPkgStore = create(
@@ -27,6 +29,8 @@ const useModelPkgStore = create(
           },
         }),
       getIncludeUids: () => Object.keys(get().data),
+      setData: (data: Record<string, ModelPkg>) => set({ data }),
+      resetData: () => set({ data: {} }),
     }),
     {
       name: "ModelPkgStore",
