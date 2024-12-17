@@ -122,6 +122,8 @@ export default function page() {
 
     const result = await offlineLogin(requestBody);
 
+    console.log("result :::", result);
+
     if (!result) {
       setOfflineLoginErrorDialog(true);
       return;
@@ -162,7 +164,6 @@ export default function page() {
         },
       });
     } else {
-      handleOpenOfflineErrorDialog();
       await handleOfflineLogin(requestBody);
     }
   };
