@@ -18,7 +18,7 @@ export default function Page() {
                 marginBottom: "16px",
                 fontSize: 16,
                 fontWeight: 500,
-                backgroundColor: "var(--primary-light)",
+                backgroundColor: "#F2F2F2",
                 borderRadius: "8px",
                 alignItems: "center",
                 justifyContent: "center",
@@ -27,19 +27,20 @@ export default function Page() {
               {/* No update available */}
               Firmware v.1.0.1 update available
             </Stack>
-            <Button>Firmware Update on Target Device</Button>
-            <Stack
-              direction="row"
-              gap="8px"
-              justifyContent="flex-end"
-              marginTop="40px"
-            >
+            <Stack direction="row" gap="8px" justifyContent="flex-end">
+              <Button
+                variant="outlined"
+                color="secondary"
+                sx={{ marginTop: "20px !important", width: 200 }}
+              >
+                Download
+              </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ marginTop: "120px !important", width: 200 }}
+                sx={{ marginTop: "20px !important", width: 200 }}
               >
-                Download
+                Update
               </Button>
             </Stack>
           </>
