@@ -1553,9 +1553,9 @@
     },
     "login": {
       "login": {
-        "invalid_country_or_id_or_password_please_try_again": "País, ID ou senha inválidos. Por favor, tente novamente.",
+        "invalid_country_or_id_or_password_please_try_again": "Login inválido ou conexão inicial à Internet necessária. Por favor, tente novamente.",
         "your_account_has_been_locked_please_contact_us_to_unlock_your_account": "Sua conta foi bloqueada. Por favor, entre em contato conosco para desbloquear sua conta.",
-        "an_initial_internet_connection_is_required_once_to_use_offline_mode": "Uma conexão inicial com a internet é necessária uma vez para usar o modo offline.",
+        "an_initial_internet_connection_is_required_once_to_use_offline_mode": "Login inválido ou conexão inicial à Internet necessária. Por favor, tente novamente.",
         "the_root_account_can_only_be_used_in_online_mode": "A conta root só pode ser usada em modo online."
       },
       "find_id": {
