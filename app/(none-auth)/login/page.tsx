@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../styles.module.scss";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -96,7 +96,7 @@ export default function page() {
   const [inputPassword, setInputPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const { isOnline } = useNetworkMonitor();
+  const [isOnline, setIsOnline] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -192,6 +192,27 @@ export default function page() {
   const handleOpenOfflineErrorDialog = () => {
     setOfflineErrorDialog(true);
   };
+
+  console.log("isOnline ::::", isOnline);
+
+  useEffect(() => {
+    setIsOnline(navigator.onLine);
+
+    const handleOnline = () => {
+      setIsOnline(true);
+    };
+    const handleOffline = () => {
+      setIsOnline(false);
+    };
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
 
   return (
     <>
