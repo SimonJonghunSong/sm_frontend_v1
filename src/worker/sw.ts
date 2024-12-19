@@ -7,6 +7,9 @@ const urlsToCache = [
   "/offline",
 
   "/login",
+  "/find-id",
+  "/find-password",
+  "/find-password/result",
 
   "/model",
   // "/model/admin",
