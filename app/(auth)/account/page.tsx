@@ -206,6 +206,20 @@ export default function Account() {
       case "ROOT":
       case "ADMIN":
       case "CUSTOMER":
+        return (
+          <Select
+            value={roleFilter}
+            onChange={(e) => handleSelectChange(e, setRoleFilter)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+            <MenuItem value={"Customer"}>
+              {t("account.account.customer")}
+            </MenuItem>
+            <MenuItem value={"Client"}>{t("account.account.client")}</MenuItem>
+            <MenuItem value={"Guest"}>{t("account.account.guest")}</MenuItem>
+          </Select>
+        );
       case "GUEST":
       default:
         return (
