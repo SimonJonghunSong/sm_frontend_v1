@@ -9,7 +9,15 @@ import { useTranslations } from "next-intl";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
-const FORCE_ONLINE_MODE_PATHS = ["/login"];
+const FORCE_ONLINE_MODE_PATHS = [
+  "/login",
+  "/find-id",
+  "/find-password",
+  "/find-password/result",
+  "/find-password/set-password",
+  "/find-password/success",
+];
+
 export const DISABLED_OFFLINE_MODE_PATHS = ["/account", "/model/admin"];
 
 export default function NetworkStatusCheck() {
@@ -57,11 +65,20 @@ export default function NetworkStatusCheck() {
 
   // Sync Service Worker
   useEffect(() => {
-    sendMessage({
-      type: "SYNC_NETWORK_STATE",
-      data: isOnline,
-    });
-  }, [isOnline]);
+    console.log("test ::::");
+
+    if (FORCE_ONLINE_MODE_PATHS.includes(pathname)) {
+      sendMessage({
+        type: "SYNC_NETWORK_STATE",
+        data: true,
+      });
+    } else {
+      sendMessage({
+        type: "SYNC_NETWORK_STATE",
+        data: isOnline,
+      });
+    }
+  }, [isOnline, pathname]);
 
   const syncLogin = async (userId: string) => {
     const response = await olineChangeWithLogin(userId);

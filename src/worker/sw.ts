@@ -10,6 +10,8 @@ const urlsToCache = [
   "/find-id",
   "/find-password",
   "/find-password/result",
+  "/find-password/set-password",
+  "/find-password/success",
 
   "/model",
   // "/model/admin",
