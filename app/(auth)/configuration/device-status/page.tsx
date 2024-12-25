@@ -67,7 +67,6 @@ export default function Page() {
                     <MenuItem value={"1.1.2"}>1.1.2</MenuItem>
                   </Select>
                 </div>
-                <span className="chip">latest</span>
               </Stack>
             </Stack>
             <Stack
