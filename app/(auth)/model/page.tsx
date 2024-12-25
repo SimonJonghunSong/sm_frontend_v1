@@ -548,8 +548,8 @@ function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
 
   if (paginatedRows.length === 0) {
     return (
-      <Stack alignItems={"center"} py={5}>
-        {t("home.home.no_loaded_models")}
+      <Stack alignItems={"center"} py={10} height={700} color="var(--grey5)">
+        <span>{t("home.home.no_loaded_models")}</span>
       </Stack>
     );
   }

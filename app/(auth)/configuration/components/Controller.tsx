@@ -278,7 +278,7 @@ export default function Controller() {
         toggleOpen={applyModalToggle}
         title="Confirm"
         confirm={() => {}}
-        confirmButtonText="Apply"
+        confirmButtonText="Yes"
         width="360px"
       >
         <Stack>
@@ -349,6 +349,7 @@ export default function Controller() {
         toggleOpen={loadModalToggle}
         title="Load Profile"
         width="720px"
+        hasFooter={false}
       >
         <LoadModal />
       </Modal>
@@ -393,8 +394,83 @@ export default function Controller() {
   );
 }
 
+const rows = [
+  {
+    id: 0,
+    col0: { id: "1" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "1" },
+  },
+  {
+    id: 1,
+    col0: { id: "2" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "2" },
+  },
+  {
+    id: 2,
+    col0: { id: "3" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "3" },
+  },
+  {
+    id: 3,
+    col0: { id: "4" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "4" },
+  },
+  {
+    id: 4,
+    col0: { id: "5" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "5" },
+  },
+  {
+    id: 5,
+    col0: { id: "6" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "6" },
+  },
+  {
+    id: 6,
+    col0: { id: "7" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "7" },
+  },
+  {
+    id: 7,
+    col0: { id: "8" },
+    col1: "ST023",
+    col2: "Profile.pofile",
+    col3: "2024-12-12",
+    col4: "3000",
+    col6: { id: "8" },
+  },
+];
+
 function LoadModal() {
-  const [selectedValue, setSelectedValue] = React.useState("a");
+  const [selectedValue, setSelectedValue] = React.useState<string>();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value);
@@ -418,32 +494,32 @@ function LoadModal() {
     },
     {
       field: "col1",
-      headerName: "Country",
+      headerName: "Model Name",
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col2",
-      headerName: "Region",
+      headerName: "File Name",
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col3",
-      headerName: "ServerIP",
+      headerName: "Date",
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
-    {
-      field: "col4",
-      headerName: "Port",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-    },
+    // {
+    //   field: "col4",
+    //   headerName: "Port",
+    //   flex: 1,
+    //   headerAlign: "center",
+    //   align: "center",
+    // },
 
     {
       field: "col6",
@@ -456,81 +532,6 @@ function LoadModal() {
           <DeleteForeverOutlinedIcon />
         </IconButton>
       ),
-    },
-  ];
-
-  const rows = [
-    {
-      id: 0,
-      col0: { id: "1" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "1" },
-    },
-    {
-      id: 1,
-      col0: { id: "2" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "2" },
-    },
-    {
-      id: 2,
-      col0: { id: "3" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "3" },
-    },
-    {
-      id: 3,
-      col0: { id: "4" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "4" },
-    },
-    {
-      id: 4,
-      col0: { id: "5" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "5" },
-    },
-    {
-      id: 5,
-      col0: { id: "6" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "6" },
-    },
-    {
-      id: 6,
-      col0: { id: "7" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "7" },
-    },
-    {
-      id: 7,
-      col0: { id: "8" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "8" },
     },
   ];
 
@@ -550,10 +551,16 @@ function LoadModal() {
         columns={columns}
         checkbox={false}
         disablePagination
+        minHeight={"auto"}
       />
 
       <Stack gap="8px" alignItems="flex-end">
-        <Button variant="contained" color="secondary" sx={{ width: 210 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ width: 210 }}
+          disabled={!selectedValue}
+        >
           Load
         </Button>
       </Stack>

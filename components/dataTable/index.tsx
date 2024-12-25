@@ -28,6 +28,7 @@ type DataTableProps = {
     rowSelectionModel: GridRowSelectionModel,
     details: GridCallbackDetails
   ) => void;
+  minHeight?: number | string;
 };
 export default function DataTable({
   disableResize = false,
@@ -42,6 +43,7 @@ export default function DataTable({
   onRowClick = () => {},
   onRowSelectionModelChange = () => {},
   getRowClassName,
+  minHeight,
 }: DataTableProps) {
   const apiRef = useRef<GridApiCommunity>();
   const [page, setPage] = useState(0);
@@ -58,7 +60,7 @@ export default function DataTable({
         display: "grid",
         gridTemplateColumns: "1fr",
         flex: 1,
-        minHeight: "697.5px",
+        minHeight: minHeight || "697.5px",
       }}
     >
       <DataGrid

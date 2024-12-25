@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "../styles.module.scss";
 import { useRouter } from "next/navigation";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
 import logo from "/public/images/logo-dark.svg";
 import Link from "next/link";
@@ -24,8 +24,6 @@ import useAuthStore from "../../../utils/useAuthStore";
 import { login, me } from "@/src/api/services/auth";
 import useLangStore from "@/utils/useLangStore";
 import { useTranslations } from "next-intl";
-import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
-import { toast } from "react-toastify";
 import styled from "@emotion/styled";
 import Modal from "@/components/Modal";
 import { getNoti } from "@/src/api/services/notification";
@@ -53,8 +51,8 @@ export default function page() {
   const [offlineRootLoginErrorDialog, setOfflineRootLoginErrorDialog] =
     useState(false);
   const [isUndefinedCountry, setIsUndefinedCountry] = useState(true);
-  const { setUserId, setUserRole, setToken, setRefreshToken, userId } =
-    useAuthStore();
+  const [isAnonymous, setIsAnonymous] = useState(false);
+  const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
 
   const { mutate, isPending } = useMutation({
     mutationFn: login,
@@ -127,8 +125,6 @@ export default function page() {
   };
 
   const handleOfflineLogin = async (requestBody: AuthLoginBody) => {
-    console.log("handleSubmit asD:ASASD: AS:D");
-
     const result = await offlineLogin(requestBody);
 
     if (!result) {
@@ -152,7 +148,10 @@ export default function page() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log("preventDefault called");
+
+    if (isAnonymous) {
+      return;
+    }
 
     const requestBody = {
       user_id: inputId,
@@ -192,8 +191,6 @@ export default function page() {
   const handleOpenOfflineErrorDialog = () => {
     setOfflineErrorDialog(true);
   };
-
-  console.log("isOnline ::::", isOnline);
 
   useEffect(() => {
     setIsOnline(navigator.onLine);
@@ -279,6 +276,7 @@ export default function page() {
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={isAnonymous}
                 value={inputId}
                 onChange={(e) => {
                   const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
@@ -303,6 +301,7 @@ export default function page() {
                 variant="outlined"
                 size="small"
                 fullWidth
+                disabled={isAnonymous}
                 type={showPassword ? "text" : "password"}
                 value={inputPassword}
                 onChange={(e) => {
@@ -372,18 +371,30 @@ export default function page() {
               background: "var(--primary-gradient)",
               mt: 2,
               opacity:
-                inputId.length === 0 || inputPassword.length === 0
+                (inputId.length === 0 || inputPassword.length === 0) &&
+                !isAnonymous
                   ? "0.5"
                   : undefined,
             }}
             disabled={
-              inputId.length === 0 || inputPassword.length === 0 || isPending
+              (inputId.length === 0 ||
+                inputPassword.length === 0 ||
+                isPending) &&
+              !isAnonymous
             }
           >
             {t("login.login")}
           </Button>
         </StyledForm>
       </StyledDiv>
+
+      <Stack direction="row" alignItems="center" pt={1} gap="4px">
+        <Checkbox
+          checked={isAnonymous}
+          onChange={(e) => setIsAnonymous(e.target.checked)}
+        />
+        <span>Anonymous</span>
+      </Stack>
 
       {errorDialog && <ErrorDialog onClose={() => setErrorDialog(false)} />}
       {offlineErrorDialog && (

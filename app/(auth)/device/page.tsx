@@ -79,6 +79,11 @@ function Before({ setStep, requestPort }) {
         >
           {t("device_detecting.detect_device")}
         </Button>
+        <FormControlLabel
+          value="AutoConnect"
+          control={<Checkbox />}
+          label="Auto-Connect"
+        />
       </Stack>
     </>
   );
@@ -140,16 +145,6 @@ function Ing({
             label="Auto-Connect"
             disabled
           />
-
-          {/* TODO: 아래 버튼 임시, 삭제 필요 */}
-          <Stack direction="row" gap="8px">
-            <Button sx={{ width: 200 }} onClick={() => setStep("FAILED")}>
-              Failed (temporary)
-            </Button>
-            <Button sx={{ width: 200 }} onClick={() => setStep("SUCCESS")}>
-              Success (temporary)
-            </Button>
-          </Stack>
         </Stack>
       </>
     );

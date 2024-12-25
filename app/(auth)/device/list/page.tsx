@@ -203,7 +203,7 @@ export default function DeviceList() {
               >
                 {t("device.device_list.configure")}
               </Button>
-              <Button
+              {/* <Button
                 disabled={
                   params.value.isPackageFetching ||
                   !params.value.port.writer.write ||
@@ -238,7 +238,7 @@ export default function DeviceList() {
                 }}
               >
                 <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
-              </Button>
+              </Button> */}
             </Stack>
           );
         }
@@ -246,12 +246,16 @@ export default function DeviceList() {
     },
   ];
 
+  console.log("portList ::::", portList);
+
   const rows = portList?.map((port, index) => {
     return {
       id: index,
       col1: port.modelVersion?.split("_")[0],
       col2: port.imei,
-      col3: port.modelVersion,
+      col3: port.modelVersion?.split("_")[
+        port.modelVersion?.split("_").length - 1
+      ],
       col4: port.modelVersion?.split("_")[
         port.modelVersion?.split("_").length - 1
       ],
