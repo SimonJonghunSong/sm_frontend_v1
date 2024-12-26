@@ -122,7 +122,7 @@ export default function DeviceList() {
         return params.value ? (
           params.value?.connected ? (
             <Button
-              variant="contained"
+              variant="outlined"
               color="secondary"
               sx={{ width: "120px" }}
               onClick={(e) => {
@@ -134,7 +134,7 @@ export default function DeviceList() {
             </Button>
           ) : (
             <Button
-              variant="outlined"
+              variant="contained"
               color="secondary"
               sx={{ width: "120px" }}
               onClick={(e) => e.stopPropagation()}
