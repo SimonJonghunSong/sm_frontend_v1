@@ -15,28 +15,53 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import { toast, ToastContainer } from "react-toastify";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import styles from "./styles.module.scss";
 
-const modalColumns: GridColDef[] = [
+const modalColumns: (t) => GridColDef[] = (t) => [
   {
     field: "col1",
-    headerName: "Model Name",
+    headerName: t("device.device_list.model_name"),
     flex: 1,
     headerAlign: "center",
     align: "center",
   },
   {
     field: "col2",
-    headerName: "IMEI",
+    headerName: t("device.device_list.esn"),
     flex: 1,
     headerAlign: "center",
     align: "center",
   },
   {
     field: "col4",
-    headerName: "F/W",
+    headerName: t("device.device_list.f/w"),
     flex: 1,
     headerAlign: "center",
     align: "center",
+  },
+  {
+    field: "col5",
+    headerName: t("device.device_list.modem"),
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+  },
+  {
+    field: "col6",
+    headerName: t("device.device_list.status"),
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+    cellClassName: styles.loaderContainer,
+    // renderCell: (port) => {
+    //   console.log("render cell ::::", port);
+
+    //   return (
+    //     <div className={styles.loaderContainer}>
+    //       <div className={styles.loader} />
+    //     </div>
+    //   );
+    // },
   },
 ];
 
@@ -587,6 +612,10 @@ function Apply({
         col4: port.port.modelinfo.split("_")[
           port.port.modelinfo.split("_").length - 1
         ],
+        col5: port.port.modelinfo.split("_")[
+          port.port.modelinfo.split("_").length - 1
+        ],
+        col6: "Applied",
       };
     });
 
@@ -599,6 +628,8 @@ function Apply({
     );
 
     for (const port of selectedPorts) {
+      console.log("port ::::", port);
+
       for (let i = 2; i < profile.length; i++) {
         await delayPromise(DELAY_MS); // 비동기 지연 함수
         setPercentage((prev) => prev + 1);
@@ -633,7 +664,7 @@ function Apply({
             setSelectedIndex(selectedIndexList)
           }
           rows={rows}
-          columns={modalColumns}
+          columns={modalColumns(t)}
         />
       </Stack>
       <Stack
@@ -651,7 +682,7 @@ function Apply({
           {t("device.configure_multi-device_pop_up_(device_list).back")}
         </Button>
         <Button
-          disabled={step === "BEFORE"}
+          disabled={!selectedIndex.length}
           variant="contained"
           color="secondary"
           sx={{ width: 200 }}

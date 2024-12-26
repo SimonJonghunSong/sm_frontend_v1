@@ -256,7 +256,10 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -300,7 +303,10 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -351,7 +357,8 @@
       "disconnect": "Desconectar",
       "configure_multi-device": "Configurar Varios Dispositivos",
       "models_that_are_not_supported_will_not_be_displayed_on_the_device_list": "Los modelos que no están soportados no se mostrarán en la lista de dispositivos.",
-      "next": "Siguiente"
+      "next": "Siguiente",
+      "status": "Estado"
     },
     "configure_multi-device_pop_up_(profile_load)": {
       "configure_multi-device": "Configurar Varios Dispositivos",
