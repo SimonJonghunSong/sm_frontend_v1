@@ -79,6 +79,8 @@ export default function page() {
       router.replace("/");
     },
     onError: () => {
+      console.log("test :::::::");
+
       setErrorDialog(true);
     },
   });
@@ -435,9 +437,7 @@ const ErrorDialog = ({ onClose }: { onClose: () => void }) => {
     >
       <Stack>
         <span style={{ wordBreak: "keep-all" }}>
-          {t(
-            "popup.login.login.invalid_country_or_id_or_password_please_try_again"
-          )}
+          {t("popup.login.login.invalid_country_or_id_or_password")}
         </span>
       </Stack>
     </Modal>
