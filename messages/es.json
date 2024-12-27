@@ -1552,6 +1552,7 @@
     },
     "login": {
       "login": {
+        "invalid_country_or_id_or_password": "País o ID o contraseña no válidos. \nPor favor inténtalo de nuevo.",
         "invalid_country_or_id_or_password_please_try_again": "Inicio de sesión inválido o se requiere una conexión a Internet inicial. Por favor, inténtalo de nuevo.",
         "your_account_has_been_locked_please_contact_us_to_unlock_your_account": "Su cuenta ha sido bloqueada. Por favor, contáctenos para desbloquear su cuenta.",
         "an_initial_internet_connection_is_required_once_to_use_offline_mode": "Inicio de sesión inválido o se requiere una conexión a Internet inicial. Por favor, inténtalo de nuevo.",
