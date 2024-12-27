@@ -343,6 +343,7 @@ export default function DeviceList() {
               sx={{ maxWidth: 300 }}
               onClick={modalToggle}
               style={{ flexShrink: 0 }}
+              disabled={portList.length === 0}
             >
               {t("device.device_list.configure_multi-device")}
             </Button>
@@ -567,7 +568,6 @@ function Before({
 }
 
 function Apply({
-  step,
   setStep,
   modalToggle,
   profile,
@@ -600,8 +600,9 @@ function Apply({
   const rows = portList
     .filter(
       ({ port }) =>
-        port.modelinfo.split("_")[port.modelinfo.split("_").length - 1] ===
-        profile[1].split("=")[1]
+        port.modelinfo.includes(profile[0].split("=")[1]) &&
+        port.modelinfo?.split("_")[port.modelinfo?.split("_").length - 1] ===
+          profile[1].split("=")[1]
     )
     .map((port, index) => {
       return {

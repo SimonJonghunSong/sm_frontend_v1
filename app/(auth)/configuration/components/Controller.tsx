@@ -284,7 +284,7 @@ export default function Controller() {
         <Stack>
           <span>Are you sure you want to apply profile to the device?</span>
           <span style={{ color: "var(--primary)" }}>
-            {currentPort.modelVersion}
+            {currentPort.modelVersion} ({currentPort.imei})
           </span>
         </Stack>
       </Modal>
