@@ -106,17 +106,6 @@ export default function page() {
     event.preventDefault();
   };
 
-  const getCountryByLang = () => {
-    switch (lang) {
-      case "en":
-        return "usa";
-      case "pt":
-        return "portugal";
-      case "es":
-        return "spain";
-    }
-  };
-
   const handleOfflineClickBlock = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -152,6 +141,9 @@ export default function page() {
     e.stopPropagation();
 
     if (isAnonymous) {
+      // setUserRole("anonymous");
+      // setToken("anonymous");
+      // router.replace("/");
       return;
     }
 
@@ -280,6 +272,9 @@ export default function page() {
                 fullWidth
                 disabled={isAnonymous}
                 value={inputId}
+                sx={{
+                  background: isAnonymous ? "#F3F3F3" : undefined,
+                }}
                 onChange={(e) => {
                   const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
                   const value = e.target.value;
@@ -306,6 +301,9 @@ export default function page() {
                 disabled={isAnonymous}
                 type={showPassword ? "text" : "password"}
                 value={inputPassword}
+                sx={{
+                  background: isAnonymous ? "#F3F3F3" : undefined,
+                }}
                 onChange={(e) => {
                   const value = e.target.value;
                   // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
@@ -313,7 +311,7 @@ export default function page() {
                   setInputPassword(e.target.value);
                 }}
                 InputProps={{
-                  endAdornment: (
+                  endAdornment: !isAnonymous && (
                     <IconButton
                       aria-label="toggle password visibility"
                       onClick={handleClickShowPassword}
@@ -359,6 +357,7 @@ export default function page() {
                   <Checkbox
                     checked={isRemberberMe}
                     onChange={(e) => setIsRememberMe(e.target.checked)}
+                    disabled={isAnonymous}
                   />
                 }
                 label={t("login.remember_me")}
@@ -373,16 +372,20 @@ export default function page() {
               background: "var(--primary-gradient)",
               mt: 2,
               opacity:
-                (inputId.length === 0 || inputPassword.length === 0) &&
-                !isAnonymous
+                (isAnonymous && isUndefinedCountry) ||
+                ((inputId.length === 0 ||
+                  inputPassword.length === 0 ||
+                  isPending) &&
+                  !isAnonymous)
                   ? "0.5"
                   : undefined,
             }}
             disabled={
-              (inputId.length === 0 ||
+              (isAnonymous && isUndefinedCountry) ||
+              ((inputId.length === 0 ||
                 inputPassword.length === 0 ||
                 isPending) &&
-              !isAnonymous
+                !isAnonymous)
             }
           >
             {t("login.login")}
