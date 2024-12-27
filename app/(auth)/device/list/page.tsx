@@ -16,6 +16,7 @@ import { toast, ToastContainer } from "react-toastify";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
+import dayjs from "dayjs";
 
 const modalColumns: (t) => GridColDef[] = (t) => [
   {
@@ -519,10 +520,8 @@ function Before({
             {t("device.configure_multi-device_pop_up_(profile_load).date")}
           </div>
           <div>
-            {selectedFile
-              ? new Date(selectedFile.lastModified).toLocaleDateString() +
-                " " +
-                new Date(selectedFile.lastModified).toLocaleTimeString()
+            {selectedFile?.lastModified
+              ? dayjs(selectedFile.lastModified).format("MMM/DD/YYYY HH:mm:ss")
               : "-"}
           </div>
         </Stack>
@@ -663,6 +662,9 @@ function Apply({
           onRowSelectionModelChange={(selectedIndexList: number[]) =>
             setSelectedIndex(selectedIndexList)
           }
+          noDataMessage={t(
+            "device.configure_multi-device_pop_up_(device_list).no_applicable_devices_found"
+          )}
           rows={rows}
           columns={modalColumns(t)}
         />

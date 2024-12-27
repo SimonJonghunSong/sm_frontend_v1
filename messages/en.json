@@ -371,9 +371,7 @@
       "modem": "Modem",
       "back": "Back",
       "apply": "Apply",
-      "no_applicable_devices_found": {
-        "": "No applicable devices found."
-      }
+      "no_applicable_devices_found": "No applicable devices found."
     }
   },
   "account": {
