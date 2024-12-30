@@ -368,18 +368,7 @@ export default function page() {
             type="submit"
             variant="contained"
             fullWidth
-            sx={{
-              background: "var(--primary-gradient)",
-              mt: 2,
-              opacity:
-                (isAnonymous && isUndefinedCountry) ||
-                ((inputId.length === 0 ||
-                  inputPassword.length === 0 ||
-                  isPending) &&
-                  !isAnonymous)
-                  ? "0.5"
-                  : undefined,
-            }}
+            sx={{ mt: 2 }}
             disabled={
               (isAnonymous && isUndefinedCountry) ||
               ((inputId.length === 0 ||
