@@ -62,9 +62,9 @@ export default function Server() {
     mutationFn: deleteMqttServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
-      toast(t("common.message.delete-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.delete-success"), {
+      //   type: "success",
+      // });
     },
   });
 
@@ -276,9 +276,9 @@ function AddServerModal({
     mutationFn: addMqttServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
-      toast(t("common.message.add-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.add-success"), {
+      //   type: "success",
+      // });
       onClose();
     },
   });
@@ -428,9 +428,9 @@ function EditServerModal({
     mutationFn: modifyMqttServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["mqtt-server"] });
-      toast(t("common.message.edit-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.edit-success"), {
+      //   type: "success",
+      // });
       onClose();
     },
   });

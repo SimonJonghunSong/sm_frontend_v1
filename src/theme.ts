@@ -98,7 +98,7 @@ const theme = createTheme({
           },
         },
         contained: {
-          "&.Mui-disabled": {
+          "&.MuiButton-containedPrimary.Mui-disabled": {
             background: "var(--primary-gradient)",
             cursor: "not-allowed",
             opacity: "0.5",

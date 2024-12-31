@@ -61,14 +61,14 @@ export default function ReactQueryProvider({
 
             console.log("error >>>", error);
 
-            toast(
-              error.response?.data?.response?.reason ||
-                error.response?.data?.message ||
-                "Error",
-              {
-                type: "error",
-              }
-            );
+            // toast(
+            //   error.response?.data?.response?.reason ||
+            //     error.response?.data?.message ||
+            //     "Error",
+            //   {
+            //     type: "error",
+            //   }
+            // );
           },
         },
       },

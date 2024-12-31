@@ -77,7 +77,7 @@ export default function Page() {
       });
 
       currentPort.port.oneditsuccess = () => {
-        toast("Save Success", { type: "success" });
+        // toast("Save Success", { type: "success" });
         router.push(`/configuration/geofence`);
       };
       write({

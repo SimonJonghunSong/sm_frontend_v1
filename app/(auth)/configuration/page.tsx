@@ -51,7 +51,7 @@ export default function page() {
     };
     currentPort.port.oneditsuccess = () => {
       setJsonPackageOfSerialPortForUpdate({ imei, payload: originData });
-      toast("Save Success!", { type: "success" });
+      // toast("Save Success!", { type: "success" });
     };
 
     if (tab === "Command String") {
@@ -68,7 +68,7 @@ export default function page() {
         console.log(value, "value onbuffervalue");
         message += value;
         if (value.includes(CR)) {
-          toast(message, { type: "default" });
+          // toast(message, { type: "default" });
         }
       };
 

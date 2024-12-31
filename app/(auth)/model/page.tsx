@@ -296,9 +296,9 @@ export default function Model() {
 
           setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
 
-          toast("Successfully loaded!", {
-            type: "success",
-          });
+          // toast("Successfully loaded!", {
+          //   type: "success",
+          // });
         },
       }
     );
@@ -382,9 +382,9 @@ export default function Model() {
               )
             );
 
-            toast("Successfully loaded!", {
-              type: "success",
-            });
+            // toast("Successfully loaded!", {
+            //   type: "success",
+            // });
           },
         }
       );

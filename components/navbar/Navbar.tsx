@@ -14,7 +14,6 @@ import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-import { toast } from "react-toastify";
 import styles from "./styles.module.scss";
 import Image from "next/image";
 import logo from "/public/images/logo-light.svg";

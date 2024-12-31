@@ -2,7 +2,6 @@
 
 import React, { useReducer, useState } from "react";
 import Image from "next/image";
-import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import styles from "../styles.module.scss";

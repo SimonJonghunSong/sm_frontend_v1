@@ -154,9 +154,6 @@ export default function Account() {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
-      toast(t("popup.account.delete_account_pop_up.deleted_successfully!"), {
-        type: "success",
-      });
     },
   });
   const [roleFilter, setRoleFilter] = useState<string>("All");

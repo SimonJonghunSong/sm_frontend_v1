@@ -2,7 +2,6 @@
 
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -78,7 +77,7 @@ export default function Page() {
   const addPolygonData = () => {
     const imei = currentPort.port.imei;
     currentPort.port.oneditsuccess = () => {
-      toast("Save Success", { type: "success" });
+      // toast("Save Success", { type: "success" });
       router.push(`/configuration/geofence`);
     };
 

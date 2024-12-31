@@ -643,10 +643,10 @@ function Apply({
       setShouldFetchJsonPackage({ imei: port.port.imei });
     }
 
-    toast("Configure Deivce Success", {
-      type: "success",
-      position: "bottom-center",
-    });
+    // toast("Configure Deivce Success", {
+    //   type: "success",
+    //   position: "bottom-center",
+    // });
     setIsLoading(false);
     modalToggle();
   };

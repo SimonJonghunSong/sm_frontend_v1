@@ -14,7 +14,6 @@ import useParameterStore from "../../utils/useParameterStore";
 import useAuthStore from "@/utils/useAuthStore";
 import { useMutation } from "@tanstack/react-query";
 import { logout } from "@/src/api/services/auth";
-import { toast } from "react-toastify";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
@@ -81,9 +80,6 @@ export default function SideMenu({
       setUserRole(undefined);
       setRefreshToken(undefined);
       router.replace("/login");
-      toast("Logged out successfully.", {
-        type: "info",
-      });
     }
   };
 

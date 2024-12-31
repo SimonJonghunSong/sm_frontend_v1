@@ -63,9 +63,9 @@ export default function Server() {
     mutationFn: deleteScutiServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
-      toast(t("common.message.delete-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.delete-success"), {
+      //   type: "success",
+      // });
     },
   });
 
@@ -272,9 +272,9 @@ function AddServerModal({ onClose }) {
     mutationFn: addScutiServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
-      toast(t("common.message.add-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.add-success"), {
+      //   type: "success",
+      // });
       onClose();
     },
   });
@@ -424,9 +424,9 @@ function EditServerModal({
     mutationFn: modifyScutiServer,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scuti-server"] });
-      toast(t("common.message.edit-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.edit-success"), {
+      //   type: "success",
+      // });
       onClose();
     },
   });

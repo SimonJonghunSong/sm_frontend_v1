@@ -154,18 +154,18 @@ export default function Model() {
     mutationFn: delModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      toast(t("common.message.delete-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.delete-success"), {
+      //   type: "success",
+      // });
     },
   });
   const editModelRequest = useMutation({
     mutationFn: editModel,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["model"] });
-      toast(t("common.message.edit-success"), {
-        type: "success",
-      });
+      // toast(t("common.message.edit-success"), {
+      //   type: "success",
+      // });
     },
   });
   const { getIncludeUids } = useModelPkgStore();

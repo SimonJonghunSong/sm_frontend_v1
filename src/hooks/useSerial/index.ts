@@ -367,7 +367,7 @@ const useSerial = () => {
             if (value.includes(CR)) {
               port.iserrorvalue = false;
               port.onprev?.();
-              toast(value, { type: "error" });
+              // toast(value, { type: "error" });
               port.onprev = null;
             } else {
               port.iserrorvalue = true;
@@ -510,7 +510,7 @@ const useSerial = () => {
         }
       }
     } catch (error) {
-      toast(error, { type: "error" });
+      // toast(error, { type: "error" });
       console.log(error);
     } finally {
       reader.releaseLock();
