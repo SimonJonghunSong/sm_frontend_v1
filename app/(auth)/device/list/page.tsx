@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
@@ -12,7 +12,6 @@ import useModal from "@/utils/useModal";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { AT_EDIT_PREFIX, AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
-import { toast, ToastContainer } from "react-toastify";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
@@ -375,7 +374,7 @@ export default function DeviceList() {
       >
         <ProfileModal modalToggle={modalToggle} write={write} />
       </Modal>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 }

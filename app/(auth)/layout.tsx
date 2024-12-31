@@ -12,15 +12,28 @@ import GlobalLoading from "@/components/GlobalLoading";
 import Footer from "@/components/Footer";
 import CreateNotiModal from "@/components/CreateNotiModal";
 import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
+import useSerial from "@/src/hooks/useSerial";
 
 const AuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
   const [notiModal, setNotiModal] = useState(false);
   const { setIsOnline, setIsSelfOffline } = useNetworkMonitor();
-
+  const {
+    func: { removePorts, getPorts },
+    state: { portList },
+  } = useSerial();
   useEffect(() => {
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    const isRendered = sessionStorage.getItem("isRendered");
+    if (!isRendered) {
+      removePorts();
+      getPorts();
+      sessionStorage.setItem("isRendered", "rendered");
+    }
+  }, [portList]);
 
   useEffect(() => {
     const handler = (e) => {

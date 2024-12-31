@@ -63,6 +63,7 @@ const useSerial = () => {
     setPackageFetchingStart,
     setCircularGeofence,
     setPolygonGeofence,
+    removeAllPort,
   } = useSerialStore();
 
   const killAllPort = () => {
@@ -587,6 +588,10 @@ const useSerial = () => {
     deleteSerialPort(port);
   };
 
+  const removePorts = () => {
+    removeAllPort();
+  };
+
   useEffect(() => {
     getPorts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -604,6 +609,7 @@ const useSerial = () => {
       addPortToState,
       monitor,
       close,
+      removePorts,
     },
   };
 };

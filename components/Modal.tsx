@@ -26,6 +26,7 @@ type ModalProps = {
   hideBackdrop?: boolean;
   hasMinimize?: boolean;
   hasFooter?: boolean;
+  disableScrollLock?: boolean;
 };
 
 export default function Modal({
@@ -45,6 +46,7 @@ export default function Modal({
   hideBackdrop = false,
   hasMinimize = false,
   hasFooter = true,
+  disableScrollLock = false,
 }: ModalProps) {
   const ref = useRef<HTMLDivElement | null>(null);
   const [isMinimize, setIsMinimize] = useState(false);
@@ -67,6 +69,7 @@ export default function Modal({
         className={className}
         open={open}
         onClose={onClose}
+        disableScrollLock={disableScrollLock}
         fullWidth
         maxWidth={"sm"}
         sx={{

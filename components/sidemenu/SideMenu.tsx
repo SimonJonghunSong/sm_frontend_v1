@@ -254,6 +254,7 @@ export default function SideMenu({
           toggleOpen={cmdModalToggle}
           width={isCmdModalWide ? "1240px" : "700px"}
           hasFooter={false}
+          disableScrollLock
         >
           <CmdModal setIsCmdModalWide={setIsCmdModalWide} />
         </Modal>
