@@ -124,7 +124,7 @@ export default function Page() {
   const [fetchedPolygonData, setFetchedPolygonData] = useState<PolygonType>();
   const [fetcheCircleData, setFetchedCircleData] = useState<CircleType>();
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
-  const [roleFilter, setRoleFilter] = useState<string>("All");
+  const [typeFilter, setTypeFilter] = useState<string>("All");
   const [isFullLoading, setIsFullLoading] = useState<boolean>(false);
   const mapRef = useRef<google.maps.Map>(null);
   const polygonPointRef = useRef("");
@@ -162,83 +162,83 @@ export default function Page() {
   const polygonData = getPolygonGeofenceData(polygonList);
   const circularData = getCircularGeofenceData(circularList);
 
-  const rows = [...polygonData, ...circularData].map(
-    ({ type, groupId }, index) => {
-      return {
-        id: index + 1,
-        no: index + 1,
-        type: type === "polygon" ? "Polygon" : "Circular",
-        groupId,
-        edit: {
-          id: groupId,
-          onEdit: () => {
-            if (type === "polygon") {
-              setGrpId(groupId);
-              router.push(`/configuration/geofence/edit/polygon`);
-            } else {
-              setGrpId(groupId);
-              router.push(`/configuration/geofence/edit/circular`);
-            }
-          },
+  const rows = [
+    ...(typeFilter === "Circular" ? [] : polygonData),
+    ...(typeFilter === "Polygon" ? [] : circularData),
+  ].map(({ type, groupId }, index) => {
+    return {
+      id: index + 1,
+      no: index + 1,
+      type: type === "polygon" ? "Polygon" : "Circular",
+      groupId,
+      edit: {
+        id: groupId,
+        onEdit: () => {
+          if (type === "polygon") {
+            setGrpId(groupId);
+            router.push(`/configuration/geofence/edit/polygon`);
+          } else {
+            setGrpId(groupId);
+            router.push(`/configuration/geofence/edit/circular`);
+          }
         },
-        delete: {
-          id: groupId,
-          onDelete: () => {
-            const imei = currentPort.port.imei;
-            if (type === "polygon") {
-              const isPolygonSpeedLimitDisabled =
-                polygonList[groupId - 1].split("#")[1].length === 6;
+      },
+      delete: {
+        id: groupId,
+        onDelete: () => {
+          const imei = currentPort.port.imei;
+          if (type === "polygon") {
+            const isPolygonSpeedLimitDisabled =
+              polygonList[groupId - 1].split("#")[1].length === 6;
 
-              currentPort.port.oneditsuccess = () => {
-                setPolygonGeofence({
-                  imei,
-                  payload: polygonList.map((value, index) =>
-                    index === groupId - 1
-                      ? `${groupId}#${
-                          isPolygonSpeedLimitDisabled
-                            ? "000000"
-                            : "00000000000000"
-                        }`
-                      : value
-                  ),
-                });
-              };
-
-              write({
-                data: `${AT_EDIT_PREFIX}${imei};53;${String(
-                  groupId - 1
-                ).padStart(2, "0")}#${
-                  isPolygonSpeedLimitDisabled ? "000000" : "00000000000000"
-                }`,
-                port: currentPort.port,
-                writer: currentPort.writer,
+            currentPort.port.oneditsuccess = () => {
+              setPolygonGeofence({
+                imei,
+                payload: polygonList.map((value, index) =>
+                  index === groupId - 1
+                    ? `${groupId}#${
+                        isPolygonSpeedLimitDisabled
+                          ? "000000"
+                          : "00000000000000"
+                      }`
+                    : value
+                ),
               });
-            } else {
-              const circleIndex = findCircleIndexByNumber(groupId - 1);
-              const [id, circleInfo] = circularList[groupId - 1].split("#");
-              const removedCircleInfo =
-                circleInfo.slice(0, 20) + "0000" + circleInfo.slice(24);
+            };
 
-              currentPort.port.oneditsuccess = () => {
-                setCircularGeofence({
-                  imei,
-                  payload: circularList.map((value, index) =>
-                    index === groupId - 1 ? `${id}#NoData` : value
-                  ),
-                });
-              };
+            write({
+              data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
+                2,
+                "0"
+              )}#${isPolygonSpeedLimitDisabled ? "000000" : "00000000000000"}`,
+              port: currentPort.port,
+              writer: currentPort.writer,
+            });
+          } else {
+            const circleIndex = findCircleIndexByNumber(groupId - 1);
+            const [id, circleInfo] = circularList[groupId - 1].split("#");
+            const removedCircleInfo =
+              circleInfo.slice(0, 20) + "0000" + circleInfo.slice(24);
 
-              write({
-                data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${removedCircleInfo}`,
-                port: currentPort.port,
-                writer: currentPort.writer,
+            currentPort.port.oneditsuccess = () => {
+              setCircularGeofence({
+                imei,
+                payload: circularList.map((value, index) =>
+                  index === groupId - 1 ? `${id}#NoData` : value
+                ),
               });
-            }
-          },
+            };
+
+            write({
+              data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${removedCircleInfo}`,
+              port: currentPort.port,
+              writer: currentPort.writer,
+            });
+          }
         },
-      };
-    }
-  );
+      },
+    };
+  });
 
   const handleRowClick = (data: GridRowParams<any>) => {
     const imei = currentPort.port.imei;
@@ -428,14 +428,13 @@ export default function Page() {
               mb="16px"
             >
               <Select
-                value={roleFilter}
-                onChange={(e) => handleSelectChange(e, setRoleFilter)}
+                value={typeFilter}
+                onChange={(e) => handleSelectChange(e, setTypeFilter)}
                 sx={{ minWidth: 160 }}
               >
                 <MenuItem value={"All"}>All</MenuItem>
-                <MenuItem value={"Admin"}>Admin</MenuItem>
-                <MenuItem value={"Customer"}>Customer</MenuItem>
-                <MenuItem value={"Guest"}>Guest</MenuItem>
+                <MenuItem value={"Polygon"}>Polygon</MenuItem>
+                <MenuItem value={"Circular"}>Circular</MenuItem>
               </Select>
 
               <Button
