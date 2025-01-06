@@ -1,7 +1,7 @@
 import { Stack, TextField, Button, IconButton } from "@mui/material";
 import styles from "./styles.module.scss";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import KeyboardDoubleArrowRightOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowRightOutlined";
@@ -213,7 +213,8 @@ export default function ResponseLog({
 }) {
   const [commandValue, setCommandValue] = useState("");
   const [selectedIdxs, setSelectedIdxs] = useState([]);
-  console.log("logs :::", logs);
+  const consoleRef = useRef<HTMLDivElement | null>(null);
+  console.log("selectedIdxs :::", selectedIdxs);
 
   const [expand, setExpand] = useState(false);
   const toggleWidth = () => {
@@ -249,6 +250,12 @@ export default function ResponseLog({
 
       setLogs((prev) => [...prev, newLog as any]);
 
+      setTimeout(() => {
+        consoleRef.current.scrollBy({
+          top: consoleRef.current.scrollHeight,
+        });
+      }, 0);
+
       setCommandValue("");
 
       let resMessage = "";
@@ -267,6 +274,11 @@ export default function ResponseLog({
               result: "Executing",
             },
           ]);
+          setTimeout(() => {
+            consoleRef.current.scrollBy({
+              top: consoleRef.current.scrollHeight,
+            });
+          }, 100);
         }
       };
 
@@ -296,6 +308,7 @@ export default function ResponseLog({
       >
         <Stack gap="16px" style={{ width: "100%" }}>
           <div
+            ref={consoleRef}
             className={styles.logWrap}
             style={{ padding: "16px", width: "100%" }}
           >
@@ -420,7 +433,7 @@ export default function ResponseLog({
               onClick={async () => {
                 console.log("selec :::", selectedIdxs);
 
-                for (const idx in selectedIdxs) {
+                for (const idx of selectedIdxs) {
                   const target = rows[idx];
 
                   handleSendMessage(target.col2.value);
