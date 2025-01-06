@@ -360,14 +360,11 @@ export default function Controller() {
         toggleOpen={uploadModalToggle}
         title="Confirm"
         confirm={() => {}}
-        confirmButtonText="Save"
+        confirmButtonText="Yes"
         width="360px"
       >
         <Stack>
           <span>Are you sure you want to upload profile to Scuti?</span>
-          <Button sx={{ width: "fit-content" }} onClick={toggleUploadChanges}>
-            {t("popup.configuration.profile_menu.show_changes")}
-          </Button>
           {showUploadChanges && (
             <TextField
               value={"Show Changed Value..."}
