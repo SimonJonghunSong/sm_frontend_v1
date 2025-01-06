@@ -2,6 +2,7 @@ import React from "react";
 import DataTable from "../../../components/dataTable";
 import { GridColDef } from "@mui/x-data-grid";
 import styles from "./styles.module.scss";
+import useAuthStore from "@/utils/useAuthStore";
 
 const columns: GridColDef[] = [
   {
@@ -172,12 +173,32 @@ const rows = [
   },
 ];
 
-export default function OperationLog() {
+export default function OperationLog({
+  logs,
+}: {
+  logs: {
+    type: "req" | "res";
+    message: string;
+    date: string;
+    result: string;
+  }[];
+}) {
+  const { userId } = useAuthStore();
+
   return (
     <div className={styles.logWrap}>
       <div style={{ width: "100%" }}>
         <DataTable
-          rows={rows}
+          rows={logs
+            .filter((item) => item.type === "req")
+            .map((item, idx) => ({
+              id: idx + 1,
+              col1: idx + 1,
+              col2: item.message,
+              col3: userId || "Anonymous",
+              col4: item.date,
+              col5: item.result,
+            }))}
           columns={columns}
           rowHeight={52}
           disablePagination

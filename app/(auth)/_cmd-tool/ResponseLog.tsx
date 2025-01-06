@@ -7,8 +7,13 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import KeyboardDoubleArrowRightOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowRightOutlined";
 import DataTable from "../../../components/dataTable";
 import { GridColDef } from "@mui/x-data-grid";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import useSerialStore from "@/src/stores/useSerialStore";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
+import { CR } from "@/src/hooks/useSerial/constant";
+import dayjs from "dayjs";
 
-const columns: GridColDef[] = [
+const columns = (handleSend: (message: string) => void): GridColDef[] => [
   {
     field: "col1",
     headerName: "No.",
@@ -44,12 +49,15 @@ const columns: GridColDef[] = [
     width: 80,
     headerAlign: "center",
     align: "center",
-    renderCell: () => (
+    renderCell: (params) => (
       <Button
         variant="outlined"
         color="secondary"
         sx={{ width: 60, height: 30 }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleSend(params.row.col2.value);
+        }}
       >
         Send
       </Button>
@@ -182,12 +190,97 @@ const rows = [
 
 export default function ResponseLog({
   setIsCmdModalWide,
+  logs,
+  setLogs,
 }: {
   setIsCmdModalWide?: React.Dispatch<React.SetStateAction<boolean>>;
+  logs: {
+    type: "req" | "res";
+    message: string;
+    date: string;
+    result: string;
+  }[];
+  setLogs: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: "req" | "res";
+        message: string;
+        date: string;
+        result: string;
+      }[]
+    >
+  >;
 }) {
+  const [commandValue, setCommandValue] = useState("");
+  const [selectedIdxs, setSelectedIdxs] = useState([]);
+  console.log("logs :::", logs);
+
   const [expand, setExpand] = useState(false);
   const toggleWidth = () => {
     setExpand(!expand);
+  };
+  const {
+    state: { portList },
+    func: { write },
+  } = useSerial();
+
+  const { imei } = useSerialConfigurationStore();
+
+  const currentPort = portList.find(({ port }) => port.imei === imei);
+
+  const handleSendMessage = (message: string) => {
+    console.log("message :::::", message);
+
+    try {
+      const port = currentPort.port;
+
+      console.log("currentPort :::", port);
+      console.log("readable :::", currentPort.port.readable);
+      console.log("writable :::", currentPort.port.writable);
+
+      console.log("port :::", port);
+
+      const newLog = {
+        type: "req",
+        message,
+        date: dayjs().format("MMM/DD/YYYY HH:mm"),
+        result: "Fail",
+      };
+
+      setLogs((prev) => [...prev, newLog as any]);
+
+      setCommandValue("");
+
+      let resMessage = "";
+
+      currentPort.port.onbuffervalue = (value) => {
+        console.log(value, "value onbuffervalue");
+        resMessage += value;
+        if (value.includes(CR)) {
+          newLog.result = "Executing";
+          setLogs((prev) => [
+            ...prev,
+            {
+              type: "res",
+              message: resMessage,
+              date: dayjs().format("MMM/DD/YYYY HH:mm"),
+              result: "Executing",
+            },
+          ]);
+        }
+      };
+
+      write({
+        data: message,
+        port,
+        writer: currentPort.writer,
+        callback: () => {
+          console.log("tes t::::");
+        },
+      });
+    } catch (e) {
+      console.log("e ::::", e);
+    }
   };
 
   useEffect(() => {
@@ -196,19 +289,33 @@ export default function ResponseLog({
 
   return (
     <>
-      <Stack direction="row" gap={expand ? "16px" : 0}>
-        <Stack gap="16px">
-          <div className={styles.logWrap} style={{ padding: "16px" }}>
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero
-            laborum nobis, veritatis iste quas, quia, sit a aut fuga porro
-            soluta minima. Incidunt commodi nesciunt omnis, modi quis reiciendis
-            suscipit!
+      <Stack
+        direction="row"
+        gap={expand ? "16px" : 0}
+        style={{ width: "100%" }}
+      >
+        <Stack gap="16px" style={{ width: "100%" }}>
+          <div
+            className={styles.logWrap}
+            style={{ padding: "16px", width: "100%" }}
+          >
+            <div className={styles.logContainer}>
+              {logs.map((item) =>
+                item.type === "req" ? (
+                  <div className={styles.logReq}>{`> ${item.message}`}</div>
+                ) : (
+                  <div className={styles.logRes}>{item.message}</div>
+                )
+              )}
+            </div>
           </div>
           <Stack direction="row" gap="16px">
             <TextField
               multiline
               fullWidth
               rows={1}
+              value={commandValue}
+              onChange={(e) => setCommandValue(e.target.value)}
               sx={{
                 flexGrow: 1,
                 height: "120px",
@@ -218,14 +325,28 @@ export default function ResponseLog({
                 },
                 "& textarea": {
                   height: "100% !important",
+                  padding: "0 !important",
                 },
               }}
             />
             <Stack justifyContent="space-between">
-              <Button variant="outlined" color="secondary">
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={() => {
+                  setCommandValue("");
+                }}
+              >
                 Clear
               </Button>
-              <Button variant="contained" color="secondary">
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled={!commandValue}
+                onClick={() => {
+                  handleSendMessage(commandValue);
+                }}
+              >
                 Send
               </Button>
             </Stack>
@@ -281,16 +402,35 @@ export default function ResponseLog({
               <div>
                 <DataTable
                   rows={rows}
-                  columns={columns}
+                  columns={columns(handleSendMessage)}
                   rowHeight={42}
                   disablePagination
                   disableRowClick
                   disableResize
                   minHeight={1}
+                  onRowSelectionModelChange={(e) => {
+                    setSelectedIdxs(e.sort((a, b) => Number(a) - Number(b)));
+                  }}
                 />
               </div>
             </div>
-            <Button variant="contained" color="secondary">
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={async () => {
+                console.log("selec :::", selectedIdxs);
+
+                for (const idx in selectedIdxs) {
+                  const target = rows[idx];
+
+                  handleSendMessage(target.col2.value);
+
+                  console.log("asdasd ::::");
+
+                  await delayPromise(500);
+                }
+              }}
+            >
               Send
             </Button>
           </Stack>
