@@ -92,7 +92,7 @@ const ConfigurationLayout = ({ children }) => {
               name: "Geofence",
               href: "/configuration",
               offlineEnable: true,
-              isActive: pathname === "/configuration" && tab === "geofence",
+              isActive: tab === "geofence",
               onClick: handleTabClick,
             },
           ]}
