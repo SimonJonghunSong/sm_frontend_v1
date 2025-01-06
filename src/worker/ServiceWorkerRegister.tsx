@@ -33,6 +33,8 @@ export default function ServiceWorkerRegister() {
       // 클라이언트 요청의 응답으로 돌아온 message
       switch ((message as ClientToServiceWorkerResponseAction).type) {
         case "INIT_INSTALL_CHECK_RESPONSE":
+          console.log("INIT_INSTALL_CHECK_RESPONSE ::::", message.data);
+
           if (!message.data) {
             handleGlobalLoadingOn();
           }
@@ -45,9 +47,13 @@ export default function ServiceWorkerRegister() {
       // 서비스 워커에서 직접 호출한 message
       switch ((message as ServiceWorkerToClientAction).type) {
         case "INSTALL_START":
+          console.log("INSTALL_START ::::");
+
           handleGlobalLoadingOn();
           break;
         case "INSTALL_END":
+          console.log("INSTALL_END ::::");
+
           getPrefetchApiList().forEach((func) => {
             func?.();
           });
