@@ -56,6 +56,7 @@ const useSerial = () => {
   const broadcastChannel = new BroadcastChannel("command_log");
   const {
     portList,
+    getPortList,
     addSerialPort,
     deleteSerialPort,
     editSerialPort,
@@ -218,9 +219,10 @@ const useSerial = () => {
             if (value.includes(CR)) {
               const imeiBuffer = imeiBufferRef.current.get(port.injectedId);
               const currentImei = imeiBuffer.trim().split(";")[1];
-              const alreadyInGlobalData = portList.some(
+              const alreadyInGlobalData = getPortList().some(
                 ({ imei }) => imei === currentImei
               );
+
               port.isimeifetching = false;
               if (currentImei) {
                 port.imei = currentImei;
@@ -246,7 +248,7 @@ const useSerial = () => {
                     imei: currentImei,
                   });
 
-                  port.grpNo = portList.find(
+                  port.grpNo = getPortList().find(
                     ({ imei }) => imei === currentImei
                   ).jsonPackageCount;
                 } else {

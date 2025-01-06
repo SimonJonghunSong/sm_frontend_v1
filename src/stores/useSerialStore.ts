@@ -25,6 +25,7 @@ export type SerialPortState = {
 type SerialPortAction = {
   addSerialPort: (port: SerialPortState) => void;
   deleteSerialPort: ({ imei }: { imei: string }) => void;
+  getPortList: () => SerialPortState[];
   removeAllPort: () => void;
   editSerialPort: ({
     imei,
@@ -83,6 +84,7 @@ const useSerialStore = create(
   persist<{ portList: SerialPortState[] } & SerialPortAction>(
     (set, get) => ({
       portList: [],
+      getPortList: () => get().portList,
       addSerialPort: (port) =>
         set(() => {
           return {

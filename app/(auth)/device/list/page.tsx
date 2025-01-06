@@ -597,7 +597,7 @@ function Apply({
   const rows = portList
     .filter(
       ({ port }) =>
-        port.modelinfo.includes(profile[0].split("=")[1]) &&
+        port.modelinfo.includes(profile[0].split("=")[1].trim()) &&
         port.modelinfo?.split("_")[port.modelinfo?.split("_").length - 1] ===
           profile[1].split("=")[1].trim()
     )
