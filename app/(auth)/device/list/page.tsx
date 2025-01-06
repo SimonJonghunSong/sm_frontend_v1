@@ -599,7 +599,7 @@ function Apply({
       ({ port }) =>
         port.modelinfo.includes(profile[0].split("=")[1]) &&
         port.modelinfo?.split("_")[port.modelinfo?.split("_").length - 1] ===
-          profile[1].split("=")[1]
+          profile[1].split("=")[1].trim()
     )
     .map((port, index) => {
       return {
