@@ -17,6 +17,7 @@ export default function CmdTool({
   const [value, setValue] = useState("response");
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setIsCmdModalWide(false);
     setValue(newValue);
   };
 
@@ -52,13 +53,7 @@ export default function CmdTool({
         />
         <Tab value="console" label={t("configuration.cmd_tool.console_log")} />
       </Tabs>
-      <div
-        style={{
-          position: "relative",
-          display: "flex",
-          flexGrow: 1,
-        }}
-      >
+      <div className={styles.contentWrap}>
         {value === "response" ? (
           <ResponseLog setIsCmdModalWide={setIsCmdModalWide} />
         ) : value === "operation" ? (

@@ -48,6 +48,8 @@ export default function DataTable({
   const apiRef = useRef<GridApiCommunity>();
   const [page, setPage] = useState(0);
 
+  console.log("rows :::", rows);
+
   useEffect(() => {
     if (rows.length <= page * 10 && rows.length > 0) {
       setPage((prev) => prev - 1);
@@ -65,7 +67,7 @@ export default function DataTable({
     >
       <DataGrid
         apiRef={apiRef}
-        rows={rows.slice(page * 10, (page + 1) * 10)}
+        rows={disablePagination ? rows : rows.slice(page * 10, (page + 1) * 10)}
         columns={columns}
         checkboxSelection={checkbox}
         disableColumnMenu
@@ -114,7 +116,7 @@ export default function DataTable({
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize: 10, //TODO: 필요 시 수정
+              pageSize: disablePagination ? 100 : 10, //TODO: 필요 시 수정
             },
           },
         }}

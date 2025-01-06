@@ -118,6 +118,66 @@ const rows = [
     col2: { id: "1", value: "AT+QJDR?" },
     col3: { id: "1" },
   },
+  {
+    id: 10,
+    col1: "11",
+    col2: { id: "1", value: "AT^$PSTDBG=E" },
+    col3: { id: "1" },
+  },
+  {
+    id: 11,
+    col1: "12",
+    col2: { id: "1", value: "AT^$PSTDBG=G" },
+    col3: { id: "1" },
+  },
+  {
+    id: 12,
+    col1: "13",
+    col2: { id: "1", value: "AT^$ESN_READ=" },
+    col3: { id: "1" },
+  },
+  {
+    id: 13,
+    col1: "14",
+    col2: { id: "1", value: "AT^$StartFM" },
+    col3: { id: "1" },
+  },
+  {
+    id: 14,
+    col1: "15",
+    col2: { id: "1", value: "AT^$FRCSLP" },
+    col3: { id: "1" },
+  },
+  {
+    id: 15,
+    col1: "16",
+    col2: { id: "1", value: "AT^CMD;;01;02" },
+    col3: { id: "1" },
+  },
+  {
+    id: 16,
+    col1: "17",
+    col2: { id: "1", value: "AT^CMD;;01;03" },
+    col3: { id: "1" },
+  },
+  {
+    id: 17,
+    col1: "18",
+    col2: { id: "1", value: "AT+CPIN?" },
+    col3: { id: "1" },
+  },
+  {
+    id: 18,
+    col1: "19",
+    col2: { id: "1", value: "AT+CEREG?" },
+    col3: { id: "1" },
+  },
+  {
+    id: 19,
+    col1: "20",
+    col2: { id: "1", value: "AT+QJDR?" },
+    col3: { id: "1" },
+  },
 ];
 
 export default function ResponseLog({
@@ -136,8 +196,8 @@ export default function ResponseLog({
 
   return (
     <>
-      <Stack direction="row" gap={expand ? "16px" : 0} flexGrow={1}>
-        <Stack gap="16px" flexGrow={1}>
+      <Stack direction="row" gap={expand ? "16px" : 0}>
+        <Stack gap="16px">
           <div className={styles.logWrap} style={{ padding: "16px" }}>
             Lorem ipsum, dolor sit amet consectetur adipisicing elit. Vero
             laborum nobis, veritatis iste quas, quia, sit a aut fuga porro
@@ -172,7 +232,8 @@ export default function ResponseLog({
           </Stack>
         </Stack>
         <Stack
-          //   flexGrow={1}
+          flexGrow={1}
+          flexShrink={0}
           sx={{ position: "relative", width: expand ? "auto" : 0 }}
         >
           <IconButton
@@ -190,6 +251,7 @@ export default function ResponseLog({
           </IconButton>
           {expand && (
             <Button
+              style={{ display: "flex", gap: "8px" }}
               sx={{
                 width: "180px",
                 position: "absolute",
@@ -205,21 +267,28 @@ export default function ResponseLog({
           <Stack
             gap="16px"
             flexGrow={1}
+            style={{
+              display: "flex",
+            }}
             sx={{
               position: "relative",
               //   width: expand ? "auto" : 0,
+
               overflow: "hidden",
             }}
           >
             <div className={styles.logWrap}>
-              <DataTable
-                rows={rows}
-                columns={columns}
-                rowHeight={42}
-                disablePagination
-                disableRowClick
-                disableResize
-              />
+              <div>
+                <DataTable
+                  rows={rows}
+                  columns={columns}
+                  rowHeight={42}
+                  disablePagination
+                  disableRowClick
+                  disableResize
+                  minHeight={1}
+                />
+              </div>
             </div>
             <Button variant="contained" color="secondary">
               Send
