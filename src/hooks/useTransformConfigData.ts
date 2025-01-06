@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 interface BaseField {
   fieldName: string;
   options?: FieldOption[];
+  name?: string;
+  number?: string;
 }
 
 interface ComboField extends BaseField {
@@ -154,18 +156,25 @@ function parseAssignList(
 }
 
 function processField(fieldData: Field, fieldName: string): Field | null {
+  let name = fieldName;
+  const targetIndex = name.lastIndexOf("(");
+  const targetIndex2 = name.lastIndexOf(")");
+
+  name = name.slice(0, targetIndex);
+  const number = fieldName.slice(targetIndex + 1, targetIndex2);
+
   switch (fieldData.type) {
     case "combo":
       if ("list" in fieldData) {
         const options = parseComboList(fieldData.list);
-        return { ...fieldData, fieldName, options };
+        return { ...fieldData, fieldName, name, number, options };
       }
     case "edit+button":
       if (fieldData.AssignList) {
         const assignList = parseAssignList(fieldData.AssignList);
-        return { ...fieldData, fieldName, assignList };
+        return { ...fieldData, fieldName, name, number, assignList };
       }
-      return { ...fieldData, fieldName };
+      return { ...fieldData, fieldName, name, number };
     case "edit":
     case "ip":
     case "any":
@@ -174,7 +183,7 @@ function processField(fieldData: Field, fieldName: string): Field | null {
     case "mAssign":
     case "lAssign":
     default:
-      return { ...fieldData, fieldName };
+      return { ...fieldData, fieldName, name, number };
   }
 }
 

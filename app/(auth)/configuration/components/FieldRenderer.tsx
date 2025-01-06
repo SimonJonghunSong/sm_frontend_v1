@@ -28,7 +28,8 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   onChange,
   isChange,
 }) => {
-  const fieldName = field.fieldName;
+  const fieldName = field.name;
+  const fieldNumber = field.number;
 
   console.log("isChange >>>", isChange);
 
@@ -44,7 +45,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               <i>*</i>
             </InputBox.Title>
             <InputBox.Info tooltipText="tooptip example" />
-            {/* <InputBox.Number>1600</InputBox.Number> */}
+            <InputBox.Number>{fieldNumber}</InputBox.Number>
             {isChange && <span className="notification" />}
           </InputBox.Head>
           <InputBox.Body>
@@ -73,7 +74,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               <i>*</i>
             </InputBox.Title>
             <InputBox.Info tooltipText="tooptip example" />
-            {/* <InputBox.Number>1600</InputBox.Number> */}
+            <InputBox.Number>{fieldNumber}</InputBox.Number>
             {isChange && <span className="notification" />}
           </InputBox.Head>
           <InputBox.Body>
@@ -100,7 +101,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               <i>*</i>
             </InputBox.Title>
             <InputBox.Info tooltipText="tooptip example" />
-            {/* <InputBox.Number>1600</InputBox.Number> */}
+            <InputBox.Number>{fieldNumber}</InputBox.Number>
             {isChange && <span className="notification" />}
           </InputBox.Head>
           <InputBox.Body>
@@ -124,7 +125,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               <i>*</i>
             </InputBox.Title>
             <InputBox.Info tooltipText="tooptip example" />
-            {/* <InputBox.Number>1600</InputBox.Number> */}
+            <InputBox.Number>{fieldNumber}</InputBox.Number>
             {isChange && <span className="notification" />}
           </InputBox.Head>
           <InputBox.Body>
@@ -202,7 +203,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
                     <i>*</i>
                   </InputBox.Title>
                   <InputBox.Info tooltipText="tooptip example" />
-                  {/* <InputBox.Number>1900</InputBox.Number> */}
+                  <InputBox.Number>{fieldNumber}</InputBox.Number>
                   {isChange && <span className="notification" />}
                 </Stack>
               </Stack>
@@ -275,7 +276,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               <i>*</i>
             </InputBox.Title>
             <InputBox.Info tooltipText="tooptip example" />
-            {/* <InputBox.Number>1339</InputBox.Number> */}
+            <InputBox.Number>{fieldNumber}</InputBox.Number>
             {isChange && <span className="notification" />}
           </InputBox.Head>
         </Stack>
@@ -296,7 +297,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
                 <i>*</i>
               </InputBox.Title>
               <InputBox.Info tooltipText="tooptip example" />
-              {/* <InputBox.Number>1055</InputBox.Number> */}
+              <InputBox.Number>{fieldNumber}</InputBox.Number>
               {isChange && <span className="notification" />}
             </InputBox.Head>
             <InputBox.Body>
