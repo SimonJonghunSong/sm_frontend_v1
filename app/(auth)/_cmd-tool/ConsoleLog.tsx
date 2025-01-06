@@ -52,7 +52,12 @@ export default function ConsoleLog() {
           <MenuItem value={port.imei}>{port.imei}</MenuItem>
         ))}
       </Select>
-      <div ref={consoleRef} className={styles.consoleWrap} style={{ flex: 1 }}>
+      <div
+        ref={consoleRef}
+        className={styles.consoleWrap}
+        id="prevent_drag"
+        style={{ flex: 1 }}
+      >
         <div>
           {log.map(({ read, write }) => {
             const logString = read ? read.data : write.data;
