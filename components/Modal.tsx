@@ -62,7 +62,11 @@ export default function Modal({
   };
 
   return (
-    <Draggable onDrag={(e) => e.preventDefault()} disabled={!isDraggable}>
+    <Draggable
+      onDrag={(e) => e.preventDefault()}
+      disabled={!isDraggable}
+      cancel={"[id*='prevent_drag']"}
+    >
       <Dialog
         ref={ref}
         hideBackdrop={hideBackdrop}
