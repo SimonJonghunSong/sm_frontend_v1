@@ -41,7 +41,6 @@ export default function CmdTool({
       >
         {t("configuration.cmd_tool.command_tool")}
       </div>
-
       <Tabs
         value={value}
         onChange={handleChange}
