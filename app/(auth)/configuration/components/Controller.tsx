@@ -257,7 +257,7 @@ export default function Controller() {
           {portList.map(({ modelVersion, imei }, idx) => {
             return (
               <MenuItem key={idx.toString()} value={imei}>
-                {modelVersion?.split("_")[0]}
+                {modelVersion?.split("_")[0]}({imei})
               </MenuItem>
             );
           })}

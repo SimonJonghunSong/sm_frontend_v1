@@ -79,8 +79,6 @@ export default function DeviceList() {
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
 
-  const { setPackageFetchingStart } = useSerialStore();
-
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -271,7 +269,7 @@ export default function DeviceList() {
     },
   ];
 
-  console.log("portList ::::", portList);
+  console.log(portList);
 
   const rows = portList?.map((port, index) => {
     return {
