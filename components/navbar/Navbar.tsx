@@ -20,7 +20,6 @@ import logo from "/public/images/logo-light.svg";
 import { Button, IconButton, Stack, TextField } from "@mui/material";
 import Modal from "@/components/Modal";
 import useModal from "@/utils/useModal";
-import Confirm from "../Confirm";
 import CmdTool from "../../app/(auth)/_cmd-tool/CmdTool";
 import useAuthStore from "@/utils/useAuthStore";
 import useLangStore from "@/utils/useLangStore";
@@ -31,6 +30,8 @@ import NotificationModal from "./NotificationModal";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import useErrorDialog from "@/src/hooks/useErrorDialog";
 import { DISABLED_OFFLINE_MODE_PATHS } from "@/components/NetworkStatusCheck";
+import useSerial from "@/src/hooks/useSerial";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -398,8 +399,9 @@ export default function Navbar() {
           confirm={() => {}}
           confirmButtonText="Add"
           width="720px"
+          hasFooter={false}
         >
-          <SearchModal />
+          <SearchModal onClose={() => networkModalToggle()} />
         </Modal>
 
         {notificationModal && (
@@ -461,8 +463,90 @@ export default function Navbar() {
   );
 }
 
-function SearchModal() {
+// 검색 결과 타입 정의
+type SearchResult = {
+  category: string;
+  parameter: string;
+};
+
+// 검색 함수
+const searchParameters = (
+  searchTerm: string,
+  data: Record<string, string[]>
+): SearchResult[] => {
+  const results: SearchResult[] = [];
+
+  // 대소문자 구분 없이 검색하기 위해 소문자로 변환
+  const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+
+  if (!normalizedSearchTerm) return results;
+
+  Object.entries(data).forEach(([category, parameters]) => {
+    // 파라미터만 검색
+    const matchedParams = parameters.filter((param) =>
+      param.toLowerCase().includes(normalizedSearchTerm)
+    );
+
+    // 매칭된 파라미터가 있으면 결과에 추가
+    matchedParams.forEach((param) => {
+      results.push({
+        category,
+        parameter: param,
+      });
+    });
+  });
+
+  return results;
+};
+
+function SearchModal({ onClose }: { onClose: () => void }) {
+  const router = useRouter();
   const searchRef = useRef<HTMLInputElement>();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const { getCurrentImei, setTab } = useSerialConfigurationStore();
+  const currentImei = getCurrentImei();
+
+  // categorizedParams는 이전에 만든 데이터
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      const results = searchParameters(searchTerm, categorizedParams[0]);
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  }, [searchTerm]);
+
+  const {
+    state: { portList },
+  } = useSerial();
+
+  const categorizedParams = portList
+    .filter(({ imei }) => imei === currentImei)
+    .map(({ packageToJson }) => {
+      const synctrakData = packageToJson.synctrak;
+
+      return Object.entries(synctrakData).reduce((acc, [_, value]) => {
+        if (value && typeof value === "object") {
+          Object.entries(value).forEach(([category, params]) => {
+            if (params && typeof params === "object") {
+              // params가 배열인 경우 각 객체의 키 값을 가져옴
+              const paramKeys = Array.isArray(params)
+                ? params
+                    .filter((param) => !param.info) // info 객체 제외
+                    .map((param) => Object.keys(param)[0]) // 각 객체의 첫 번째 키를 가져옴
+                    .map((key) => key.split("(")[0].trim()) // 괄호 이전의 텍스트만 사용
+                : [];
+
+              if (paramKeys.length > 0) {
+                acc[category] = paramKeys;
+              }
+            }
+          });
+        }
+        return acc;
+      }, {});
+    });
 
   useEffect(() => {
     if (searchRef.current) {
@@ -483,11 +567,16 @@ function SearchModal() {
       >
         <TextField
           inputRef={searchRef}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
           fullWidth
           InputProps={{
             endAdornment: (
               <Stack direction="row">
-                <IconButton sx={{ width: 28, height: 28 }}>
+                <IconButton
+                  onClick={() => setSearchTerm("")}
+                  sx={{ width: 28, height: 28 }}
+                >
                   <CancelOutlinedIcon />
                 </IconButton>
                 <IconButton sx={{ width: 28, height: 28 }}>
@@ -502,63 +591,62 @@ function SearchModal() {
         <Stack width="100%">
           <div className={styles.title}>Sections</div>
           <ul className={styles.list}>
-            <li>
-              <div className={styles.subTitle}>System &gt; GNSS settings</div>
-              <div className={styles.description}>
-                Select global navigation stelite systems, whitch are used for
-                the device operation.
-              </div>
-            </li>
-            <li>
-              <div className={styles.subTitle}>System &gt; GNSS settings</div>
-              <div className={styles.description}>
-                Select global navigation stelite systems, whitch are used for
-                the device operation.
-              </div>
-            </li>
-            <li>
-              <div className={styles.subTitle}>System &gt; GNSS settings</div>
-              <div className={styles.description}>
-                Select global navigation stelite systems, whitch are used for
-                the device operation.
-              </div>
-            </li>
+            {/* {searchResults.length === 0 && ( */}
+            <Stack
+              height="100%"
+              alignItems="center"
+              justifyContent="center"
+              color="var(--grey5)"
+              py={10}
+            >
+              No results found
+            </Stack>
+            {/* )} */}
           </ul>
         </Stack>
-        <Button color="secondary" sx={{ textDecoration: "underline" }}>
-          Show all result
-        </Button>
       </Stack>
       <Stack py={2} alignItems="flex-end" gap="16px">
         <Stack width="100%">
           <div className={styles.title}>Parameters</div>
           <ul className={styles.list}>
-            <li>
-              <div className={styles.subTitle}>Device Status &gt; GNSS</div>
-              <div className={styles.description}>
-                Select global navigation stelite systems, whitch are used for
-                the device operation.
-              </div>
-            </li>
-            <li>
-              <div className={styles.subTitle}>Device Status &gt; GNSS</div>
-              <div className={styles.description}>
-                Select global navigation stelite systems, whitch are used for
-                the device operation.
-              </div>
-            </li>
-            <li>
-              <div className={styles.subTitle}>Device Status &gt; GNSS</div>
-              <div className={styles.description}>
-                Select global navigation stelite systems, whitch are used for
-                the device operation.
-              </div>
-            </li>
+            {searchResults.length === 0 && (
+              <Stack
+                height="100%"
+                alignItems="center"
+                justifyContent="center"
+                color="var(--grey5)"
+                py={10}
+              >
+                No results found
+              </Stack>
+            )}
+            {searchResults.map((result, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  if (
+                    result.category === "Circular Geofence" ||
+                    result.category === "Polygon Geofence"
+                  ) {
+                    setTab("geofence");
+                    router.push(`/configuration/geofence`);
+                  } else {
+                    router.push(`/configuration`);
+                    setTab(result.category);
+                  }
+                  onClose();
+                }}
+              >
+                <div className={styles.subTitle}>
+                  {result.category} &gt; {result.parameter}
+                </div>
+              </li>
+            ))}
           </ul>
         </Stack>
-        <Button color="secondary" sx={{ textDecoration: "underline" }}>
+        {/* <Button color="secondary" sx={{ textDecoration: "underline" }}>
           Show all result
-        </Button>
+        </Button> */}
       </Stack>
     </Stack>
   );
