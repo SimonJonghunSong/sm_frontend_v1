@@ -10,11 +10,11 @@ const login = (body: AuthLoginBody) => {
       role: string;
     }>,
     AuthLoginBody
-  >("/api/v1/auth/login", body);
+  >("/api/v1/auth/login_scuti", body);
 };
 
 const logout = () => {
-  return post("api/v1/auth/logout");
+  return post("api/v1/auth/logout_scuti");
 };
 
 const findId = (body: AuthFindIdBody) => {

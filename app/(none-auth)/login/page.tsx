@@ -69,7 +69,7 @@ export default function page() {
       const data = response.data.parameter;
 
       insertLoginUser({
-        id: body.user_id,
+        id: body.username,
         password: body.password,
         country: body.country,
         me: JSON.stringify(meRes.data.parameter.user),
@@ -148,7 +148,7 @@ export default function page() {
     }
 
     const requestBody = {
-      user_id: inputId,
+      username: inputId,
       country: selectCountry,
       password: inputPassword,
     };
@@ -276,13 +276,14 @@ export default function page() {
                   background: isAnonymous ? "#F3F3F3" : undefined,
                 }}
                 onChange={(e) => {
-                  const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
+                  // const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
                   const value = e.target.value;
 
-                  // 입력값 중 허용되지 않는 문자 제거
-                  if (!regex.test(value)) {
-                    e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
-                  }
+                  // // 입력값 중 허용되지 않는 문자 제거
+                  // if (!regex.test(value)) {
+                  //   e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
+                  // }
+                  e.target.value = value.replace(/[\u3131-\uD79D]/g, "");
                   setInputId(e.target.value);
                 }}
               />
