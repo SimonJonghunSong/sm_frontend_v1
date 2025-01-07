@@ -42,16 +42,6 @@ export default function ConsoleLog() {
 
   return (
     <Stack gap={2} width="100%">
-      <Select
-        value={selectedIMEI}
-        onChange={(e) => setSelectedIMEI(e.target.value)}
-        style={{ width: "100%" }}
-        size="small"
-      >
-        {portList.map((port) => (
-          <MenuItem value={port.imei}>{port.imei}</MenuItem>
-        ))}
-      </Select>
       <div
         ref={consoleRef}
         className={styles.consoleWrap}

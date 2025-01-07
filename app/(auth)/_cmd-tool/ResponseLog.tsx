@@ -430,6 +430,7 @@ export default function ResponseLog({
             <Button
               variant="contained"
               color="secondary"
+              disabled={!selectedIdxs.length}
               onClick={async () => {
                 console.log("selec :::", selectedIdxs);
 

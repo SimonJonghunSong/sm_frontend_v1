@@ -358,6 +358,8 @@ async function handleMessage(event) {
       break;
     case "SYNC_NETWORK_STATE":
       isOnline = message.data;
+    case "INIT_INSTALL_UPDATE":
+      isInstallFinish = true;
     default:
       break;
   }

@@ -35,7 +35,7 @@
   }
 
   .tableWrap {
-    height: calc(100vh - 300px);
+    height: 536px;
     overflow: hidden;
     flex-shrink: 0;
     flex-grow: 0;
@@ -44,7 +44,7 @@
 
 .contentWrap {
   display: flex;
-  min-height: calc(100vh - 300px);
+  height: 536px;
   max-height: calc(100vh - 300px);
 }
 
