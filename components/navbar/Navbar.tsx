@@ -334,31 +334,31 @@ export default function Navbar() {
 
           {userRole !== "ROOT" && (
             <>
-              {pathname.includes("configuration") ||
-                (pathname.includes("model-detail") && (
-                  <TextField
-                    variant="outlined"
-                    size="small"
-                    placeholder={`${t("gnb.pw_set.search")}`}
-                    id="search"
-                    sx={{
-                      "& .MuiOutlinedInput-root": {
-                        paddingRight: 0,
-                        color: "var(--grey5)",
-                      },
-                      backgroundColor: "var(--black)",
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton type="submit">
-                          <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
-                        </IconButton>
-                      ),
-                    }}
-                    onClick={handleSearchClick}
-                    inputProps={{ readOnly: true }}
-                  />
-                ))}
+              {(pathname.includes("configuration") ||
+                pathname.includes("model-detail")) && (
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  placeholder={`${t("gnb.pw_set.search")}`}
+                  id="search"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      paddingRight: 0,
+                      color: "var(--grey5)",
+                    },
+                    backgroundColor: "var(--black)",
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton type="submit">
+                        <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                      </IconButton>
+                    ),
+                  }}
+                  onClick={handleSearchClick}
+                  inputProps={{ readOnly: true }}
+                />
+              )}
 
               <div
                 className={
@@ -501,19 +501,17 @@ const searchParameters = (
 };
 
 function SearchModal({ onClose }: { onClose: () => void }) {
+  const t = useTranslations();
   const router = useRouter();
   const searchRef = useRef<HTMLInputElement>();
-  const pathname = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const { getCurrentImei, setTab } = useSerialConfigurationStore();
   const currentImei = getCurrentImei();
+  const [showAllResult, setShowAllResult] = useState(false);
 
   // categorizedParams는 이전에 만든 데이터
   useEffect(() => {
-    // 임시 : model-detail 페이지에서는 동작되면 안됨
-    if (pathname.includes("model-detail")) return;
-
     if (searchTerm.trim()) {
       const results = searchParameters(searchTerm, categorizedParams[0]);
       setSearchResults(results);
@@ -534,8 +532,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
       return Object.entries(synctrakData).reduce((acc, [_, value]) => {
         if (value && typeof value === "object") {
           Object.entries(value).forEach(([category, params]) => {
-            if (params && typeof params === "object") {
+            if (params && typeof params === "object" && category !== "info") {
               // params가 배열인 경우 각 객체의 키 값을 가져옴
+
               const paramKeys = Array.isArray(params)
                 ? params
                     .filter((param) => !param.info) // info 객체 제외
@@ -575,15 +574,21 @@ function SearchModal({ onClose }: { onClose: () => void }) {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           fullWidth
+          placeholder={t("gnb.pw_set.search")}
           InputProps={{
             endAdornment: (
               <Stack direction="row">
-                <IconButton
-                  onClick={() => setSearchTerm("")}
-                  sx={{ width: 28, height: 28 }}
-                >
-                  <CancelOutlinedIcon />
-                </IconButton>
+                {searchTerm && (
+                  <IconButton
+                    onClick={() => {
+                      setSearchTerm("");
+                      setShowAllResult(false);
+                    }}
+                    sx={{ width: 28, height: 28 }}
+                  >
+                    <CancelOutlinedIcon />
+                  </IconButton>
+                )}
                 <IconButton sx={{ width: 28, height: 28 }}>
                   <SearchOutlinedIcon />
                 </IconButton>
@@ -592,67 +597,82 @@ function SearchModal({ onClose }: { onClose: () => void }) {
           }}
         />
       </Stack>
-      <Stack py={2} alignItems="flex-end" gap="16px">
-        <Stack width="100%">
-          <div className={styles.title}>Sections</div>
-          <ul className={styles.list}>
-            {/* {searchResults.length === 0 && ( */}
-            <Stack
-              height="100%"
-              alignItems="center"
-              justifyContent="center"
-              color="var(--grey5)"
-              py={10}
-            >
-              No results found
+
+      {searchTerm ? (
+        <>
+          {/* <Stack py={2} alignItems="flex-end" gap="16px">
+            <Stack width="100%">
+              <div className={styles.title}>Sections</div>
+              <ul className={styles.list}>
+                <Stack
+                  height="100%"
+                  alignItems="center"
+                  justifyContent="center"
+                  color="var(--grey5)"
+                  py={10}
+                >
+                  No results found
+                </Stack>
+              </ul>
             </Stack>
-            {/* )} */}
-          </ul>
-        </Stack>
-      </Stack>
-      <Stack py={2} alignItems="flex-end" gap="16px">
-        <Stack width="100%">
-          <div className={styles.title}>Parameters</div>
-          <ul className={styles.list}>
-            {searchResults.length === 0 && (
-              <Stack
-                height="100%"
-                alignItems="center"
-                justifyContent="center"
-                color="var(--grey5)"
-                py={10}
+          </Stack> */}
+          <Stack py={2} alignItems="flex-end" gap="16px">
+            <Stack width="100%">
+              <div className={styles.title}>Parameters</div>
+              <ul className={styles.list}>
+                {searchResults.length === 0 && (
+                  <Stack
+                    height="100%"
+                    alignItems="center"
+                    justifyContent="center"
+                    color="var(--grey5)"
+                    py={10}
+                  >
+                    No results found
+                  </Stack>
+                )}
+                {/* 3개만 보여주고 show all result 버튼 누르면 다 보여주기 */}
+                {searchResults
+                  .slice(0, showAllResult ? searchResults.length : 3)
+                  .map((result, index) => (
+                    <li
+                      key={index}
+                      onClick={() => {
+                        if (
+                          result.category === "Circular Geofence" ||
+                          result.category === "Polygon Geofence"
+                        ) {
+                          setTab("geofence");
+                          router.push(`/configuration/geofence`);
+                        } else {
+                          router.push(`/configuration`);
+                          setTab(result.category);
+                        }
+                        onClose();
+                      }}
+                    >
+                      <div className={styles.subTitle}>
+                        {result.category} &gt; {result.parameter}
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            </Stack>
+            {/* 3개 이상의 result 일때만 */}
+            {searchResults.length > 3 && !showAllResult && (
+              <Button
+                color="secondary"
+                sx={{ textDecoration: "underline" }}
+                onClick={() => setShowAllResult(true)}
               >
-                No results found
-              </Stack>
+                Show all result
+              </Button>
             )}
-            {searchResults.map((result, index) => (
-              <li
-                key={index}
-                onClick={() => {
-                  if (
-                    result.category === "Circular Geofence" ||
-                    result.category === "Polygon Geofence"
-                  ) {
-                    setTab("geofence");
-                    router.push(`/configuration/geofence`);
-                  } else {
-                    router.push(`/configuration`);
-                    setTab(result.category);
-                  }
-                  onClose();
-                }}
-              >
-                <div className={styles.subTitle}>
-                  {result.category} &gt; {result.parameter}
-                </div>
-              </li>
-            ))}
-          </ul>
-        </Stack>
-        {/* <Button color="secondary" sx={{ textDecoration: "underline" }}>
-          Show all result
-        </Button> */}
-      </Stack>
+          </Stack>
+        </>
+      ) : (
+        <Stack height={500}></Stack>
+      )}
     </Stack>
   );
 }

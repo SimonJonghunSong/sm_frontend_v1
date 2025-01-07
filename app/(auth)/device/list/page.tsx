@@ -592,7 +592,6 @@ function Apply({
   const { portList } = useSerialStore();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
-  const [percentage, setPercentage] = useState<number>(0);
   const [applyStatus, setApplyStatus] = useState<
     Record<number, "pending" | "loading" | "applied" | "failed">
   >({});
@@ -641,7 +640,6 @@ function Apply({
       setApplyStatus((prev) => ({ ...prev, [i]: "loading" }));
       for (let j = 2; j < profile.length; j++) {
         await delayPromise(DELAY_MS);
-        setPercentage((prev) => prev + 1);
         await write({
           data: `${AT_EDIT_PREFIX};${profile[j].split(";;")[1]}`,
           writer: port.writer,
