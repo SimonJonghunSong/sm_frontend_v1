@@ -199,14 +199,14 @@ export default function SideMenu({
                   />
                 </div>
               </li>
-              {/* <li>
+              <li>
                 <button
                   style={{ textDecoration: "underline" }}
                   onClick={handleDeleteModel}
                 >
                   Delete Model
                 </button>
-              </li> */}
+              </li>
               <li
                 className={
                   pathname.startsWith("/configuration/fw-update")

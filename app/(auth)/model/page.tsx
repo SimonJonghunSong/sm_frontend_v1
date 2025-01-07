@@ -181,6 +181,7 @@ export default function Model() {
             onNetworkError={() => {
               setOfflineErrorDialog(true);
             }}
+            model={params.row.col2}
           />
         );
       },
@@ -575,6 +576,7 @@ function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
               </div>
               <div className={styles.galleryTitle}>{item.col2}</div>
               <ModelButton
+                model={item.col2}
                 loaded={rows[index].loaded}
                 toggleLoaded={() => toggleLoaded(item.id)}
                 onNetworkError={onNetworkError}
@@ -646,7 +648,7 @@ function LinearDeterminate({ setEndLoaded }) {
   );
 }
 
-function ModelButton({ loaded, toggleLoaded, onNetworkError }) {
+function ModelButton({ loaded, toggleLoaded, onNetworkError, model }) {
   const t = useTranslations("home");
   const [startLoaded, setStartLoaded] = useState<boolean>(false);
   const { isOnline } = useNetworkMonitor();
@@ -654,7 +656,7 @@ function ModelButton({ loaded, toggleLoaded, onNetworkError }) {
   const router = useRouter();
   const handleConfigurationClick = (e) => {
     e.stopPropagation();
-    router.push("/configuration");
+    router.push(`/model-detail/device-status?model=${model}`);
   };
 
   const loadedEnd = () => {

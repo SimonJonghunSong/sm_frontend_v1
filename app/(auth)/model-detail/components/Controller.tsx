@@ -14,11 +14,9 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Modal from "../../../../components/Modal";
 import useModal from "../../../../utils/useModal";
-import DeleteForeverOutlinedIcon from '@mui/icons-material/DeleteForeverOutlined';
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "../../../../components/dataTable";
-
-
 
 export default function Controller() {
   const [modelName, setModelName] = useState<string>("model-1");
@@ -32,34 +30,33 @@ export default function Controller() {
   const [loadModal, loadModalToggle] = useModal();
   const [uploadModal, uploadModalToggle] = useModal();
 
-  
   const handleApply = () => {
     applyModalToggle();
-  }
+  };
   const handleSave = () => {
     saveModalToggle();
-  }
+  };
   const handleLoad = () => {
     loadModalToggle();
-  }
+  };
   const handleUpload = () => {
     uploadModalToggle();
-  }
+  };
 
   const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
   const toggleSaveChanges = () => {
     setShowSaveChanges(!showSaveChanges);
-  }
+  };
 
   const [showUploadChanges, setShowUploadChanges] = useState<boolean>(false);
   const toggleUploadChanges = () => {
     setShowUploadChanges(!showUploadChanges);
-  }
+  };
 
   const [path, setPath] = useState<File>();
   const handlePathChange = (e) => {
-    setPath(e.target.files[0])
-  }
+    setPath(e.target.files[0]);
+  };
   return (
     <Stack
       direction="row"
@@ -89,35 +86,10 @@ export default function Controller() {
         >
           Profile
         </span>
-        <Tooltip
-          title="Apply to device"
-          placement="top"
-          slotProps={{
-            popper: {
-              modifiers: [
-                {
-                  name: "offset",
-                  options: {
-                    offset: [0, -10],
-                  },
-                },
-              ],
-            },
-          }}
-        >
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ width: 80 }}
-            onClick={handleApply}
-          >
-            Apply
-          </Button>
-        </Tooltip>
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: 80 }}
+          sx={{ width: 100 }}
           onClick={handleSave}
         >
           Save
@@ -125,7 +97,7 @@ export default function Controller() {
         <Button
           variant="contained"
           color="secondary"
-          sx={{ width: 80 }}
+          sx={{ width: 100 }}
           onClick={handleLoad}
         >
           Load
@@ -149,7 +121,7 @@ export default function Controller() {
           <Button
             variant="contained"
             color="secondary"
-            sx={{ width: 80 }}
+            sx={{ width: 100 }}
             onClick={handleUpload}
           >
             Upload
@@ -158,20 +130,6 @@ export default function Controller() {
         <IconButton>
           <FileDownloadOutlinedIcon sx={{ color: "var(--black)" }} />
         </IconButton>
-      </Stack>
-
-      <Stack direction="row" gap="8px" alignItems="center">
-        <IconButton>
-          <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
-        </IconButton>
-        <Select value={modelName} onChange={handleChange} sx={{ width: 168 }}>
-          <MenuItem value={"model-1"}>ST8300(275676-6)</MenuItem>
-          <MenuItem value={"model-2"}>ST8300(275676-7)</MenuItem>
-          <MenuItem value={"model-3"}>ST8300(275676-8)</MenuItem>
-        </Select>
-        <Button variant="outlined" color="secondary">
-          Disconnect
-        </Button>
       </Stack>
 
       {/* Apply Modal */}
@@ -201,7 +159,11 @@ export default function Controller() {
         <Stack>
           <span>Are you sure you want to save profile?</span>
           <Stack direction="row" gap="8px" mt={1}>
-            <TextField fullWidth value={path?.name || ""} inputProps={{readOnly: true}}/>
+            <TextField
+              fullWidth
+              value={path?.name || ""}
+              inputProps={{ readOnly: true }}
+            />
             <Button variant="outlined" color="secondary" component="label">
               <input
                 style={{ display: "none" }}
@@ -289,8 +251,7 @@ export default function Controller() {
   );
 }
 
-
-function LoadModal () {
+function LoadModal() {
   const [selectedValue, setSelectedValue] = React.useState("a");
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -341,7 +302,7 @@ function LoadModal () {
       headerAlign: "center",
       align: "center",
     },
-    
+
     {
       field: "col6",
       headerName: "Delete",
@@ -457,4 +418,3 @@ function LoadModal () {
     </Stack>
   );
 }
-

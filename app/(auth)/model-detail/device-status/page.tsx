@@ -1,27 +1,18 @@
 "use client";
 
-import sampleMap from "/public/images/sample-map.png";
-import {
-  Box,
-  Button,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-} from "@mui/material";
 import React, { useState } from "react";
+import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import sampleMap from "/public/images/sample-map.png";
+import { Box, Button, Stack } from "@mui/material";
 import SideMenu from "../../../../components/sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
-import Image from "next/image";
-import InputBox from "../../../../components/inputbox/InputBox";
 
 export default function Page() {
-  const [version, setVersion] = useState<string>("1.1.1");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setVersion(event.target.value);
-  };
+  const searchParams = useSearchParams();
+  const model = searchParams.get("model");
+  const [version] = useState<string>("1.1.1");
 
   return (
     <div className="pageWrap">
@@ -41,7 +32,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Model Name</div>
-              <div>ST8300 (M)</div>
+              <div>{model}</div>
             </Stack>
             <Stack
               direction="row"
@@ -62,8 +53,20 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
+              <div className="list-title">Modem Version</div>
+              <Stack direction="row" gap="16px" alignItems="center">
+                <div>{version}</div>
+              </Stack>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
               <div className="list-title">BLE Version</div>
-              <div>B.1.0.6</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -73,17 +76,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Wifi Version</div>
-              <div>W.2.1.0</div>
-            </Stack>
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              borderBottom="1px solid var(--grey3)"
-            >
-              <div className="list-title">MCU Version</div>
-              <div>99.1.53</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -93,7 +86,27 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">RTC Time</div>
-              <div>Jan/01/2024 18:04:39</div>
+              <div>-</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">Operating Time</div>
+              <div>-</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">Battery Activation Time</div>
+              <div>-</div>
             </Stack>
           </Stack>
 
@@ -106,7 +119,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">IMEI</div>
-              <div>394893248032984029348</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -115,8 +128,18 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">GPS modem F/W</div>
-              <div>1.1.1</div>
+              <div className="list-title">ESN</div>
+              <div>-</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">GNSS Version</div>
+              <div>-</div>
             </Stack>
 
             <Stack
@@ -127,7 +150,17 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Backup Battery Voltage</div>
-              <div>10 mV.</div>
+              <div>-</div>
+            </Stack>
+            <Stack
+              direction="row"
+              alignItems="center"
+              gap="8px"
+              height="56px"
+              borderBottom="1px solid var(--grey3)"
+            >
+              <div className="list-title">Activate Battery Log</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -137,7 +170,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">GNSS State</div>
-              <div>BNSS Fixed</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -147,7 +180,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">WWAN State</div>
-              <div>Connected with Server</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -161,6 +194,7 @@ export default function Page() {
                 <Button
                   variant="outlined"
                   color="secondary"
+                  disabled
                   sx={{ height: 30 }}
                 >
                   Reboot
@@ -188,7 +222,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Latitued</div>
-              <div>54.7968967</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -198,7 +232,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Longitude</div>
-              <div>54.7968967</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -208,7 +242,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Angle</div>
-              <div>0.744</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -218,7 +252,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Speed</div>
-              <div>0 km/h</div>
+              <div>-</div>
             </Stack>
           </Stack>
 
@@ -231,13 +265,8 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">
-                <Stack direction="row" gap="8px" alignItems="center">
-                  <span>Modem Status</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
-                </Stack>
-              </div>
-              <div>On</div>
+              <div className="list-title">Modem Status</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -246,13 +275,8 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">
-                <Stack direction="row" gap="8px" alignItems="center">
-                  <span>Network Status</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
-                </Stack>
-              </div>
-              <div>Activated</div>
+              <div className="list-title">Network Status</div>
+              <div>-</div>
             </Stack>
 
             <Stack
@@ -262,13 +286,8 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">
-                <Stack direction="row" gap="8px" alignItems="center">
-                  <span>Current Operator</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
-                </Stack>
-              </div>
-              <div>42402</div>
+              <div className="list-title">Current Operator</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -277,13 +296,8 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">
-                <Stack direction="row" gap="8px" alignItems="center">
-                  <span>Signal Level</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
-                </Stack>
-              </div>
-              <div>Excellent Signal</div>
+              <div className="list-title">Signal Level</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -292,13 +306,8 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">
-                <Stack direction="row" gap="8px" alignItems="center">
-                  <span>Socket Type</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
-                </Stack>
-              </div>
-              <div>Avl data sending</div>
+              <div className="list-title">Socket Type</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -307,13 +316,8 @@ export default function Page() {
               height="56px"
               borderBottom="1px solid var(--grey3)"
             >
-              <div className="list-title">
-                <Stack direction="row" gap="8px" alignItems="center">
-                  <span>Socket</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
-                </Stack>
-              </div>
-              <div>13.0.0.0 : 27676 (TCP)</div>
+              <div className="list-title">Socket</div>
+              <div>-</div>
             </Stack>
           </Stack>
         </Stack>
