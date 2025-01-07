@@ -44,7 +44,8 @@ interface AuthRegisterBody {
 
 interface AuthLoginBody {
   country: string;
-  user_id: string;
+  // user_id: string;
+  username: string;
   password: string;
 }
 
