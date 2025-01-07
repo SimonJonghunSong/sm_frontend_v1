@@ -86,14 +86,18 @@ export default function ServiceWorkerRegister() {
             registration.scope
           );
 
-          if (navigator.serviceWorker.controller.state === "activated") {
-            handleGlobalLoadingOff();
-          }
-
           return navigator.serviceWorker.ready;
         })
         .then((registration) => {
           console.log("Service Worker is now active and ready:", registration);
+
+          if (registration?.active?.state === "activated") {
+            sendMessage({
+              type: "INIT_INSTALL_UPDATE",
+            });
+
+            handleGlobalLoadingOff();
+          }
         })
         .catch((error) => {
           console.error("Service Worker registration failed:", error);
