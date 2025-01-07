@@ -1,11 +1,8 @@
 "use client";
 
-import {
-  Divider,
-  Stack,
-} from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import React from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import Network1 from "./Network1";
@@ -19,7 +16,6 @@ import useParameterStore from "../../../../utils/useParameterStore";
 export default function Page() {
   const { hiddenParameter } = useParameterStore();
 
-  
   return (
     <div className="pageWrap">
       <SideMenu configuration sideMenuItems={sideMenuItems} />
@@ -29,21 +25,19 @@ export default function Page() {
 
         <Stack>
           <Network1 />
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
           <Network2 />
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
           <JammingDetection />
-          <Divider sx={{mb:"40px"}}/>
-          {
-            !hiddenParameter && (
-              <>
-                <ImmobilizerCycle />
-                <Divider sx={{mb:"40px"}}/>
-              </>
-            )
-          }
+          <Divider sx={{ mb: "40px" }} />
+          {!hiddenParameter && (
+            <>
+              <ImmobilizerCycle />
+              <Divider sx={{ mb: "40px" }} />
+            </>
+          )}
           <Sms />
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
           <Call />
         </Stack>
       </article>

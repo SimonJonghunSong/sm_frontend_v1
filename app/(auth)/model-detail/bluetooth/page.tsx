@@ -1,19 +1,14 @@
 "use client";
 
-import {
-  Divider,
-  Stack,
-} from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import React from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import Ble from "./Ble";
 import BleConfiguration from "./BleConfiguration";
 import SensorConfiguration from "./SensorConfiguration";
 import RegisterBle from "./RegisterBle";
-
-
 
 export default function Tracking() {
   return (

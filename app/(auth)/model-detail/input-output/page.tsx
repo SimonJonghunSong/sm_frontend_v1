@@ -1,13 +1,8 @@
 "use client";
 
-import {
-  Divider,
-  Stack,
-  Tab,
-  Tabs,
-} from "@mui/material";
+import { Divider, Stack, Tab, Tabs } from "@mui/material";
 import React, { useState } from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import Input from "./Input";
@@ -15,12 +10,11 @@ import InputBox from "../../../../components/inputbox/InputBox";
 import Output from "./Output";
 
 export default function Page() {
+  const [value, setValue] = useState("input");
 
-    const [value, setValue] = useState("input");
-
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-      setValue(newValue);
-    };
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
 
   return (
     <div className="pageWrap">
@@ -60,15 +54,19 @@ export default function Page() {
               marginBottom: "16px",
             }}
           >
-            <Tab value="input" label="Input" sx={{width: "50%", maxWidth: "unset"}}/>
-            <Tab value="output" label="Output" sx={{width: "50%", maxWidth: "unset"}}/>
+            <Tab
+              value="input"
+              label="Input"
+              sx={{ width: "50%", maxWidth: "unset" }}
+            />
+            <Tab
+              value="output"
+              label="Output"
+              sx={{ width: "50%", maxWidth: "unset" }}
+            />
           </Tabs>
 
-          {value === "input" ? (
-            <Input />
-          ) : (
-            <Output />
-          )}
+          {value === "input" ? <Input /> : <Output />}
         </Stack>
       </article>
     </div>

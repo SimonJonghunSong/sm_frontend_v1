@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import { Box, Button, Stack, TextField } from "@mui/material";
 
@@ -22,27 +22,29 @@ export default function Page() {
                 marginBottom: "16px",
                 fontSize: 16,
                 fontWeight: 500,
-                backgroundColor: "var(--primary-light)",
+                backgroundColor: "#F2F2F2",
                 borderRadius: "8px",
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
-              Firmware v.X.X.X update available
+              {/* No update available */}
+              Firmware v.1.0.1 update available
             </Stack>
-            <Button>Firmware Update on Target Device</Button>
-            <Stack
-              direction="row"
-              gap="8px"
-              justifyContent="flex-end"
-              marginTop="40px"
-            >
+            <Stack direction="row" gap="8px" justifyContent="flex-end">
+              <Button
+                variant="outlined"
+                color="secondary"
+                sx={{ marginTop: "20px !important", width: 200 }}
+              >
+                Download
+              </Button>
               <Button
                 variant="contained"
                 color="secondary"
-                sx={{ marginTop: "120px !important" }}
+                sx={{ marginTop: "20px !important", width: 200 }}
               >
-                Download
+                Update
               </Button>
             </Stack>
           </>

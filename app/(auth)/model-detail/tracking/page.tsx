@@ -1,19 +1,15 @@
 "use client";
 
-import {
-  Divider,
-  Stack,
-} from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import React from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import FineTracking from "./FineTracking";
 import ModeConfig from "./ModeConfig";
 import ModeSetting from "./ModeSetting";
 import ModeSetting2 from "./ModeSetting2";
-
-
+import SideMenu from "../sidemenu/SideMenu";
 
 export default function Page() {
   return (

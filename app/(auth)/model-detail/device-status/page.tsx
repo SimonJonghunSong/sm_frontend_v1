@@ -4,15 +4,26 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import sampleMap from "/public/images/sample-map.png";
-import { Box, Button, Stack } from "@mui/material";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import {
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+} from "@mui/material";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 
 export default function Page() {
   const searchParams = useSearchParams();
   const model = searchParams.get("model");
-  const [version] = useState<string>("1.1.1");
+  const [version, setVersion] = useState<string>("1.1.1");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setVersion(event.target.value);
+  };
 
   return (
     <div className="pageWrap">
@@ -43,7 +54,16 @@ export default function Page() {
             >
               <div className="list-title">F/W Version</div>
               <Stack direction="row" gap="16px" alignItems="center">
-                <div>{version}</div>
+                <div>
+                  <Select
+                    value={version}
+                    onChange={handleChange}
+                    sx={{ width: 144 }}
+                  >
+                    <MenuItem value={"1.1.1"}>1.1.1</MenuItem>
+                    <MenuItem value={"1.1.2"}>1.1.2</MenuItem>
+                  </Select>
+                </div>
               </Stack>
             </Stack>
             <Stack
@@ -55,7 +75,7 @@ export default function Page() {
             >
               <div className="list-title">Modem Version</div>
               <Stack direction="row" gap="16px" alignItems="center">
-                <div>{version}</div>
+                <div>-</div>
               </Stack>
             </Stack>
             <Stack

@@ -334,30 +334,31 @@ export default function Navbar() {
 
           {userRole !== "ROOT" && (
             <>
-              {pathname.includes("configuration") && (
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  placeholder={`${t("gnb.pw_set.search")}`}
-                  id="search"
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      paddingRight: 0,
-                      color: "var(--grey5)",
-                    },
-                    backgroundColor: "var(--black)",
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <IconButton type="submit">
-                        <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
-                      </IconButton>
-                    ),
-                  }}
-                  onClick={handleSearchClick}
-                  inputProps={{ readOnly: true }}
-                />
-              )}
+              {pathname.includes("configuration") ||
+                (pathname.includes("model-detail") && (
+                  <TextField
+                    variant="outlined"
+                    size="small"
+                    placeholder={`${t("gnb.pw_set.search")}`}
+                    id="search"
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        paddingRight: 0,
+                        color: "var(--grey5)",
+                      },
+                      backgroundColor: "var(--black)",
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <IconButton type="submit">
+                          <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                        </IconButton>
+                      ),
+                    }}
+                    onClick={handleSearchClick}
+                    inputProps={{ readOnly: true }}
+                  />
+                ))}
 
               <div
                 className={
@@ -502,6 +503,7 @@ const searchParameters = (
 function SearchModal({ onClose }: { onClose: () => void }) {
   const router = useRouter();
   const searchRef = useRef<HTMLInputElement>();
+  const pathname = usePathname();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const { getCurrentImei, setTab } = useSerialConfigurationStore();
@@ -509,6 +511,9 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
   // categorizedParams는 이전에 만든 데이터
   useEffect(() => {
+    // 임시 : model-detail 페이지에서는 동작되면 안됨
+    if (pathname.includes("model-detail")) return;
+
     if (searchTerm.trim()) {
       const results = searchParameters(searchTerm, categorizedParams[0]);
       setSearchResults(results);

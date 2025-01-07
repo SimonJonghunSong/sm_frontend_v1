@@ -1,12 +1,8 @@
 "use client";
 
-import {
-  Button,
-  Divider,
-  Stack,
-} from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import React, { useState } from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import Report from "./Report";
@@ -29,26 +25,31 @@ export default function Page() {
 
         <Stack>
           <Report />
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
           <AntiTheft />
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
           <ReportMapping />
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
           <ReportMapping2 />
           <Stack alignItems="center" mb={"40px"}>
-            {
-              assignHeader ? (
-                <AssignHeader/>
-              ) : (
-                <Button variant="contained" color="secondary" sx={{width:200}} onClick={() => setAssignHeader(true)}>Assign Header</Button>
-              )
-            }
+            {assignHeader ? (
+              <AssignHeader />
+            ) : (
+              <Button
+                variant="contained"
+                color="secondary"
+                sx={{ width: 200 }}
+                onClick={() => setAssignHeader(true)}
+              >
+                Assign Header
+              </Button>
+            )}
           </Stack>
-          <Divider sx={{mb:"40px"}}/>
-          <AlertConfig1/>
-          <Divider sx={{mb:"40px"}}/>
-          <AlertConfig2/>
-          <Divider sx={{mb:"40px"}}/>
+          <Divider sx={{ mb: "40px" }} />
+          <AlertConfig1 />
+          <Divider sx={{ mb: "40px" }} />
+          <AlertConfig2 />
+          <Divider sx={{ mb: "40px" }} />
           <ScheduleReport />
         </Stack>
       </article>

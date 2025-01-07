@@ -1,17 +1,12 @@
 "use client";
 
-import {
-  Button,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import React from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import InputBox from "../../../../components/inputbox/InputBox";
 
 export default function Page() {
-
   return (
     <div className="pageWrap">
       <SideMenu configuration sideMenuItems={sideMenuItems} />
@@ -226,7 +221,7 @@ export default function Page() {
             <Stack direction="row" gap="16px">
               <TextField
                 inputProps={{
-                  readOnly: true
+                  readOnly: true,
                 }}
                 multiline
                 fullWidth

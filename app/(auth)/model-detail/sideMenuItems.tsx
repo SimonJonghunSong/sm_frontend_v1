@@ -36,9 +36,9 @@ export const sideMenuItems = [
     icon: () => <InsertChartOutlinedIcon />,
   },
   {
-    name: "Accessories",
-    href: "/model-detail/accessories",
-    icon: () => <FlareOutlinedIcon />,
+    name: "Tracking",
+    href: "/model-detail/tracking",
+    icon: () => <PinDropOutlinedIcon />,
   },
   {
     name: "Input/Output(I/O)",
@@ -51,19 +51,14 @@ export const sideMenuItems = [
     icon: () => <HexagonOutlinedIcon />,
   },
   {
-    name: "Tracking",
-    href: "/model-detail/tracking",
-    icon: () => <PinDropOutlinedIcon />,
-  },
-  {
-    name: "Driver",
-    href: "/model-detail/driver",
-    icon: () => <Image src={DriverIcon} alt="DriverIcon" />,
-  },
-  {
     name: "Bluetooth",
     href: "/model-detail/bluetooth",
     icon: () => <BluetoothOutlinedIcon />,
+  },
+  {
+    name: "Accessories",
+    href: "/model-detail/accessories",
+    icon: () => <FlareOutlinedIcon />,
   },
   {
     name: "RF",
@@ -75,5 +70,4 @@ export const sideMenuItems = [
     href: "/model-detail/commands",
     icon: () => <KeyboardCommandKeyOutlinedIcon />,
   },
-  // { name: "Profile", href: "/configuration/profile", icon: () => <PendingOutlinedIcon /> },
 ];

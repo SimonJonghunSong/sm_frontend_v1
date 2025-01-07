@@ -13,7 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import SideMenu from "../../../../../components/sidemenu/SideMenu";
+import SideMenu from "../../sidemenu/SideMenu";
 import { sideMenuItems } from "../../sideMenuItems";
 import Controller from "../../components/Controller";
 import InputBox from "../../../../../components/inputbox/InputBox";

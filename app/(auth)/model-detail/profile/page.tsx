@@ -1,17 +1,12 @@
 "use client";
 
-import {
-  Divider,
-  Stack,
-} from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import React from "react";
-import SideMenu from "../../../../components/sidemenu/SideMenu";
+import SideMenu from "../sidemenu/SideMenu";
 import { sideMenuItems } from "../sideMenuItems";
 import Controller from "../components/Controller";
 import ProfileSettings from "./ProfileSettings";
 import ProfileSettings2 from "./ProfileSettings2";
-
-
 
 export default function Page() {
   return (
