@@ -52,16 +52,13 @@ const modalColumns: (t) => GridColDef[] = (t) => [
     flex: 1,
     headerAlign: "center",
     align: "center",
-    cellClassName: styles.loaderContainer,
-    // renderCell: (port) => {
-    //   console.log("render cell ::::", port);
-
-    //   return (
-    //     <div className={styles.loaderContainer}>
-    //       <div className={styles.loader} />
-    //     </div>
-    //   );
-    // },
+    renderCell: (params) => {
+      if (params.value === "loading") {
+        return <LoadingCircle />;
+      } else {
+        return <>{params.value}</>;
+      }
+    },
   },
 ];
 
@@ -269,8 +266,6 @@ export default function DeviceList() {
     },
   ];
 
-  console.log(portList);
-
   const rows = portList?.map((port, index) => {
     return {
       id: index,
@@ -372,7 +367,6 @@ export default function DeviceList() {
       >
         <ProfileModal modalToggle={modalToggle} write={write} />
       </Modal>
-      {/* <ToastContainer /> */}
     </div>
   );
 }
@@ -564,6 +558,14 @@ function Before({
   );
 }
 
+const LoadingCircle = () => {
+  return (
+    <div className={styles.loaderContainer}>
+      <div className={styles.loader} />
+    </div>
+  );
+};
+
 function Apply({
   setStep,
   modalToggle,
@@ -591,6 +593,9 @@ function Apply({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number[]>([]);
   const [percentage, setPercentage] = useState<number>(0);
+  const [applyStatus, setApplyStatus] = useState<
+    Record<number, "pending" | "loading" | "applied" | "failed">
+  >({});
 
   const { setShouldFetchJsonPackage } = useSerialStore();
 
@@ -612,7 +617,14 @@ function Apply({
         col5: port.port.modelinfo.split("_")[
           port.port.modelinfo.split("_").length - 1
         ],
-        col6: "Applied",
+        col6:
+          applyStatus[index] === "loading"
+            ? "loading"
+            : applyStatus[index] === "applied"
+            ? "Applied"
+            : applyStatus[index] === "failed"
+            ? "Failed"
+            : "-",
       };
     });
 
@@ -624,35 +636,29 @@ function Apply({
       selectedIndex.includes(index)
     );
 
-    for (const port of selectedPorts) {
-      console.log("port ::::", port);
-
-      for (let i = 2; i < profile.length; i++) {
-        await delayPromise(DELAY_MS); // 비동기 지연 함수
+    for (let i = 0; i < selectedPorts.length; i++) {
+      const port = selectedPorts[i];
+      setApplyStatus((prev) => ({ ...prev, [i]: "loading" }));
+      for (let j = 2; j < profile.length; j++) {
+        await delayPromise(DELAY_MS);
         setPercentage((prev) => prev + 1);
         await write({
-          data: `${AT_EDIT_PREFIX};${profile[i].split(";;")[1]}`,
+          data: `${AT_EDIT_PREFIX};${profile[j].split(";;")[1]}`,
           writer: port.writer,
           port: port.port,
         });
       }
+      setApplyStatus((prev) => ({ ...prev, [i]: "applied" }));
 
       setShouldFetchJsonPackage({ imei: port.port.imei });
     }
 
-    // toast("Configure Deivce Success", {
-    //   type: "success",
-    //   position: "bottom-center",
-    // });
     setIsLoading(false);
-    modalToggle();
+    // modalToggle();
   };
 
   return (
     <>
-      {isLoading && (
-        <FullLoading progress={(percentage / (profile.length - 2)) * 100} />
-      )}
       <Stack>
         <DataTable
           rowHeight={56}
