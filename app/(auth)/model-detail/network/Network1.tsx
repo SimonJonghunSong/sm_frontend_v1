@@ -1,22 +1,31 @@
-import { Stack, Select, MenuItem, TextField, IconButton, FormControl, FormControlLabel, Checkbox, SelectChangeEvent } from '@mui/material'
-import React, { useState } from 'react'
-import InputBox from '../../../../components/inputbox/InputBox'
-import { SwitchPrimary } from '../../../../components/switches'
+import {
+  Stack,
+  Select,
+  MenuItem,
+  TextField,
+  IconButton,
+  FormControl,
+  FormControlLabel,
+  Checkbox,
+  SelectChangeEvent,
+} from "@mui/material";
+import React, { useState } from "react";
+import InputBox from "../../../../components/inputbox/InputBox";
+import { SwitchPrimary } from "../../../../components/switches";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 
-
 export default function Network1() {
-    const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
-    const handleMouseDownPassword = (
-      event: React.MouseEvent<HTMLButtonElement>
-    ) => {
-      event.preventDefault();
-    };
-    
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   return (
     <>
       <div className="pageTitle">Network1</div>
@@ -27,15 +36,26 @@ export default function Network1() {
               <InputBox.Title>
                 keep Alive Interval (minutes)<i>*</i>
               </InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>1600</InputBox.Number>
+              <InputBox.Info
+                placement="bottom"
+                tooltipText={
+                  <>
+                    If there is no data communication between the server and the
+                    device for a long time (It depends on the network service
+                    provider), the mobile network will disconnect.
+                    <br />
+                    To prevent this, you can set the 1060(Keep Alive Interval)
+                    time, which sends a 'KEEP_ALIVE' message to the server
+                    before the network is disconnected. <br />• Range :
+                    0~432,000 <br />• Default : 0
+                  </>
+                }
+              />
+              <InputBox.Number>1060</InputBox.Number>
               {/* <span className="notification"/> */}
             </InputBox.Head>
             <InputBox.Body>
-              <Select
-                value={"select-1"}
-                sx={{ width: "100%" }}
-              >
+              <Select value={"select-1"} sx={{ width: "100%" }}>
                 <MenuItem value={"select-1"}>Automatic</MenuItem>
               </Select>
             </InputBox.Body>
@@ -65,10 +85,7 @@ export default function Network1() {
               {/* <span className="notification"/> */}
             </InputBox.Head>
             <InputBox.Body>
-              <Select
-                value={"select-1"}
-                sx={{ width: "100%" }}
-              >
+              <Select value={"select-1"} sx={{ width: "100%" }}>
                 <MenuItem value={"select-1"}>Profile 4</MenuItem>
               </Select>
             </InputBox.Body>
@@ -192,10 +209,7 @@ export default function Network1() {
               {/* <span className="notification"/> */}
             </InputBox.Head>
             <InputBox.Body>
-              <Select
-                value={"select-1"}
-                sx={{ width: "100%" }}
-              >
+              <Select value={"select-1"} sx={{ width: "100%" }}>
                 <MenuItem value={"select-1"}>TCP</MenuItem>
               </Select>
             </InputBox.Body>
@@ -238,10 +252,7 @@ export default function Network1() {
               {/* <span className="notification"/> */}
             </InputBox.Head>
             <InputBox.Body>
-              <Select
-                value={"select-1"}
-                sx={{ width: "100%" }}
-              >
+              <Select value={"select-1"} sx={{ width: "100%" }}>
                 <MenuItem value={"select-1"}>TCP</MenuItem>
               </Select>
             </InputBox.Body>
@@ -254,7 +265,16 @@ export default function Network1() {
               <InputBox.Title>
                 UDP ACK<i>*</i>
               </InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
+              <InputBox.Info
+                placement="bottom"
+                tooltipText={
+                  <>
+                    When using a UDP server type, you can choose to have the
+                    server send a signal that the data was successfully
+                    transmitted.
+                  </>
+                }
+              />
               <InputBox.Number>1011</InputBox.Number>
               {/* <span className="notification"/> */}
             </InputBox.Head>
@@ -400,10 +420,7 @@ export default function Network1() {
               {/* <span className="notification"/> */}
             </InputBox.Head>
             <InputBox.Body>
-              <Select
-                value={"select-1"}
-                sx={{ width: "100%" }}
-              >
+              <Select value={"select-1"} sx={{ width: "100%" }}>
                 <MenuItem value={"select-1"}>Keep Connected</MenuItem>
               </Select>
             </InputBox.Body>
@@ -456,10 +473,7 @@ export default function Network1() {
               {/* <span className="notification"/> */}
             </InputBox.Head>
             <InputBox.Body>
-              <Select
-                value={"select-1"}
-                sx={{ width: "100%" }}
-              >
+              <Select value={"select-1"} sx={{ width: "100%" }}>
                 <MenuItem value={"select-1"}>Galobal (Roaming)</MenuItem>
               </Select>
             </InputBox.Body>

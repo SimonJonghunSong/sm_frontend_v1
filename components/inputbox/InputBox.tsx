@@ -36,12 +36,18 @@ InputBox.Title = function Title({
   );
 };
 
-InputBox.Info = function Info({ tooltipText }) {
+InputBox.Info = function Info({
+  tooltipText,
+  placement = "top",
+}: {
+  tooltipText?: ReactNode;
+  placement?: "top" | "bottom";
+}) {
   return (
     <div className={styles.info}>
       <Tooltip
         title={tooltipText}
-        placement="top"
+        placement={placement}
         slotProps={{
           popper: {
             modifiers: [
