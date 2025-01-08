@@ -8,6 +8,12 @@ import useSerial from "@/src/hooks/useSerial";
 import SideMenu from "@/components/sidemenu/SideMenu";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
+const EXCLUDE_CONFIG_PATHS = [
+  "/configuration/device-status",
+  "/configuration/edit-profile",
+  "/configuration/fw-update",
+];
+
 // 탭 형식 레이아웃
 
 const ConfigurationLayout = ({ children }) => {
@@ -92,7 +98,8 @@ const ConfigurationLayout = ({ children }) => {
               name: "Geofence",
               href: "/configuration",
               offlineEnable: true,
-              isActive: tab === "geofence",
+              isActive:
+                !EXCLUDE_CONFIG_PATHS.includes(pathname) && tab === "geofence",
               onClick: handleTabClick,
             },
           ]}
