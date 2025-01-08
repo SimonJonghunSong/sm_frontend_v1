@@ -56,18 +56,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">F/W Version</div>
-              <Stack direction="row" gap="16px" alignItems="center">
-                <div>
-                  <Select
-                    value={version}
-                    onChange={handleChange}
-                    sx={{ width: 144 }}
-                  >
-                    <MenuItem value={"1.1.1"}>1.1.1</MenuItem>
-                    <MenuItem value={"1.1.2"}>1.1.2</MenuItem>
-                  </Select>
-                </div>
-              </Stack>
+              <div>{version}</div>
             </Stack>
             <Stack
               direction="row"
@@ -252,7 +241,6 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Modem Status</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>On</div>
@@ -267,7 +255,6 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Network Status</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>Activated</div>
@@ -283,7 +270,6 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Current Operator</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>42402</div>
@@ -298,7 +284,6 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Signal Level</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>Excellent Signal</div>
@@ -313,7 +298,6 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Socket Type</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>Avl data sending</div>
@@ -328,7 +312,6 @@ export default function Page() {
               <div className="list-title">
                 <Stack direction="row" gap="8px" alignItems="center">
                   <span>Socket</span>
-                  <InputBox.Info tooltipText="example tooltip text" />
                 </Stack>
               </div>
               <div>13.0.0.0 : 27676 (TCP)</div>
