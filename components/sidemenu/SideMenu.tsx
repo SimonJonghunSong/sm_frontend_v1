@@ -5,7 +5,6 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import Confirm from "../Confirm";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import SyncOutlinedIcon from "@mui/icons-material/SyncOutlined";
 import { Divider } from "@mui/material";
@@ -94,13 +93,6 @@ export default function SideMenu({
 
     return `${href}${queryData}`;
   };
-
-  function handleDeleteModel() {
-    Confirm({
-      title: "Confirm",
-      text: "Are you sure you want to delete this model from loaded model list? If there is any unsaved data, it will be lost.",
-    });
-  }
 
   return (
     <>
@@ -198,14 +190,6 @@ export default function SideMenu({
                     onChange={() => toggleHiddenParameter()}
                   />
                 </div>
-              </li>
-              <li>
-                <button
-                  style={{ textDecoration: "underline" }}
-                  onClick={handleDeleteModel}
-                >
-                  Delete Model
-                </button>
               </li>
               <li
                 className={
