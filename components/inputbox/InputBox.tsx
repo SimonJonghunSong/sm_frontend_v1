@@ -1,7 +1,7 @@
 import { CSSProperties, ReactNode } from "react";
 import styles from "./styles.module.scss";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import { Tooltip } from "@mui/material";
+import { styled, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 
 interface InputBoxProps {
   children: ReactNode;
@@ -45,7 +45,7 @@ InputBox.Info = function Info({
 }) {
   return (
     <div className={styles.info}>
-      <Tooltip
+      <CustomWidthTooltip
         title={tooltipText}
         placement={placement}
         slotProps={{
@@ -64,7 +64,7 @@ InputBox.Info = function Info({
         <ErrorOutlineOutlinedIcon
           sx={{ fontSize: "22px", color: "var(--grey5)" }}
         />
-      </Tooltip>
+      </CustomWidthTooltip>
     </div>
   );
 };
@@ -76,3 +76,13 @@ InputBox.Number = function Number({ children }: ChildComponentProps) {
 InputBox.Body = function Body({ children }: ChildComponentProps) {
   return <div className={styles.body}>{children}</div>;
 };
+
+const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 500,
+    fontSize: "13px",
+    padding: "12px",
+  },
+});

@@ -51,7 +51,7 @@ export const sideMenuItems = [
     icon: () => <HexagonOutlinedIcon />,
   },
   {
-    name: "Bluetooth",
+    name: "BLE",
     href: "/model-detail/bluetooth",
     icon: () => <BluetoothOutlinedIcon />,
   },
