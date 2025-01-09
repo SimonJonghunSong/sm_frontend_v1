@@ -43,6 +43,7 @@ InputBox.Info = function Info({
   tooltipText?: ReactNode;
   placement?: "top" | "bottom";
 }) {
+  console.log(tooltipText);
   return (
     <div className={styles.info}>
       <CustomWidthTooltip
@@ -81,7 +82,7 @@ const CustomWidthTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
 ))({
   [`& .${tooltipClasses.tooltip}`]: {
-    maxWidth: 500,
+    maxWidth: 414,
     fontSize: "13px",
     padding: "12px",
   },
