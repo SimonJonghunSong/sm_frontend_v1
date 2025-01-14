@@ -76,6 +76,7 @@ export default function Modal({
         disableScrollLock={disableScrollLock}
         fullWidth
         maxWidth={"sm"}
+        style={isDraggable && {width: 'fit-content', margin: '0 auto'}}
         sx={{
           width: isMinimize ? "400px" : "100%",
           "& .MuiDialog-paper": {
