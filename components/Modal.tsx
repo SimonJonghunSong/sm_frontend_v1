@@ -8,6 +8,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import maximizeIcon from "/public/images/maximize-icon.png";
+import Image from "next/image";
 
 type ModalProps = {
   closeButton?: boolean;
@@ -106,7 +108,13 @@ export default function Modal({
                   zIndex: 30,
                 }}
               >
-                <RemoveIcon sx={{ color: "var(--black)" }} />
+                {isMinimize ?   <Image
+                src={maximizeIcon}
+                alt="maximizeIcon"
+                width={24}
+                height={24}
+                style={{ display: "block", width: "24px%", height: "24px" }}
+              /> : <RemoveIcon sx={{ color: "var(--black)" }} />}
               </IconButton>
             )}
 

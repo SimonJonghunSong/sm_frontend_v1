@@ -19,6 +19,9 @@
       "edit-success": "Editado com sucesso!",
       "delete-success": "Excluído com sucesso!",
       "save-success": "Salvo com sucesso!"
+    },
+    "table-message": {
+      "no-operation-logs-yet": "Ainda não há registros de operação."
     }
   },
   "login": {

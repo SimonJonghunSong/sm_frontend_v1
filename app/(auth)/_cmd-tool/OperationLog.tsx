@@ -3,6 +3,7 @@ import DataTable from "../../../components/dataTable";
 import { GridColDef } from "@mui/x-data-grid";
 import styles from "./styles.module.scss";
 import useAuthStore from "@/utils/useAuthStore";
+import { useTranslations } from "next-intl";
 
 const columns: GridColDef[] = [
   {
@@ -183,6 +184,7 @@ export default function OperationLog({
     result: string;
   }[];
 }) {
+  const t = useTranslations()
   const { userId } = useAuthStore();
 
   return (
@@ -205,6 +207,7 @@ export default function OperationLog({
           disableRowClick
           minHeight={1}
           checkbox={false}
+          noDataMessage={t("common.table-message.no-operation-logs-yet")}
         />
       </div>
     </div>

@@ -20,6 +20,9 @@
       "edit-success": "Successfully edited!",
       "save-success": "Saved successfully!",
       "delete-success": "Successfully deleted!"
+    },
+    "table-message": {
+      "no-operation-logs-yet": "No operation logs yet."
     }
   },
   "login": {
