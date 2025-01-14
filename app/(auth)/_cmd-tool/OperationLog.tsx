@@ -203,6 +203,7 @@ export default function OperationLog({
           rowHeight={52}
           disablePagination
           disableRowClick
+          minHeight={1}
           checkbox={false}
         />
       </div>
