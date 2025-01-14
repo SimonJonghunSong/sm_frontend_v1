@@ -256,7 +256,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -284,7 +287,38 @@
       "all_required_fields_have_not_been_filled_out": {
         "": "Todos os campos obrigatórios não foram preenchidos."
       },
-      "save": "Salvar"
+      "save": "Salvar",
+      "features-item": {
+        "basic": "Básico",
+        "advanced": "Avançado",
+        "wired": "Com fio",
+        "bot": "ROBÔ",
+        "box-tracker": "BoxTracker",
+        "obd": "OBD",
+        "wi-fi": "Wi-fi",
+        "ble": "BLE",
+        "rf": "RF",
+        "digital-inputs-outputs": "Entradas/Saídas Digitais",
+        "rs232": "RS232",
+        "one-wire": "1 fio",
+        "voice-call": "Chamada de voz",
+        "dead-reckoning": "Acerto de contas",
+        "geofence": "Cerca geográfica",
+        "jamming": "Bloqueio",
+        "motion-sensor": "Sensor de movimento",
+        "ignition": "Ignição",
+        "low-power-consumption": "Baixo consumo de energia (eDRX)",
+        "temperature-sensor": "Sensor de temperatura",
+        "waterproof": "Impermeável",
+        "tamper-detection": "Detecção de violação",
+        "solar": "Solar",
+        "j1939-support": "Suporte J1939",
+        "engine-diagnostics": "Diagnóstico do motor",
+        "primary-battery": "Bateria Primária",
+        "rechargeable-battery": "Bateria recarregável",
+        "dpa": "APD",
+        "backup-battery": "Bateria reserva"
+      }
     },
     "edit_model_pop_up": {
       "edit_model": "Editar Modelo",
@@ -300,7 +334,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",

@@ -292,7 +292,38 @@
       "all_required_fields_have_not_been_filled_out": {
         "": "All required fields have not been filled out."
       },
-      "save": "Save"
+      "save": "Save",
+      "features-item": {
+        "basic": "Basic",
+        "advanced": "Advanced",
+        "wired": "Wired",
+        "bot": "BOT",
+        "box-tracker": "BoxTracker",
+        "obd": "OBD",
+        "wi-fi": "Wi-Fi",
+        "ble": "BLE",
+        "rf": "RF",
+        "digital-inputs-outputs": "Digital Inputs/Outputs",
+        "rs232": "RS232",
+        "one-wire": "1-Wire",
+        "voice-call": "Voice Call",
+        "dead-reckoning": "Dead Reckoning",
+        "geofence": "Geofence",
+        "jamming": "Jamming",
+        "motion-sensor": "Motion Sensor",
+        "ignition": "Ignition",
+        "low-power-consumption": "Low-power consumption (eDRX)",
+        "temperature-sensor": "Temperature Sensor",
+        "waterproof": "Waterproof",
+        "tamper-detection": "Tamper Detection",
+        "solar": "Solar",
+        "j1939-support": "J1939 Support",
+        "engine-diagnostics": "Engine Diagnostics",
+        "primary-battery": "Primary Battery",
+        "rechargeable-battery": "Rechargeable Battery",
+        "dpa": "DPA",
+        "backup-battery": "Backup Battery"
+      }
     },
     "edit_model_pop_up": {
       "edit_model": "Edit Model",
@@ -328,7 +359,7 @@
       "obd": "OBD",
       "indoor": "Indoor",
       "motorcycle_tracker": "Motorcycle Tracker",
-      "setting_file_*": "Setting File *",
+      "setting_file_*": "Setting File",
       "hide_from_list": "Hide from List",
       "cancel": "Cancel",
       "save": "Save"
