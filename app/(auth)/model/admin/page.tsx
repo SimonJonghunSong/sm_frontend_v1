@@ -43,6 +43,11 @@ export const featureTransition = (
       pt: "3G",
       es: "3G",
     },
+    "NB-IoT": {
+      en: "NB-IoT",
+      pt: "NB-IoT",
+      es: "NB-IoT",
+    },
     Advanced: {
       en: "Advanced",
       pt: "Avançado",

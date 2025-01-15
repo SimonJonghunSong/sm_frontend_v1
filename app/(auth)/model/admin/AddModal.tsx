@@ -355,7 +355,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
             >
               {[
                 { label: "2G", value: "2G" },
-                { label: "3G", value: "3G" },
+                { label: "NB-IoT", value: "NB-IoT" },
                 { label: "LTE Cat.1", value: "LTEcat1" },
                 { label: "LTE Cat.M1", value: "LTECatM1" },
                 { label: "5G", value: "5G" },
@@ -390,36 +390,144 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
               sx={{ flexDirection: "row", gap: "10px", flexWrap: "wrap" }}
             >
               {[
-                 { label: t("model.add_model_pop_up.features-item.basic"), value: "Basic" },
-                 { label: t("model.add_model_pop_up.features-item.advanced"), value: "Advanced" },
-                 { label: t("model.add_model_pop_up.features-item.wired"), value: "Wired" },
-                 { label: t("model.add_model_pop_up.features-item.bot"), value: "BOT" },
-                 { label: t("model.add_model_pop_up.features-item.box-tracker"), value: "BoxTracker" },
-                 { label: t("model.add_model_pop_up.features-item.obd"), value: "OBD" },
-                 { label: t("model.add_model_pop_up.features-item.wi-fi"), value: "Wi-Fi" },
-                 { label: t("model.add_model_pop_up.features-item.ble"), value: "BLE" },
-                 { label: t("model.add_model_pop_up.features-item.rf"), value: "RF" },
-                 { label: t("model.add_model_pop_up.features-item.digital-inputs-outputs"), value: "Digital Inputs/Outputs" },
-                 { label: t("model.add_model_pop_up.features-item.rs232"), value: "RS232" },
-                 { label: t("model.add_model_pop_up.features-item.one-wire"), value: "1-Wire" },
-                 { label: t("model.add_model_pop_up.features-item.voice-call"), value: "Voice Call" },
-                 { label: t("model.add_model_pop_up.features-item.dead-reckoning"), value: "Dead Reckoning" },
-                 { label: t("model.add_model_pop_up.features-item.geofence"), value: "Geofence" },
-                 { label: t("model.add_model_pop_up.features-item.jamming"), value: "Jamming" },
-                 { label: t("model.add_model_pop_up.features-item.motion-sensor"), value: "Motion Sensor" },
-                 { label: t("model.add_model_pop_up.features-item.ignition"), value: "Ignition" },
-                 { label: t("model.add_model_pop_up.features-item.low-power-consumption"), value: "Low-power consumption (eDRX)" },
-                 { label: t("model.add_model_pop_up.features-item.temperature-sensor"), value: "Temperature Sensor" },
-                 { label: t("model.add_model_pop_up.features-item.waterproof"), value: "Waterproof" },
-                 { label: t("model.add_model_pop_up.features-item.tamper-detection"), value: "Tamper Detection" },
-                 { label: t("model.add_model_pop_up.features-item.solar"), value: "Solar" },
-                 { label: t("model.add_model_pop_up.features-item.j1939-support"), value: "J1939 Support" },
-                 { label: t("model.add_model_pop_up.features-item.engine-diagnostics"), value: "Engine Diagnostics" },
-                 { label: t("model.add_model_pop_up.features-item.primary-battery"), value: "Primary Battery" },
-                 { label: t("model.add_model_pop_up.features-item.rechargeable-battery"), value: "Rechargeable Battery" },
-                 { label: t("model.add_model_pop_up.features-item.dpa"), value: "DPA" },
-                 { label: t("model.add_model_pop_up.features-item.backup-battery"), value: "Backup Battery" }
-               
+                {
+                  label: t("model.add_model_pop_up.features-item.basic"),
+                  value: "Basic",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.advanced"),
+                  value: "Advanced",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.wired"),
+                  value: "Wired",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.bot"),
+                  value: "BOT",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.box-tracker"),
+                  value: "BoxTracker",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.obd"),
+                  value: "OBD",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.wi-fi"),
+                  value: "Wi-Fi",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.ble"),
+                  value: "BLE",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.rf"),
+                  value: "RF",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.digital-inputs-outputs"
+                  ),
+                  value: "Digital Inputs/Outputs",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.rs232"),
+                  value: "RS232",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.one-wire"),
+                  value: "1-Wire",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.voice-call"),
+                  value: "Voice Call",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.dead-reckoning"
+                  ),
+                  value: "Dead Reckoning",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.geofence"),
+                  value: "Geofence",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.jamming"),
+                  value: "Jamming",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.motion-sensor"
+                  ),
+                  value: "Motion Sensor",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.ignition"),
+                  value: "Ignition",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.low-power-consumption"
+                  ),
+                  value: "Low-power consumption (eDRX)",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.temperature-sensor"
+                  ),
+                  value: "Temperature Sensor",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.waterproof"),
+                  value: "Waterproof",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.tamper-detection"
+                  ),
+                  value: "Tamper Detection",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.solar"),
+                  value: "Solar",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.j1939-support"
+                  ),
+                  value: "J1939 Support",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.engine-diagnostics"
+                  ),
+                  value: "Engine Diagnostics",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.primary-battery"
+                  ),
+                  value: "Primary Battery",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.rechargeable-battery"
+                  ),
+                  value: "Rechargeable Battery",
+                },
+                {
+                  label: t("model.add_model_pop_up.features-item.dpa"),
+                  value: "DPA",
+                },
+                {
+                  label: t(
+                    "model.add_model_pop_up.features-item.backup-battery"
+                  ),
+                  value: "Backup Battery",
+                },
               ].map(({ label, value }) => {
                 return (
                   <FormControlLabel
