@@ -48,12 +48,12 @@ const ConfigurationLayout = ({ children }) => {
 
   // event
   const handleTabClick = (name: string) => {
-    if (pathname !== "/configuration") {
-      setTab(name);
-      router.push("/configuration");
-    } else if (name === "Geofence") {
+    if (name === "Geofence") {
       setTab("geofence");
       router.push("/configuration/geofence");
+    } else if (pathname !== "/configuration") {
+      setTab(name);
+      router.push("/configuration");
     } else {
       setTab(name);
     }
@@ -96,7 +96,7 @@ const ConfigurationLayout = ({ children }) => {
             }),
             {
               name: "Geofence",
-              href: "/configuration",
+              href: "/configuration/geofence",
               offlineEnable: true,
               isActive:
                 !EXCLUDE_CONFIG_PATHS.includes(pathname) && tab === "geofence",
