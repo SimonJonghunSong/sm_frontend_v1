@@ -630,21 +630,15 @@ function SearchModal({ onClose }: { onClose: () => void }) {
             {searchTerm && (
               <Stack py={2} alignItems="flex-end" gap="16px">
                 <Stack width="100%">{renderSearchResults()}</Stack>
-                {searchResults.length > 3 && !showAllResult ? (
+                {searchResults.length > 3 && (
                   <Button
                     color="secondary"
                     sx={{ textDecoration: "underline" }}
-                    onClick={() => setShowAllResult(true)}
+                    onClick={() => setShowAllResult(!showAllResult)}
                   >
-                    {t("configuration.search_bar.show_all_result")}
-                  </Button>
-                ) : (
-                  <Button
-                    color="secondary"
-                    sx={{ textDecoration: "underline" }}
-                    onClick={() => setShowAllResult(false)}
-                  >
-                    {t("configuration.search_bar.show_less")}
+                    {showAllResult
+                      ? t("configuration.search_bar.show_less")
+                      : t("configuration.search_bar.show_all_result")}
                   </Button>
                 )}
               </Stack>
