@@ -2,12 +2,16 @@
 
 import React from "react";
 import { Button, Stack, TextField } from "@mui/material";
+import { useTranslations } from "next-intl";
 
 export default function Page() {
+  const t = useTranslations();
   return (
     <div className="pageWrap" style={{ width: "100%" }}>
       <article className="contentWrap">
-        <div className="pageTitle">Edit Profile</div>
+        <div className="pageTitle">
+          {t("configuration.edit_profile.edit_profile")}
+        </div>
         <Stack direction="row" gap="16px">
           <TextField
             multiline
@@ -15,9 +19,9 @@ export default function Page() {
             rows={1}
             sx={{
               flexGrow: 1,
-              height: "120px",
+              height: "600px",
               "& .MuiInputBase-root": {
-                padding: "10px 12px",
+                padding: "16px 0",
                 height: "100% !important",
               },
               "& textarea": {
@@ -27,17 +31,8 @@ export default function Page() {
           />
         </Stack>
 
-        <Stack
-          direction="row"
-          gap="8px"
-          justifyContent="flex-end"
-          marginTop="40px"
-        >
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ marginTop: "168px !important" }}
-          >
+        <Stack direction="row" justifyContent="flex-end" pt={"40px"}>
+          <Button variant="contained" color="secondary" sx={{ width: 200 }}>
             Save
           </Button>
         </Stack>

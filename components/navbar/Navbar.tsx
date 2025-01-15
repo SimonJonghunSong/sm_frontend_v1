@@ -171,18 +171,6 @@ export default function Navbar() {
 
       offlineChangeModalToggle();
     }
-
-    // Confirm({
-    //   title: "Confirm",
-    //   text: `Are you sure you want to switch to ${
-    //     isOfflineToOnline ? "online" : "offline"
-    //   } usage?`,
-    // }).then((result) => {
-    //   if (result.isConfirmed) {
-    //     setIsOnline(isOfflineToOnline);
-    //     setIsSelfOffline(!isOfflineToOnline);
-    //   }
-    // });
   };
 
   const getRootHref = () => {
@@ -635,35 +623,35 @@ function SearchModal({ onClose }: { onClose: () => void }) {
           }}
         />
       </Stack>
-
-      {searchTerm ? (
-        <>
-          {searchTerm && (
-            <Stack py={2} alignItems="flex-end" gap="16px">
-              <Stack width="100%">{renderSearchResults()}</Stack>
-              {searchResults.length > 3 && !showAllResult ? (
-                <Button
-                  color="secondary"
-                  sx={{ textDecoration: "underline" }}
-                  onClick={() => setShowAllResult(true)}
-                >
-                  {t("configuration.search_bar.show_all_result")}
-                </Button>
-              ) : (
-                <Button
-                  color="secondary"
-                  sx={{ textDecoration: "underline" }}
-                  onClick={() => setShowAllResult(false)}
-                >
-                  {t("configuration.search_bar.show_less")}
-                </Button>
-              )}
-            </Stack>
-          )}
-        </>
-      ) : (
-        <Stack height={500}></Stack>
-      )}
+      {/* 고정 height 값 500 + 서치하는 텍스트 영역은 상단으로 고정 */}
+      <Stack height={500} overflow="auto">
+        {searchTerm && (
+          <>
+            {searchTerm && (
+              <Stack py={2} alignItems="flex-end" gap="16px">
+                <Stack width="100%">{renderSearchResults()}</Stack>
+                {searchResults.length > 3 && !showAllResult ? (
+                  <Button
+                    color="secondary"
+                    sx={{ textDecoration: "underline" }}
+                    onClick={() => setShowAllResult(true)}
+                  >
+                    {t("configuration.search_bar.show_all_result")}
+                  </Button>
+                ) : (
+                  <Button
+                    color="secondary"
+                    sx={{ textDecoration: "underline" }}
+                    onClick={() => setShowAllResult(false)}
+                  >
+                    {t("configuration.search_bar.show_less")}
+                  </Button>
+                )}
+              </Stack>
+            )}
+          </>
+        )}
+      </Stack>
     </Stack>
   );
 }

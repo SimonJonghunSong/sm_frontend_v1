@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import { getLogsByIMEI } from "@/utils/idbLogUtil";
-import { MenuItem, Select, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import useSerial from "@/src/hooks/useSerial";
 
 export default function ConsoleLog() {
@@ -10,7 +10,7 @@ export default function ConsoleLog() {
     state: { portList },
   } = useSerial();
   const [log, setLog] = useState([]);
-  const [selectedIMEI, setSelectedIMEI] = useState(portList?.[0]?.imei);
+  const [selectedIMEI] = useState(portList?.[0]?.imei);
   const broadcastChannel = new BroadcastChannel("command_log");
 
   const get = async () => {
@@ -57,11 +57,14 @@ export default function ConsoleLog() {
             return (
               <div>
                 {isWrite ? (
-                  <strong>
+                  <strong style={{ wordBreak: "break-all" }}>
                     {prefix} {logString}
                   </strong>
                 ) : (
-                  <p className={styles.textIndent}>
+                  <p
+                    className={styles.textIndent}
+                    style={{ wordBreak: "break-all" }}
+                  >
                     {prefix} {logString}
                   </p>
                 )}
