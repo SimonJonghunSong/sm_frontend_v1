@@ -558,6 +558,44 @@ function SearchModal({ onClose }: { onClose: () => void }) {
     }
   }, []);
 
+  // SearchResults 컴포넌트
+  const renderSearchResults = () => {
+    if (searchResults.length === 0) return <EmptyResults />;
+
+    const displayedResults = searchResults.slice(
+      0,
+      showAllResult ? searchResults.length : 3
+    );
+
+    return (
+      <>
+        <div className={styles.title}>Parameters</div>
+        <ul className={styles.list}>
+          {displayedResults.map((result, index) => (
+            <SearchResultItem
+              key={index}
+              result={result}
+              onSelect={(result) => {
+                if (
+                  ["Circular Geofence", "Polygon Geofence"].includes(
+                    result.category
+                  )
+                ) {
+                  setTab("geofence");
+                  router.push("/configuration/geofence");
+                } else {
+                  router.push("/configuration");
+                  setTab(result.category);
+                }
+                onClose();
+              }}
+            />
+          ))}
+        </ul>
+      </>
+    );
+  };
+
   return (
     <Stack className={styles.search}>
       <Stack
@@ -600,75 +638,28 @@ function SearchModal({ onClose }: { onClose: () => void }) {
 
       {searchTerm ? (
         <>
-          {/* <Stack py={2} alignItems="flex-end" gap="16px">
-            <Stack width="100%">
-              <div className={styles.title}>Sections</div>
-              <ul className={styles.list}>
-                <Stack
-                  height="100%"
-                  alignItems="center"
-                  justifyContent="center"
-                  color="var(--grey5)"
-                  py={10}
+          {searchTerm && (
+            <Stack py={2} alignItems="flex-end" gap="16px">
+              <Stack width="100%">{renderSearchResults()}</Stack>
+              {searchResults.length > 3 && !showAllResult ? (
+                <Button
+                  color="secondary"
+                  sx={{ textDecoration: "underline" }}
+                  onClick={() => setShowAllResult(true)}
                 >
-                  No results found
-                </Stack>
-              </ul>
+                  {t("configuration.search_bar.show_all_result")}
+                </Button>
+              ) : (
+                <Button
+                  color="secondary"
+                  sx={{ textDecoration: "underline" }}
+                  onClick={() => setShowAllResult(false)}
+                >
+                  {t("configuration.search_bar.show_less")}
+                </Button>
+              )}
             </Stack>
-          </Stack> */}
-          <Stack py={2} alignItems="flex-end" gap="16px">
-            <Stack width="100%">
-              <div className={styles.title}>Parameters</div>
-              <ul className={styles.list}>
-                {searchResults.length === 0 && (
-                  <Stack
-                    height="100%"
-                    alignItems="center"
-                    justifyContent="center"
-                    color="var(--grey5)"
-                    py={10}
-                  >
-                    No results found
-                  </Stack>
-                )}
-                {/* 3개만 보여주고 show all result 버튼 누르면 다 보여주기 */}
-                {searchResults
-                  .slice(0, showAllResult ? searchResults.length : 3)
-                  .map((result, index) => (
-                    <li
-                      key={index}
-                      onClick={() => {
-                        if (
-                          result.category === "Circular Geofence" ||
-                          result.category === "Polygon Geofence"
-                        ) {
-                          setTab("geofence");
-                          router.push(`/configuration/geofence`);
-                        } else {
-                          router.push(`/configuration`);
-                          setTab(result.category);
-                        }
-                        onClose();
-                      }}
-                    >
-                      <div className={styles.subTitle}>
-                        {result.category} &gt; {result.parameter}
-                      </div>
-                    </li>
-                  ))}
-              </ul>
-            </Stack>
-            {/* 3개 이상의 result 일때만 */}
-            {searchResults.length > 3 && !showAllResult && (
-              <Button
-                color="secondary"
-                sx={{ textDecoration: "underline" }}
-                onClick={() => setShowAllResult(true)}
-              >
-                Show all result
-              </Button>
-            )}
-          </Stack>
+          )}
         </>
       ) : (
         <Stack height={500}></Stack>
@@ -688,3 +679,28 @@ function CmdModal() {
 
   return <CmdTool />;
 }
+
+// 검색 결과 아이템 컴포넌트
+const SearchResultItem = ({ result, onSelect }) => (
+  <li onClick={() => onSelect(result)}>
+    <div className={styles.subTitle}>
+      {result.category} &gt; {result.parameter}
+    </div>
+  </li>
+);
+
+// 빈 결과 컴포넌트
+const EmptyResults = () => {
+  const t = useTranslations("configuration");
+  return (
+    <Stack
+      height="100%"
+      alignItems="center"
+      justifyContent="center"
+      color="var(--grey5)"
+      py={10}
+    >
+      {t("search_bar.no_results_found")}
+    </Stack>
+  );
+};
