@@ -141,7 +141,7 @@ export const insertLoginUser = async (data: {
 // 오프라인 로그인 처리
 export const offlineLogin = async (body: AuthLoginBody) => {
   const user = await getUserByIdAndPassword(
-    body.user_id,
+    body.username,
     base64Encoded(body.password)
   );
 
@@ -165,7 +165,7 @@ export const olineChangeWithLogin = async (userId: string) => {
   }
 
   const res = await login({
-    user_id: loginUser.key,
+    username: loginUser.key,
     password: base64Decoded(loginUser.password),
     country: loginUser.country,
   });

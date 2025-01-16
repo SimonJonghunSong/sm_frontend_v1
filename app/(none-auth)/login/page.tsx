@@ -79,8 +79,6 @@ export default function page() {
       router.replace("/");
     },
     onError: () => {
-      console.log("test :::::::");
-
       setErrorDialog(true);
     },
   });

@@ -9,7 +9,6 @@ import React, {
   useState,
 } from "react";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
 import { useTranslations } from "next-intl";
 import styles from "./styles.module.scss";
 import {
@@ -296,10 +295,6 @@ export default function Model() {
           addDatas(records);
 
           setRowData((prev) => prev.map((item) => ({ ...item, loaded: true })));
-
-          // toast("Successfully loaded!", {
-          //   type: "success",
-          // });
         },
       }
     );
@@ -382,10 +377,6 @@ export default function Model() {
                 item.id === id ? { ...item, loaded: !item.loaded } : item
               )
             );
-
-            // toast("Successfully loaded!", {
-            //   type: "success",
-            // });
           },
         }
       );
