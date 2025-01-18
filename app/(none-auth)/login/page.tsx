@@ -372,6 +372,7 @@ export default function page() {
               (isAnonymous && isUndefinedCountry) ||
               ((inputId.length === 0 ||
                 inputPassword.length === 0 ||
+                !selectCountry ||
                 isPending) &&
                 !isAnonymous)
             }
