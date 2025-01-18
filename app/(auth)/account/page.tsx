@@ -43,6 +43,7 @@ import { AxiosError } from "axios";
 
 export default function Account() {
   const t = useTranslations();
+  const { userRole } = useAuthStore();
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -99,22 +100,58 @@ export default function Account() {
       width: 80,
       headerAlign: "center",
       align: "center",
-      renderCell: (event) => (
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            openErrorPopup(t("popup.account.delete_account_pop_up.delete"), {
-              title: t("common.popup.confrim"),
-              confirmText: t("common.popup.yes"),
-              onErrorPopupOk: () => {
-                mutate([event.row.id]);
-              },
-            });
-          }}
-        >
-          <DeleteForeverOutlinedIcon />
-        </IconButton>
-      ),
+      renderCell: (event) => {
+        // Root는 ROot, Guest 둘다 삭제 가능
+        // Guest는 Guest만 삭제 가능
+
+        if (userRole === "GUEST") {
+          if (event.row.col6 === "Guest") {
+            return (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openErrorPopup(
+                    t("popup.account.delete_account_pop_up.delete"),
+                    {
+                      title: t("common.popup.confrim"),
+                      confirmText: t("common.popup.yes"),
+                      onErrorPopupOk: () => {
+                        mutate([event.row.id]);
+                      },
+                    }
+                  );
+                }}
+              >
+                <DeleteForeverOutlinedIcon />
+              </IconButton>
+            );
+          }
+          return null;
+        } else {
+          if (event.row.col6 === "Root" || event.row.col6 === "Guest") {
+            return (
+              <IconButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  openErrorPopup(
+                    t("popup.account.delete_account_pop_up.delete"),
+                    {
+                      title: t("common.popup.confrim"),
+                      confirmText: t("common.popup.yes"),
+                      onErrorPopupOk: () => {
+                        mutate([event.row.id]);
+                      },
+                    }
+                  );
+                }}
+              >
+                <DeleteForeverOutlinedIcon />
+              </IconButton>
+            );
+          }
+          return null;
+        }
+      },
     },
   ];
   const [selectedRowIdList, setSelectedRowIdList] = useState<string[]>();
@@ -163,8 +200,6 @@ export default function Account() {
 
   const [modal, modalToggle] = useModal();
 
-  const { userRole } = useAuthStore();
-
   const handleSelectChange = (
     e: SelectChangeEvent,
     setState: Dispatch<SetStateAction<string>>
@@ -199,9 +234,49 @@ export default function Account() {
   };
 
   const renderMenuFilter = () => {
+    //   Add Account > Filter 1
+    // - Root : All, Root, Administrator, Customer, Client. Guest ✅
+    // - Administrator : All, Administrator, Customer, Client. Guest ✅
+    // - Customer : All, Customer, Client. Guest ✅
+    // - Client : All, Client. Guest ✅
     switch (userRole) {
       case "ROOT":
+        return (
+          <Select
+            value={roleFilter}
+            onChange={(e) => handleSelectChange(e, setRoleFilter)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+            <MenuItem value={"Root"}>{t("account.account.root")}</MenuItem>
+            <MenuItem value={"Admin"}>
+              {t("account.account.administrator")}
+            </MenuItem>
+            <MenuItem value={"Customer"}>
+              {t("account.account.customer")}
+            </MenuItem>
+            <MenuItem value={"Client"}>{t("account.account.client")}</MenuItem>
+            <MenuItem value={"Guest"}>{t("account.account.guest")}</MenuItem>
+          </Select>
+        );
       case "ADMIN":
+        return (
+          <Select
+            value={roleFilter}
+            onChange={(e) => handleSelectChange(e, setRoleFilter)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+            <MenuItem value={"Admin"}>
+              {t("account.account.administrator")}
+            </MenuItem>
+            <MenuItem value={"Customer"}>
+              {t("account.account.customer")}
+            </MenuItem>
+            <MenuItem value={"Client"}>{t("account.account.client")}</MenuItem>
+            <MenuItem value={"Guest"}>{t("account.account.guest")}</MenuItem>
+          </Select>
+        );
       case "CUSTOMER":
         return (
           <Select
@@ -218,7 +293,6 @@ export default function Account() {
           </Select>
         );
       case "GUEST":
-      default:
         return (
           <Select
             value={roleFilter}
@@ -226,14 +300,49 @@ export default function Account() {
             sx={{ minWidth: 160 }}
           >
             <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
-            <MenuItem value={"Admin"}>
-              {t("account.account.administrator")}
-            </MenuItem>
-            <MenuItem value={"Customer"}>
-              {t("account.account.customer")}
-            </MenuItem>
             <MenuItem value={"Client"}>{t("account.account.client")}</MenuItem>
             <MenuItem value={"Guest"}>{t("account.account.guest")}</MenuItem>
+          </Select>
+        );
+    }
+  };
+
+  const renderFilter2MenuItems = () => {
+    // Add Account > Search Filter 2
+    // - Root : All, ID, E-mail, User, Company ✅
+    // - Administrator : All, ID, E-mail, User, Company ✅
+    // - Customer : All, ID, E-mail, User ✅
+    // - Client : All, ID, E-mail, User ✅
+    switch (userRole) {
+      case "ROOT":
+      case "ADMIN":
+        return (
+          <Select
+            value={userFilter}
+            onChange={(e) => handleSelectChange(e, setUserFilter)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+            <MenuItem value={"ID"}>{t("account.account.id")}</MenuItem>
+            <MenuItem value={"E-mail"}>{t("account.account.email")}</MenuItem>
+            <MenuItem value={"Username"}>{t("account.account.user")}</MenuItem>
+            <MenuItem value={"CompanyName"}>
+              {t("account.account.company")}
+            </MenuItem>
+          </Select>
+        );
+      case "CUSTOMER":
+      case "GUEST":
+        return (
+          <Select
+            value={userFilter}
+            onChange={(e) => handleSelectChange(e, setUserFilter)}
+            sx={{ minWidth: 160 }}
+          >
+            <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
+            <MenuItem value={"ID"}>{t("account.account.id")}</MenuItem>
+            <MenuItem value={"E-mail"}>{t("account.account.email")}</MenuItem>
+            <MenuItem value={"Username"}>{t("account.account.user")}</MenuItem>
           </Select>
         );
     }
@@ -253,24 +362,7 @@ export default function Account() {
             >
               <Stack direction="row" gap="8px">
                 {renderMenuFilter()}
-
-                <Select
-                  value={userFilter}
-                  onChange={(e) => handleSelectChange(e, setUserFilter)}
-                  sx={{ minWidth: 160 }}
-                >
-                  <MenuItem value={"All"}>{t("account.account.all")}</MenuItem>
-                  <MenuItem value={"ID"}>{t("account.account.id")}</MenuItem>
-                  <MenuItem value={"E-mail"}>
-                    {t("account.account.email")}
-                  </MenuItem>
-                  <MenuItem value={"Username"}>
-                    {t("account.account.user")}
-                  </MenuItem>
-                  <MenuItem value={"CompanyName"}>
-                    {t("account.account.company")}
-                  </MenuItem>
-                </Select>
+                {renderFilter2MenuItems()}
 
                 <TextField
                   value={searchInputValue}
@@ -302,8 +394,31 @@ export default function Account() {
                 {t("account.account.add")}
               </Button>
             </Stack>
+
+            {/* 
+                  - Root : Root, Administrator, Customer, Client. Guest 반영 완료 ✅
+                  - Administrator : Administrator, Customer, Client. Guest 반영 완료 ✅
+                  - Customer : Customer, Client. Guest (해당 업체 Customer, Client, Guest 만 노출 => 알 수 없음)
+                  - Client : Client. Guest (해당 업체 Client, Guest 만 노출 => 알 수 없음)
+            */}
             <DataTable
               noDataMessage={t("account.account.no_results_found")}
+              isRowSelectable={(params) => {
+                // Guest can only select Guest
+                if (userRole === "GUEST") {
+                  if (params.row.col6 === "Guest") {
+                    return true;
+                  }
+                } else {
+                  // Someone else can select Root and Guest
+                  if (
+                    params.row.col6 === "Guest" ||
+                    params.row.col6 === "Root"
+                  ) {
+                    return true;
+                  }
+                }
+              }}
               rows={(error
                 ? []
                 : data?.data?.user_list.filter((user) => {
@@ -313,6 +428,22 @@ export default function Account() {
                     );
                   }) || []
               )
+                .filter(({ role }) => {
+                  if (userRole === "ADMIN") {
+                    return role.name !== "root";
+                  }
+                  if (userRole === "CUSTOMER") {
+                    return role.name !== "root" && role.name !== "admin";
+                  }
+                  if (userRole === "CLIENT") {
+                    return (
+                      role.name !== "root" &&
+                      role.name !== "admin" &&
+                      role.name !== "customer"
+                    );
+                  }
+                  return true;
+                })
                 .filter((item) => {
                   if (!searchValue) return true;
 
@@ -506,8 +637,6 @@ function reducer(state: FormState, action: FormAction): FormState {
 const getFieldsByRole = (userRole: string) => {
   switch (userRole) {
     case "ROOT":
-      return ["role", "id", "email", "name", "password", "passwordConfirm"];
-    case "ADMIN":
       return [
         "role",
         "id",
@@ -516,11 +645,7 @@ const getFieldsByRole = (userRole: string) => {
         "password",
         "passwordConfirm",
         "country",
-        "affiliation",
-        "department",
       ];
-    case "CUSTOMER":
-    case "CLIENT":
       return [
         "role",
         "id",
@@ -562,25 +687,21 @@ function AddAcountModal({
 }) {
   const t = useTranslations();
   const selectRoleData = useCallback(() => {
+    // - Root : Root, Guest ✅
+    // - Admin : Guest ✅
+    // - Customer : Guest ✅
+    // - Client : Guest ✅
     switch (userRole) {
-      case "CUSTOMER":
-        return [
-          { label: t("account.account.customer"), value: "customer" },
-          { label: t("account.account.client"), value: "client" },
-          { label: t("account.account.guest"), value: "guest" },
-        ];
-      case "CLIENT":
       case "ROOT":
-      case "ADMIN":
-      case "GUEST":
-      default:
         return [
           { label: t("account.account.root"), value: "root" },
-          { label: t("account.account.administrator"), value: "admin" },
-          { label: t("account.account.customer"), value: "customer" },
-          { label: t("account.account.client"), value: "client" },
           { label: t("account.account.guest"), value: "guest" },
         ];
+      case "ADMIN":
+      case "CUSTOMER":
+      case "CLIENT":
+      case "GUEST":
+        return [{ label: t("account.account.guest"), value: "guest" }];
     }
   }, []);
   const { userRole } = useAuthStore();
@@ -672,8 +793,6 @@ function AddAcountModal({
     });
   };
 
-  console.log(":::::::", form.watch());
-
   const getDisableStateWithFormHelper = (
     keys: (
       | "role"
@@ -706,8 +825,6 @@ function AddAcountModal({
         }
 
         if (key === "nda_file" && !item) {
-          console.log("ASDAS");
-
           return true;
         }
 
@@ -716,11 +833,7 @@ function AddAcountModal({
     );
   };
 
-  console.log("form.watch :::", form.watch());
-
   const getDisableState = () => {
-    console.log(" :::", form.watch("role"));
-
     if (!form.watch("role")) return true;
 
     switch (form.watch("role")?.toUpperCase() || "") {

@@ -9,6 +9,7 @@ import {
   GridFooter,
   GridFooterContainer,
   GridRowClassNameParams,
+  GridRowParams,
   GridRowSelectionModel,
 } from "@mui/x-data-grid";
 
@@ -29,6 +30,7 @@ type DataTableProps = {
     details: GridCallbackDetails
   ) => void;
   minHeight?: number | string;
+  isRowSelectable?: (params: GridRowParams<any>) => boolean;
 };
 export default function DataTable({
   disableResize = false,
@@ -44,11 +46,10 @@ export default function DataTable({
   onRowSelectionModelChange = () => {},
   getRowClassName,
   minHeight,
+  isRowSelectable,
 }: DataTableProps) {
   const apiRef = useRef<GridApiCommunity>();
   const [page, setPage] = useState(0);
-
-  console.log("rows :::", rows);
 
   useEffect(() => {
     if (rows.length <= page * 10 && rows.length > 0) {
@@ -76,6 +77,7 @@ export default function DataTable({
         getRowClassName={getRowClassName}
         rowHeight={rowHeight}
         autoHeight
+        isRowSelectable={isRowSelectable}
         disableColumnSorting
         hideFooterSelectedRowCount
         hideFooterPagination={disablePagination}
