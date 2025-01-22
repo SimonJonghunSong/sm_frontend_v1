@@ -139,10 +139,11 @@ export default function page() {
     e.stopPropagation();
 
     if (isAnonymous) {
-      // setUserRole("anonymous");
-      // setToken("anonymous");
-      // router.replace("/");
-      return;
+      if (isOnline) {
+        return router.replace("/anonymous/device");
+      } else {
+        return setOfflineLoginErrorDialog(true);
+      }
     }
 
     const requestBody = {
