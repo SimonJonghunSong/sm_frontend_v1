@@ -65,6 +65,8 @@ const useSerial = () => {
     setCircularGeofence,
     setPolygonGeofence,
     removeAllPort,
+    setIsDisconnected,
+    setIsConnected,
   } = useSerialStore();
 
   const killAllPort = () => {
@@ -272,6 +274,7 @@ const useSerial = () => {
                     shouldRefetchPackage: false,
                     polygonGeofenceData: [],
                     circularGeofenceData: [],
+                    isDisconnected: false,
                   });
                   port.ispackagecountfetching = true;
                   write({
@@ -612,6 +615,8 @@ const useSerial = () => {
       monitor,
       close,
       removePorts,
+      setIsDisconnected,
+      setIsConnected,
     },
   };
 };

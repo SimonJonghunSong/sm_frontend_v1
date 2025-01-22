@@ -40,7 +40,7 @@ export default function Controller() {
 
   const {
     state: { portList },
-    func: { close, write },
+    func: { write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setPackageFetchingStart } = useSerialStore();
   const currentPort = portList.find(({ port }) => port.imei === imei);
@@ -77,15 +77,7 @@ export default function Controller() {
   const handleUpload = () => {
     uploadModalToggle();
   };
-  const handleClosePort = () => {
-    close({
-      port: currentPort.port,
-      writableStreamClosed: currentPort.writableStreamClosed,
-      readableStreamClosed: currentPort.readableStreamClosed,
-      reader: currentPort.reader,
-      writer: currentPort.writer,
-    });
-  };
+
   const handleRefreshJsonPacket = async () => {
     setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
@@ -260,14 +252,29 @@ export default function Controller() {
             );
           })}
         </Select>
-        <Button
-          variant="outlined"
-          color="secondary"
-          disabled={!currentPort.port.readable && !currentPort.port.writable}
-          onClick={handleClosePort}
-        >
-          {t("configuration.profile_menu.disconnect")}
-        </Button>
+        {!currentPort.isDisconnected ? (
+          <Button
+            variant="outlined"
+            color="secondary"
+            disabled={!currentPort.port.readable && !currentPort.port.writable}
+            onClick={() => {
+              setIsDisconnected({ imei: currentPort.port.imei });
+            }}
+          >
+            {t("configuration.profile_menu.disconnect")}
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={!currentPort.port.readable && !currentPort.port.writable}
+            onClick={() => {
+              setIsConnected({ imei: currentPort.port.imei });
+            }}
+          >
+            {t("configuration.profile_menu.connect")}
+          </Button>
+        )}
       </Stack>
 
       {/* Apply Modal */}

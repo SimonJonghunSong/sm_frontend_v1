@@ -71,7 +71,7 @@ export default function DeviceList() {
   const t = useTranslations();
   const {
     state: { portList, connectingPortCount },
-    func: { requestPort, forget, write, close },
+    func: { requestPort, forget, write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
 
@@ -139,14 +139,15 @@ export default function DeviceList() {
           return <RowSkeleton />;
         }
         return params.value ? (
-          params.value?.connected ? (
+          !params.value.port.isDisconnected ? (
             <Button
               variant="outlined"
               color="secondary"
               sx={{ width: "120px" }}
               onClick={(e) => {
+                console.log(params.value);
                 e.stopPropagation();
-                forget(params.value.port.port);
+                setIsDisconnected({ imei: params.value.port.port.imei });
               }}
             >
               {t("device.device_list.disconnect")}
@@ -156,7 +157,10 @@ export default function DeviceList() {
               variant="contained"
               color="secondary"
               sx={{ width: "120px" }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsConnected({ imei: params.value.port.port.imei });
+              }}
             >
               {t("device.device_list.connect")}
             </Button>
@@ -222,42 +226,6 @@ export default function DeviceList() {
               >
                 {t("device.device_list.configure")}
               </Button>
-              {/* <Button
-                disabled={
-                  params.value.isPackageFetching ||
-                  !params.value.port.writer.write ||
-                  !params.value.port.reader.read
-                }
-                variant="outlined"
-                color="secondary"
-                sx={{ width: "10px" }}
-                onClick={async (e) => {
-                  e.stopPropagation();
-
-                  params.value.port.port.grpNo =
-                    params.value.port.jsonPackageCount;
-
-                  setPackageFetchingStart({
-                    imei: params.value.port.port.imei,
-                  });
-
-                  const commands = Array.from(
-                    { length: params.value.port.jsonPackageCount },
-                    (_, i) => `${AT_GET_JSON}${i + 1}`
-                  );
-                  params.value.port.port.isjsonpackagefetching = true;
-                  for (const command of commands) {
-                    write({
-                      data: command,
-                      port: params.value.port.port,
-                      writer: params.value.port.writer,
-                    });
-                    await delayPromise(DELAY_MS); // 100ms 지연
-                  }
-                }}
-              >
-                <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
-              </Button> */}
             </Stack>
           );
         }

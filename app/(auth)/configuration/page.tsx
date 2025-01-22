@@ -112,7 +112,10 @@ export default function page() {
         {true && (
           <Button
             variant="contained"
-            disabled={tab !== "Command String" && isSaveDisabled}
+            disabled={
+              (tab !== "Command String" && isSaveDisabled) ||
+              currentPort.isDisconnected
+            }
             onClick={() => handleSaveSettings()}
           >
             {t("configuration.commands.send")}

@@ -42,7 +42,7 @@ export default function Controller() {
 
   const {
     state: { portList },
-    func: { close, write },
+    func: { close, write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setPackageFetchingStart } = useSerialStore();
   const currentPort = portList.find(({ port }) => port.imei === imei);
@@ -262,14 +262,29 @@ export default function Controller() {
             );
           })}
         </Select>
-        <Button
-          variant="outlined"
-          color="secondary"
-          disabled={!currentPort.port.readable && !currentPort.port.writable}
-          onClick={handleClosePort}
-        >
-          {t("configuration.profile_menu.disconnect")}
-        </Button>
+        {!currentPort.isDisconnected ? (
+          <Button
+            variant="outlined"
+            color="secondary"
+            disabled={!currentPort.port.readable && !currentPort.port.writable}
+            onClick={() => {
+              setIsDisconnected({ imei: currentPort.port.imei });
+            }}
+          >
+            {t("configuration.profile_menu.disconnect")}
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={!currentPort.port.readable && !currentPort.port.writable}
+            onClick={() => {
+              setIsConnected({ imei: currentPort.port.imei });
+            }}
+          >
+            {t("configuration.profile_menu.connect")}
+          </Button>
+        )}
       </Stack>
 
       {/* Apply Modal */}

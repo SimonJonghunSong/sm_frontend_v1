@@ -20,6 +20,7 @@ export type SerialPortState = {
   shouldRefetchPackage: boolean;
   circularGeofenceData: string[];
   polygonGeofenceData: string[];
+  isDisconnected: boolean;
 };
 
 type SerialPortAction = {
@@ -66,6 +67,8 @@ type SerialPortAction = {
   setShouldFetchJsonPackage: ({ imei }: { imei: string }) => void;
   getPolygonData: ({ imei }: { imei: string }) => string[];
   getCircularData: ({ imei }: { imei: string }) => string[];
+  setIsDisconnected: ({ imei }: { imei: string }) => void;
+  setIsConnected: ({ imei }: { imei: string }) => void;
 };
 
 export const parse = (str) => {
@@ -212,8 +215,27 @@ const useSerialStore = create(
         );
         return currentPort.circularGeofenceData;
       },
+      setIsDisconnected: ({ imei }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, isDisconnected: true }
+                : item;
+            }),
+          };
+        }),
+      setIsConnected: ({ imei }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, isDisconnected: false }
+                : item;
+            }),
+          };
+        }),
     }),
-
     {
       name: "serialStore",
     }

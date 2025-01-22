@@ -72,7 +72,7 @@ export default function DeviceList() {
   const t = useTranslations();
   const {
     state: { portList, connectingPortCount },
-    func: { requestPort, forget, write, close },
+    func: { requestPort, forget, write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
 
@@ -140,14 +140,14 @@ export default function DeviceList() {
           return <RowSkeleton />;
         }
         return params.value ? (
-          params.value?.connected ? (
+          !params.value.port.isDisconnected ? (
             <Button
               variant="outlined"
               color="secondary"
               sx={{ width: "120px" }}
               onClick={(e) => {
                 e.stopPropagation();
-                forget(params.value.port.port);
+                setIsDisconnected({ imei: params.value.port.port.imei });
               }}
             >
               {t("device.device_list.disconnect")}
@@ -157,7 +157,10 @@ export default function DeviceList() {
               variant="contained"
               color="secondary"
               sx={{ width: "120px" }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsConnected({ imei: params.value.port.port.imei });
+              }}
             >
               {t("device.device_list.connect")}
             </Button>
