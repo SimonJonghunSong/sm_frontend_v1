@@ -1,7 +1,13 @@
 import Swal from "sweetalert2";
 import "animate.css";
 
-export default async function Alert({ title, text }:{title:string,text:string}) {
+export default async function Alert({
+  title,
+  text,
+}: {
+  title: string;
+  text: string;
+}) {
   return Swal.fire({
     title,
     text,
@@ -13,6 +19,7 @@ export default async function Alert({ title, text }:{title:string,text:string}) 
     hideClass: {
       popup: "animate__animated animate__zoomOut animate__faster",
     },
+
     // backdrop: false
   });
 }
