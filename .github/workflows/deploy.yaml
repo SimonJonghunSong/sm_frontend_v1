@@ -23,5 +23,7 @@ jobs:
             git pull https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/stsunlab-sync-master.git
             npm install
             npm run build
+            fuser -k 3000/tcp || true
             pkill -f "npm start" || true    # npm start로 실행된 프로세스 종료
             nohup npm start > output.log 2>&1 &    # 백그라운드로 새로운 프로세스 시작
+            echo "Deploy completed successfully"
