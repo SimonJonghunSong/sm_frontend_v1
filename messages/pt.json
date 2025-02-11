@@ -259,10 +259,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -337,10 +334,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1735,5 +1729,35 @@
     "At_least_1_upper/lowercase": "Pelo menos 1 letra maiúscula/minúscula",
     "At_least_1_number": "Pelo menos 1 número",
     "Passwords_do_not_match": "As senhas não coincidem."
+  },
+  "notify": {
+    "title": "Notificar",
+    "table": {
+      "title": "Título",
+      "creator": "Criador",
+      "created_date": "Data criada",
+      "status": "Status",
+      "copy": "Cópia",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "send_date": "Data de envio"
+    },
+    "popup": {
+      "message_group": "Grupo de mensagens",
+      "message": "Mensagem",
+      "title": "Título",
+      "message_group_options": {
+        "administrator": "Administrador",
+        "all": "Todos",
+        "customer": "Cliente",
+        "client": "Cliente",
+        "guest": "Convidado"
+      }
+    },
+    "message_list": "Lista de mensagens",
+    "delete": "Excluir",
+    "alert": {
+      "delete": "Tem certeza de que deseja excluir?"
+    }
   }
 }
