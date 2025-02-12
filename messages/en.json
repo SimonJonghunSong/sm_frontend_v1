@@ -1777,6 +1777,7 @@
       "popup_title": "Send Notify",
       "title": "Title",
       "message": "Message",
+      "link": "Link",
       "message_group": "Message Group",
       "message_group_options": {
         "all": "All",
@@ -1787,7 +1788,8 @@
       }
     },
     "alert": {
-      "delete": "Are you sure you want to delete?"
+      "delete": "Are you sure you want to delete?",
+      "sent_success": "Sent successfully!"
     }
   }
 }

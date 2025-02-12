@@ -259,7 +259,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -334,7 +337,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1752,12 +1758,16 @@
         "customer": "Cliente",
         "client": "Cliente",
         "guest": "Convidado"
-      }
+      },
+      "popup_title": "Enviar notificar",
+      "link": "Link"
     },
     "message_list": "Lista de mensagens",
     "delete": "Excluir",
     "alert": {
-      "delete": "Tem certeza de que deseja excluir?"
-    }
+      "delete": "Tem certeza de que deseja excluir?",
+      "sent_success": "Enviado com sucesso!"
+    },
+    "send": "Enviar"
   }
 }

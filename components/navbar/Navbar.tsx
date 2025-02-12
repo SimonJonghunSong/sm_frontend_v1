@@ -67,6 +67,12 @@ const adminMenus = (lang: "en" | "pt" | "es") => [
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
   },
+  {
+    name: getLocalizedString(lang, "Notify", "Notificar", "Notificar"),
+    href: "/notify",
+    offlineEnable: true,
+    icon: () => <CampaignIcon />,
+  },
 ];
 const customerMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -102,12 +108,6 @@ const guestMenus = (lang: "en" | "pt" | "es") => [
     href: "/device",
     offlineEnable: true,
     icon: () => <TrackChangesOutlinedIcon />,
-  },
-  {
-    name: getLocalizedString(lang, "Notify", "Notificar", "Notificar"),
-    href: "/notify",
-    offlineEnable: true,
-    icon: () => <CampaignIcon />,
   },
 ];
 

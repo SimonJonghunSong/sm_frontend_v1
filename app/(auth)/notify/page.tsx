@@ -21,7 +21,12 @@ import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import dayjs from "dayjs";
-import { deleteNotify, getAdminNoti } from "@/src/api/services/notification";
+import {
+  createNoti,
+  deleteNotify,
+  getAdminNoti,
+} from "@/src/api/services/notification";
+import { toast } from "react-toastify";
 
 export default function Notify() {
   const t = useTranslations();
@@ -49,6 +54,8 @@ export default function Notify() {
     queryKey: ["notify"],
     queryFn: getAdminNoti,
   });
+
+  console.log("data :::", data);
 
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const queryClient = useQueryClient();
@@ -205,12 +212,14 @@ export default function Notify() {
 
 type State = {
   title: string;
+  link: string;
   message: string;
   messageGroup: string[];
 };
 
 type Action =
   | { type: "SET_TITLE"; payload: string }
+  | { type: "SET_LINK"; payload: string }
   | { type: "SET_MESSAGE"; payload: string }
   | { type: "SET_MESSAGE_GROUP"; payload: string[] };
 
@@ -218,6 +227,8 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case "SET_TITLE":
       return { ...state, title: action.payload };
+    case "SET_LINK":
+      return { ...state, link: action.payload };
     case "SET_MESSAGE":
       return { ...state, message: action.payload };
     case "SET_MESSAGE_GROUP":
@@ -233,10 +244,14 @@ function SendNotifyModal({ onClose }) {
   const [state, dispatch] = useReducer(reducer, {
     title: "",
     message: "",
+    link: "",
     messageGroup: [],
   });
 
-  const setField = (type: "SET_TITLE" | "SET_MESSAGE", value: string) => {
+  const setField = (
+    type: "SET_TITLE" | "SET_MESSAGE" | "SET_LINK",
+    value: string
+  ) => {
     dispatch({ type, payload: value });
   };
 
@@ -282,19 +297,33 @@ function SendNotifyModal({ onClose }) {
     }
   };
 
+  const { mutate } = useMutation({
+    mutationFn: createNoti,
+    onSuccess: () => {
+      toast(t("notify.alert.sent_success"), { type: "success" });
+      onClose();
+    },
+  });
+
   const handleAdd = () => {
     console.log("state :::", state);
+    mutate({
+      title: state.title,
+      message: state.message,
+      link: state.link || undefined,
+    });
   };
 
   return (
     <Modal
       open
       closeButton
-      disabled={!state.title || !state.message || !state.messageGroup.length}
+      // disabled={!state.title || !state.message || !state.messageGroup.length}
+      disabled={!state.title || !state.message}
       toggleOpen={onClose}
       title={`${t("notify.popup.popup_title")}`}
       confirm={handleAdd}
-      confirmButtonText="Add"
+      confirmButtonText={t("notify.send")}
       width="500px"
     >
       <Stack>
@@ -335,6 +364,21 @@ function SendNotifyModal({ onClose }) {
         </InputBox>
 
         <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>{t("notify.popup.link")}</InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              fullWidth
+              value={state.link}
+              onChange={(e) => {
+                setField("SET_LINK", e.target.value);
+              }}
+            />
+          </InputBox.Body>
+        </InputBox>
+
+        {/* <InputBox>
           <InputBox.Head>
             <InputBox.Title>
               {t("notify.popup.message_group")}
@@ -384,7 +428,7 @@ function SendNotifyModal({ onClose }) {
               })}
             </FormControl>
           </InputBox.Body>
-        </InputBox>
+        </InputBox> */}
       </Stack>
     </Modal>
   );
