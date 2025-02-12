@@ -9,14 +9,10 @@ import AnonymousNavbar from "@/components/navbar/AnonymousNavbar";
 import FullLoading from "@/components/FullLoading";
 import GlobalLoading from "@/components/GlobalLoading";
 import Footer from "@/components/Footer";
-import CreateNotiModal from "@/components/CreateNotiModal";
-import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useSerial from "@/src/hooks/useSerial";
 
 const AuthLayout = ({ children }) => {
   const [hydrated, setHydrated] = useState<boolean>(false);
-  const [notiModal, setNotiModal] = useState(false);
-  const { setIsOnline, setIsSelfOffline } = useNetworkMonitor();
   const {
     func: { removePorts, getPorts },
     state: { portList },
@@ -34,24 +30,6 @@ const AuthLayout = ({ children }) => {
     }
   }, [portList]);
 
-  useEffect(() => {
-    const handler = (e) => {
-      if (e.shiftKey && e.code === "KeyN") {
-        setNotiModal(true);
-      }
-
-      if (e.shiftKey && e.code === "KeyR") {
-        setIsOnline(navigator.onLine);
-        setIsSelfOffline(false);
-      }
-    };
-    window.addEventListener("keydown", handler);
-
-    return () => {
-      window.removeEventListener("keydown", handler);
-    };
-  }, []);
-
   if (!hydrated)
     return (
       <div className="mainWrap">
@@ -66,9 +44,6 @@ const AuthLayout = ({ children }) => {
       <section>{children}</section>
       <GlobalLoading />
       <Footer />
-
-      {/* noti modal 임시 */}
-      {notiModal && <CreateNotiModal onClose={() => setNotiModal(false)} />}
     </div>
   );
 };
