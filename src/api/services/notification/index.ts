@@ -34,46 +34,9 @@ const createNoti = ({
 };
 
 const getAdminNoti = async () => {
-  return {
-    data: {
-      records: [
-        {
-          uid: "1",
-          title: "test",
-          creator: "test",
-          created: "2025-01-10 12:30:00",
-          status: "Send",
-          sended: "2025-01-10 12:30:10",
-        },
-        {
-          uid: "2",
-          title: "test",
-          creator: "test",
-          created: "2025-01-10 12:30:00",
-          status: "Send",
-          sended: "2025-01-10 12:30:10",
-        },
-        {
-          uid: "3",
-          title: "test",
-          creator: "test",
-          created: "2025-01-10 12:30:00",
-          status: "Send",
-          sended: "2025-01-10 12:30:10",
-        },
-        {
-          uid: "4",
-          title: "test",
-          creator: "test",
-          created: "2025-01-10 12:30:00",
-          status: "Send",
-          sended: "2025-01-10 12:30:10",
-        },
-      ],
-      count: 10,
-    },
-  };
+  return get<{ count: number; records: GetNotificationRes[] }>("/api/v1/noti");
 };
+
 const deleteNotify = (body: string[]) => {
   return del("/api/v1/noti", { uid_list: body });
 };

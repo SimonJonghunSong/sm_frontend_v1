@@ -3,17 +3,8 @@
 import React, { useReducer, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { GridColDef } from "@mui/x-data-grid";
-import {
-  Button,
-  Checkbox,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DataTable from "@/components/dataTable";
 import InputBox from "@/components/inputbox/InputBox";
@@ -21,11 +12,7 @@ import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import dayjs from "dayjs";
-import {
-  createNoti,
-  deleteNotify,
-  getAdminNoti,
-} from "@/src/api/services/notification";
+import { createNoti, getAdminNoti } from "@/src/api/services/notification";
 import { toast } from "react-toastify";
 
 export default function Notify() {
@@ -59,15 +46,6 @@ export default function Notify() {
 
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: deleteNotify,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["notify"] });
-      // toast(t("common.message.delete-success"), {
-      //   type: "success",
-      // });
-    },
-  });
 
   const columns: GridColDef[] = [
     {
@@ -122,27 +100,10 @@ export default function Notify() {
         </IconButton>
       ),
     },
-    {
-      field: "col7",
-      headerName: t("notify.table.delete"),
-      width: 80,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => (
-        <IconButton
-          onClick={(e) => {
-            e.stopPropagation();
-            toggle();
-            deleteCallback.current = () => mutate([params.row.id]);
-          }}
-        >
-          <DeleteForeverOutlinedIcon />
-        </IconButton>
-      ),
-    },
   ];
 
-  const rows = (data?.data.records || []).map(
+  // TODO 수정 필요
+  const rows = ((data?.data.records as any[]) || []).map(
     ({ uid, title, creator, created, status, sended }) => {
       return {
         id: uid,
@@ -156,11 +117,6 @@ export default function Notify() {
   );
 
   const [addModal, addModalToggle] = useModal();
-
-  const handleDeleteRows = () => {
-    multiDeleteDialogToggle();
-    deleteCallback.current = () => mutate(selectedRows);
-  };
 
   return (
     <div className="pageWrap">
@@ -190,16 +146,6 @@ export default function Notify() {
             setSelectedRows(data as string[])
           }
           noDataMessage="No registered messages."
-          footerButton={
-            <Button
-              disabled={selectedRows.length === 0}
-              variant="text"
-              color="info"
-              onClick={handleDeleteRows}
-            >
-              {t("notify.delete")}
-            </Button>
-          }
         />
       </article>
 
