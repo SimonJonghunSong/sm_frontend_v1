@@ -646,22 +646,7 @@ const getFieldsByRole = (userRole: string) => {
         "passwordConfirm",
         "country",
       ];
-      return [
-        "role",
-        "id",
-        "email",
-        "name",
-        "password",
-        "passwordConfirm",
-        "country",
-        "company",
-        "department",
-        "taxId",
-        "alias",
-        "affiliation",
-        "department",
-        "nda_file",
-      ];
+
     case "GUEST":
       return [
         "role",
@@ -790,6 +775,7 @@ function AddAcountModal({
   const handleSubmit = (values: any) => {
     mutate({
       ...values,
+      target_svr_country: values?.country,
     });
   };
 
