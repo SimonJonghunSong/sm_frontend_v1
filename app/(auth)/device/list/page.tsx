@@ -212,7 +212,9 @@ export default function DeviceList() {
             >
               <Button
                 disabled={
-                  !params.value.configure || params.value.isPackageError
+                  !params.value.configure ||
+                  params.value.isPackageError ||
+                  params.value.port.isDisconnected
                 }
                 variant="contained"
                 color="secondary"
