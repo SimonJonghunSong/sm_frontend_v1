@@ -1750,5 +1750,47 @@
     "At_least_1_upper/lowercase": "At least 1 upper/lowercase",
     "At_least_1_number": "At least 1 number",
     "Passwords_do_not_match": "Passwords do not match."
+  },
+  "notify": {
+    "title": "Notify",
+    "message_list": "Message List",
+    "filter": {
+      "sent": "Sent",
+      "failed": "Failed",
+      "draft": "Draft",
+      "scheduled": "Scheduled"
+    },
+    "search": "search",
+    "table": {
+      "title": "Title",
+      "creator": "Creator",
+      "created_date": "Created Date",
+      "status": "Status",
+      "send_date": "Send Date",
+      "copy": "Copy",
+      "edit": "Edit",
+      "delete": "Delete",
+      "copy_success": "Message copy successfully!"
+    },
+    "send": "Send",
+    "delete": "Delete",
+    "popup": {
+      "popup_title": "Send Notify",
+      "title": "Title",
+      "message": "Message",
+      "link": "Link",
+      "message_group": "Message Group",
+      "message_group_options": {
+        "all": "All",
+        "administrator": "Administrator",
+        "customer": "Customer",
+        "client": "Client",
+        "guest": "Guest"
+      }
+    },
+    "alert": {
+      "delete": "Are you sure you want to delete?",
+      "sent_success": "Sent successfully!"
+    }
   }
 }

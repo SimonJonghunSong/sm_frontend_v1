@@ -1735,5 +1735,40 @@
     "At_least_1_upper/lowercase": "Pelo menos 1 letra maiúscula/minúscula",
     "At_least_1_number": "Pelo menos 1 número",
     "Passwords_do_not_match": "As senhas não coincidem."
+  },
+  "notify": {
+    "title": "Notificar",
+    "table": {
+      "title": "Título",
+      "creator": "Criador",
+      "created_date": "Data criada",
+      "status": "Status",
+      "copy": "Cópia",
+      "edit": "Editar",
+      "delete": "Excluir",
+      "send_date": "Data de envio",
+      "copy_success": "Cópia de mensagem com sucesso!"
+    },
+    "popup": {
+      "message_group": "Grupo de mensagens",
+      "message": "Mensagem",
+      "title": "Título",
+      "message_group_options": {
+        "administrator": "Administrador",
+        "all": "Todos",
+        "customer": "Cliente",
+        "client": "Cliente",
+        "guest": "Convidado"
+      },
+      "popup_title": "Enviar notificar",
+      "link": "Link"
+    },
+    "message_list": "Lista de mensagens",
+    "delete": "Excluir",
+    "alert": {
+      "delete": "Tem certeza de que deseja excluir?",
+      "sent_success": "Enviado com sucesso!"
+    },
+    "send": "Enviar"
   }
 }

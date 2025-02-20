@@ -142,7 +142,9 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
                       if (!is_read) {
                         handleNotiClick(uid);
                       }
-                      window.location.href = noti.link;
+                      if (noti.link) {
+                        window.location.href = noti.link;
+                      }
                     }}
                   >
                     <Stack

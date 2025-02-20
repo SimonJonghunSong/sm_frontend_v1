@@ -33,4 +33,12 @@ const createNoti = ({
   });
 };
 
-export { getNoti, readNoti, createNoti };
+const getAdminNoti = async () => {
+  return get<{ count: number; records: GetNotificationRes[] }>("/api/v1/noti");
+};
+
+const deleteNotify = (body: string[]) => {
+  return del("/api/v1/noti", { uid_list: body });
+};
+
+export { getNoti, readNoti, createNoti, getAdminNoti, deleteNotify };

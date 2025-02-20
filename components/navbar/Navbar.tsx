@@ -11,6 +11,7 @@ import WidgetsOutlinedIcon from "@mui/icons-material/WidgetsOutlined";
 import PeopleAltOutlinedIcon from "@mui/icons-material/PeopleAltOutlined";
 import NotificationsSharpIcon from "@mui/icons-material/NotificationsSharp";
 import TrackChangesOutlinedIcon from "@mui/icons-material/TrackChangesOutlined";
+import CampaignIcon from "@mui/icons-material/Campaign";
 
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
@@ -65,6 +66,12 @@ const adminMenus = (lang: "en" | "pt" | "es") => [
     href: "/account",
     offlineEnable: false,
     icon: () => <PeopleAltOutlinedIcon />,
+  },
+  {
+    name: getLocalizedString(lang, "Notify", "Notificar", "Notificar"),
+    href: "/notify",
+    offlineEnable: true,
+    icon: () => <CampaignIcon />,
   },
 ];
 const customerMenus = (lang: "en" | "pt" | "es") => [
