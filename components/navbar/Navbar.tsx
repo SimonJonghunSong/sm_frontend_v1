@@ -283,7 +283,7 @@ export default function Navbar() {
                 <SettingsSharpIcon />
               </Link>
             </li>
-            {userRole !== "ROOT" && userRole !== "ADMIN" && (
+            {userRole !== "ROOT" && (
               <li>
                 <button
                   onClick={() => setNotificationModal(!notificationModal)}
