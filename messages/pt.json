@@ -1746,7 +1746,8 @@
       "copy": "Cópia",
       "edit": "Editar",
       "delete": "Excluir",
-      "send_date": "Data de envio"
+      "send_date": "Data de envio",
+      "copy_success": "Cópia de mensagem com sucesso!"
     },
     "popup": {
       "message_group": "Grupo de mensagens",

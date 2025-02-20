@@ -47,6 +47,16 @@ export default function Notify() {
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const queryClient = useQueryClient();
 
+  const handleCopy = async (message: string) => {
+    try {
+      await navigator.clipboard.writeText(message);
+
+      toast(t("notify.table.copy_success"), { type: "success" });
+    } catch (err) {
+      console.error("복사 실패:", err);
+    }
+  };
+
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -94,6 +104,9 @@ export default function Notify() {
           onClick={(e) => {
             e.stopPropagation();
             // TODO: 메세지 내용 복사
+            console.log("event :::", event);
+
+            handleCopy(event?.row?.message);
           }}
         >
           <ContentCopyIcon />
@@ -104,14 +117,15 @@ export default function Notify() {
 
   // TODO 수정 필요
   const rows = ((data?.data.records as any[]) || []).map(
-    ({ uid, title, creator, created, status, sended }) => {
+    ({ uid, title, sender, created, message, sended }) => {
       return {
         id: uid,
         col1: title,
-        col2: creator,
+        col2: sender,
         col3: dayjs(created).format("MMM/DD/YYYY HH:mm"),
-        col4: status,
+        col4: "Sent",
         col5: dayjs(sended).format("MMM/DD/YYYY HH:mm"),
+        message,
       };
     }
   );
@@ -146,6 +160,7 @@ export default function Notify() {
             setSelectedRows(data as string[])
           }
           noDataMessage="No registered messages."
+          checkbox={false}
         />
       </article>
 
@@ -246,6 +261,7 @@ function SendNotifyModal({ onClose }) {
   const { mutate } = useMutation({
     mutationFn: createNoti,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notify"] });
       toast(t("notify.alert.sent_success"), { type: "success" });
       onClose();
     },
