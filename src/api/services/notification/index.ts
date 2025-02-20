@@ -6,6 +6,9 @@ const getNoti = () => {
     "/api/v1/my/noti"
   );
 };
+const delNoti = (body: string[]) => {
+  return del("/api/v1/my/noti", { uid_list: body });
+};
 
 const readNoti = (uid_list: string[]) => {
   return put<void, { uid_list: string[] }>("/api/v1/my/noti/read-done", {
@@ -41,4 +44,4 @@ const deleteNotify = (body: string[]) => {
   return del("/api/v1/noti", { uid_list: body });
 };
 
-export { getNoti, readNoti, createNoti, getAdminNoti, deleteNotify };
+export { getNoti, delNoti, readNoti, createNoti, getAdminNoti, deleteNotify };

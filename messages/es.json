@@ -513,6 +513,9 @@
       "all": "Todos",
       "no_new_notifications": "No hay nuevas notificaciones.",
       "no_notifications_yet": "Aún no hay notificaciones."
+    },
+    "alert": {
+      "deleted_successfully": "¡Eliminado con éxito!"
     }
   },
   "configuration": {

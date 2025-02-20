@@ -5,7 +5,9 @@ import { useTranslations } from "next-intl";
 import { Stack, IconButton, Tabs, Tab, Box } from "@mui/material";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { getNoti, readNoti } from "@/src/api/services/notification";
+import { delNoti, getNoti, readNoti } from "@/src/api/services/notification";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import { toast } from "react-toastify";
 
 interface NotificationModalProps {
   onClose: () => void;
@@ -29,11 +31,23 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
       };
     },
   });
+  const rows = notificationQuery?.data?.records.filter(
+    (item) => !item.is_deleted
+  );
+
+  console.log("rows :::", rows);
 
   const readNotification = useMutation({
     mutationFn: readNoti,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["notification"] });
+    },
+  });
+  const deleteNotification = useMutation({
+    mutationFn: delNoti,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["notification"] });
+      toast(t("alert.deleted_successfully"), { type: "success" });
     },
   });
 
@@ -58,6 +72,10 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
     readNotification.mutate([notiId]);
   };
 
+  const handleDeleteNoti = (id: string) => {
+    deleteNotification.mutate([id]);
+  };
+
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleCloseOnEscPress);
@@ -73,10 +91,7 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
 
   const renderTabContent = () => {
     if (tabs === "new") {
-      if (
-        notificationQuery.data.records.filter(({ is_read }) => !is_read)
-          .length === 0
-      ) {
+      if (rows.filter(({ is_read }) => !is_read).length === 0) {
         return (
           <Stack textAlign={"center"} height={"100%"} justifyContent={"center"}>
             {t("privacy_policy.no_new_notifications")}
@@ -87,7 +102,7 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
       return (
         <Stack width="100%" className={styles.notificationListWrap}>
           <ul className={styles.list}>
-            {notificationQuery.data.records
+            {rows
               .filter(({ is_read }) => !is_read)
               .map(({ uid, noti, received_at }) => {
                 return (
@@ -96,52 +111,6 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
                     className={styles.active}
                     onClick={() => {
                       handleNotiClick(uid);
-                      // window.location.href = noti.link;
-                    }}
-                  >
-                    <Stack
-                      direction="row"
-                      justifyContent="space-between"
-                      alignItems="center"
-                    >
-                      <Stack>
-                        <div className={styles.subTitle}>{noti.title}</div>
-                        <div className={styles.description}>{noti.message}</div>
-                      </Stack>
-                      <Stack>
-                        <span className={styles.date}>
-                          {dayjs(received_at).format("MMM/DD/YYYY HH:mm")}
-                        </span>
-                      </Stack>
-                    </Stack>
-                  </li>
-                );
-              })}
-          </ul>
-        </Stack>
-      );
-    } else {
-      if (notificationQuery.data.count === 0) {
-        return (
-          <Stack justifyContent="center" height={"100%"} textAlign={"center"}>
-            {t("privacy_policy.no_notifications_yet")}
-          </Stack>
-        );
-      }
-
-      return (
-        <Stack width="100%" className={styles.notificationListWrap}>
-          <ul className={styles.list}>
-            {notificationQuery.data.records.map(
-              ({ uid, noti, received_at, is_read }) => {
-                return (
-                  <li
-                    key={uid}
-                    className={!is_read ? styles.active : undefined}
-                    onClick={() => {
-                      if (!is_read) {
-                        handleNotiClick(uid);
-                      }
                       if (noti.link) {
                         window.location.href = noti.link;
                       }
@@ -156,16 +125,82 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
                         <div className={styles.subTitle}>{noti.title}</div>
                         <div className={styles.description}>{noti.message}</div>
                       </Stack>
-                      <Stack>
+                      <Stack
+                        flexDirection={"row"}
+                        alignItems={"center"}
+                        gap={2}
+                      >
                         <span className={styles.date}>
                           {dayjs(received_at).format("MMM/DD/YYYY HH:mm")}
                         </span>
+                        <IconButton
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            handleDeleteNoti(uid);
+                          }}
+                        >
+                          <DeleteForeverOutlinedIcon />
+                        </IconButton>
                       </Stack>
                     </Stack>
                   </li>
                 );
-              }
-            )}
+              })}
+          </ul>
+        </Stack>
+      );
+    } else {
+      if (rows.length === 0) {
+        return (
+          <Stack justifyContent="center" height={"100%"} textAlign={"center"}>
+            {t("privacy_policy.no_notifications_yet")}
+          </Stack>
+        );
+      }
+
+      return (
+        <Stack width="100%" className={styles.notificationListWrap}>
+          <ul className={styles.list}>
+            {rows.map(({ uid, noti, received_at, is_read }) => {
+              return (
+                <li
+                  key={uid}
+                  className={!is_read ? styles.active : undefined}
+                  onClick={() => {
+                    if (!is_read) {
+                      handleNotiClick(uid);
+                    }
+                    if (noti.link) {
+                      window.location.href = noti.link;
+                    }
+                  }}
+                >
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                  >
+                    <Stack>
+                      <div className={styles.subTitle}>{noti.title}</div>
+                      <div className={styles.description}>{noti.message}</div>
+                    </Stack>
+                    <Stack flexDirection={"row"} alignItems={"center"} gap={2}>
+                      <span className={styles.date}>
+                        {dayjs(received_at).format("MMM/DD/YYYY HH:mm")}
+                      </span>
+                      <IconButton
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          handleDeleteNoti(uid);
+                        }}
+                      >
+                        <DeleteForeverOutlinedIcon />
+                      </IconButton>
+                    </Stack>
+                  </Stack>
+                </li>
+              );
+            })}
           </ul>
         </Stack>
       );
