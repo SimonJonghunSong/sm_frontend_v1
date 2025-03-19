@@ -35,8 +35,6 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
     (item) => !item.is_deleted
   );
 
-  console.log("rows :::", rows);
-
   const readNotification = useMutation({
     mutationFn: readNoti,
     onSuccess: () => {
@@ -133,14 +131,14 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
                         <span className={styles.date}>
                           {dayjs(received_at).format("MMM/DD/YYYY HH:mm")}
                         </span>
-                        <IconButton
+                        {/* <IconButton
                           onClick={(event) => {
                             event.stopPropagation();
                             handleDeleteNoti(uid);
                           }}
                         >
                           <DeleteForeverOutlinedIcon />
-                        </IconButton>
+                        </IconButton> */}
                       </Stack>
                     </Stack>
                   </li>
@@ -188,14 +186,14 @@ const NotificationModal = ({ onClose }: NotificationModalProps) => {
                       <span className={styles.date}>
                         {dayjs(received_at).format("MMM/DD/YYYY HH:mm")}
                       </span>
-                      <IconButton
+                      {/* <IconButton
                         onClick={(event) => {
                           event.stopPropagation();
                           handleDeleteNoti(uid);
                         }}
                       >
                         <DeleteForeverOutlinedIcon />
-                      </IconButton>
+                      </IconButton> */}
                     </Stack>
                   </Stack>
                 </li>
