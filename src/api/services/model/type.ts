@@ -46,3 +46,25 @@ export interface ModelPkg {
   fw_ver: string;
   model_pkg: string;
 }
+
+export interface ModelConfig {
+  no: number;
+  Depth2: string;
+  Depth3: string;
+  TEXT_EN: string;
+  TEXT_ES: string;
+  TEXT_PT: string;
+  UI_INPUT_TYPE?: string;
+  DEFAULT_VALUE?: string;
+  TEXT_EN_ITEM_CONTENT?: string;
+  TEXT_ES_ITEM_CONTENT?: string;
+  TEXT_PT_ITEM_CONTENT?: string;
+  TEXT_EN_INFO?: string;
+  TEXT_ES_INFO?: string;
+  TEXT_PT_INFO?: string;
+  JSON_ID?: string;
+  DEFAULT_VAL_INDEX?: string;
+  TEXT_EN_ERR?: string;
+  TEXT_ES_ERR?: string;
+  TEXT_PT_ERR?: string;
+}

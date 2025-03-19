@@ -36,7 +36,11 @@ import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import { SwitchPrimary } from "../../../components/switches";
 import { useRouter } from "next/navigation";
 import { getRows } from "./tableData";
-import { getModelPkg, getModels } from "@/src/api/services/model";
+import {
+  getModelConfig,
+  getModelPkg,
+  getModels,
+} from "@/src/api/services/model";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import useModelPkgStore from "@/src/stores/useModelPkgStore";
 import useCustomPagination from "@/src/hooks/useCustomPagination";
@@ -48,6 +52,8 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { updateModelPkgDataByEmail } from "@/utils/idbLoginUtil";
 import useAuthStore from "@/utils/useAuthStore";
+import { saveJsonDataToIDB } from "@/utils/idbModelUtil";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -641,13 +647,26 @@ function LinearDeterminate({ setEndLoaded }) {
 
 function ModelButton({ loaded, toggleLoaded, onNetworkError, model }) {
   const t = useTranslations("home");
-  const [startLoaded, setStartLoaded] = useState<boolean>(false);
-  const { isOnline } = useNetworkMonitor();
-
+  const { setModelName } = useModelInfoStore();
   const router = useRouter();
+  const { isOnline } = useNetworkMonitor();
+  const [startLoaded, setStartLoaded] = useState<boolean>(false);
+
+  const modelConfigMenuSectionListMutation = useMutation({
+    mutationFn: getModelConfig,
+    onSuccess: async (res) => {
+      try {
+        await saveJsonDataToIDB(model, res.data.result.jsonData);
+      } catch (e) {
+        console.log(e, "saveJsonDataToIDB Error");
+      }
+    },
+  });
+
   const handleConfigurationClick = (e) => {
     e.stopPropagation();
-    router.push(`/model-detail/device-status?model=${model}`);
+    setModelName(model);
+    router.push(`/model-info`);
   };
 
   const loadedEnd = () => {
@@ -676,6 +695,8 @@ function ModelButton({ loaded, toggleLoaded, onNetworkError, model }) {
           sx={{ width: "100%" }}
           onClick={(e) => {
             e.stopPropagation();
+            modelConfigMenuSectionListMutation.mutate();
+
             if (!isOnline) {
               onNetworkError?.();
               return;

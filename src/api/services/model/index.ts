@@ -2,6 +2,7 @@ import {
   AddModelBody,
   EditModelBody,
   Model,
+  ModelConfig,
   ModelPkg,
   PostModelPkgBody,
 } from "@/src/api/services/model/type";
@@ -38,4 +39,49 @@ const getModelPkg = (body: PostModelPkgBody) => {
   );
 };
 
-export { getModels, addModel, editModel, delModel, getModelPkg };
+const getModelConfig = () => {
+  return post<
+    {
+      response: { code: string; reason: string };
+      result: {
+        jsonData: ModelConfig[];
+      };
+    },
+    { model_name: string; model_version: string }
+  >("/api/v1/model_cfg_load_model", {
+    model_name: "ST8300",
+    model_version: "v0.7",
+  });
+};
+const getModelConfigMenuSectionList = () => {
+  return post<
+    {
+      response: { code: string; reason: string };
+      result: {
+        menuSectionList: ModelConfig[];
+      };
+    },
+    { model_name: string; model_version: string }
+  >("/api/v1/model_cfg_menu_section_list", {
+    model_name: "ST8300",
+    model_version: "v0.7",
+  });
+};
+const getModelConfigMenuContents = (menu: string) => {
+  return post("/api/v1/model_cfg_menu_contents", {
+    model_name: "ST8300",
+    model_version: "v0.7",
+    menu,
+  });
+};
+
+export {
+  getModels,
+  addModel,
+  editModel,
+  delModel,
+  getModelPkg,
+  getModelConfig,
+  getModelConfigMenuSectionList,
+  getModelConfigMenuContents,
+};
