@@ -38,8 +38,6 @@ import { useRouter } from "next/navigation";
 import { getRows } from "./tableData";
 import {
   getModelConfig,
-  getModelConfigMenuSectionList,
-  getModelConfigMenuContents,
   getModelPkg,
   getModels,
 } from "@/src/api/services/model";
@@ -54,7 +52,7 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { updateModelPkgDataByEmail } from "@/utils/idbLoginUtil";
 import useAuthStore from "@/utils/useAuthStore";
-import { getJsonDataFromIDB, saveJsonDataToIDB } from "@/utils/idbModelUtil";
+import { saveJsonDataToIDB } from "@/utils/idbModelUtil";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [

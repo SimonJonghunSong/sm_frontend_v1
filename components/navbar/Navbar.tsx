@@ -33,6 +33,8 @@ import useErrorDialog from "@/src/hooks/useErrorDialog";
 import { DISABLED_OFFLINE_MODE_PATHS } from "@/components/NetworkStatusCheck";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import { useQuery } from "@tanstack/react-query";
+import { getNoti } from "@/src/api/services/notification";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -127,6 +129,17 @@ export default function Navbar() {
 
   const [offlineChangeModal, offlineChangeModalToggle] = useModal();
   const [onlineChangeModal, onlineChangeModalToggle] = useModal();
+
+  const notificationQuery = useQuery({
+    queryKey: ["notification"],
+    queryFn: getNoti,
+    refetchOnMount: true,
+    select: ({ data }) => {
+      return {
+        isNew: (data?.records || []).some((record) => !record.is_read),
+      };
+    },
+  });
 
   const navLinkes =
     userRole && userRole === "ROOT"
@@ -286,9 +299,23 @@ export default function Navbar() {
             {userRole !== "ROOT" && (
               <li>
                 <button
+                  style={{ position: "relative" }}
                   onClick={() => setNotificationModal(!notificationModal)}
                 >
                   <NotificationsSharpIcon />
+                  {notificationQuery.data?.isNew && (
+                    <div
+                      style={{
+                        width: "5px",
+                        height: "5px",
+                        backgroundColor: "#FC6508",
+                        borderRadius: "50%",
+                        position: "absolute",
+                        top: 0,
+                        right: 0,
+                      }}
+                    />
+                  )}
                 </button>
               </li>
             )}
