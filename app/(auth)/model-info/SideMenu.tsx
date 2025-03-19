@@ -4,6 +4,8 @@ import React from "react";
 import styles from "./styles.module.scss";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import useLangStore from "@/utils/useLangStore";
+import { getSideMenuIcon } from "./sideMenuItems";
+import { Stack } from "@mui/material";
 
 type SideMenuItem = {
   textEn: string;
@@ -41,9 +43,10 @@ export default function SideMenu({
               onClick={() => onTabChange(textEn)}
             >
               <button>
-                <span>
+                <Stack direction="row" gap="8px" alignItems="center">
+                  {getSideMenuIcon(textEn)}
                   {lang === "en" ? textEn : lang === "es" ? textEs : textPt}
-                </span>
+                </Stack>
               </button>
             </li>
           );
