@@ -67,4 +67,7 @@ export interface ModelConfig {
   TEXT_EN_ERR?: string;
   TEXT_ES_ERR?: string;
   TEXT_PT_ERR?: string;
+  required?: string;
+  VALUE_MAX?: string;
+  VALUE_MIN?: string;
 }

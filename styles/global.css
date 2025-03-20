@@ -136,6 +136,10 @@ a:focus {
 .list-title {
   min-width: 180px;
   font-weight: 600;
+
+  i {
+    color: var(--primary);
+  }
 }
 
 /* Confirm, Alert swal 스타일링 */

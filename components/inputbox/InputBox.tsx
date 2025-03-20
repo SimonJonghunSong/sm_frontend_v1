@@ -5,14 +5,19 @@ import { styled, Tooltip, tooltipClasses, TooltipProps } from "@mui/material";
 
 interface InputBoxProps {
   children: ReactNode;
+  style?: CSSProperties;
 }
 
 interface ChildComponentProps {
   children: ReactNode;
 }
 
-export default function InputBox({ children }: InputBoxProps) {
-  return <div className={styles.inputBox}>{children}</div>;
+export default function InputBox({ children, style }: InputBoxProps) {
+  return (
+    <div className={styles.inputBox} style={style}>
+      {children}
+    </div>
+  );
 }
 
 InputBox.Head = function Head({ children }: ChildComponentProps) {
@@ -43,7 +48,6 @@ InputBox.Info = function Info({
   tooltipText?: ReactNode;
   placement?: "top" | "bottom";
 }) {
-  console.log(tooltipText);
   return (
     <div className={styles.info}>
       <CustomWidthTooltip
