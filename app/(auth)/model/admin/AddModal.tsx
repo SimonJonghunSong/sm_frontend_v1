@@ -202,7 +202,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
     const formData = new FormData();
 
     formData.append("image_file", imageFile);
-    formData.append("default_profile", settingFile);
+    formData.append("default_config_file", settingFile);
     formData.append(
       "json",
       JSON.stringify({
@@ -568,7 +568,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   style={{ display: "none" }}
                   type="file"
                   hidden
-                  accept=".json"
+                  accept=".xlsx, .xls"
                   onChange={handleFileChange}
                 />
                 {t("model.add_model_pop_up.upload")}

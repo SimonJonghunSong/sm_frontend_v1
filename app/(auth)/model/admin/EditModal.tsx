@@ -206,7 +206,7 @@ export default function EditModal({
             formData.append("image_file", imageFile);
           }
           if (settingFile) {
-            formData.append("default_profile", settingFile);
+            formData.append("default_config_file", settingFile);
           }
           formData.append(
             "json",
@@ -593,7 +593,7 @@ export default function EditModal({
                   style={{ display: "none" }}
                   type="file"
                   hidden
-                  accept=".json"
+                  accept=".xlsx, .xls"
                   onChange={handleFileChange}
                 />
                 {t("model.edit_model_pop_up.upload")}
