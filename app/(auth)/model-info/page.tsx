@@ -1,14 +1,23 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import useModelInfoStore from "@/src/stores/useModelInfo";
-import { getJsonDataFromIDB } from "@/utils/idbModelUtil";
+import {
+  deleteJsonDataFromIDB,
+  getJsonDataFromIDB,
+} from "@/utils/idbModelUtil";
 import { ModelConfig } from "@/src/api/services/model/type";
 import SideMenu from "./SideMenu";
-import { Button, MenuItem, Select, Stack } from "@mui/material";
+import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
+import useConfirmDialog from "@/src/hooks/useConfirmDialog";
+import { useRouter } from "next/navigation";
+import InputBox from "@/components/inputbox/InputBox";
 
 const SIDE_BAR = "Side Bar";
+const DELETE_MODEL = "Delete Model";
+const SHOW_HIDDEN_PARAMETERS = "Show Hidden Parameters";
 
 type SupportedLang = "en" | "es" | "pt";
 type MultiLangText = {
@@ -32,7 +41,10 @@ export const getLocalizedText = (
 
 const ModelInfoPage = () => {
   const [tab, setTab] = useState<string>();
-  const [menuContentList, setMenuContentList] = useState<ModelConfig[]>([]);
+  const [showHiddenParameters, setShowHiddenParameters] = useState(false);
+  const [allMenuContentList, setAllMenuContentList] = useState<ModelConfig[]>(
+    []
+  );
   const [sideBarList, setSideBarList] = useState<
     {
       no: number;
@@ -43,14 +55,28 @@ const ModelInfoPage = () => {
     }[]
   >([]);
   const { getModelName } = useModelInfoStore();
-  const { lang } = useLangStore();
+  const t = useTranslations();
+  const router = useRouter();
+
+  const { toggle, renderConfirmModal } = useConfirmDialog({
+    onYes: () => {
+      deleteJsonDataFromIDB(getModelName());
+      router.push("/model");
+    },
+    description: t(
+      "popup.configuration.side_bar.are_you_sure_you_want_to_delete_this_model_from_loaded_model_list?"
+    ),
+  });
 
   const handleTabChange = (tab: string) => {
-    setTab(tab);
-  };
-
-  const getMenuContent = (tab: string) => {
-    return menuContentList.filter((item) => item.Depth2 === tab);
+    if (tab === DELETE_MODEL) {
+      toggle();
+    }
+    if (tab === SHOW_HIDDEN_PARAMETERS) {
+      return;
+    } else {
+      setTab(tab);
+    }
   };
 
   useEffect(() => {
@@ -59,7 +85,7 @@ const ModelInfoPage = () => {
         getModelName()
       )) as ModelConfig[];
 
-      const menuSectionList = jsonData
+      const menuSectionList = (jsonData || [])
         .filter((item) => item.Depth2 === SIDE_BAR)
         .map((item, index) => {
           return {
@@ -76,7 +102,7 @@ const ModelInfoPage = () => {
       );
 
       setSideBarList(menuSectionList);
-      setMenuContentList(menuContentList);
+      setAllMenuContentList(menuContentList);
       setTab(menuSectionList[0].textEn);
     };
     fetchJsonData();
@@ -88,106 +114,72 @@ const ModelInfoPage = () => {
         sideMenuItems={sideBarList}
         activeTab={tab}
         onTabChange={handleTabChange}
+        showHiddenParameters={showHiddenParameters}
+        setShowHiddenParameters={setShowHiddenParameters}
       />
-      <article className="contentWrap">
-        <Stack flexWrap="wrap" direction="row" gap="0 40px">
-          {getMenuContent(tab).map((item, idx) => {
-            const isSectionTitle = !item.DEFAULT_VALUE && !item.UI_INPUT_TYPE;
-            const isButton = item.UI_INPUT_TYPE === "button";
-            const isDropdown = item.UI_INPUT_TYPE === "dropdown";
+      <ContentByTab
+        tab={tab}
+        showHiddenParameters={showHiddenParameters}
+        allMenuContentList={allMenuContentList}
+      />
+      {renderConfirmModal()}
+    </div>
+  );
+};
 
-            if (isSectionTitle) {
-              return (
-                <div
-                  className="pageTitle"
-                  style={{
-                    width: "100%",
-                    paddingTop: idx === 0 ? 0 : 48,
-                  }}
-                >
-                  {getLocalizedText(item, lang)}
-                </div>
-              );
-            }
-            if (isButton) {
-              return (
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  gap="8px"
-                  height="56px"
-                  width="calc(50% - 20px)"
-                  borderBottom="1px solid var(--grey3)"
-                >
-                  <div className="list-title">
-                    {getLocalizedText(item, lang)}
-                  </div>
-                  <div>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      sx={{ height: 30 }}
-                    >
-                      {getLocalizedText(item, lang)}
-                    </Button>
-                  </div>
-                </Stack>
-              );
-            }
-            if (isDropdown) {
-              return (
-                <Stack
-                  direction="row"
-                  alignItems="center"
-                  gap="8px"
-                  height="56px"
-                  width="calc(50% - 20px)"
-                  borderBottom="1px solid var(--grey3)"
-                >
-                  <div className="list-title">
-                    {getLocalizedText(item, lang)}
-                  </div>
-                  <Stack direction="row" gap="16px" alignItems="center">
-                    <div>
-                      <Select
-                        value={item.DEFAULT_VALUE}
-                        onChange={(e) => {
-                          setMenuContentList(
-                            menuContentList.map((menuContent) => {
-                              if (item.no === menuContent.no) {
-                                return {
-                                  ...menuContent,
-                                  DEFAULT_VALUE: e.target.value,
-                                };
-                              }
-                              return menuContent;
-                            })
-                          );
-                        }}
-                        sx={{ width: 144 }}
-                      >
-                        {(lang === "en"
-                          ? item.TEXT_EN_ITEM_CONTENT
-                          : lang === "es"
-                          ? item.TEXT_ES_ITEM_CONTENT
-                          : item.TEXT_PT_ITEM_CONTENT
-                        )
-                          ?.split(",")
-                          .map((itemContent, index) => {
-                            return (
-                              <MenuItem
-                                value={item.DEFAULT_VAL_INDEX.split(",")[index]}
-                              >
-                                {itemContent}
-                              </MenuItem>
-                            );
-                          })}
-                      </Select>
-                    </div>
-                  </Stack>
-                </Stack>
-              );
-            }
+export default ModelInfoPage;
+
+const ContentByTab = ({
+  tab,
+  showHiddenParameters,
+  allMenuContentList,
+}: {
+  tab: string;
+  showHiddenParameters: boolean;
+  allMenuContentList: ModelConfig[];
+}) => {
+  const [menuContentList, setMenuContentList] = useState<ModelConfig[]>([]);
+  const { lang } = useLangStore();
+
+  useEffect(() => {
+    setMenuContentList(
+      allMenuContentList.filter((content) => content.Depth2 === tab)
+    );
+  }, [tab]);
+
+  return (
+    <article className="contentWrap">
+      <Stack
+        flexWrap="wrap"
+        direction="row"
+        gap={tab === "Device Status" ? "0 40px" : "48px 40px"}
+      >
+        {menuContentList.map((item, idx) => {
+          const isSectionTitle = !item.DEFAULT_VALUE && !item.UI_INPUT_TYPE;
+          const isButton = item.UI_INPUT_TYPE === "button";
+          const isDropdown = item.UI_INPUT_TYPE === "dropdown";
+          const isInput = item.UI_INPUT_TYPE === "edit";
+          const isHiddenParameter = item["hidden-param"] === "true";
+
+          if (isHiddenParameter && !showHiddenParameters) {
+            return null;
+          }
+
+          if (isSectionTitle) {
+            return (
+              <div
+                className="pageTitle"
+                style={{
+                  width: "100%",
+                  paddingTop: idx === 0 ? 0 : 48,
+                  marginBottom: tab === "Device Status" ? 48 : 0,
+                }}
+              >
+                {getLocalizedText(item, lang)}
+              </div>
+            );
+          }
+          if (isButton) {
             return (
               <Stack
                 direction="row"
@@ -197,15 +189,212 @@ const ModelInfoPage = () => {
                 width="calc(50% - 20px)"
                 borderBottom="1px solid var(--grey3)"
               >
-                <div className="list-title">{getLocalizedText(item, lang)}</div>
-                <div>{item.DEFAULT_VALUE || "-"}</div>
+                <div
+                  className="list-title"
+                  style={
+                    isHiddenParameter ? { color: "var(--error)" } : undefined
+                  }
+                >
+                  {getLocalizedText(item, lang)}
+                </div>
+                <div>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    sx={{ height: 30 }}
+                  >
+                    {getLocalizedText(item, lang)}
+                  </Button>
+                </div>
               </Stack>
             );
-          })}
-        </Stack>
-      </article>
-    </div>
+          }
+          if (isDropdown) {
+            return (
+              <Stack
+                direction={tab === "Device Status" ? "row" : "column"}
+                alignItems={tab === "Device Status" ? "center" : "flex-start"}
+                gap={tab === "Device Status" ? "8px" : "12px"}
+                height={tab === "Device Status" ? "56px" : undefined}
+                width="calc(50% - 20px)"
+                borderBottom={
+                  tab === "Device Status" ? "1px solid var(--grey3)" : undefined
+                }
+              >
+                <div
+                  className="list-title"
+                  style={
+                    isHiddenParameter ? { color: "var(--error)" } : undefined
+                  }
+                >
+                  <Stack direction="row" alignItems={"center"} gap={"8px"}>
+                    {getLocalizedText(item, lang)}
+                    {item.required === "true" && <i>*</i>}
+                    {item.TEXT_EN_INFO && (
+                      <InputBox.Info
+                        tooltipText={
+                          <span style={{ whiteSpace: "pre-wrap" }}>
+                            {lang === "en"
+                              ? item.TEXT_EN_INFO
+                              : lang === "es"
+                              ? item.TEXT_ES_INFO
+                              : item.TEXT_PT_INFO}
+                          </span>
+                        }
+                      />
+                    )}
+                    {item.JSON_ID && (
+                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                    )}
+                  </Stack>
+                </div>
+                <Stack
+                  direction="row"
+                  gap="16px"
+                  alignItems="center"
+                  width={"100%"}
+                >
+                  <div style={{ width: "100%" }}>
+                    <Select
+                      value={item.DEFAULT_VALUE}
+                      onChange={(e) => {
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              return {
+                                ...menuContent,
+                                DEFAULT_VALUE: e.target.value,
+                              };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                      sx={{ width: tab === "Device Status" ? 144 : "100%" }}
+                    >
+                      {(lang === "en"
+                        ? item.TEXT_EN_ITEM_CONTENT
+                        : lang === "es"
+                        ? item.TEXT_ES_ITEM_CONTENT
+                        : item.TEXT_PT_ITEM_CONTENT
+                      )
+                        ?.split(",")
+                        .map((itemContent, index) => {
+                          return (
+                            <MenuItem
+                              value={item.DEFAULT_VAL_INDEX?.split(",")[index]}
+                            >
+                              {itemContent}
+                            </MenuItem>
+                          );
+                        })}
+                    </Select>
+                  </div>
+                </Stack>
+              </Stack>
+            );
+          }
+          if (isInput) {
+            return (
+              <InputBox style={{ width: "calc(50% - 20px)" }}>
+                <InputBox.Head>
+                  <InputBox.Title
+                    style={
+                      isHiddenParameter ? { color: "var(--error)" } : undefined
+                    }
+                  >
+                    {getLocalizedText(item, lang)}
+                    {item.required === "true" && <i>*</i>}
+                  </InputBox.Title>
+                  {item.TEXT_EN_INFO && (
+                    <InputBox.Info
+                      tooltipText={
+                        <span style={{ whiteSpace: "pre-wrap" }}>
+                          {lang === "en"
+                            ? item.TEXT_EN_INFO
+                            : lang === "es"
+                            ? item.TEXT_ES_INFO
+                            : item.TEXT_PT_INFO}
+                        </span>
+                      }
+                    />
+                  )}
+                  {item.JSON_ID && (
+                    <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                  )}
+                </InputBox.Head>
+                <InputBox.Body>
+                  <TextField
+                    fullWidth
+                    type={
+                      !!item.VALUE_MIN && !!item.VALUE_MIN ? "number" : "text"
+                    }
+                    inputProps={
+                      !!item.VALUE_MIN && !!item.VALUE_MIN
+                        ? {
+                            min: item.VALUE_MIN || undefined,
+                            max: item.VALUE_MAX || undefined,
+                          }
+                        : undefined
+                    }
+                    value={item.DEFAULT_VALUE}
+                    onChange={(e) => {
+                      let newValue = e.target.value;
+
+                      // 숫자 타입일 경우 범위 검증
+                      if (
+                        item.VALUE_MIN !== undefined &&
+                        item.VALUE_MAX !== undefined
+                      ) {
+                        const numValue = Number(newValue);
+                        if (numValue > Number(item.VALUE_MAX)) {
+                          newValue = String(item.VALUE_MAX);
+                        } else if (numValue < Number(item.VALUE_MIN)) {
+                          newValue = String(item.VALUE_MIN);
+                        }
+                      }
+
+                      setMenuContentList(
+                        menuContentList.map((menuContent) => {
+                          if (item.no === menuContent.no) {
+                            return {
+                              ...menuContent,
+                              DEFAULT_VALUE: newValue,
+                            };
+                          }
+                          return menuContent;
+                        })
+                      );
+                    }}
+                  />
+                </InputBox.Body>
+              </InputBox>
+            );
+          }
+          return (
+            <Stack
+              direction={tab === "Device Status" ? "row" : "column"}
+              alignItems={tab === "Device Status" ? "center" : "flex-start"}
+              gap={tab === "Device Status" ? "8px" : "12px"}
+              height={tab === "Device Status" ? "56px" : undefined}
+              width="calc(50% - 20px)"
+              borderBottom={
+                tab === "Device Status" ? "1px solid var(--grey3)" : undefined
+              }
+            >
+              <div
+                className="list-title"
+                style={
+                  isHiddenParameter ? { color: "var(--error)" } : undefined
+                }
+              >
+                {getLocalizedText(item, lang)}
+              </div>
+              <div>{item.DEFAULT_VALUE || "-"}</div>
+            </Stack>
+          );
+        })}
+      </Stack>
+    </article>
   );
 };
-
-export default ModelInfoPage;

@@ -52,7 +52,7 @@ import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { updateModelPkgDataByEmail } from "@/utils/idbLoginUtil";
 import useAuthStore from "@/utils/useAuthStore";
-import { saveJsonDataToIDB } from "@/utils/idbModelUtil";
+import { getJsonDataFromIDB, saveJsonDataToIDB } from "@/utils/idbModelUtil";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
@@ -179,10 +179,6 @@ export default function Model() {
       renderCell: (params) => {
         return (
           <ModelButton
-            loaded={params.row.loaded}
-            toggleLoaded={() => {
-              toggleLoaded(params.row.id);
-            }}
             onNetworkError={() => {
               setOfflineErrorDialog(true);
             }}
@@ -206,6 +202,7 @@ export default function Model() {
   const [selectedTab, setSelectedTab] = useState("");
 
   const [rowData, setRowData] = useState(getRows(data?.data?.records));
+
   const filteredRowData = rowData
     // text field search 필터 추가
     .filter((item) => {
@@ -215,14 +212,14 @@ export default function Model() {
     .filter((item) => {
       return !item.hide;
     })
-    // 로드된 모델만 필터링
-    .filter((item) => {
-      if (showLoadedModels) {
-        return item.loaded;
-      }
+    // // 로드된 모델만 필터링
+    // .filter((item) => {
+    //   if (showLoadedModels) {
+    //     return item.loaded;
+    //   }
 
-      return true;
-    })
+    //   return true;
+    // })
     // features 탭 필터링
     .filter((item) => {
       if (selectedTab) {
@@ -354,6 +351,48 @@ export default function Model() {
   useEffect(() => {
     setRowData(getRows(data?.data?.records));
   }, [data]);
+
+  useEffect(() => {
+    const filterLoadedModels = async () => {
+      try {
+        const rows = getRows(data?.data?.records);
+
+        if (showLoadedModels) {
+          // Promise.all을 사용하여 모든 비동기 작업 완료 대기
+          const loadedRows = await Promise.all(
+            rows.map(async (item) => {
+              try {
+                const jsonData = await getJsonDataFromIDB(item.col2);
+                return jsonData ? { ...item, idbData: jsonData } : null;
+              } catch (error) {
+                console.error(`Error loading data for ${item.col2}:`, error);
+                return null;
+              }
+            })
+          );
+
+          // null 값을 제거하고 유효한 데이터만 필터링
+          const filteredRows = loadedRows.filter(
+            (item): item is NonNullable<typeof item> => item !== null
+          );
+
+          setRowData(filteredRows);
+        } else {
+          // showLoadedModels가 false일 때는 모든 행 표시
+          setRowData(rows);
+        }
+      } catch (error) {
+        console.error("Error filtering loaded models:", error);
+        // 에러 발생 시 빈 배열이나 기존 데이터 유지
+        setRowData([]);
+      }
+    };
+
+    // data가 있을 때만 실행
+    if (data?.data?.records) {
+      filterLoadedModels();
+    }
+  }, [showLoadedModels, data]);
 
   useEffect(() => {
     setColumnData(getColumns());
@@ -533,7 +572,7 @@ type DataTableProps = {
   onNetworkError?: () => void;
 };
 
-function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
+function GalleryView({ rows, onNetworkError }: DataTableProps) {
   const t = useTranslations();
   const { paginatedRows, page, pageCount, handleChangePage } =
     useCustomPagination({ rows, limit: 30 });
@@ -572,12 +611,7 @@ function GalleryView({ rows, toggleLoaded, onNetworkError }: DataTableProps) {
                 </Box>
               </div>
               <div className={styles.galleryTitle}>{item.col2}</div>
-              <ModelButton
-                model={item.col2}
-                loaded={rows[index].loaded}
-                toggleLoaded={() => toggleLoaded(item.id)}
-                onNetworkError={onNetworkError}
-              />
+              <ModelButton model={item.col2} onNetworkError={onNetworkError} />
             </li>
           ))}
         </ul>
@@ -645,18 +679,20 @@ function LinearDeterminate({ setEndLoaded }) {
   );
 }
 
-function ModelButton({ loaded, toggleLoaded, onNetworkError, model }) {
+function ModelButton({ onNetworkError, model }) {
   const t = useTranslations("home");
   const { setModelName } = useModelInfoStore();
   const router = useRouter();
   const { isOnline } = useNetworkMonitor();
   const [startLoaded, setStartLoaded] = useState<boolean>(false);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const modelConfigMenuSectionListMutation = useMutation({
     mutationFn: getModelConfig,
     onSuccess: async (res) => {
       try {
         await saveJsonDataToIDB(model, res.data.result.jsonData);
+        setIsLoaded(true);
       } catch (e) {
         console.log(e, "saveJsonDataToIDB Error");
       }
@@ -670,11 +706,25 @@ function ModelButton({ loaded, toggleLoaded, onNetworkError, model }) {
   };
 
   const loadedEnd = () => {
-    toggleLoaded();
     setStartLoaded(false);
   };
 
-  if (loaded) {
+  useEffect(() => {
+    const fetchJsonData = async () => {
+      try {
+        const jsonData = await getJsonDataFromIDB(model);
+        if (jsonData) {
+          setIsLoaded(true);
+        }
+      } catch (error) {
+        console.error("Error fetching JSON data:", error);
+      }
+    };
+
+    fetchJsonData();
+  }, []);
+
+  if (isLoaded) {
     return (
       <>
         <Button
@@ -706,7 +756,7 @@ function ModelButton({ loaded, toggleLoaded, onNetworkError, model }) {
           endIcon={<FileDownloadOutlinedIcon />}
         >
           <span>{t("image_type.load_model")}</span>
-          {startLoaded && !loaded && (
+          {startLoaded && !isLoaded && (
             <LinearDeterminate setEndLoaded={loadedEnd} />
           )}
         </Button>

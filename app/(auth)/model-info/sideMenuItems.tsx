@@ -12,6 +12,7 @@ import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
 import KeyboardCommandKeyOutlinedIcon from "@mui/icons-material/KeyboardCommandKeyOutlined";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import SyncOutlinedIcon from "@mui/icons-material/SyncOutlined";
+
 export const getSideMenuIcon = (name: string) => {
   switch (name) {
     case "Device Status":

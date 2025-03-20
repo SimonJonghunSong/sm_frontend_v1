@@ -6,6 +6,7 @@ import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import useLangStore from "@/utils/useLangStore";
 import { getSideMenuIcon } from "./sideMenuItems";
 import { Stack } from "@mui/material";
+import { SwitchSecondary } from "@/components/switches";
 
 type SideMenuItem = {
   textEn: string;
@@ -17,11 +18,15 @@ interface SideMenuProps {
   sideMenuItems: SideMenuItem[];
   activeTab: string;
   onTabChange: (tab: string) => void;
+  showHiddenParameters: boolean;
+  setShowHiddenParameters: (showHiddenParameters: boolean) => void;
 }
 export default function SideMenu({
   sideMenuItems,
   activeTab,
   onTabChange,
+  showHiddenParameters,
+  setShowHiddenParameters,
 }: SideMenuProps) {
   const { lang } = useLangStore();
   const { toggle, renderConfirmModal } = useConfirmDialog({
@@ -36,6 +41,27 @@ export default function SideMenu({
     <aside className={styles.sideMenuWrap}>
       <ul className={styles.sideMenu}>
         {sideMenuItems.map(({ textEn, textEs, textPt }) => {
+          if (textEn === "Show Hidden Parameters") {
+            return (
+              <li key={textEn}>
+                <Stack
+                  direction="row"
+                  justifyContent="space-between"
+                  alignItems={"center"}
+                  height="40px"
+                  padding="0 16px"
+                >
+                  {lang === "en" ? textEn : lang === "es" ? textEs : textPt}
+                  <SwitchSecondary
+                    checked={showHiddenParameters}
+                    onChange={() =>
+                      setShowHiddenParameters(!showHiddenParameters)
+                    }
+                  />
+                </Stack>
+              </li>
+            );
+          }
           return (
             <li
               key={textEn}

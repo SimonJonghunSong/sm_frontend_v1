@@ -57,3 +57,21 @@ export const getJsonDataFromIDB = async (modelName: string) => {
     throw error;
   }
 };
+
+export const deleteJsonDataFromIDB = async (modelName: string) => {
+  try {
+    const db = (await initDB()) as IDBDatabase;
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([STORE_NAME], "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+
+      const request = store.delete(modelName);
+
+      request.onsuccess = () => resolve(true);
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Error deleting from IndexedDB:", error);
+    throw error;
+  }
+};
