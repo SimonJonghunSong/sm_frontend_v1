@@ -37,18 +37,18 @@ const getModelPkg = (body: PostModelPkgBody) => {
   );
 };
 
-const getModelConfig = () => {
+const getModelConfig = (model_name: string, model_version: string) => {
   return post<
     {
       response: { code: string; reason: string };
       result: {
-        jsonData: ModelConfig[];
+        records: ModelConfig[];
       };
     },
     { model_name: string; model_version: string }
   >("/api/v1/model_cfg_load_model", {
-    model_name: "ST8300",
-    model_version: "0.7",
+    model_name,
+    model_version,
   });
 };
 const getModelConfigMenuSectionList = () => {
