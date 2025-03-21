@@ -155,7 +155,7 @@ const ContentByTab = ({
         gap={tab === "Device Status" ? "0 40px" : "48px 40px"}
       >
         {menuContentList.map((item, idx) => {
-          const isSectionTitle = !item.DEFAULT_VALUE && !item.UI_INPUT_TYPE;
+          const isSectionTitle = item.Depth3 === "Section1";
           const isButton = item.UI_INPUT_TYPE === "button";
           const isDropdown = item.UI_INPUT_TYPE === "dropdown";
           const isInput = item.UI_INPUT_TYPE === "edit";

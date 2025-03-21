@@ -1,6 +1,4 @@
 import {
-  AddModelBody,
-  EditModelBody,
   Model,
   ModelConfig,
   ModelPkg,
