@@ -183,6 +183,7 @@ export default function Model() {
               setOfflineErrorDialog(true);
             }}
             model={params.row.col2}
+            model_version={params.row.col3}
           />
         );
       },
@@ -611,7 +612,11 @@ function GalleryView({ rows, onNetworkError }: DataTableProps) {
                 </Box>
               </div>
               <div className={styles.galleryTitle}>{item.col2}</div>
-              <ModelButton model={item.col2} onNetworkError={onNetworkError} />
+              <ModelButton
+                model={item.col2}
+                model_version={item.col3}
+                onNetworkError={onNetworkError}
+              />
             </li>
           ))}
         </ul>
@@ -679,7 +684,7 @@ function LinearDeterminate({ setEndLoaded }) {
   );
 }
 
-function ModelButton({ onNetworkError, model }) {
+function ModelButton({ onNetworkError, model, model_version }) {
   const t = useTranslations("home");
   const { setModelName } = useModelInfoStore();
   const router = useRouter();
@@ -688,7 +693,7 @@ function ModelButton({ onNetworkError, model }) {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const modelConfigMenuSectionListMutation = useMutation({
-    mutationFn: getModelConfig,
+    mutationFn: () => getModelConfig(model, model_version),
     onSuccess: async (res) => {
       try {
         await saveJsonDataToIDB(model, res.data.result.records);
