@@ -68,6 +68,8 @@ function reducer(state: FormState, action: FormAction): FormState {
       return { ...state, settingFile: action.value };
     case "SET_HIDE":
       return { ...state, hide: action.value };
+    case "SET_FIRMWARE_VERSION":
+      return { ...state, firmwareVersion: action.value };
     default:
       return state;
   }
