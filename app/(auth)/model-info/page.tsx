@@ -14,6 +14,7 @@ import useLangStore from "@/utils/useLangStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
 import InputBox from "@/components/inputbox/InputBox";
+import { PasswordTextField } from "./EditHiddenInput";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -159,6 +160,7 @@ const ContentByTab = ({
           const isSectionTitle = item.Depth3 === "Section1";
           const isButton = item.UI_INPUT_TYPE === "button";
           const isDropdown = item.UI_INPUT_TYPE === "dropdown";
+          const isEditHidden = item.UI_INPUT_TYPE === "edit_hidden";
           const isInput = item.UI_INPUT_TYPE === "edit";
           const isHiddenParameter = item["hidden-param"] === "true";
 
@@ -279,11 +281,11 @@ const ContentByTab = ({
                         ? item.TEXT_ES_ITEM_CONTENT
                         : item.TEXT_PT_ITEM_CONTENT
                       )
-                        ?.split(",")
+                        ?.split(", ")
                         .map((itemContent, index) => {
                           return (
                             <MenuItem
-                              value={item.DEFAULT_VAL_INDEX?.split(",")[index]}
+                              value={item.DEFAULT_VAL_INDEX?.split(", ")[index]}
                             >
                               {itemContent}
                             </MenuItem>
@@ -295,7 +297,7 @@ const ContentByTab = ({
               </Stack>
             );
           }
-          if (isInput) {
+          if (isInput || isEditHidden) {
             return (
               <InputBox style={{ width: "calc(50% - 20px)" }}>
                 <InputBox.Head>
@@ -325,49 +327,72 @@ const ContentByTab = ({
                   )}
                 </InputBox.Head>
                 <InputBox.Body>
-                  <TextField
-                    fullWidth
-                    type={
-                      !!item.VALUE_MIN && !!item.VALUE_MIN ? "number" : "text"
-                    }
-                    inputProps={
-                      !!item.VALUE_MIN && !!item.VALUE_MIN
-                        ? {
-                            min: item.VALUE_MIN || undefined,
-                            max: item.VALUE_MAX || undefined,
-                          }
-                        : undefined
-                    }
-                    value={item.DEFAULT_VALUE}
-                    onChange={(e) => {
-                      let newValue = e.target.value;
-
-                      // 숫자 타입일 경우 범위 검증
-                      if (
-                        item.VALUE_MIN !== undefined &&
-                        item.VALUE_MAX !== undefined
-                      ) {
-                        const numValue = Number(newValue);
-                        if (numValue > Number(item.VALUE_MAX)) {
-                          newValue = String(item.VALUE_MAX);
-                        } else if (numValue < Number(item.VALUE_MIN)) {
-                          newValue = String(item.VALUE_MIN);
-                        }
+                  {isEditHidden ? (
+                    <PasswordTextField
+                      value={item.DEFAULT_VALUE}
+                      onChange={(newValue) => {
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              return {
+                                ...menuContent,
+                                DEFAULT_VALUE: newValue,
+                              };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                    />
+                  ) : (
+                    <TextField
+                      fullWidth
+                      type={
+                        !!item.VALUE_MIN && !!item.VALUE_MIN
+                          ? "number"
+                          : isEditHidden
+                          ? "password"
+                          : "text"
                       }
+                      inputProps={
+                        !!item.VALUE_MIN && !!item.VALUE_MIN
+                          ? {
+                              min: item.VALUE_MIN || undefined,
+                              max: item.VALUE_MAX || undefined,
+                            }
+                          : undefined
+                      }
+                      value={item.DEFAULT_VALUE}
+                      onChange={(e) => {
+                        let newValue = e.target.value;
 
-                      setMenuContentList(
-                        menuContentList.map((menuContent) => {
-                          if (item.no === menuContent.no) {
-                            return {
-                              ...menuContent,
-                              DEFAULT_VALUE: newValue,
-                            };
+                        // 숫자 타입일 경우 범위 검증
+                        if (
+                          item.VALUE_MIN !== undefined &&
+                          item.VALUE_MAX !== undefined
+                        ) {
+                          const numValue = Number(newValue);
+                          if (numValue > Number(item.VALUE_MAX)) {
+                            newValue = String(item.VALUE_MAX);
+                          } else if (numValue < Number(item.VALUE_MIN)) {
+                            newValue = String(item.VALUE_MIN);
                           }
-                          return menuContent;
-                        })
-                      );
-                    }}
-                  />
+                        }
+
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              return {
+                                ...menuContent,
+                                DEFAULT_VALUE: newValue,
+                              };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                    />
+                  )}
                 </InputBox.Body>
               </InputBox>
             );

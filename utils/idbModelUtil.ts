@@ -20,19 +20,33 @@ export const initDB = () => {
   });
 };
 
-export const saveJsonDataToIDB = async (modelName: string, jsonData: any) => {
+export const saveJsonDataToIDB = async (
+  modelName: string,
+  jsonData: ModelConfig[]
+) => {
   try {
     const db = (await initDB()) as IDBDatabase;
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
+      // DEFAULT_VALUE가 있는 경우 value 필드 추가
+      const processedData = Array.isArray(jsonData)
+        ? jsonData.map((item) => {
+            if ("DEFAULT_VALUE" in item) {
+              return {
+                ...item,
+                value: item.DEFAULT_VALUE,
+              };
+            }
+            return item;
+          })
+        : jsonData;
 
       const request = store.put({
         modelName,
-        data: jsonData,
+        data: processedData,
         updatedAt: new Date(),
       });
-
       request.onsuccess = () => resolve(request.result);
       request.onerror = () => reject(request.error);
     });
