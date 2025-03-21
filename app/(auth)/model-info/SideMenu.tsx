@@ -48,8 +48,8 @@ export default function SideMenu({
                   direction="row"
                   justifyContent="space-between"
                   alignItems={"center"}
-                  height="40px"
-                  padding="0 16px"
+                  padding="16px 16px 8px"
+                  borderTop="1px solid #4D4D56"
                 >
                   {lang === "en" ? textEn : lang === "es" ? textEs : textPt}
                   <SwitchSecondary
