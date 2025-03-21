@@ -50,7 +50,7 @@ const getModelConfig = () => {
     { model_name: string; model_version: string }
   >("/api/v1/model_cfg_load_model", {
     model_name: "ST8300",
-    model_version: "v0.7",
+    model_version: "0.7",
   });
 };
 const getModelConfigMenuSectionList = () => {
@@ -64,13 +64,13 @@ const getModelConfigMenuSectionList = () => {
     { model_name: string; model_version: string }
   >("/api/v1/model_cfg_menu_section_list", {
     model_name: "ST8300",
-    model_version: "v0.7",
+    model_version: "0.7",
   });
 };
 const getModelConfigMenuContents = (menu: string) => {
   return post("/api/v1/model_cfg_menu_contents", {
     model_name: "ST8300",
-    model_version: "v0.7",
+    model_version: "0.7",
     menu,
   });
 };
