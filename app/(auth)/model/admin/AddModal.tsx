@@ -24,6 +24,7 @@ import { AxiosError } from "axios";
 
 export interface FormState {
   devName: string;
+  firmwareVersion: string;
   country: string;
   imageFile: File;
   imageFileSmall: string;
@@ -37,6 +38,7 @@ export interface FormState {
 type FormAction =
   | { type: "RESET" }
   | { type: "SET_DATA"; value: FormState }
+  | { type: "SET_FIRMWARE_VERSION"; value: string }
   | { type: "SET_DEV_NAME"; value: string }
   | { type: "SET_COUNTRY"; value: string }
   | { type: "SET_IMAGE_FILE"; value: File }
@@ -73,6 +75,7 @@ function reducer(state: FormState, action: FormAction): FormState {
 
 const initialState: FormState = {
   devName: "",
+  firmwareVersion: "",
   country: "",
   imageFile: undefined,
   imageFileSmall: "",
@@ -126,6 +129,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
 
   const {
     devName,
+    firmwareVersion,
     country,
     imageFile,
     supportedNetworkType,
@@ -308,6 +312,36 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                 });
               }}
               name="dev_name"
+              fullWidth
+            />
+          </InputBox.Body>
+        </InputBox>
+
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>
+              {t("configuration.device_status.f/w_version")}
+              <i>*</i>
+            </InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <TextField
+              value={firmwareVersion}
+              onChange={(e) => {
+                const regex = /^[\d.]*$/; // 숫자와 점만 허용
+                const value = e.target.value;
+
+                // 입력값 중 허용되지 않는 문자 제거
+                if (!regex.test(value)) {
+                  e.target.value = value.replace(/[^\d.]/g, ""); // 숫자와 점이 아닌 문자 모두 제거
+                }
+
+                dispatch({
+                  type: "SET_FIRMWARE_VERSION",
+                  value: e.target.value,
+                });
+              }}
+              name="firmware_version"
               fullWidth
             />
           </InputBox.Body>
