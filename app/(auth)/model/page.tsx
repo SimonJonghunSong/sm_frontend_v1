@@ -691,7 +691,7 @@ function ModelButton({ onNetworkError, model }) {
     mutationFn: getModelConfig,
     onSuccess: async (res) => {
       try {
-        await saveJsonDataToIDB(model, res.data.result.jsonData);
+        await saveJsonDataToIDB(model, res.data.result.records);
         setIsLoaded(true);
       } catch (e) {
         console.log(e, "saveJsonDataToIDB Error");
