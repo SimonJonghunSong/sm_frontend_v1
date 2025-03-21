@@ -213,7 +213,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
       "json",
       JSON.stringify({
         dev_name: devName,
-        fw_ver: "1.1.0",
+        fw_ver: firmwareVersion,
         country,
         supported_network_type: supportedNetworkType,
         supported_features: supportedFeatures,
