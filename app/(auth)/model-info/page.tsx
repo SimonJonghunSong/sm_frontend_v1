@@ -69,13 +69,14 @@ const ModelInfoPage = () => {
   });
 
   const handleTabChange = (tab: string) => {
-    if (tab === DELETE_MODEL) {
-      toggle();
-    }
-    if (tab === SHOW_HIDDEN_PARAMETERS) {
-      return;
-    } else {
-      setTab(tab);
+    switch (tab) {
+      case DELETE_MODEL:
+        toggle();
+        break;
+      case SHOW_HIDDEN_PARAMETERS:
+        return;
+      default:
+        setTab(tab);
     }
   };
 
