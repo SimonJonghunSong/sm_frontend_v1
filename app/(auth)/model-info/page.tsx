@@ -9,7 +9,15 @@ import {
 } from "@/utils/idbModelUtil";
 import { ModelConfig } from "@/src/api/services/model/type";
 import SideMenu from "./SideMenu";
-import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControlLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
@@ -162,6 +170,7 @@ const ContentByTab = ({
           const isDropdown = item.UI_INPUT_TYPE === "dropdown";
           const isEditHidden = item.UI_INPUT_TYPE === "edit_hidden";
           const isInput = item.UI_INPUT_TYPE === "edit";
+          const isCheckbox = item.UI_INPUT_TYPE === "checkbox";
           const isHiddenParameter = item["hidden-param"] === "true";
 
           if (isHiddenParameter && !showHiddenParameters) {
@@ -397,6 +406,133 @@ const ContentByTab = ({
               </InputBox>
             );
           }
+
+          if (isCheckbox) {
+            return (
+              <Stack
+                direction={tab === "Device Status" ? "row" : "column"}
+                alignItems={tab === "Device Status" ? "center" : "flex-start"}
+                gap={tab === "Device Status" ? "8px" : "12px"}
+                height={tab === "Device Status" ? "56px" : undefined}
+                width="calc(50% - 20px)"
+                borderBottom={
+                  tab === "Device Status" ? "1px solid var(--grey3)" : undefined
+                }
+              >
+                <div
+                  className="list-title"
+                  style={
+                    isHiddenParameter ? { color: "var(--error)" } : undefined
+                  }
+                >
+                  <Stack direction="row" alignItems={"center"} gap={"8px"}>
+                    {getLocalizedText(item, lang)}
+                    {item.required === "true" && <i>*</i>}
+                    {item.TEXT_EN_INFO && (
+                      <InputBox.Info
+                        tooltipText={
+                          <span style={{ whiteSpace: "pre-wrap" }}>
+                            {lang === "en"
+                              ? item.TEXT_EN_INFO
+                              : lang === "es"
+                              ? item.TEXT_ES_INFO
+                              : item.TEXT_PT_INFO}
+                          </span>
+                        }
+                      />
+                    )}
+                    {item.JSON_ID && (
+                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                    )}
+                  </Stack>
+                </div>
+                <Stack
+                  direction="row"
+                  gap="16px"
+                  alignItems="center"
+                  width={"100%"}
+                >
+                  <div
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      flexWrap: "wrap",
+                      gap: "8px",
+                    }}
+                  >
+                    {item.DEFAULT_VAL_INDEX?.split(", ").map((key, index) => {
+                      const label = (
+                        lang === "en"
+                          ? item.TEXT_EN_ITEM_CONTENT
+                          : lang === "es"
+                          ? item.TEXT_ES_ITEM_CONTENT
+                          : item.TEXT_PT_ITEM_CONTENT
+                      )
+                        ?.replace(/[\r\n]+/g, " ")
+                        .split(", ")[index];
+                      const values = item?.DEFAULT_VALUE?.replaceAll(
+                        " ",
+                        ""
+                      ).split("");
+
+                      return (
+                        <FormControlLabel
+                          key={key}
+                          label={label}
+                          control={
+                            <Checkbox
+                              key={key}
+                              checked={values?.[index] === "1"}
+                              onChange={(e) => {
+                                const valIndex =
+                                  item?.DEFAULT_VAL_INDEX?.split(", ") ?? [];
+                                const totalBits = valIndex.length;
+
+                                // 기존 값을 파싱하고 길이 부족한 경우 0으로 채움
+                                const currentBits =
+                                  item?.DEFAULT_VALUE?.replaceAll(
+                                    " ",
+                                    ""
+                                  ).split("") ?? [];
+                                while (currentBits.length < totalBits) {
+                                  currentBits.push("0");
+                                }
+
+                                // toggle
+                                currentBits[index] =
+                                  currentBits[index] === "1" ? "0" : "1";
+
+                                // 8비트 단위로 공백 포함하여 재조합
+                                const newValue = currentBits
+                                  .map((bit, i) =>
+                                    i % 8 === 0 ? " " + bit : bit
+                                  )
+                                  .join("")
+                                  .trim();
+
+                                setMenuContentList(
+                                  menuContentList.map((menuContent) => {
+                                    if (item.no === menuContent.no) {
+                                      return {
+                                        ...menuContent,
+                                        DEFAULT_VALUE: newValue,
+                                      };
+                                    }
+                                    return menuContent;
+                                  })
+                                );
+                              }}
+                            />
+                          }
+                        />
+                      );
+                    })}
+                  </div>
+                </Stack>
+              </Stack>
+            );
+          }
+
           return (
             <Stack
               direction={tab === "Device Status" ? "row" : "column"}
