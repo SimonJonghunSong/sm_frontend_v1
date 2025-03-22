@@ -1708,7 +1708,8 @@
     },
     "configuration": {
       "side_bar": {
-        "are_you_sure_you_want_to_delete_this_model_from_loaded_model_list?": "Are you sure you want to delete this model from loaded model list?"
+        "are_you_sure_you_want_to_delete_this_model_from_loaded_model_list?": "Are you sure you want to delete this model from loaded model list?",
+        "are_you_sure_you_want_to_send_the_data?": "Are you sure you want to send the data?"
       },
       "profile_menu": {
         "applied_successfully!": "Applied successfully!",

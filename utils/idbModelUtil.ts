@@ -94,7 +94,7 @@ export const deleteJsonDataFromIDB = async (modelName: string) => {
 
 export const updateParametersInIDB = async (
   modelName: string,
-  updatedParameters: { id: number | string; [key: string]: any }[]
+  updatedParameters: { no: number | string; [key: string]: any }[]
 ) => {
   try {
     const db = (await initDB()) as IDBDatabase;
@@ -112,11 +112,11 @@ export const updateParametersInIDB = async (
       const updatedData = currentData.map((item: any) => {
         // 업데이트할 파라미터 찾기
         const updateInfo = updatedParameters.find(
-          (param) => param.id === item.id
+          (param) => param.no === item.no
         );
         if (updateInfo) {
           // id는 유지하고 나머지 데이터만 업데이트
-          const { id, ...updateData } = updateInfo;
+          const { no, ...updateData } = updateInfo;
           return {
             ...item,
             ...updateData,
