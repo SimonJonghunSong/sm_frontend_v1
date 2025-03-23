@@ -524,6 +524,7 @@
     }
   },
   "configuration": {
+    "please_fill_out_this_field": "Please fill out this field",
     "side_bar": {
       "device_status": "Device Status",
       "network": "Network",

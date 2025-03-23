@@ -207,7 +207,7 @@ const ContentByTab = ({
       .map((item) => {
         return {
           no: item.no,
-          message: "values is required!",
+          message: t("configuration.please_fill_out_this_field"),
         };
       });
 
@@ -311,7 +311,7 @@ const ContentByTab = ({
                     // 전체 저장
                     onClick={() => handleSendClick()}
                   >
-                    {t("configuration.commands.send")}
+                    {t("configuration.ble.save")}
                   </Button>
                 </div>
               );

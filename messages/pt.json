@@ -513,6 +513,7 @@
     }
   },
   "configuration": {
+    "please_fill_out_this_field": "Por favor, preencha este campo",
     "side_bar": {
       "device_status": "Status do Dispositivo",
       "network": "Rede",

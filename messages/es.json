@@ -513,6 +513,7 @@
     }
   },
   "configuration": {
+    "please_fill_out_this_field": "Por favor, complete este campo",
     "side_bar": {
       "device_status": "Estado del Dispositivo",
       "network": "Red",
