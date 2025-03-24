@@ -370,9 +370,21 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                 sx={{ gap: "24px" }}
               >
                 <FormControlLabel value="USA" control={<Radio />} label="SU" />
-                <FormControlLabel value="SB" control={<Radio />} label="SB" />
-                <FormControlLabel value="SM" control={<Radio />} label="SM" />
-                <FormControlLabel value="SE" control={<Radio />} label="SE" />
+                <FormControlLabel
+                  value="Brazil"
+                  control={<Radio />}
+                  label="SB"
+                />
+                <FormControlLabel
+                  value="Mexico"
+                  control={<Radio />}
+                  label="SM"
+                />
+                <FormControlLabel
+                  value="Europe"
+                  control={<Radio />}
+                  label="SE"
+                />
               </RadioGroup>
             </FormControl>
           </InputBox.Body>
