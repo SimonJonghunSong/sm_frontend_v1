@@ -297,7 +297,9 @@ const ContentByTab = ({
             const isHiddenParameter = item["hidden-param"] === "true";
             const isSwitch =
               item.UI_INPUT_TYPE === undefined && item.ONOFF_TOGGLE === "true";
-            const isTimeHMA = item.UI_INPUT_TYPE === "time_HMA";
+            const isTimeHMA =
+              item.UI_INPUT_TYPE === "time_HMA" ||
+              item.UI_INPUT_TYPE === "time_se_HMA";
 
             if (isHiddenParameter && !showHiddenParameters) {
               return null;
@@ -783,33 +785,38 @@ const ContentByTab = ({
                     {item.JSON_ID && (
                       <InputBox.Number>{item.JSON_ID}</InputBox.Number>
                     )}
-                    <div style={{ marginLeft: "auto" }}>
-                      <SwitchPrimary
-                        checked={item.ONOFF_TOGGLE === "true"}
-                        onChange={(e) => {
-                          handleClearError(item.no);
-                          const isOn = e.target.checked;
+                    {typeof item.ONOFF_TOGGLE !== "undefined" && (
+                      <div style={{ marginLeft: "auto" }}>
+                        <SwitchPrimary
+                          checked={item.ONOFF_TOGGLE === "true"}
+                          onChange={(e) => {
+                            handleClearError(item.no);
+                            const isOn = e.target.checked;
 
-                          setMenuContentList(
-                            menuContentList.map((menuContent) => {
-                              if (item.no === menuContent.no) {
-                                return {
-                                  ...menuContent,
-                                  ONOFF_TOGGLE: String(isOn),
-                                  value: item?.DEFAULT_VALUE,
-                                };
-                              }
-                              return menuContent;
-                            })
-                          );
-                        }}
-                      />
-                    </div>
+                            setMenuContentList(
+                              menuContentList.map((menuContent) => {
+                                if (item.no === menuContent.no) {
+                                  return {
+                                    ...menuContent,
+                                    ONOFF_TOGGLE: String(isOn),
+                                    value: item?.DEFAULT_VALUE,
+                                  };
+                                }
+                                return menuContent;
+                              })
+                            );
+                          }}
+                        />
+                      </div>
+                    )}
                   </Stack>
                   <TimeHMA
                     style={{
                       visibility:
-                        item.ONOFF_TOGGLE !== "true" ? "hidden" : "visible",
+                        typeof item.ONOFF_TOGGLE !== "undefined" &&
+                        item.ONOFF_TOGGLE !== "true"
+                          ? "hidden"
+                          : "visible",
                     }}
                     value={item.value}
                     onChange={(value: string) => {
