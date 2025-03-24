@@ -70,4 +70,5 @@ export interface ModelConfig {
   required?: string;
   VALUE_MAX?: string;
   VALUE_MIN?: string;
+  ONOFF_TOGGLE?: string;
 }

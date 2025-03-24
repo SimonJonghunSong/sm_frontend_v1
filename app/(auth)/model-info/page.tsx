@@ -24,9 +24,11 @@ import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
 import InputBox from "@/components/inputbox/InputBox";
 import { PasswordTextField } from "./EditHiddenInput";
+import { SwitchPrimary } from "@/components/switches";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
+const DEVICE_STATUS = "Device Status";
 const SHOW_HIDDEN_PARAMETERS = "Show Hidden Parameters";
 
 type SupportedLang = "en" | "es" | "pt";
@@ -171,6 +173,7 @@ const ContentByTab = ({
 
   const [menuContentList, setMenuContentList] = useState<ModelConfig[]>([]);
   const [errorList, setErrorList] = useState<Record<number, string>>({});
+
   const { lang } = useLangStore();
 
   const { toggle: sendToggle, renderConfirmModal: renderSendConfirmModal } =
@@ -279,6 +282,7 @@ const ContentByTab = ({
           gap={tab === "Device Status" ? "0 40px" : "48px 40px"}
         >
           {menuContentList.map((item, idx) => {
+            const isDeviceStatus = tab == DEVICE_STATUS;
             const isSectionTitle = item.Depth3 === "Section1";
             const isButton = item.UI_INPUT_TYPE === "button";
             const isDropdown = item.UI_INPUT_TYPE === "dropdown";
@@ -286,6 +290,8 @@ const ContentByTab = ({
             const isInput = item.UI_INPUT_TYPE === "edit";
             const isCheckbox = item.UI_INPUT_TYPE === "checkbox";
             const isHiddenParameter = item["hidden-param"] === "true";
+            const isSwitch =
+              item.UI_INPUT_TYPE === undefined && item.ONOFF_TOGGLE === "true";
 
             if (isHiddenParameter && !showHiddenParameters) {
               return null;
@@ -302,17 +308,19 @@ const ContentByTab = ({
                   }}
                 >
                   {getLocalizedText(item, lang)}
-                  <Button
-                    color="secondary"
-                    variant="contained"
-                    // 센션 별 저장
-                    // onClick={() => handleSendClick(item.TEXT_EN)}
+                  {!isDeviceStatus && (
+                    <Button
+                      color="secondary"
+                      variant="contained"
+                      // 센션 별 저장
+                      // onClick={() => handleSendClick(item.TEXT_EN)}
 
-                    // 전체 저장
-                    onClick={() => handleSendClick()}
-                  >
-                    {t("configuration.ble.save")}
-                  </Button>
+                      // 전체 저장
+                      onClick={() => handleSendClick()}
+                    >
+                      {t("configuration.ble.save")}
+                    </Button>
+                  )}
                 </div>
               );
             }
@@ -349,15 +357,13 @@ const ContentByTab = ({
             if (isDropdown) {
               return (
                 <Stack
-                  direction={tab === "Device Status" ? "row" : "column"}
-                  alignItems={tab === "Device Status" ? "center" : "flex-start"}
-                  gap={tab === "Device Status" ? "8px" : "12px"}
-                  height={tab === "Device Status" ? "56px" : undefined}
+                  direction={isDeviceStatus ? "row" : "column"}
+                  alignItems={isDeviceStatus ? "center" : "flex-start"}
+                  gap={isDeviceStatus ? "8px" : "12px"}
+                  height={isDeviceStatus ? "56px" : undefined}
                   width="calc(50% - 20px)"
                   borderBottom={
-                    tab === "Device Status"
-                      ? "1px solid var(--grey3)"
-                      : undefined
+                    isDeviceStatus ? "1px solid var(--grey3)" : undefined
                   }
                 >
                   <div
@@ -549,15 +555,13 @@ const ContentByTab = ({
             if (isCheckbox) {
               return (
                 <Stack
-                  direction={tab === "Device Status" ? "row" : "column"}
-                  alignItems={tab === "Device Status" ? "center" : "flex-start"}
-                  gap={tab === "Device Status" ? "8px" : "12px"}
-                  height={tab === "Device Status" ? "56px" : undefined}
+                  direction={isDeviceStatus ? "row" : "column"}
+                  alignItems={isDeviceStatus ? "center" : "flex-start"}
+                  gap={isDeviceStatus ? "8px" : "12px"}
+                  height={isDeviceStatus ? "56px" : undefined}
                   width="calc(50% - 20px)"
                   borderBottom={
-                    tab === "Device Status"
-                      ? "1px solid var(--grey3)"
-                      : undefined
+                    isDeviceStatus ? "1px solid var(--grey3)" : undefined
                   }
                 >
                   <div
@@ -676,15 +680,72 @@ const ContentByTab = ({
               );
             }
 
+            if (isSwitch) {
+              return (
+                <Stack
+                  direction={"row"}
+                  justifyContent={"space-between"}
+                  alignItems={"center"}
+                  width="calc(50% - 20px)"
+                >
+                  <Stack alignItems={"center"} direction={"row"} gap={"8px"}>
+                    <InputBox.Title
+                      style={
+                        isHiddenParameter
+                          ? { color: "var(--error)" }
+                          : undefined
+                      }
+                    >
+                      {getLocalizedText(item, lang)}
+                      {item.required === "true" && <i>*</i>}
+                    </InputBox.Title>
+                    {item.TEXT_EN_INFO && (
+                      <InputBox.Info
+                        tooltipText={
+                          <span style={{ whiteSpace: "pre-wrap" }}>
+                            {lang === "en"
+                              ? item.TEXT_EN_INFO
+                              : lang === "es"
+                              ? item.TEXT_ES_INFO
+                              : item.TEXT_PT_INFO}
+                          </span>
+                        }
+                      />
+                    )}
+                    {item.JSON_ID && (
+                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                    )}
+                  </Stack>
+
+                  <SwitchPrimary
+                    value={item.DEFAULT_VALUE === "01"}
+                    onChange={(e) => {
+                      handleClearError(item.no);
+                      const isOn = e.target.checked ? "01" : "00";
+
+                      setMenuContentList(
+                        menuContentList.map((menuContent) => {
+                          if (item.no === menuContent.no) {
+                            return { ...menuContent, DEFAULT_VALUE: isOn };
+                          }
+                          return menuContent;
+                        })
+                      );
+                    }}
+                  />
+                </Stack>
+              );
+            }
+
             return (
               <Stack
-                direction={tab === "Device Status" ? "row" : "column"}
-                alignItems={tab === "Device Status" ? "center" : "flex-start"}
-                gap={tab === "Device Status" ? "8px" : "12px"}
-                height={tab === "Device Status" ? "56px" : undefined}
+                direction={isDeviceStatus ? "row" : "column"}
+                alignItems={isDeviceStatus ? "center" : "flex-start"}
+                gap={isDeviceStatus ? "8px" : "12px"}
+                height={isDeviceStatus ? "56px" : undefined}
                 width="calc(50% - 20px)"
                 borderBottom={
-                  tab === "Device Status" ? "1px solid var(--grey3)" : undefined
+                  isDeviceStatus ? "1px solid var(--grey3)" : undefined
                 }
               >
                 <div
