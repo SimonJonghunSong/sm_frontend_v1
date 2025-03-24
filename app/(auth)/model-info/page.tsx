@@ -108,7 +108,8 @@ const ModelInfoPage = () => {
 
   useEffect(() => {
     const fetchJsonData = async () => {
-      const jsonData = (await getJsonDataFromIDB(modelName)) as ModelConfig[];
+      const jsonData =
+        ((await getJsonDataFromIDB(modelName)) as ModelConfig[]) || [];
 
       const menuSectionList = (jsonData || [])
         .filter((item) => item.Depth2 === SIDE_BAR)
@@ -126,9 +127,11 @@ const ModelInfoPage = () => {
         (item) => item.Depth2 !== SIDE_BAR
       );
 
-      setSideBarList(menuSectionList);
-      setAllMenuContentList(menuContentList);
-      setTab(menuSectionList[0].textEn);
+      if (menuSectionList.length > 0) {
+        setSideBarList(menuSectionList);
+        setAllMenuContentList(menuContentList);
+        setTab(menuSectionList[0].textEn);
+      }
     };
     fetchJsonData();
   }, [modelName]);
@@ -174,6 +177,7 @@ const ContentByTab = ({
   const [menuContentList, setMenuContentList] = useState<ModelConfig[]>([]);
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
+  console.log(menuContentList);
   const { lang } = useLangStore();
 
   const { toggle: sendToggle, renderConfirmModal: renderSendConfirmModal } =
