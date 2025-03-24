@@ -26,6 +26,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { PasswordTextField } from "./EditHiddenInput";
 import { SwitchPrimary } from "@/components/switches";
 import TimeHMA from "app/(auth)/model-info/TimeHMA";
+import CheckboxEdit from "./CheckboxEdit";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -300,6 +301,7 @@ const ContentByTab = ({
             const isTimeHMA =
               item.UI_INPUT_TYPE === "time_HMA" ||
               item.UI_INPUT_TYPE === "time_se_HMA";
+            const isCheckboxEdit = item.UI_INPUT_TYPE === "checkbox_edit";
 
             if (isHiddenParameter && !showHiddenParameters) {
               return null;
@@ -838,6 +840,22 @@ const ContentByTab = ({
                     }}
                   />
                 </Stack>
+              );
+            }
+
+            if (isCheckboxEdit) {
+              return (
+                <CheckboxEdit
+                  title={getLocalizedText(item, lang)}
+                  info={
+                    lang === "en"
+                      ? item.TEXT_EN_INFO
+                      : lang === "es"
+                      ? item.TEXT_ES_INFO
+                      : item.TEXT_PT_INFO
+                  }
+                  jsonId={item.JSON_ID}
+                />
               );
             }
 
