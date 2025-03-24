@@ -292,8 +292,12 @@ const ContentByTab = ({
             const isSectionTitle = item.Depth3 === "Section1";
             const isButton = item.UI_INPUT_TYPE === "button";
             const isDropdown = item.UI_INPUT_TYPE === "dropdown";
+            const isDropdownButton = item.UI_INPUT_TYPE === "dropdown_button";
             const isEditHidden = item.UI_INPUT_TYPE === "edit_hidden";
-            const isInput = item.UI_INPUT_TYPE === "edit";
+            const isInput =
+              item.UI_INPUT_TYPE === "edit" ||
+              item.UI_INPUT_TYPE === "edit_min" ||
+              item.UI_INPUT_TYPE === "edit_max";
             const isCheckbox = item.UI_INPUT_TYPE === "checkbox";
             const isHiddenParameter = item["hidden-param"] === "true";
             const isSwitch =
@@ -302,6 +306,7 @@ const ContentByTab = ({
               item.UI_INPUT_TYPE === "time_HMA" ||
               item.UI_INPUT_TYPE === "time_se_HMA";
             const isCheckboxEdit = item.UI_INPUT_TYPE === "checkbox_edit";
+            const isEditButton = item.UI_INPUT_TYPE === "edit_button";
 
             if (isHiddenParameter && !showHiddenParameters) {
               return null;
@@ -364,7 +369,7 @@ const ContentByTab = ({
                 </Stack>
               );
             }
-            if (isDropdown) {
+            if (isDropdown || isDropdownButton) {
               return (
                 <Stack
                   direction={isDeviceStatus ? "row" : "column"}
@@ -410,51 +415,59 @@ const ContentByTab = ({
                     width={"100%"}
                   >
                     <div style={{ width: "100%" }}>
-                      <Select
-                        value={item.DEFAULT_VALUE}
-                        onChange={(e) => {
-                          handleClearError(item.no);
+                      <Stack direction="row" gap="8px">
+                        <Select
+                          value={item.DEFAULT_VALUE}
+                          onChange={(e) => {
+                            handleClearError(item.no);
 
-                          setMenuContentList(
-                            menuContentList.map((menuContent) => {
-                              if (item.no === menuContent.no) {
-                                return {
-                                  ...menuContent,
-                                  DEFAULT_VALUE: e.target.value,
-                                };
-                              }
-                              return menuContent;
-                            })
-                          );
-                        }}
-                        sx={{ width: tab === "Device Status" ? 144 : "100%" }}
-                      >
-                        {(lang === "en"
-                          ? item.TEXT_EN_ITEM_CONTENT
-                          : lang === "es"
-                          ? item.TEXT_ES_ITEM_CONTENT
-                          : item.TEXT_PT_ITEM_CONTENT
-                        )
-                          ?.split(", ")
-                          .map((itemContent, index) => {
-                            return (
-                              <MenuItem
-                                value={
-                                  item.DEFAULT_VAL_INDEX?.split(", ")[index]
+                            setMenuContentList(
+                              menuContentList.map((menuContent) => {
+                                if (item.no === menuContent.no) {
+                                  return {
+                                    ...menuContent,
+                                    DEFAULT_VALUE: e.target.value,
+                                  };
                                 }
-                              >
-                                {itemContent}
-                              </MenuItem>
+                                return menuContent;
+                              })
                             );
-                          })}
-                      </Select>
+                          }}
+                          sx={{ width: tab === "Device Status" ? 144 : "100%" }}
+                        >
+                          {(lang === "en"
+                            ? item.TEXT_EN_ITEM_CONTENT
+                            : lang === "es"
+                            ? item.TEXT_ES_ITEM_CONTENT
+                            : item.TEXT_PT_ITEM_CONTENT
+                          )
+                            ?.split(", ")
+                            .map((itemContent, index) => {
+                              return (
+                                <MenuItem
+                                  value={
+                                    item.DEFAULT_VAL_INDEX?.split(", ")[index]
+                                  }
+                                >
+                                  {itemContent}
+                                </MenuItem>
+                              );
+                            })}
+                        </Select>
+                        {isDropdownButton && (
+                          <Button color="secondary" variant="contained">
+                            {t("configuration.ble.save")}
+                          </Button>
+                        )}
+                      </Stack>
+
                       {renderErrorMessage(item)}
                     </div>
                   </Stack>
                 </Stack>
               );
             }
-            if (isInput || isEditHidden) {
+            if (isInput || isEditHidden || isEditButton) {
               return (
                 <InputBox style={{ width: "calc(50% - 20px)" }}>
                   <InputBox.Head>
@@ -466,7 +479,6 @@ const ContentByTab = ({
                       }
                     >
                       {getLocalizedText(item, lang)}
-                      {item.required === "true" && <i>*</i>}
                     </InputBox.Title>
                     {item.TEXT_EN_INFO && (
                       <InputBox.Info
@@ -506,55 +518,73 @@ const ContentByTab = ({
                         }}
                       />
                     ) : (
-                      <TextField
-                        fullWidth
-                        type={
-                          !!item.VALUE_MIN && !!item.VALUE_MIN
-                            ? "number"
-                            : isEditHidden
-                            ? "password"
-                            : "text"
-                        }
-                        inputProps={
-                          !!item.VALUE_MIN && !!item.VALUE_MIN
-                            ? {
-                                min: item.VALUE_MIN || undefined,
-                                max: item.VALUE_MAX || undefined,
-                              }
-                            : undefined
-                        }
-                        value={item.DEFAULT_VALUE}
-                        onChange={(e) => {
-                          handleClearError(item.no);
-
-                          let newValue = e.target.value;
-
-                          // 숫자 타입일 경우 범위 검증
-                          if (
-                            item.VALUE_MIN !== undefined &&
-                            item.VALUE_MAX !== undefined
-                          ) {
-                            const numValue = Number(newValue);
-                            if (numValue > Number(item.VALUE_MAX)) {
-                              newValue = String(item.VALUE_MAX);
-                            } else if (numValue < Number(item.VALUE_MIN)) {
-                              newValue = String(item.VALUE_MIN);
+                      <>
+                        <Stack direction="row" gap="8px">
+                          <TextField
+                            fullWidth
+                            type={
+                              !!item.VALUE_MIN && !!item.VALUE_MIN
+                                ? "number"
+                                : isEditHidden
+                                ? "password"
+                                : "text"
                             }
-                          }
+                            inputProps={
+                              !!item.VALUE_MIN && !!item.VALUE_MIN
+                                ? {
+                                    min: item.VALUE_MIN || undefined,
+                                    max: item.VALUE_MAX || undefined,
+                                  }
+                                : undefined
+                            }
+                            value={item.DEFAULT_VALUE}
+                            onChange={(e) => {
+                              handleClearError(item.no);
 
-                          setMenuContentList(
-                            menuContentList.map((menuContent) => {
-                              if (item.no === menuContent.no) {
-                                return {
-                                  ...menuContent,
-                                  DEFAULT_VALUE: newValue,
-                                };
+                              let newValue = e.target.value;
+
+                              // 숫자 타입일 경우 범위 검증
+                              if (
+                                item.VALUE_MIN !== undefined &&
+                                item.VALUE_MAX !== undefined
+                              ) {
+                                const numValue = Number(newValue);
+                                if (numValue > Number(item.VALUE_MAX)) {
+                                  newValue = String(item.VALUE_MAX);
+                                } else if (numValue < Number(item.VALUE_MIN)) {
+                                  newValue = String(item.VALUE_MIN);
+                                }
                               }
-                              return menuContent;
-                            })
-                          );
-                        }}
-                      />
+
+                              setMenuContentList(
+                                menuContentList.map((menuContent) => {
+                                  if (item.no === menuContent.no) {
+                                    return {
+                                      ...menuContent,
+                                      DEFAULT_VALUE: newValue,
+                                    };
+                                  }
+                                  return menuContent;
+                                })
+                              );
+                            }}
+                          />
+
+                          {isEditButton && (
+                            <Button
+                              color="secondary"
+                              variant="contained"
+                              // 센션 별 저장
+                              // onClick={() => handleSendClick(item.TEXT_EN)}
+
+                              // 전체 저장
+                              onClick={() => {}}
+                            >
+                              {t("configuration.ble.save")}
+                            </Button>
+                          )}
+                        </Stack>
+                      </>
                     )}
                   </InputBox.Body>
                   {renderErrorMessage(item)}
@@ -820,7 +850,7 @@ const ContentByTab = ({
                           ? "hidden"
                           : "visible",
                     }}
-                    value={item.value}
+                    value={item.DEFAULT_VALUE}
                     onChange={(value: string) => {
                       console.log("value22 :::", value);
 
@@ -831,7 +861,7 @@ const ContentByTab = ({
 
                             return {
                               ...menuContent,
-                              value,
+                              DEFAULT_VALUE: value,
                             };
                           }
                           return menuContent;
