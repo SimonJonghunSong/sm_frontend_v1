@@ -25,6 +25,7 @@ import { useRouter } from "next/navigation";
 import InputBox from "@/components/inputbox/InputBox";
 import { PasswordTextField } from "./EditHiddenInput";
 import { SwitchPrimary } from "@/components/switches";
+import TimeHMA from "app/(auth)/model-info/TimeHMA";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -296,6 +297,7 @@ const ContentByTab = ({
             const isHiddenParameter = item["hidden-param"] === "true";
             const isSwitch =
               item.UI_INPUT_TYPE === undefined && item.ONOFF_TOGGLE === "true";
+            const isTimeHMA = item.UI_INPUT_TYPE === "time_HMA";
 
             if (isHiddenParameter && !showHiddenParameters) {
               return null;
@@ -731,6 +733,97 @@ const ContentByTab = ({
                         menuContentList.map((menuContent) => {
                           if (item.no === menuContent.no) {
                             return { ...menuContent, DEFAULT_VALUE: isOn };
+                          }
+                          return menuContent;
+                        })
+                      );
+                    }}
+                  />
+                </Stack>
+              );
+            }
+
+            if (isTimeHMA) {
+              return (
+                <Stack
+                  justifyContent={"flex-start"}
+                  alignItems={"center"}
+                  width="calc(50% - 20px)"
+                  gap={"12px"}
+                >
+                  <Stack
+                    width={"100%"}
+                    alignItems={"center"}
+                    direction={"row"}
+                    gap={"8px"}
+                  >
+                    <InputBox.Title
+                      style={
+                        isHiddenParameter
+                          ? { color: "var(--error)" }
+                          : undefined
+                      }
+                    >
+                      {getLocalizedText(item, lang)}
+                      {item.required === "true" && <i>*</i>}
+                    </InputBox.Title>
+                    {item.TEXT_EN_INFO && (
+                      <InputBox.Info
+                        tooltipText={
+                          <span style={{ whiteSpace: "pre-wrap" }}>
+                            {lang === "en"
+                              ? item.TEXT_EN_INFO
+                              : lang === "es"
+                              ? item.TEXT_ES_INFO
+                              : item.TEXT_PT_INFO}
+                          </span>
+                        }
+                      />
+                    )}
+                    {item.JSON_ID && (
+                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                    )}
+                    <div style={{ marginLeft: "auto" }}>
+                      <SwitchPrimary
+                        checked={item.ONOFF_TOGGLE === "true"}
+                        onChange={(e) => {
+                          handleClearError(item.no);
+                          const isOn = e.target.checked;
+
+                          setMenuContentList(
+                            menuContentList.map((menuContent) => {
+                              if (item.no === menuContent.no) {
+                                return {
+                                  ...menuContent,
+                                  ONOFF_TOGGLE: String(isOn),
+                                  value: item?.DEFAULT_VALUE,
+                                };
+                              }
+                              return menuContent;
+                            })
+                          );
+                        }}
+                      />
+                    </div>
+                  </Stack>
+                  <TimeHMA
+                    style={{
+                      visibility:
+                        item.ONOFF_TOGGLE !== "true" ? "hidden" : "visible",
+                    }}
+                    value={item.value}
+                    onChange={(value: string) => {
+                      console.log("value22 :::", value);
+
+                      setMenuContentList(
+                        menuContentList.map((menuContent) => {
+                          if (item.no === menuContent.no) {
+                            console.log("test ::::::::", menuContent);
+
+                            return {
+                              ...menuContent,
+                              value,
+                            };
                           }
                           return menuContent;
                         })
