@@ -179,6 +179,7 @@ export default function Model() {
       renderCell: (params) => {
         return (
           <ModelButton
+            style={{ padding: "8px 0px" }}
             onNetworkError={() => {
               setOfflineErrorDialog(true);
             }}
@@ -595,11 +596,11 @@ function GalleryView({ rows, onNetworkError }: DataTableProps) {
   return (
     <Stack>
       <Stack alignItems="center" style={{ overflow: "auto" }}>
-        <ul style={{ width: "1740px" }} className={styles.galleryWrap}>
+        <ul className={styles.galleryWrap}>
           {paginatedRows.map((item, index) => (
             <li key={item.id}>
               <div className={styles.galleryThumbnail}>
-                <Box width={195} height={172}>
+                <Box>
                   <img
                     src={item.col1}
                     alt="model"
@@ -613,6 +614,7 @@ function GalleryView({ rows, onNetworkError }: DataTableProps) {
               </div>
               <div className={styles.galleryTitle}>{item.col2}</div>
               <ModelButton
+                style={{ padding: "8px 0px" }}
                 model={item.col2}
                 model_version={item.col3}
                 onNetworkError={onNetworkError}
@@ -684,7 +686,7 @@ function LinearDeterminate({ setEndLoaded }) {
   );
 }
 
-function ModelButton({ onNetworkError, model, model_version }) {
+function ModelButton({ onNetworkError, model, model_version, style }) {
   const t = useTranslations("home");
   const { setModelName } = useModelInfoStore();
   const router = useRouter();
@@ -733,6 +735,7 @@ function ModelButton({ onNetworkError, model, model_version }) {
     return (
       <>
         <Button
+          style={style}
           variant="contained"
           sx={{ width: "100%" }}
           onClick={(e) => handleConfigurationClick(e)}
@@ -746,6 +749,7 @@ function ModelButton({ onNetworkError, model, model_version }) {
     return (
       <>
         <Button
+          style={style}
           variant="outlined"
           sx={{ width: "100%" }}
           onClick={(e) => {
