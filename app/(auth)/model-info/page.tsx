@@ -10,15 +10,7 @@ import {
 } from "@/utils/idbModelUtil";
 import { ModelConfig } from "@/src/api/services/model/type";
 import SideMenu from "./SideMenu";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
+import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 import { useRouter } from "next/navigation";
@@ -30,6 +22,7 @@ import TimeSeHMAButton from "app/(auth)/model-info/TimeSeHMAButton";
 import CheckboxEdit from "./CheckboxEdit";
 import ModelInfoController from "./Controller";
 import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
+import CheckboxEditButton from "app/(auth)/model-info/CheckboxEditButton";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -314,6 +307,8 @@ const ContentByTab = ({
                 item.UI_INPUT_TYPE === "time_se_HM_button";
               const isCheckboxEdit = item.UI_INPUT_TYPE === "checkbox_edit";
               const isEditButton = item.UI_INPUT_TYPE === "edit_button";
+              const isCheckboxEditButton =
+                item.UI_INPUT_TYPE === "checkbox_edit_button";
 
               if (isHiddenParameter && !showHiddenParameters) {
                 return null;
@@ -608,6 +603,12 @@ const ContentByTab = ({
               }
 
               if (isCheckbox) {
+                console.log("item :::", item);
+                console.log(
+                  "item.DEFAULT_VAL_INDEX :::",
+                  item.DEFAULT_VAL_INDEX
+                );
+
                 return (
                   <Stack
                     direction={isDeviceStatus ? "row" : "column"}
@@ -655,19 +656,22 @@ const ContentByTab = ({
                       width={"100%"}
                     >
                       <CheckboxComp
-                        value={item?.value as string}
+                        value={item.DEFAULT_VALUE || ""}
                         optionsString={item.DEFAULT_VAL_INDEX}
                         labelsString={{
-                          TEXT_EN_ITEM_CONTENT: item.TEXT_EN_ITEM_CONTENT,
-                          TEXT_ES_ITEM_CONTENT: item.TEXT_ES_ITEM_CONTENT,
-                          TEXT_PT_ITEM_CONTENT: item.TEXT_PT_ITEM_CONTENT,
+                          TEXT_EN_ITEM_CONTENT: item.TEXT_EN_ITEM_CONTENT || "",
+                          TEXT_ES_ITEM_CONTENT: item.TEXT_ES_ITEM_CONTENT || "",
+                          TEXT_PT_ITEM_CONTENT: item.TEXT_PT_ITEM_CONTENT || "",
                         }}
                         lang={lang}
                         onChange={(newValue) => {
                           setMenuContentList(
                             menuContentList.map((menuContent) => {
                               if (item.no === menuContent.no) {
-                                return { ...menuContent, value: newValue };
+                                return {
+                                  ...menuContent,
+                                  DEFAULT_VALUE: newValue,
+                                };
                               }
                               return menuContent;
                             })
@@ -790,7 +794,7 @@ const ContentByTab = ({
                                     return {
                                       ...menuContent,
                                       ONOFF_TOGGLE: String(isOn),
-                                      value: item?.DEFAULT_VALUE,
+                                      DEFAULT_VALUE: item?.DEFAULT_VALUE,
                                     };
                                   }
                                   return menuContent;
@@ -816,8 +820,6 @@ const ContentByTab = ({
                         setMenuContentList(
                           menuContentList.map((menuContent) => {
                             if (item.no === menuContent.no) {
-                              console.log("test ::::::::", menuContent);
-
                               return {
                                 ...menuContent,
                                 DEFAULT_VALUE: value,
@@ -906,6 +908,77 @@ const ContentByTab = ({
                     }
                     jsonId={item.JSON_ID}
                   />
+                );
+              }
+
+              if (isCheckboxEditButton) {
+                return (
+                  <Stack
+                    justifyContent={"flex-start"}
+                    alignItems={"center"}
+                    width="calc(50% - 20px)"
+                    gap={"12px"}
+                  >
+                    <Stack
+                      width={"100%"}
+                      alignItems={"center"}
+                      direction={"row"}
+                      gap={"8px"}
+                    >
+                      <InputBox.Title
+                        style={
+                          isHiddenParameter
+                            ? { color: "var(--error)" }
+                            : undefined
+                        }
+                      >
+                        {getLocalizedText(item, lang)}
+                        {item.required === "true" && <i>*</i>}
+                      </InputBox.Title>
+                      {item.TEXT_EN_INFO && (
+                        <InputBox.Info
+                          tooltipText={
+                            <span style={{ whiteSpace: "pre-wrap" }}>
+                              {lang === "en"
+                                ? item.TEXT_EN_INFO
+                                : lang === "es"
+                                ? item.TEXT_ES_INFO
+                                : item.TEXT_PT_INFO}
+                            </span>
+                          }
+                        />
+                      )}
+                      {item.JSON_ID && (
+                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                      )}
+                    </Stack>
+                    <CheckboxEditButton
+                      checkedValue={item?.DEFAULT_VALUE?.[0] || ""}
+                      inputValue={item?.DEFAULT_VALUE?.[1] || ""}
+                      VALUE_MIN={item.VALUE_MIN}
+                      VALUE_MAX={item.VALUE_MAX}
+                      optionsString={item.DEFAULT_VAL_INDEX}
+                      lang={lang}
+                      labelsString={{
+                        TEXT_EN_ITEM_CONTENT: item.TEXT_EN_ITEM_CONTENT || "",
+                        TEXT_ES_ITEM_CONTENT: item.TEXT_ES_ITEM_CONTENT || "",
+                        TEXT_PT_ITEM_CONTENT: item.TEXT_PT_ITEM_CONTENT || "",
+                      }}
+                      onChange={(newValue) => {
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              return {
+                                ...menuContent,
+                                DEFAULT_VALUE: newValue as unknown as string,
+                              };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                    />
+                  </Stack>
                 );
               }
 
