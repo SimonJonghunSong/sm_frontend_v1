@@ -1,6 +1,7 @@
 import { Button, MenuItem, Select } from "@mui/material";
 import dayjs from "dayjs";
 import TimeHMA from "./TimeHMA";
+import { useTranslations } from "use-intl";
 
 interface Props {
   style?: React.CSSProperties;
@@ -17,6 +18,8 @@ export default function TimeSeHMAButton({
   onClick,
   unit = 1,
 }: Props) {
+  const t = useTranslations();
+
   const renderComponent = (type?: "start" | "end") => {
     const [start, end] = values || [];
     const value = type === "start" ? start : end;
@@ -57,7 +60,7 @@ export default function TimeSeHMAButton({
         color="secondary"
         onClick={onClick}
       >
-        Send
+        {t("configuration.ble.save")}
       </Button>
     </div>
   );
