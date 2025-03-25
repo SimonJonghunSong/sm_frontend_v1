@@ -17,21 +17,18 @@ import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
 import DataTable from "@/components/dataTable";
 
-export default function Controller() {
-  const [modelName, setModelName] = useState<string>("model-1");
+interface ModelInfoControllerProps {
+  modelName: string;
+}
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setModelName(event.target.value);
-  };
-
+export default function ModelInfoController({
+  modelName,
+}: ModelInfoControllerProps) {
   const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
   const [loadModal, loadModalToggle] = useModal();
   const [uploadModal, uploadModalToggle] = useModal();
 
-  const handleApply = () => {
-    applyModalToggle();
-  };
   const handleSave = () => {
     saveModalToggle();
   };
@@ -42,25 +39,45 @@ export default function Controller() {
     uploadModalToggle();
   };
 
-  const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
-  const toggleSaveChanges = () => {
-    setShowSaveChanges(!showSaveChanges);
-  };
-
-  const [showUploadChanges, setShowUploadChanges] = useState<boolean>(false);
-  const toggleUploadChanges = () => {
-    setShowUploadChanges(!showUploadChanges);
-  };
-
   const [path, setPath] = useState<File>();
   const handlePathChange = (e) => {
     setPath(e.target.files[0]);
   };
+
+  const downloadProfileFile = (
+    originalFileName: string,
+    downloadFileName: string
+  ) => {
+    try {
+      const filePath = `/assets/profiles/${originalFileName}`;
+
+      fetch(filePath)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          // 다운로드될 때의 파일명 변경
+          link.download = downloadFileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          window.URL.revokeObjectURL(url);
+        })
+        .catch((error) => {
+          console.error("Error downloading file:", error);
+        });
+    } catch (error) {
+      console.error("Error creating download link:", error);
+    }
+  };
+
   return (
     <Stack
       direction="row"
       alignItems="center"
       justifyContent="space-between"
+      width={"100%"}
       mb="24px"
       pb="24px"
       borderBottom="1px solid var(--grey4)"
@@ -101,6 +118,12 @@ export default function Controller() {
         >
           Load
         </Button>
+        {/* 
+            // Administrator/Customer/Client : Shown
+            // Guest/Anonnymous : Hidden
+            // Online : Enabled
+            // Offline : Disabled
+        */}
         <Tooltip
           title="Scuti Upload"
           placement="top"
@@ -157,26 +180,10 @@ export default function Controller() {
       >
         <Stack>
           <span>Are you sure you want to save profile?</span>
-          <Stack direction="row" gap="8px" mt={1}>
-            <TextField
-              fullWidth
-              value={path?.name || ""}
-              inputProps={{ readOnly: true }}
-            />
-            <Button variant="outlined" color="secondary" component="label">
-              <input
-                style={{ display: "none" }}
-                type="file"
-                hidden
-                onChange={handlePathChange}
-              />
-              Path
-            </Button>
-          </Stack>
-          <Button sx={{ width: "fit-content" }} onClick={toggleSaveChanges}>
+          {/* <Button sx={{ width: "fit-content" }} onClick={toggleSaveChanges}>
             Show Changes
-          </Button>
-          {showSaveChanges && (
+          </Button> */}
+          {/* {showSaveChanges && (
             <TextField
               value={"Show Changed Value..."}
               multiline
@@ -195,7 +202,7 @@ export default function Controller() {
                 },
               }}
             />
-          )}
+          )} */}
         </Stack>
       </Modal>
 
@@ -206,6 +213,7 @@ export default function Controller() {
         toggleOpen={loadModalToggle}
         title="Load Profile"
         width="720px"
+        hasFooter={false}
       >
         <LoadModal />
       </Modal>
@@ -221,10 +229,10 @@ export default function Controller() {
       >
         <Stack>
           <span>Are you sure you want to upload profile to Scuti?</span>
-          <Button sx={{ width: "fit-content" }} onClick={toggleUploadChanges}>
+          {/* <Button sx={{ width: "fit-content" }} onClick={toggleUploadChanges}>
             Show Changes
-          </Button>
-          {showUploadChanges && (
+          </Button> */}
+          {/* {showUploadChanges && (
             <TextField
               value={"Show Changed Value..."}
               multiline
@@ -243,7 +251,7 @@ export default function Controller() {
                 },
               }}
             />
-          )}
+          )} */}
         </Stack>
       </Modal>
     </Stack>

@@ -688,7 +688,7 @@ function LinearDeterminate({ setEndLoaded }) {
 
 function ModelButton({ onNetworkError, model, model_version, style }) {
   const t = useTranslations("home");
-  const { setModelName } = useModelInfoStore();
+  const { setModelName, setFwVer } = useModelInfoStore();
   const router = useRouter();
   const { isOnline } = useNetworkMonitor();
   const [startLoaded, setStartLoaded] = useState<boolean>(false);
@@ -709,6 +709,7 @@ function ModelButton({ onNetworkError, model, model_version, style }) {
   const handleConfigurationClick = (e) => {
     e.stopPropagation();
     setModelName(model);
+    setFwVer(model_version);
     router.push(`/model-info`);
   };
 
