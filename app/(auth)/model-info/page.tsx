@@ -215,9 +215,6 @@ const ContentByTab = ({
         };
       });
 
-    console.log("requiredList :::", requiredList);
-    console.log("errorNoList :::", errorNoList);
-
     // 에러가 있을 경우 에러 표기
     if (errorNoList.length !== 0) {
       setErrorList(
@@ -230,7 +227,6 @@ const ContentByTab = ({
         const errorElement = document.querySelector(
           `[data-error-no='${errorNoList[0].no}']`
         );
-        console.log("errorElement :::", errorElement);
 
         if (errorElement) {
           const rect = errorElement.getBoundingClientRect();
@@ -603,12 +599,6 @@ const ContentByTab = ({
               }
 
               if (isCheckbox) {
-                console.log("item :::", item);
-                console.log(
-                  "item.DEFAULT_VAL_INDEX :::",
-                  item.DEFAULT_VAL_INDEX
-                );
-
                 return (
                   <Stack
                     direction={isDeviceStatus ? "row" : "column"}
@@ -815,8 +805,6 @@ const ContentByTab = ({
                       }}
                       value={item.DEFAULT_VALUE}
                       onChange={(value: string) => {
-                        console.log("value22 :::", value);
-
                         setMenuContentList(
                           menuContentList.map((menuContent) => {
                             if (item.no === menuContent.no) {

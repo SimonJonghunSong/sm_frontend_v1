@@ -42,6 +42,7 @@ export default function CheckboxEditButton({
         onChange={(newValue) => {
           onChange([newValue, inputValue]);
         }}
+        hasAllCheckbox={false}
       />
       {isEditHidden ? (
         <PasswordTextField
