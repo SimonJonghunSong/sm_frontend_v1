@@ -64,8 +64,10 @@ const ModelInfoPage = () => {
       index: number;
     }[]
   >([]);
-  const { getModelName } = useModelInfoStore();
+  const { getModelName, getFwVer } = useModelInfoStore();
   const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+
   const t = useTranslations();
   const router = useRouter();
 
@@ -146,6 +148,7 @@ const ModelInfoPage = () => {
       <ContentByTab
         tab={tab}
         modelName={modelName}
+        fwVer={fwVer}
         showHiddenParameters={showHiddenParameters}
         allMenuContentList={allMenuContentList}
         handleUpdateContentList={handleUpdateContentList}
@@ -160,12 +163,14 @@ export default ModelInfoPage;
 const ContentByTab = ({
   tab,
   modelName,
+  fwVer,
   showHiddenParameters,
   allMenuContentList,
   handleUpdateContentList,
 }: {
   tab: string;
   modelName: string;
+  fwVer: string;
   showHiddenParameters: boolean;
   allMenuContentList: ModelConfig[];
   handleUpdateContentList: (menuContentList: ModelConfig[]) => void;
@@ -274,7 +279,7 @@ const ContentByTab = ({
     <>
       <article className="contentWrap">
         <Stack>
-          <ModelInfoController modelName={modelName} />
+          <ModelInfoController modelName={modelName} fwVer={fwVer} />
           <Stack
             flexWrap="wrap"
             direction="row"

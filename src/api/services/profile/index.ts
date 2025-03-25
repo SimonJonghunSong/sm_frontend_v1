@@ -1,13 +1,12 @@
+import { DownloadProfileResponse } from "@/src/api/services/profile/type";
 import { del, put, post } from "../../apiClient";
 
-const uploadProfile = ({ json, profile }: { json: string; profile: File }) => {
-  return post<void, { json: string; profile: File }>(
-    "/api/v1/my/profile_upload",
-    {
-      json,
-      profile,
-    }
-  );
+const uploadProfile = (formData: FormData) => {
+  return post<void, FormData>("/api/v1/my/profile_upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 const downloadProfile = ({
@@ -20,7 +19,7 @@ const downloadProfile = ({
   nickname?: string;
 }) => {
   return post<
-    void,
+    DownloadProfileResponse,
     { model_name?: string; model_version?: string; nickname?: string }
   >("/api/v1/my/profile_download", {
     model_name,
