@@ -29,6 +29,7 @@ import TimeHMA from "app/(auth)/model-info/TimeHMA";
 import TimeSeHMAButton from "app/(auth)/model-info/TimeSeHMAButton";
 import CheckboxEdit from "./CheckboxEdit";
 import ModelInfoController from "./Controller";
+import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -653,87 +654,26 @@ const ContentByTab = ({
                       alignItems="center"
                       width={"100%"}
                     >
-                      <div
-                        style={{
-                          width: "100%",
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: "8px",
+                      <CheckboxComp
+                        value={item?.value as string}
+                        optionsString={item.DEFAULT_VAL_INDEX}
+                        labelsString={{
+                          TEXT_EN_ITEM_CONTENT: item.TEXT_EN_ITEM_CONTENT,
+                          TEXT_ES_ITEM_CONTENT: item.TEXT_ES_ITEM_CONTENT,
+                          TEXT_PT_ITEM_CONTENT: item.TEXT_PT_ITEM_CONTENT,
                         }}
-                      >
-                        {item.DEFAULT_VAL_INDEX?.split(", ").map(
-                          (key, index) => {
-                            const label = (
-                              lang === "en"
-                                ? item.TEXT_EN_ITEM_CONTENT
-                                : lang === "es"
-                                ? item.TEXT_ES_ITEM_CONTENT
-                                : item.TEXT_PT_ITEM_CONTENT
-                            )
-                              ?.replace(/[\r\n]+/g, " ")
-                              .split(", ")[index];
-                            const values = item?.DEFAULT_VALUE?.replaceAll(
-                              " ",
-                              ""
-                            ).split("");
-
-                            return (
-                              <FormControlLabel
-                                key={key}
-                                label={label}
-                                control={
-                                  <Checkbox
-                                    key={key}
-                                    checked={values?.[index] === "1"}
-                                    onChange={(e) => {
-                                      handleClearError(item.no);
-
-                                      const valIndex =
-                                        item?.DEFAULT_VAL_INDEX?.split(", ") ??
-                                        [];
-                                      const totalBits = valIndex.length;
-
-                                      // 기존 값을 파싱하고 길이 부족한 경우 0으로 채움
-                                      const currentBits =
-                                        item?.DEFAULT_VALUE?.replaceAll(
-                                          " ",
-                                          ""
-                                        ).split("") ?? [];
-                                      while (currentBits.length < totalBits) {
-                                        currentBits.push("0");
-                                      }
-
-                                      // toggle
-                                      currentBits[index] =
-                                        currentBits[index] === "1" ? "0" : "1";
-
-                                      // 8비트 단위로 공백 포함하여 재조합
-                                      const newValue = currentBits
-                                        .map((bit, i) =>
-                                          i % 8 === 0 ? " " + bit : bit
-                                        )
-                                        .join("")
-                                        .trim();
-
-                                      setMenuContentList(
-                                        menuContentList.map((menuContent) => {
-                                          if (item.no === menuContent.no) {
-                                            return {
-                                              ...menuContent,
-                                              DEFAULT_VALUE: newValue,
-                                            };
-                                          }
-                                          return menuContent;
-                                        })
-                                      );
-                                    }}
-                                  />
-                                }
-                              />
-                            );
-                          }
-                        )}
-                      </div>
+                        lang={lang}
+                        onChange={(newValue) => {
+                          setMenuContentList(
+                            menuContentList.map((menuContent) => {
+                              if (item.no === menuContent.no) {
+                                return { ...menuContent, value: newValue };
+                              }
+                              return menuContent;
+                            })
+                          );
+                        }}
+                      />
                     </Stack>
                   </Stack>
                 );
