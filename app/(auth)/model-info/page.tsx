@@ -27,6 +27,7 @@ import { PasswordTextField } from "./EditHiddenInput";
 import { SwitchPrimary } from "@/components/switches";
 import TimeHMA from "app/(auth)/model-info/TimeHMA";
 import CheckboxEdit from "./CheckboxEdit";
+import ModelInfoController from "./Controller";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -179,7 +180,6 @@ const ContentByTab = ({
   const [menuContentList, setMenuContentList] = useState<ModelConfig[]>([]);
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
-  console.log(menuContentList);
   const { lang } = useLangStore();
 
   const { toggle: sendToggle, renderConfirmModal: renderSendConfirmModal } =
@@ -282,72 +282,639 @@ const ContentByTab = ({
   return (
     <>
       <article className="contentWrap">
-        <Stack
-          flexWrap="wrap"
-          direction="row"
-          gap={tab === "Device Status" ? "0 40px" : "48px 40px"}
-        >
-          {menuContentList.map((item, idx) => {
-            const isDeviceStatus = tab == DEVICE_STATUS;
-            const isSectionTitle = item.Depth3 === "Section1";
-            const isButton = item.UI_INPUT_TYPE === "button";
-            const isDropdown = item.UI_INPUT_TYPE === "dropdown";
-            const isDropdownButton = item.UI_INPUT_TYPE === "dropdown_button";
-            const isEditHidden = item.UI_INPUT_TYPE === "edit_hidden";
-            const isInput =
-              item.UI_INPUT_TYPE === "edit" ||
-              item.UI_INPUT_TYPE === "edit_min" ||
-              item.UI_INPUT_TYPE === "edit_max";
-            const isCheckbox = item.UI_INPUT_TYPE === "checkbox";
-            const isHiddenParameter = item["hidden-param"] === "true";
-            const isSwitch =
-              item.UI_INPUT_TYPE === undefined && item.ONOFF_TOGGLE === "true";
-            const isTimeHMA =
-              item.UI_INPUT_TYPE === "time_HMA" ||
-              item.UI_INPUT_TYPE === "time_se_HMA";
-            const isCheckboxEdit = item.UI_INPUT_TYPE === "checkbox_edit";
-            const isEditButton = item.UI_INPUT_TYPE === "edit_button";
+        <Stack>
+          <ModelInfoController modelName={modelName} />
+          <Stack
+            flexWrap="wrap"
+            direction="row"
+            gap={tab == DEVICE_STATUS ? "0 40px" : "40px"}
+          >
+            {menuContentList.map((item, idx) => {
+              const isDeviceStatus = tab == DEVICE_STATUS;
+              const isSectionTitle = item.Depth3 === "Section1";
+              const isButton = item.UI_INPUT_TYPE === "button";
+              const isDropdown = item.UI_INPUT_TYPE === "dropdown";
+              const isDropdownButton = item.UI_INPUT_TYPE === "dropdown_button";
+              const isEditHidden = item.UI_INPUT_TYPE === "edit_hidden";
+              const isInput =
+                item.UI_INPUT_TYPE === "edit" ||
+                item.UI_INPUT_TYPE === "edit_min" ||
+                item.UI_INPUT_TYPE === "edit_max";
+              const isCheckbox = item.UI_INPUT_TYPE === "checkbox";
+              const isHiddenParameter = item["hidden-param"] === "true";
+              const isSwitch =
+                item.UI_INPUT_TYPE === undefined &&
+                item.ONOFF_TOGGLE === "true";
+              const isTimeHMA =
+                item.UI_INPUT_TYPE === "time_HMA" ||
+                item.UI_INPUT_TYPE === "time_se_HMA";
+              const isCheckboxEdit = item.UI_INPUT_TYPE === "checkbox_edit";
+              const isEditButton = item.UI_INPUT_TYPE === "edit_button";
 
-            if (isHiddenParameter && !showHiddenParameters) {
-              return null;
-            }
+              if (isHiddenParameter && !showHiddenParameters) {
+                return null;
+              }
 
-            if (isSectionTitle) {
-              return (
-                <div
-                  className="pageTitle"
-                  style={{
-                    width: "100%",
-                    paddingTop: idx === 0 ? 0 : 48,
-                    marginBottom: tab === "Device Status" ? 48 : 0,
-                  }}
-                >
-                  {getLocalizedText(item, lang)}
-                  {!isDeviceStatus && (
-                    <Button
-                      color="secondary"
-                      variant="contained"
-                      // 센션 별 저장
-                      // onClick={() => handleSendClick(item.TEXT_EN)}
+              if (isSectionTitle) {
+                return (
+                  <div
+                    className="pageTitle"
+                    style={{
+                      width: "100%",
+                      paddingTop: idx === 0 ? 0 : 48,
+                      marginBottom: tab === "Device Status" ? 48 : 0,
+                    }}
+                  >
+                    {getLocalizedText(item, lang)}
+                    {!isDeviceStatus && (
+                      <Button
+                        color="secondary"
+                        variant="contained"
+                        // 센션 별 저장
+                        // onClick={() => handleSendClick(item.TEXT_EN)}
 
-                      // 전체 저장
-                      onClick={() => handleSendClick()}
+                        // 전체 저장
+                        onClick={() => handleSendClick()}
+                      >
+                        {t("configuration.ble.save")}
+                      </Button>
+                    )}
+                  </div>
+                );
+              }
+              if (isButton) {
+                return (
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    gap="8px"
+                    height="56px"
+                    width="calc(50% - 20px)"
+                    borderBottom="1px solid var(--grey3)"
+                  >
+                    <div
+                      className="list-title"
+                      style={
+                        isHiddenParameter
+                          ? { color: "var(--error)" }
+                          : undefined
+                      }
                     >
-                      {t("configuration.ble.save")}
-                    </Button>
-                  )}
-                </div>
-              );
-            }
-            if (isButton) {
+                      {getLocalizedText(item, lang)}
+                    </div>
+                    <div>
+                      <Button
+                        variant="outlined"
+                        color="secondary"
+                        sx={{ height: 30 }}
+                      >
+                        {getLocalizedText(item, lang)}
+                      </Button>
+                    </div>
+                  </Stack>
+                );
+              }
+              if (isDropdown || isDropdownButton) {
+                return (
+                  <Stack
+                    direction={isDeviceStatus ? "row" : "column"}
+                    alignItems={isDeviceStatus ? "center" : "flex-start"}
+                    gap={isDeviceStatus ? "8px" : "12px"}
+                    height={isDeviceStatus ? "56px" : undefined}
+                    width="calc(50% - 20px)"
+                    borderBottom={
+                      isDeviceStatus ? "1px solid var(--grey3)" : undefined
+                    }
+                  >
+                    <div
+                      className="list-title"
+                      style={
+                        isHiddenParameter
+                          ? { color: "var(--error)" }
+                          : undefined
+                      }
+                    >
+                      <Stack direction="row" alignItems={"center"} gap={"8px"}>
+                        {getLocalizedText(item, lang)}
+                        {item.required === "true" && <i>*</i>}
+                        {item.TEXT_EN_INFO && (
+                          <InputBox.Info
+                            tooltipText={
+                              <span style={{ whiteSpace: "pre-wrap" }}>
+                                {lang === "en"
+                                  ? item.TEXT_EN_INFO
+                                  : lang === "es"
+                                  ? item.TEXT_ES_INFO
+                                  : item.TEXT_PT_INFO}
+                              </span>
+                            }
+                          />
+                        )}
+                        {item.JSON_ID && (
+                          <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                        )}
+                      </Stack>
+                    </div>
+                    <Stack
+                      direction="row"
+                      gap="16px"
+                      alignItems="center"
+                      width={"100%"}
+                    >
+                      <div style={{ width: "100%" }}>
+                        <Stack direction="row" gap="8px">
+                          <Select
+                            value={item.DEFAULT_VALUE}
+                            onChange={(e) => {
+                              handleClearError(item.no);
+
+                              setMenuContentList(
+                                menuContentList.map((menuContent) => {
+                                  if (item.no === menuContent.no) {
+                                    return {
+                                      ...menuContent,
+                                      DEFAULT_VALUE: e.target.value,
+                                    };
+                                  }
+                                  return menuContent;
+                                })
+                              );
+                            }}
+                            sx={{
+                              width: tab === "Device Status" ? 144 : "100%",
+                            }}
+                          >
+                            {(lang === "en"
+                              ? item.TEXT_EN_ITEM_CONTENT
+                              : lang === "es"
+                              ? item.TEXT_ES_ITEM_CONTENT
+                              : item.TEXT_PT_ITEM_CONTENT
+                            )
+                              ?.split(", ")
+                              .map((itemContent, index) => {
+                                return (
+                                  <MenuItem
+                                    value={
+                                      item.DEFAULT_VAL_INDEX?.split(", ")[index]
+                                    }
+                                  >
+                                    {itemContent}
+                                  </MenuItem>
+                                );
+                              })}
+                          </Select>
+                          {isDropdownButton && (
+                            <Button color="secondary" variant="contained">
+                              {t("configuration.ble.save")}
+                            </Button>
+                          )}
+                        </Stack>
+
+                        {renderErrorMessage(item)}
+                      </div>
+                    </Stack>
+                  </Stack>
+                );
+              }
+              if (isInput || isEditHidden || isEditButton) {
+                return (
+                  <InputBox style={{ width: "calc(50% - 20px)" }}>
+                    <InputBox.Head>
+                      <InputBox.Title
+                        style={
+                          isHiddenParameter
+                            ? { color: "var(--error)" }
+                            : undefined
+                        }
+                      >
+                        {getLocalizedText(item, lang)}
+                      </InputBox.Title>
+                      {item.TEXT_EN_INFO && (
+                        <InputBox.Info
+                          tooltipText={
+                            <span style={{ whiteSpace: "pre-wrap" }}>
+                              {lang === "en"
+                                ? item.TEXT_EN_INFO
+                                : lang === "es"
+                                ? item.TEXT_ES_INFO
+                                : item.TEXT_PT_INFO}
+                            </span>
+                          }
+                        />
+                      )}
+                      {item.JSON_ID && (
+                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                      )}
+                    </InputBox.Head>
+                    <InputBox.Body>
+                      {isEditHidden ? (
+                        <PasswordTextField
+                          value={item.DEFAULT_VALUE}
+                          onChange={(newValue) => {
+                            handleClearError(item.no);
+
+                            setMenuContentList(
+                              menuContentList.map((menuContent) => {
+                                if (item.no === menuContent.no) {
+                                  return {
+                                    ...menuContent,
+                                    DEFAULT_VALUE: newValue,
+                                  };
+                                }
+                                return menuContent;
+                              })
+                            );
+                          }}
+                        />
+                      ) : (
+                        <>
+                          <Stack direction="row" gap="8px">
+                            <TextField
+                              fullWidth
+                              type={
+                                !!item.VALUE_MIN && !!item.VALUE_MIN
+                                  ? "number"
+                                  : isEditHidden
+                                  ? "password"
+                                  : "text"
+                              }
+                              inputProps={
+                                !!item.VALUE_MIN && !!item.VALUE_MIN
+                                  ? {
+                                      min: item.VALUE_MIN || undefined,
+                                      max: item.VALUE_MAX || undefined,
+                                    }
+                                  : undefined
+                              }
+                              value={item.DEFAULT_VALUE}
+                              onChange={(e) => {
+                                handleClearError(item.no);
+
+                                let newValue = e.target.value;
+
+                                // 숫자 타입일 경우 범위 검증
+                                if (
+                                  item.VALUE_MIN !== undefined &&
+                                  item.VALUE_MAX !== undefined
+                                ) {
+                                  const numValue = Number(newValue);
+                                  if (numValue > Number(item.VALUE_MAX)) {
+                                    newValue = String(item.VALUE_MAX);
+                                  } else if (
+                                    numValue < Number(item.VALUE_MIN)
+                                  ) {
+                                    newValue = String(item.VALUE_MIN);
+                                  }
+                                }
+
+                                setMenuContentList(
+                                  menuContentList.map((menuContent) => {
+                                    if (item.no === menuContent.no) {
+                                      return {
+                                        ...menuContent,
+                                        DEFAULT_VALUE: newValue,
+                                      };
+                                    }
+                                    return menuContent;
+                                  })
+                                );
+                              }}
+                            />
+
+                            {isEditButton && (
+                              <Button
+                                color="secondary"
+                                variant="contained"
+                                // 센션 별 저장
+                                // onClick={() => handleSendClick(item.TEXT_EN)}
+
+                                // 전체 저장
+                                onClick={() => {}}
+                              >
+                                {t("configuration.ble.save")}
+                              </Button>
+                            )}
+                          </Stack>
+                        </>
+                      )}
+                    </InputBox.Body>
+                    {renderErrorMessage(item)}
+                  </InputBox>
+                );
+              }
+
+              if (isCheckbox) {
+                return (
+                  <Stack
+                    direction={isDeviceStatus ? "row" : "column"}
+                    alignItems={isDeviceStatus ? "center" : "flex-start"}
+                    gap={isDeviceStatus ? "8px" : "12px"}
+                    height={isDeviceStatus ? "56px" : undefined}
+                    width="calc(50% - 20px)"
+                    borderBottom={
+                      isDeviceStatus ? "1px solid var(--grey3)" : undefined
+                    }
+                  >
+                    <div
+                      className="list-title"
+                      style={
+                        isHiddenParameter
+                          ? { color: "var(--error)" }
+                          : undefined
+                      }
+                    >
+                      <Stack direction="row" alignItems={"center"} gap={"8px"}>
+                        {getLocalizedText(item, lang)}
+                        {item.required === "true" && <i>*</i>}
+                        {item.TEXT_EN_INFO && (
+                          <InputBox.Info
+                            tooltipText={
+                              <span style={{ whiteSpace: "pre-wrap" }}>
+                                {lang === "en"
+                                  ? item.TEXT_EN_INFO
+                                  : lang === "es"
+                                  ? item.TEXT_ES_INFO
+                                  : item.TEXT_PT_INFO}
+                              </span>
+                            }
+                          />
+                        )}
+                        {item.JSON_ID && (
+                          <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                        )}
+                      </Stack>
+                    </div>
+                    <Stack
+                      direction="row"
+                      gap="16px"
+                      alignItems="center"
+                      width={"100%"}
+                    >
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "8px",
+                        }}
+                      >
+                        {item.DEFAULT_VAL_INDEX?.split(", ").map(
+                          (key, index) => {
+                            const label = (
+                              lang === "en"
+                                ? item.TEXT_EN_ITEM_CONTENT
+                                : lang === "es"
+                                ? item.TEXT_ES_ITEM_CONTENT
+                                : item.TEXT_PT_ITEM_CONTENT
+                            )
+                              ?.replace(/[\r\n]+/g, " ")
+                              .split(", ")[index];
+                            const values = item?.DEFAULT_VALUE?.replaceAll(
+                              " ",
+                              ""
+                            ).split("");
+
+                            return (
+                              <FormControlLabel
+                                key={key}
+                                label={label}
+                                control={
+                                  <Checkbox
+                                    key={key}
+                                    checked={values?.[index] === "1"}
+                                    onChange={(e) => {
+                                      handleClearError(item.no);
+
+                                      const valIndex =
+                                        item?.DEFAULT_VAL_INDEX?.split(", ") ??
+                                        [];
+                                      const totalBits = valIndex.length;
+
+                                      // 기존 값을 파싱하고 길이 부족한 경우 0으로 채움
+                                      const currentBits =
+                                        item?.DEFAULT_VALUE?.replaceAll(
+                                          " ",
+                                          ""
+                                        ).split("") ?? [];
+                                      while (currentBits.length < totalBits) {
+                                        currentBits.push("0");
+                                      }
+
+                                      // toggle
+                                      currentBits[index] =
+                                        currentBits[index] === "1" ? "0" : "1";
+
+                                      // 8비트 단위로 공백 포함하여 재조합
+                                      const newValue = currentBits
+                                        .map((bit, i) =>
+                                          i % 8 === 0 ? " " + bit : bit
+                                        )
+                                        .join("")
+                                        .trim();
+
+                                      setMenuContentList(
+                                        menuContentList.map((menuContent) => {
+                                          if (item.no === menuContent.no) {
+                                            return {
+                                              ...menuContent,
+                                              DEFAULT_VALUE: newValue,
+                                            };
+                                          }
+                                          return menuContent;
+                                        })
+                                      );
+                                    }}
+                                  />
+                                }
+                              />
+                            );
+                          }
+                        )}
+                      </div>
+                    </Stack>
+                  </Stack>
+                );
+              }
+
+              if (isSwitch) {
+                return (
+                  <Stack
+                    direction={"row"}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    width="calc(50% - 20px)"
+                  >
+                    <Stack alignItems={"center"} direction={"row"} gap={"8px"}>
+                      <InputBox.Title
+                        style={
+                          isHiddenParameter
+                            ? { color: "var(--error)" }
+                            : undefined
+                        }
+                      >
+                        {getLocalizedText(item, lang)}
+                        {item.required === "true" && <i>*</i>}
+                      </InputBox.Title>
+                      {item.TEXT_EN_INFO && (
+                        <InputBox.Info
+                          tooltipText={
+                            <span style={{ whiteSpace: "pre-wrap" }}>
+                              {lang === "en"
+                                ? item.TEXT_EN_INFO
+                                : lang === "es"
+                                ? item.TEXT_ES_INFO
+                                : item.TEXT_PT_INFO}
+                            </span>
+                          }
+                        />
+                      )}
+                      {item.JSON_ID && (
+                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                      )}
+                    </Stack>
+
+                    <SwitchPrimary
+                      value={item.DEFAULT_VALUE === "01"}
+                      onChange={(e) => {
+                        handleClearError(item.no);
+                        const isOn = e.target.checked ? "01" : "00";
+
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              return { ...menuContent, DEFAULT_VALUE: isOn };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                    />
+                  </Stack>
+                );
+              }
+
+              if (isTimeHMA) {
+                return (
+                  <Stack
+                    justifyContent={"flex-start"}
+                    alignItems={"center"}
+                    width="calc(50% - 20px)"
+                    gap={"12px"}
+                  >
+                    <Stack
+                      width={"100%"}
+                      alignItems={"center"}
+                      direction={"row"}
+                      gap={"8px"}
+                    >
+                      <InputBox.Title
+                        style={
+                          isHiddenParameter
+                            ? { color: "var(--error)" }
+                            : undefined
+                        }
+                      >
+                        {getLocalizedText(item, lang)}
+                        {item.required === "true" && <i>*</i>}
+                      </InputBox.Title>
+                      {item.TEXT_EN_INFO && (
+                        <InputBox.Info
+                          tooltipText={
+                            <span style={{ whiteSpace: "pre-wrap" }}>
+                              {lang === "en"
+                                ? item.TEXT_EN_INFO
+                                : lang === "es"
+                                ? item.TEXT_ES_INFO
+                                : item.TEXT_PT_INFO}
+                            </span>
+                          }
+                        />
+                      )}
+                      {item.JSON_ID && (
+                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                      )}
+                      {typeof item.ONOFF_TOGGLE !== "undefined" && (
+                        <div style={{ marginLeft: "auto" }}>
+                          <SwitchPrimary
+                            checked={item.ONOFF_TOGGLE === "true"}
+                            onChange={(e) => {
+                              handleClearError(item.no);
+                              const isOn = e.target.checked;
+
+                              setMenuContentList(
+                                menuContentList.map((menuContent) => {
+                                  if (item.no === menuContent.no) {
+                                    return {
+                                      ...menuContent,
+                                      ONOFF_TOGGLE: String(isOn),
+                                      value: item?.DEFAULT_VALUE,
+                                    };
+                                  }
+                                  return menuContent;
+                                })
+                              );
+                            }}
+                          />
+                        </div>
+                      )}
+                    </Stack>
+                    <TimeHMA
+                      style={{
+                        visibility:
+                          typeof item.ONOFF_TOGGLE !== "undefined" &&
+                          item.ONOFF_TOGGLE !== "true"
+                            ? "hidden"
+                            : "visible",
+                      }}
+                      value={item.DEFAULT_VALUE}
+                      onChange={(value: string) => {
+                        console.log("value22 :::", value);
+
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              console.log("test ::::::::", menuContent);
+
+                              return {
+                                ...menuContent,
+                                DEFAULT_VALUE: value,
+                              };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                    />
+                  </Stack>
+                );
+              }
+
+              if (isCheckboxEdit) {
+                return (
+                  <CheckboxEdit
+                    title={getLocalizedText(item, lang)}
+                    info={
+                      lang === "en"
+                        ? item.TEXT_EN_INFO
+                        : lang === "es"
+                        ? item.TEXT_ES_INFO
+                        : item.TEXT_PT_INFO
+                    }
+                    jsonId={item.JSON_ID}
+                  />
+                );
+              }
+
               return (
                 <Stack
-                  direction="row"
-                  alignItems="center"
-                  gap="8px"
-                  height="56px"
+                  direction={isDeviceStatus ? "row" : "column"}
+                  alignItems={isDeviceStatus ? "center" : "flex-start"}
+                  gap={isDeviceStatus ? "8px" : "12px"}
+                  height={isDeviceStatus ? "56px" : undefined}
                   width="calc(50% - 20px)"
-                  borderBottom="1px solid var(--grey3)"
+                  borderBottom={
+                    isDeviceStatus ? "1px solid var(--grey3)" : undefined
+                  }
                 >
                   <div
                     className="list-title"
@@ -357,561 +924,11 @@ const ContentByTab = ({
                   >
                     {getLocalizedText(item, lang)}
                   </div>
-                  <div>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      sx={{ height: 30 }}
-                    >
-                      {getLocalizedText(item, lang)}
-                    </Button>
-                  </div>
+                  <div>{item.DEFAULT_VALUE || "-"}</div>
                 </Stack>
               );
-            }
-            if (isDropdown || isDropdownButton) {
-              return (
-                <Stack
-                  direction={isDeviceStatus ? "row" : "column"}
-                  alignItems={isDeviceStatus ? "center" : "flex-start"}
-                  gap={isDeviceStatus ? "8px" : "12px"}
-                  height={isDeviceStatus ? "56px" : undefined}
-                  width="calc(50% - 20px)"
-                  borderBottom={
-                    isDeviceStatus ? "1px solid var(--grey3)" : undefined
-                  }
-                >
-                  <div
-                    className="list-title"
-                    style={
-                      isHiddenParameter ? { color: "var(--error)" } : undefined
-                    }
-                  >
-                    <Stack direction="row" alignItems={"center"} gap={"8px"}>
-                      {getLocalizedText(item, lang)}
-                      {item.required === "true" && <i>*</i>}
-                      {item.TEXT_EN_INFO && (
-                        <InputBox.Info
-                          tooltipText={
-                            <span style={{ whiteSpace: "pre-wrap" }}>
-                              {lang === "en"
-                                ? item.TEXT_EN_INFO
-                                : lang === "es"
-                                ? item.TEXT_ES_INFO
-                                : item.TEXT_PT_INFO}
-                            </span>
-                          }
-                        />
-                      )}
-                      {item.JSON_ID && (
-                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
-                      )}
-                    </Stack>
-                  </div>
-                  <Stack
-                    direction="row"
-                    gap="16px"
-                    alignItems="center"
-                    width={"100%"}
-                  >
-                    <div style={{ width: "100%" }}>
-                      <Stack direction="row" gap="8px">
-                        <Select
-                          value={item.DEFAULT_VALUE}
-                          onChange={(e) => {
-                            handleClearError(item.no);
-
-                            setMenuContentList(
-                              menuContentList.map((menuContent) => {
-                                if (item.no === menuContent.no) {
-                                  return {
-                                    ...menuContent,
-                                    DEFAULT_VALUE: e.target.value,
-                                  };
-                                }
-                                return menuContent;
-                              })
-                            );
-                          }}
-                          sx={{ width: tab === "Device Status" ? 144 : "100%" }}
-                        >
-                          {(lang === "en"
-                            ? item.TEXT_EN_ITEM_CONTENT
-                            : lang === "es"
-                            ? item.TEXT_ES_ITEM_CONTENT
-                            : item.TEXT_PT_ITEM_CONTENT
-                          )
-                            ?.split(", ")
-                            .map((itemContent, index) => {
-                              return (
-                                <MenuItem
-                                  value={
-                                    item.DEFAULT_VAL_INDEX?.split(", ")[index]
-                                  }
-                                >
-                                  {itemContent}
-                                </MenuItem>
-                              );
-                            })}
-                        </Select>
-                        {isDropdownButton && (
-                          <Button color="secondary" variant="contained">
-                            {t("configuration.ble.save")}
-                          </Button>
-                        )}
-                      </Stack>
-
-                      {renderErrorMessage(item)}
-                    </div>
-                  </Stack>
-                </Stack>
-              );
-            }
-            if (isInput || isEditHidden || isEditButton) {
-              return (
-                <InputBox style={{ width: "calc(50% - 20px)" }}>
-                  <InputBox.Head>
-                    <InputBox.Title
-                      style={
-                        isHiddenParameter
-                          ? { color: "var(--error)" }
-                          : undefined
-                      }
-                    >
-                      {getLocalizedText(item, lang)}
-                    </InputBox.Title>
-                    {item.TEXT_EN_INFO && (
-                      <InputBox.Info
-                        tooltipText={
-                          <span style={{ whiteSpace: "pre-wrap" }}>
-                            {lang === "en"
-                              ? item.TEXT_EN_INFO
-                              : lang === "es"
-                              ? item.TEXT_ES_INFO
-                              : item.TEXT_PT_INFO}
-                          </span>
-                        }
-                      />
-                    )}
-                    {item.JSON_ID && (
-                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
-                    )}
-                  </InputBox.Head>
-                  <InputBox.Body>
-                    {isEditHidden ? (
-                      <PasswordTextField
-                        value={item.DEFAULT_VALUE}
-                        onChange={(newValue) => {
-                          handleClearError(item.no);
-
-                          setMenuContentList(
-                            menuContentList.map((menuContent) => {
-                              if (item.no === menuContent.no) {
-                                return {
-                                  ...menuContent,
-                                  DEFAULT_VALUE: newValue,
-                                };
-                              }
-                              return menuContent;
-                            })
-                          );
-                        }}
-                      />
-                    ) : (
-                      <>
-                        <Stack direction="row" gap="8px">
-                          <TextField
-                            fullWidth
-                            type={
-                              !!item.VALUE_MIN && !!item.VALUE_MIN
-                                ? "number"
-                                : isEditHidden
-                                ? "password"
-                                : "text"
-                            }
-                            inputProps={
-                              !!item.VALUE_MIN && !!item.VALUE_MIN
-                                ? {
-                                    min: item.VALUE_MIN || undefined,
-                                    max: item.VALUE_MAX || undefined,
-                                  }
-                                : undefined
-                            }
-                            value={item.DEFAULT_VALUE}
-                            onChange={(e) => {
-                              handleClearError(item.no);
-
-                              let newValue = e.target.value;
-
-                              // 숫자 타입일 경우 범위 검증
-                              if (
-                                item.VALUE_MIN !== undefined &&
-                                item.VALUE_MAX !== undefined
-                              ) {
-                                const numValue = Number(newValue);
-                                if (numValue > Number(item.VALUE_MAX)) {
-                                  newValue = String(item.VALUE_MAX);
-                                } else if (numValue < Number(item.VALUE_MIN)) {
-                                  newValue = String(item.VALUE_MIN);
-                                }
-                              }
-
-                              setMenuContentList(
-                                menuContentList.map((menuContent) => {
-                                  if (item.no === menuContent.no) {
-                                    return {
-                                      ...menuContent,
-                                      DEFAULT_VALUE: newValue,
-                                    };
-                                  }
-                                  return menuContent;
-                                })
-                              );
-                            }}
-                          />
-
-                          {isEditButton && (
-                            <Button
-                              color="secondary"
-                              variant="contained"
-                              // 센션 별 저장
-                              // onClick={() => handleSendClick(item.TEXT_EN)}
-
-                              // 전체 저장
-                              onClick={() => {}}
-                            >
-                              {t("configuration.ble.save")}
-                            </Button>
-                          )}
-                        </Stack>
-                      </>
-                    )}
-                  </InputBox.Body>
-                  {renderErrorMessage(item)}
-                </InputBox>
-              );
-            }
-
-            if (isCheckbox) {
-              return (
-                <Stack
-                  direction={isDeviceStatus ? "row" : "column"}
-                  alignItems={isDeviceStatus ? "center" : "flex-start"}
-                  gap={isDeviceStatus ? "8px" : "12px"}
-                  height={isDeviceStatus ? "56px" : undefined}
-                  width="calc(50% - 20px)"
-                  borderBottom={
-                    isDeviceStatus ? "1px solid var(--grey3)" : undefined
-                  }
-                >
-                  <div
-                    className="list-title"
-                    style={
-                      isHiddenParameter ? { color: "var(--error)" } : undefined
-                    }
-                  >
-                    <Stack direction="row" alignItems={"center"} gap={"8px"}>
-                      {getLocalizedText(item, lang)}
-                      {item.required === "true" && <i>*</i>}
-                      {item.TEXT_EN_INFO && (
-                        <InputBox.Info
-                          tooltipText={
-                            <span style={{ whiteSpace: "pre-wrap" }}>
-                              {lang === "en"
-                                ? item.TEXT_EN_INFO
-                                : lang === "es"
-                                ? item.TEXT_ES_INFO
-                                : item.TEXT_PT_INFO}
-                            </span>
-                          }
-                        />
-                      )}
-                      {item.JSON_ID && (
-                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
-                      )}
-                    </Stack>
-                  </div>
-                  <Stack
-                    direction="row"
-                    gap="16px"
-                    alignItems="center"
-                    width={"100%"}
-                  >
-                    <div
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "8px",
-                      }}
-                    >
-                      {item.DEFAULT_VAL_INDEX?.split(", ").map((key, index) => {
-                        const label = (
-                          lang === "en"
-                            ? item.TEXT_EN_ITEM_CONTENT
-                            : lang === "es"
-                            ? item.TEXT_ES_ITEM_CONTENT
-                            : item.TEXT_PT_ITEM_CONTENT
-                        )
-                          ?.replace(/[\r\n]+/g, " ")
-                          .split(", ")[index];
-                        const values = item?.DEFAULT_VALUE?.replaceAll(
-                          " ",
-                          ""
-                        ).split("");
-
-                        return (
-                          <FormControlLabel
-                            key={key}
-                            label={label}
-                            control={
-                              <Checkbox
-                                key={key}
-                                checked={values?.[index] === "1"}
-                                onChange={(e) => {
-                                  handleClearError(item.no);
-
-                                  const valIndex =
-                                    item?.DEFAULT_VAL_INDEX?.split(", ") ?? [];
-                                  const totalBits = valIndex.length;
-
-                                  // 기존 값을 파싱하고 길이 부족한 경우 0으로 채움
-                                  const currentBits =
-                                    item?.DEFAULT_VALUE?.replaceAll(
-                                      " ",
-                                      ""
-                                    ).split("") ?? [];
-                                  while (currentBits.length < totalBits) {
-                                    currentBits.push("0");
-                                  }
-
-                                  // toggle
-                                  currentBits[index] =
-                                    currentBits[index] === "1" ? "0" : "1";
-
-                                  // 8비트 단위로 공백 포함하여 재조합
-                                  const newValue = currentBits
-                                    .map((bit, i) =>
-                                      i % 8 === 0 ? " " + bit : bit
-                                    )
-                                    .join("")
-                                    .trim();
-
-                                  setMenuContentList(
-                                    menuContentList.map((menuContent) => {
-                                      if (item.no === menuContent.no) {
-                                        return {
-                                          ...menuContent,
-                                          DEFAULT_VALUE: newValue,
-                                        };
-                                      }
-                                      return menuContent;
-                                    })
-                                  );
-                                }}
-                              />
-                            }
-                          />
-                        );
-                      })}
-                    </div>
-                  </Stack>
-                </Stack>
-              );
-            }
-
-            if (isSwitch) {
-              return (
-                <Stack
-                  direction={"row"}
-                  justifyContent={"space-between"}
-                  alignItems={"center"}
-                  width="calc(50% - 20px)"
-                >
-                  <Stack alignItems={"center"} direction={"row"} gap={"8px"}>
-                    <InputBox.Title
-                      style={
-                        isHiddenParameter
-                          ? { color: "var(--error)" }
-                          : undefined
-                      }
-                    >
-                      {getLocalizedText(item, lang)}
-                      {item.required === "true" && <i>*</i>}
-                    </InputBox.Title>
-                    {item.TEXT_EN_INFO && (
-                      <InputBox.Info
-                        tooltipText={
-                          <span style={{ whiteSpace: "pre-wrap" }}>
-                            {lang === "en"
-                              ? item.TEXT_EN_INFO
-                              : lang === "es"
-                              ? item.TEXT_ES_INFO
-                              : item.TEXT_PT_INFO}
-                          </span>
-                        }
-                      />
-                    )}
-                    {item.JSON_ID && (
-                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
-                    )}
-                  </Stack>
-
-                  <SwitchPrimary
-                    value={item.DEFAULT_VALUE === "01"}
-                    onChange={(e) => {
-                      handleClearError(item.no);
-                      const isOn = e.target.checked ? "01" : "00";
-
-                      setMenuContentList(
-                        menuContentList.map((menuContent) => {
-                          if (item.no === menuContent.no) {
-                            return { ...menuContent, DEFAULT_VALUE: isOn };
-                          }
-                          return menuContent;
-                        })
-                      );
-                    }}
-                  />
-                </Stack>
-              );
-            }
-
-            if (isTimeHMA) {
-              return (
-                <Stack
-                  justifyContent={"flex-start"}
-                  alignItems={"center"}
-                  width="calc(50% - 20px)"
-                  gap={"12px"}
-                >
-                  <Stack
-                    width={"100%"}
-                    alignItems={"center"}
-                    direction={"row"}
-                    gap={"8px"}
-                  >
-                    <InputBox.Title
-                      style={
-                        isHiddenParameter
-                          ? { color: "var(--error)" }
-                          : undefined
-                      }
-                    >
-                      {getLocalizedText(item, lang)}
-                      {item.required === "true" && <i>*</i>}
-                    </InputBox.Title>
-                    {item.TEXT_EN_INFO && (
-                      <InputBox.Info
-                        tooltipText={
-                          <span style={{ whiteSpace: "pre-wrap" }}>
-                            {lang === "en"
-                              ? item.TEXT_EN_INFO
-                              : lang === "es"
-                              ? item.TEXT_ES_INFO
-                              : item.TEXT_PT_INFO}
-                          </span>
-                        }
-                      />
-                    )}
-                    {item.JSON_ID && (
-                      <InputBox.Number>{item.JSON_ID}</InputBox.Number>
-                    )}
-                    {typeof item.ONOFF_TOGGLE !== "undefined" && (
-                      <div style={{ marginLeft: "auto" }}>
-                        <SwitchPrimary
-                          checked={item.ONOFF_TOGGLE === "true"}
-                          onChange={(e) => {
-                            handleClearError(item.no);
-                            const isOn = e.target.checked;
-
-                            setMenuContentList(
-                              menuContentList.map((menuContent) => {
-                                if (item.no === menuContent.no) {
-                                  return {
-                                    ...menuContent,
-                                    ONOFF_TOGGLE: String(isOn),
-                                    value: item?.DEFAULT_VALUE,
-                                  };
-                                }
-                                return menuContent;
-                              })
-                            );
-                          }}
-                        />
-                      </div>
-                    )}
-                  </Stack>
-                  <TimeHMA
-                    style={{
-                      visibility:
-                        typeof item.ONOFF_TOGGLE !== "undefined" &&
-                        item.ONOFF_TOGGLE !== "true"
-                          ? "hidden"
-                          : "visible",
-                    }}
-                    value={item.DEFAULT_VALUE}
-                    onChange={(value: string) => {
-                      console.log("value22 :::", value);
-
-                      setMenuContentList(
-                        menuContentList.map((menuContent) => {
-                          if (item.no === menuContent.no) {
-                            console.log("test ::::::::", menuContent);
-
-                            return {
-                              ...menuContent,
-                              DEFAULT_VALUE: value,
-                            };
-                          }
-                          return menuContent;
-                        })
-                      );
-                    }}
-                  />
-                </Stack>
-              );
-            }
-
-            if (isCheckboxEdit) {
-              return (
-                <CheckboxEdit
-                  title={getLocalizedText(item, lang)}
-                  info={
-                    lang === "en"
-                      ? item.TEXT_EN_INFO
-                      : lang === "es"
-                      ? item.TEXT_ES_INFO
-                      : item.TEXT_PT_INFO
-                  }
-                  jsonId={item.JSON_ID}
-                />
-              );
-            }
-
-            return (
-              <Stack
-                direction={isDeviceStatus ? "row" : "column"}
-                alignItems={isDeviceStatus ? "center" : "flex-start"}
-                gap={isDeviceStatus ? "8px" : "12px"}
-                height={isDeviceStatus ? "56px" : undefined}
-                width="calc(50% - 20px)"
-                borderBottom={
-                  isDeviceStatus ? "1px solid var(--grey3)" : undefined
-                }
-              >
-                <div
-                  className="list-title"
-                  style={
-                    isHiddenParameter ? { color: "var(--error)" } : undefined
-                  }
-                >
-                  {getLocalizedText(item, lang)}
-                </div>
-                <div>{item.DEFAULT_VALUE || "-"}</div>
-              </Stack>
-            );
-          })}
+            })}
+          </Stack>
         </Stack>
       </article>
       {renderSendConfirmModal()}
