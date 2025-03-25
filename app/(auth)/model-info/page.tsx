@@ -26,6 +26,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { PasswordTextField } from "./EditHiddenInput";
 import { SwitchPrimary } from "@/components/switches";
 import TimeHMA from "app/(auth)/model-info/TimeHMA";
+import TimeSeHMAButton from "app/(auth)/model-info/TimeSeHMAButton";
 import CheckboxEdit from "./CheckboxEdit";
 import ModelInfoController from "./Controller";
 
@@ -308,6 +309,8 @@ const ContentByTab = ({
               const isTimeHMA =
                 item.UI_INPUT_TYPE === "time_HMA" ||
                 item.UI_INPUT_TYPE === "time_se_HMA";
+              const isTimeSeHMAButton =
+                item.UI_INPUT_TYPE === "time_se_HM_button";
               const isCheckboxEdit = item.UI_INPUT_TYPE === "checkbox_edit";
               const isEditButton = item.UI_INPUT_TYPE === "edit_button";
 
@@ -878,6 +881,67 @@ const ContentByTab = ({
                               return {
                                 ...menuContent,
                                 DEFAULT_VALUE: value,
+                              };
+                            }
+                            return menuContent;
+                          })
+                        );
+                      }}
+                    />
+                  </Stack>
+                );
+              }
+
+              if (isTimeSeHMAButton) {
+                return (
+                  <Stack
+                    justifyContent={"flex-start"}
+                    alignItems={"center"}
+                    width="calc(50% - 20px)"
+                    gap={"12px"}
+                  >
+                    <Stack
+                      width={"100%"}
+                      alignItems={"center"}
+                      direction={"row"}
+                      gap={"8px"}
+                    >
+                      <InputBox.Title
+                        style={
+                          isHiddenParameter
+                            ? { color: "var(--error)" }
+                            : undefined
+                        }
+                      >
+                        {getLocalizedText(item, lang)}
+                        {item.required === "true" && <i>*</i>}
+                      </InputBox.Title>
+                      {item.TEXT_EN_INFO && (
+                        <InputBox.Info
+                          tooltipText={
+                            <span style={{ whiteSpace: "pre-wrap" }}>
+                              {lang === "en"
+                                ? item.TEXT_EN_INFO
+                                : lang === "es"
+                                ? item.TEXT_ES_INFO
+                                : item.TEXT_PT_INFO}
+                            </span>
+                          }
+                        />
+                      )}
+                      {item.JSON_ID && (
+                        <InputBox.Number>{item.JSON_ID}</InputBox.Number>
+                      )}
+                    </Stack>
+                    <TimeSeHMAButton
+                      values={(item.DEFAULT_VALUE as unknown as string[]) || []}
+                      onChange={(value: string[]) => {
+                        setMenuContentList(
+                          menuContentList.map((menuContent) => {
+                            if (item.no === menuContent.no) {
+                              return {
+                                ...menuContent,
+                                DEFAULT_VALUE: value as unknown as string,
                               };
                             }
                             return menuContent;
