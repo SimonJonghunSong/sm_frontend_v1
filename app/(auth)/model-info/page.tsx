@@ -363,7 +363,7 @@ const ContentByTab = ({
                       color="secondary"
                       sx={{ height: 30 }}
                     >
-                      {getLocalizedText(item, lang)}
+                      {t("configuration.ble.save")}
                     </Button>
                   </div>
                 </Stack>
