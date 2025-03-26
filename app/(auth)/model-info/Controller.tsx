@@ -297,7 +297,7 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
           open={loadModal}
           toggleOpen={loadModalToggle}
           title="Load Profile"
-          width="720px"
+          width="1240px"
           hasFooter={false}
         >
           <LoadModal modelName={modelName} fwVer={fwVer} />
