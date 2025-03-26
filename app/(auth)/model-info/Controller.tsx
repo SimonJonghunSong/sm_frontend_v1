@@ -1,4 +1,4 @@
-import { Button, IconButton, Radio, Stack, Tooltip } from "@mui/material";
+import { Button, IconButton, Radio, Stack, Tooltip, Chip } from "@mui/material";
 import React, { useRef } from "react";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
@@ -13,6 +13,7 @@ import {
   uploadProfile,
 } from "@/src/api/services/profile";
 import { useTranslations } from "next-intl";
+import dayjs from "dayjs";
 
 interface ModelInfoControllerProps {
   modelName: string;
@@ -336,8 +337,21 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
 }
 
 function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
-  const [selectedValue, setSelectedValue] = React.useState("a");
+  const [selectedValue, setSelectedValue] = React.useState<string>();
+  const [selectedFiles, setSelectedFiles] = React.useState<
+    {
+      id: string;
+      col0: { id: string };
+      col1: string;
+      col2: string;
+      col3: string;
+      col4: string;
+      col6: { id: string };
+      isLocal: boolean;
+    }[]
+  >([]);
   const t = useTranslations();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const profileFromScutiMutation = useMutation({
     mutationFn: downloadProfile,
@@ -360,8 +374,80 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
   const handleLoadFromScuti = () => {
     profileFromScutiMutation.mutate({
       model_name: modelName,
-      model_version: fwVer,
     });
+  };
+
+  const parseProfileFile = async (
+    file: File
+  ): Promise<{
+    model: string;
+    version: string;
+  }> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target?.result as string;
+        const lines = content.split("\n");
+        const modelLine = lines.find((line) => line.startsWith("MODEL="));
+        const versionLine = lines.find((line) => line.startsWith("VERSION="));
+
+        if (!modelLine || !versionLine) {
+          reject(new Error("Invalid profile file format"));
+          return;
+        }
+
+        resolve({
+          model: modelLine.split("=")[1].trim(),
+          version: versionLine.split("=")[1].trim(),
+        });
+      };
+      reader.onerror = () => reject(new Error("Failed to read file"));
+      reader.readAsText(file);
+    });
+  };
+
+  const formatDate = (dateString: string) => {
+    return dayjs(dateString).format("MMM/DD/YYYY HH:mm");
+  };
+
+  const handleFileUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length === 0) return;
+
+    try {
+      const newFiles = await Promise.all(
+        files.map(async (file) => {
+          const { model, version } = await parseProfileFile(file);
+          return {
+            id: file.name,
+            col0: { id: file.name },
+            col1: model,
+            col2: version,
+            col3: file.name,
+            col4: formatDate(new Date().toISOString()),
+            col6: { id: file.name },
+            isLocal: true,
+          };
+        })
+      );
+
+      setSelectedFiles((prev) => [...prev, ...newFiles]);
+    } catch (error) {
+      console.error("Error parsing profile files:", error);
+    }
+  };
+
+  const handleRemoveLocalFile = (fileName: string) => {
+    setSelectedFiles((prev) => prev.filter((file) => file.id !== fileName));
+    if (selectedValue === fileName) {
+      setSelectedValue(undefined);
+    }
+    // 파일 업로드 후 파일 삭제 시 파일 입력 창 값이 남아있어 파일 업로드 시 중복 파일 업로드 가능하도록 함
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   const columns: GridColDef[] = [
@@ -395,6 +481,20 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
       align: "center",
     },
     {
+      field: "source",
+      headerName: "Source",
+      width: 120,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <Chip
+          label={params.row.isLocal ? "Local" : "Scuti"}
+          color={params.row.isLocal ? "default" : "primary"}
+          size="small"
+        />
+      ),
+    },
+    {
       field: "col3",
       headerName: t(
         "device.configure_multi-device_pop_up_(profile_load).file_name"
@@ -410,7 +510,6 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
       headerAlign: "center",
       align: "center",
     },
-
     {
       field: "col6",
       headerName: "Delete",
@@ -421,7 +520,11 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
         <IconButton
           onClick={(e) => {
             e.stopPropagation();
-            deleteProfileMutation.mutate([params.value.id]);
+            if (!params.row.isLocal) {
+              deleteProfileMutation.mutate([params.value.id]);
+            } else {
+              handleRemoveLocalFile(params.value.id);
+            }
           }}
         >
           <DeleteForeverOutlinedIcon />
@@ -430,10 +533,26 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
     },
   ];
 
+  const scutiRecords =
+    profileFromScutiMutation.data?.data?.result?.records || [];
+
   return (
     <Stack gap="24px">
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        accept=".profile"
+        multiple
+        style={{ display: "none" }}
+      />
       <Stack gap="8px" direction="row" justifyContent="flex-end">
-        <Button variant="outlined" color="secondary" sx={{ width: 210 }}>
+        <Button
+          variant="outlined"
+          color="secondary"
+          sx={{ width: 210 }}
+          onClick={() => fileInputRef.current?.click()}
+        >
           {t("configuration.load_profile_popup.load_from_pc")}
         </Button>
         <Button
@@ -447,24 +566,32 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
       </Stack>
 
       <DataTable
-        rows={(profileFromScutiMutation.data?.data?.result?.records || []).map(
-          ({ uid, model, fw_ver, file, date }) => ({
+        rows={[
+          ...selectedFiles,
+          ...scutiRecords.map(({ uid, model, fw_ver, file, date }) => ({
             id: uid,
             col0: { id: uid },
             col1: model,
             col2: fw_ver,
             col3: file,
-            col4: date,
+            col4: formatDate(date),
             col6: { id: uid },
-          })
-        )}
+            isLocal: false,
+          })),
+        ]}
         columns={columns}
         checkbox={false}
         disablePagination
       />
 
       <Stack gap="8px" alignItems="flex-end">
-        <Button variant="contained" color="secondary" sx={{ width: 210 }}>
+        <Button
+          variant="contained"
+          color="secondary"
+          sx={{ width: 210 }}
+          onClick={() => {}}
+          disabled={!selectedValue}
+        >
           {t("configuration.load_profile_popup.load")}
         </Button>
       </Stack>
