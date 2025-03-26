@@ -12,6 +12,7 @@ export interface DownloadProfileResponse {
       fw_ver: string;
       file_nickname: string;
       file: string;
+      date: string;
     }[];
   };
 }

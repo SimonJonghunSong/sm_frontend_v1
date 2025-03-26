@@ -1,15 +1,5 @@
-import {
-  Button,
-  IconButton,
-  MenuItem,
-  Radio,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  TextField,
-  Tooltip,
-} from "@mui/material";
-import React, { useRef, useState } from "react";
+import { Button, IconButton, Radio, Stack, Tooltip } from "@mui/material";
+import React, { useRef } from "react";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { GridColDef } from "@mui/x-data-grid";
@@ -17,7 +7,11 @@ import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
 import DataTable from "@/components/dataTable";
 import { useMutation } from "@tanstack/react-query";
-import { downloadProfile, uploadProfile } from "@/src/api/services/profile";
+import {
+  deleteProfile,
+  downloadProfile,
+  uploadProfile,
+} from "@/src/api/services/profile";
 import { useTranslations } from "next-intl";
 
 interface ModelInfoControllerProps {
@@ -293,29 +287,6 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
         >
           <Stack>
             <span>Are you sure you want to save profile?</span>
-            {/* <Button sx={{ width: "fit-content" }} onClick={toggleSaveChanges}>
-            Show Changes
-          </Button> */}
-            {/* {showSaveChanges && (
-            <TextField
-              value={"Show Changed Value..."}
-              multiline
-              rows={1}
-              inputProps={{ readOnly: true }}
-              sx={{
-                mt: 2,
-                flexGrow: 1,
-                height: "160px",
-                "& .MuiInputBase-root": {
-                  padding: "10px 12px",
-                  height: "100% !important",
-                },
-                "& textarea": {
-                  height: "100% !important",
-                },
-              }}
-            />
-          )} */}
           </Stack>
         </Modal>
 
@@ -328,7 +299,7 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
           width="720px"
           hasFooter={false}
         >
-          <LoadModal />
+          <LoadModal modelName={modelName} fwVer={fwVer} />
         </Modal>
 
         {/* Upload Modal */}
@@ -342,29 +313,6 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
         >
           <Stack>
             <span>Are you sure you want to upload profile to Scuti?</span>
-            {/* <Button sx={{ width: "fit-content" }} onClick={toggleUploadChanges}>
-            Show Changes
-          </Button> */}
-            {/* {showUploadChanges && (
-            <TextField
-              value={"Show Changed Value..."}
-              multiline
-              rows={1}
-              inputProps={{ readOnly: true }}
-              sx={{
-                mt: 2,
-                flexGrow: 1,
-                height: "160px",
-                "& .MuiInputBase-root": {
-                  padding: "10px 12px",
-                  height: "100% !important",
-                },
-                "& textarea": {
-                  height: "100% !important",
-                },
-              }}
-            />
-          )} */}
           </Stack>
         </Modal>
       </Stack>
@@ -387,11 +335,33 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
   );
 }
 
-function LoadModal() {
+function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
   const [selectedValue, setSelectedValue] = React.useState("a");
+  const t = useTranslations();
+
+  const profileFromScutiMutation = useMutation({
+    mutationFn: downloadProfile,
+  });
+
+  const deleteProfileMutation = useMutation({
+    mutationFn: deleteProfile,
+    onSuccess: () => {
+      profileFromScutiMutation.mutate({
+        model_name: modelName,
+        model_version: fwVer,
+      });
+    },
+  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedValue(event.target.value);
+  };
+
+  const handleLoadFromScuti = () => {
+    profileFromScutiMutation.mutate({
+      model_name: modelName,
+      model_version: fwVer,
+    });
   };
 
   const columns: GridColDef[] = [
@@ -412,28 +382,30 @@ function LoadModal() {
     },
     {
       field: "col1",
-      headerName: "Country",
+      headerName: t("device.device_list.model_name"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col2",
-      headerName: "Region",
+      headerName: t("device.device_list.f/w"),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col3",
-      headerName: "ServerIP",
+      headerName: t(
+        "device.configure_multi-device_pop_up_(profile_load).file_name"
+      ),
       flex: 1,
       headerAlign: "center",
       align: "center",
     },
     {
       field: "col4",
-      headerName: "Port",
+      headerName: t("device.configure_multi-device_pop_up_(profile_load).date"),
       flex: 1,
       headerAlign: "center",
       align: "center",
@@ -445,86 +417,16 @@ function LoadModal() {
       width: 80,
       headerAlign: "center",
       align: "center",
-      renderCell: () => (
-        <IconButton onClick={(e) => e.stopPropagation()}>
+      renderCell: (params) => (
+        <IconButton
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteProfileMutation.mutate([params.value.id]);
+          }}
+        >
           <DeleteForeverOutlinedIcon />
         </IconButton>
       ),
-    },
-  ];
-
-  const rows = [
-    {
-      id: 0,
-      col0: { id: "1" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "1" },
-    },
-    {
-      id: 1,
-      col0: { id: "2" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "2" },
-    },
-    {
-      id: 2,
-      col0: { id: "3" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "3" },
-    },
-    {
-      id: 3,
-      col0: { id: "4" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "4" },
-    },
-    {
-      id: 4,
-      col0: { id: "5" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "5" },
-    },
-    {
-      id: 5,
-      col0: { id: "6" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "6" },
-    },
-    {
-      id: 6,
-      col0: { id: "7" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "7" },
-    },
-    {
-      id: 7,
-      col0: { id: "8" },
-      col1: "USA",
-      col2: "LA",
-      col3: "231.232.22.34",
-      col4: "3000",
-      col6: { id: "8" },
     },
   ];
 
@@ -532,15 +434,30 @@ function LoadModal() {
     <Stack gap="24px">
       <Stack gap="8px" direction="row" justifyContent="flex-end">
         <Button variant="outlined" color="secondary" sx={{ width: 210 }}>
-          Load from PC
+          {t("configuration.load_profile_popup.load_from_pc")}
         </Button>
-        <Button variant="outlined" color="secondary" sx={{ width: 210 }}>
-          Load from Scuti
+        <Button
+          variant="outlined"
+          color="secondary"
+          sx={{ width: 210 }}
+          onClick={handleLoadFromScuti}
+        >
+          {t("configuration.load_profile_popup.load_from_scuti")}
         </Button>
       </Stack>
 
       <DataTable
-        rows={rows}
+        rows={(profileFromScutiMutation.data?.data?.result?.records || []).map(
+          ({ uid, model, fw_ver, file, date }) => ({
+            id: uid,
+            col0: { id: uid },
+            col1: model,
+            col2: fw_ver,
+            col3: file,
+            col4: date,
+            col6: { id: uid },
+          })
+        )}
         columns={columns}
         checkbox={false}
         disablePagination
@@ -548,7 +465,7 @@ function LoadModal() {
 
       <Stack gap="8px" alignItems="flex-end">
         <Button variant="contained" color="secondary" sx={{ width: 210 }}>
-          Load
+          {t("configuration.load_profile_popup.load")}
         </Button>
       </Stack>
     </Stack>
