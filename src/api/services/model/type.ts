@@ -71,4 +71,9 @@ export interface ModelConfig {
   VALUE_MAX?: string;
   VALUE_MIN?: string;
   ONOFF_TOGGLE?: string;
+  hdr?: string;
+}
+
+export interface ModelConfigWithData extends ModelConfig {
+  data?: string;
 }

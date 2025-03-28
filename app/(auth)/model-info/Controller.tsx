@@ -18,11 +18,13 @@ import dayjs from "dayjs";
 interface ModelInfoControllerProps {
   modelName: string;
   fwVer: string;
+  onExportProfile: () => void;
 }
 
 export default function ModelInfoController({
   modelName,
   fwVer,
+  onExportProfile,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
@@ -52,58 +54,58 @@ export default function ModelInfoController({
     uploadModalToggle();
   };
 
-  const handleDownloadProfileFile = () => {
-    try {
-      downloadProfileMutation
-        .mutateAsync({
-          model_name: modelName,
-          model_version: fwVer,
-        })
-        .then((response) => {
-          const { data } = response;
+  // const handleDownloadProfileFile = () => {
+  //   try {
+  //     downloadProfileMutation
+  //       .mutateAsync({
+  //         model_name: modelName,
+  //         model_version: fwVer,
+  //       })
+  //       .then((response) => {
+  //         const { data } = response;
 
-          // TODO: 지금은 만약 여러개 있으면 가장 마지막 것만 다운로드 되도록 구현함
-          const records = data?.result?.records;
+  //         // TODO: 지금은 만약 여러개 있으면 가장 마지막 것만 다운로드 되도록 구현함
+  //         const records = data?.result?.records;
 
-          if (records.length > 0) {
-            const targetRcord = records[records.length - 1];
+  //         if (records.length > 0) {
+  //           const targetRcord = records[records.length - 1];
 
-            const { file, file_nickname } = targetRcord;
-            const url = file;
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = file_nickname;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-          } else {
-            toggleIsOpenCommonPopup();
-            commonPopupTitle.current = t("common.popup.error");
-            // TODO: 임의 에러 메시지 표기중
-            commonPopupMessage.current = t(
-              "configuration.popup_message.no_profile"
-            );
-          }
-        })
-        .catch((error) => {
-          toggleIsOpenCommonPopup();
-          commonPopupTitle.current = t("common.popup.error");
-          // TODO: 임의 에러 메시지 표기중
-          commonPopupMessage.current = t(
-            "configuration.popup_message.failed_download_profile"
-          );
-          console.error("Error downloading file:", error);
-        });
-    } catch (error) {
-      toggleIsOpenCommonPopup();
-      commonPopupTitle.current = t("common.popup.error");
-      // TODO: 임의 에러 메시지 표기중
-      commonPopupMessage.current = t(
-        "configuration.popup_message.failed_download_profile"
-      );
-      console.error("Error creating download link:", error);
-    }
-  };
+  //           const { file, file_nickname } = targetRcord;
+  //           const url = file;
+  //           const link = document.createElement("a");
+  //           link.href = url;
+  //           link.download = file_nickname;
+  //           document.body.appendChild(link);
+  //           link.click();
+  //           link.remove();
+  //         } else {
+  //           toggleIsOpenCommonPopup();
+  //           commonPopupTitle.current = t("common.popup.error");
+  //           // TODO: 임의 에러 메시지 표기중
+  //           commonPopupMessage.current = t(
+  //             "configuration.popup_message.no_profile"
+  //           );
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         toggleIsOpenCommonPopup();
+  //         commonPopupTitle.current = t("common.popup.error");
+  //         // TODO: 임의 에러 메시지 표기중
+  //         commonPopupMessage.current = t(
+  //           "configuration.popup_message.failed_download_profile"
+  //         );
+  //         console.error("Error downloading file:", error);
+  //       });
+  //   } catch (error) {
+  //     toggleIsOpenCommonPopup();
+  //     commonPopupTitle.current = t("common.popup.error");
+  //     // TODO: 임의 에러 메시지 표기중
+  //     commonPopupMessage.current = t(
+  //       "configuration.popup_message.failed_download_profile"
+  //     );
+  //     console.error("Error creating download link:", error);
+  //   }
+  // };
 
   const handleUploadProfileConfirm = () => {
     // TODO: 일단 고정 string으로 생성하여 보내도록 구현함
@@ -257,7 +259,8 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
               Upload
             </Button>
           </Tooltip>
-          <IconButton onClick={handleDownloadProfileFile}>
+
+          <IconButton onClick={onExportProfile}>
             <FileDownloadOutlinedIcon sx={{ color: "var(--black)" }} />
           </IconButton>
         </Stack>

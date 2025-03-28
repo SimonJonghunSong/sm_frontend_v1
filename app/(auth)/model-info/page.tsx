@@ -8,7 +8,7 @@ import {
   getJsonDataFromIDB,
   updateParametersInIDB,
 } from "@/utils/idbModelUtil";
-import { ModelConfig } from "@/src/api/services/model/type";
+import { ModelConfigWithData } from "@/src/api/services/model/type";
 import SideMenu from "./SideMenu";
 import { Button, MenuItem, Select, Stack, TextField } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
@@ -23,6 +23,8 @@ import CheckboxEdit from "./CheckboxEdit";
 import ModelInfoController from "./Controller";
 import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 import CheckboxEditButton from "app/(auth)/model-info/CheckboxEditButton";
+import { convertModelConfigToProfile } from "@/src/utils/profileUtil";
+import { fileDownload } from "@/utils/fileDownload";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -52,9 +54,10 @@ export const getLocalizedText = (
 const ModelInfoPage = () => {
   const [tab, setTab] = useState<string>();
   const [showHiddenParameters, setShowHiddenParameters] = useState(false);
-  const [allMenuContentList, setAllMenuContentList] = useState<ModelConfig[]>(
-    []
-  );
+  const [allMenuContentList, setAllMenuContentList] = useState<
+    ModelConfigWithData[]
+  >([]);
+
   const [sideBarList, setSideBarList] = useState<
     {
       no: number;
@@ -81,6 +84,13 @@ const ModelInfoPage = () => {
     ),
   });
 
+  const handleExportProfile = () => {
+    const profile = convertModelConfigToProfile(allMenuContentList);
+    const filename = `${modelName}_${fwVer}.profile`;
+    const blob = new Blob([profile], { type: "text/plain" });
+    fileDownload(blob, filename);
+  };
+
   const handleTabChange = (tab: string) => {
     switch (tab) {
       case DELETE_MODEL:
@@ -93,7 +103,7 @@ const ModelInfoPage = () => {
     }
   };
 
-  const handleUpdateContentList = (menuContentList: ModelConfig[]) => {
+  const handleUpdateContentList = (menuContentList: ModelConfigWithData[]) => {
     updateParametersInIDB(modelName, menuContentList);
     setAllMenuContentList((prev) => {
       const updatedMap = new Map(
@@ -109,7 +119,7 @@ const ModelInfoPage = () => {
   useEffect(() => {
     const fetchJsonData = async () => {
       const jsonData =
-        ((await getJsonDataFromIDB(modelName)) as ModelConfig[]) || [];
+        ((await getJsonDataFromIDB(modelName)) as ModelConfigWithData[]) || [];
 
       const menuSectionList = (jsonData || [])
         .filter((item) => item.Depth2 === SIDE_BAR)
@@ -152,6 +162,7 @@ const ModelInfoPage = () => {
         showHiddenParameters={showHiddenParameters}
         allMenuContentList={allMenuContentList}
         handleUpdateContentList={handleUpdateContentList}
+        onExportProfile={handleExportProfile}
       />
       {renderConfirmModal()}
     </div>
@@ -167,17 +178,21 @@ const ContentByTab = ({
   showHiddenParameters,
   allMenuContentList,
   handleUpdateContentList,
+  onExportProfile,
 }: {
   tab: string;
   modelName: string;
   fwVer: string;
   showHiddenParameters: boolean;
-  allMenuContentList: ModelConfig[];
-  handleUpdateContentList: (menuContentList: ModelConfig[]) => void;
+  allMenuContentList: ModelConfigWithData[];
+  handleUpdateContentList: (menuContentList: ModelConfigWithData[]) => void;
+  onExportProfile: () => void;
 }) => {
   const t = useTranslations();
 
-  const [menuContentList, setMenuContentList] = useState<ModelConfig[]>([]);
+  const [menuContentList, setMenuContentList] = useState<ModelConfigWithData[]>(
+    []
+  );
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
   const { lang } = useLangStore();
@@ -250,7 +265,7 @@ const ContentByTab = ({
     sendToggle();
   };
 
-  const renderErrorMessage = (item: ModelConfig) => {
+  const renderErrorMessage = (item: ModelConfigWithData) => {
     const message = errorList[item.no];
     const hasError = !!message;
 
@@ -279,7 +294,11 @@ const ContentByTab = ({
     <>
       <article className="contentWrap">
         <Stack>
-          <ModelInfoController modelName={modelName} fwVer={fwVer} />
+          <ModelInfoController
+            modelName={modelName}
+            fwVer={fwVer}
+            onExportProfile={onExportProfile}
+          />
           <Stack
             flexWrap="wrap"
             direction="row"
