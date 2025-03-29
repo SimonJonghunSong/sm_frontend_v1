@@ -25,6 +25,7 @@ import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 import CheckboxEditButton from "app/(auth)/model-info/CheckboxEditButton";
 import { convertModelConfigToProfile } from "@/src/utils/profileUtil";
 import { fileDownload } from "@/utils/fileDownload";
+import AssignMenus from "app/(auth)/model-info/AssignMenus";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -292,7 +293,7 @@ const ContentByTab = ({
 
   return (
     <>
-      <article className="contentWrap">
+      <article style={{ overflow: "hidden" }} className="contentWrap">
         <Stack>
           <ModelInfoController
             modelName={modelName}
@@ -329,9 +330,53 @@ const ContentByTab = ({
               const isEditButton = item.UI_INPUT_TYPE === "edit_button";
               const isCheckboxEditButton =
                 item.UI_INPUT_TYPE === "checkbox_edit_button";
+              const isAssignHeaders =
+                isSectionTitle &&
+                item.TEXT_EN.replaceAll(" ", "").toLowerCase() ===
+                  "assignheader";
+              const isAssignHeaderItem =
+                item.Depth3 === "Assign Header-Small" ||
+                item.Depth3 === "Assign Header-Medium" ||
+                item.Depth3 === "Assign Header-Large";
 
               if (isHiddenParameter && !showHiddenParameters) {
                 return null;
+              }
+
+              if (isAssignHeaderItem) {
+                return null;
+              }
+
+              if (isAssignHeaders) {
+                const smallItems = menuContentList.filter(
+                  (item) => item.Depth3 === "Assign Header-Small"
+                );
+                const mediumItems = menuContentList.filter(
+                  (item) => item.Depth3 === "Assign Header-Medium"
+                );
+                const largeItems = menuContentList.filter(
+                  (item) => item.Depth3 === "Assign Header-Large"
+                );
+
+                return (
+                  <Stack gap={"12px"} width="100%">
+                    <div
+                      className="pageTitle"
+                      style={{
+                        width: "100%",
+                        paddingTop: idx === 0 ? 0 : 48,
+                        marginBottom: tab === "Device Status" ? 48 : 0,
+                      }}
+                    >
+                      {getLocalizedText(item, lang)}
+                    </div>
+                    <AssignMenus
+                      smallItems={smallItems}
+                      mediumItems={mediumItems}
+                      largeItems={largeItems}
+                    />
+                  </Stack>
+                );
               }
 
               if (isSectionTitle) {
