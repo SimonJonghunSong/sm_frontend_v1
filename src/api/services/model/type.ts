@@ -75,5 +75,5 @@ export interface ModelConfig {
 }
 
 export interface ModelConfigWithData extends ModelConfig {
-  data?: string;
+  value?: string;
 }

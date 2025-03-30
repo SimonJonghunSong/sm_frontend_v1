@@ -86,8 +86,12 @@ const ModelInfoPage = () => {
   });
 
   const handleExportProfile = () => {
-    const profile = convertModelConfigToProfile(allMenuContentList);
-    const filename = `${modelName}_${fwVer}.profile`;
+    const profile = convertModelConfigToProfile(
+      allMenuContentList,
+      modelName,
+      fwVer
+    );
+    const filename = `${modelName}_SB_${fwVer}.profile`;
     const blob = new Blob([profile], { type: "text/plain" });
     fileDownload(blob, filename);
   };
@@ -194,6 +198,7 @@ const ContentByTab = ({
   const [menuContentList, setMenuContentList] = useState<ModelConfigWithData[]>(
     []
   );
+  console.log(menuContentList);
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
   const { lang } = useLangStore();
@@ -226,9 +231,7 @@ const ContentByTab = ({
     );
 
     const errorNoList = requiredList
-      .filter(
-        (item) => !item.DEFAULT_VALUE && item.UI_INPUT_TYPE !== "checkbox"
-      )
+      .filter((item) => !item.value && item.UI_INPUT_TYPE !== "checkbox")
       .map((item) => {
         return {
           no: item.no,
@@ -395,10 +398,10 @@ const ContentByTab = ({
                         color="secondary"
                         variant="contained"
                         // 센션 별 저장
-                        // onClick={() => handleSendClick(item.TEXT_EN)}
+                        onClick={() => handleSendClick(item.TEXT_EN)}
 
                         // 전체 저장
-                        onClick={() => handleSendClick()}
+                        // onClick={() => handleSendClick()}
                       >
                         {t("configuration.ble.save")}
                       </Button>
@@ -488,7 +491,7 @@ const ContentByTab = ({
                       <div style={{ width: "100%" }}>
                         <Stack direction="row" gap="8px">
                           <Select
-                            value={item.DEFAULT_VALUE}
+                            value={item.value}
                             onChange={(e) => {
                               handleClearError(item.no);
 
@@ -497,7 +500,7 @@ const ContentByTab = ({
                                   if (item.no === menuContent.no) {
                                     return {
                                       ...menuContent,
-                                      DEFAULT_VALUE: e.target.value,
+                                      value: e.target.value,
                                     };
                                   }
                                   return menuContent;
@@ -573,7 +576,7 @@ const ContentByTab = ({
                     <InputBox.Body>
                       {isEditHidden ? (
                         <PasswordTextField
-                          value={item.DEFAULT_VALUE}
+                          value={item.value}
                           onChange={(newValue) => {
                             handleClearError(item.no);
 
@@ -582,7 +585,7 @@ const ContentByTab = ({
                                 if (item.no === menuContent.no) {
                                   return {
                                     ...menuContent,
-                                    DEFAULT_VALUE: newValue,
+                                    value: newValue,
                                   };
                                 }
                                 return menuContent;
@@ -610,7 +613,7 @@ const ContentByTab = ({
                                     }
                                   : undefined
                               }
-                              value={item.DEFAULT_VALUE}
+                              value={item.value}
                               onChange={(e) => {
                                 handleClearError(item.no);
 
@@ -636,7 +639,7 @@ const ContentByTab = ({
                                     if (item.no === menuContent.no) {
                                       return {
                                         ...menuContent,
-                                        DEFAULT_VALUE: newValue,
+                                        value: newValue,
                                       };
                                     }
                                     return menuContent;
@@ -715,7 +718,7 @@ const ContentByTab = ({
                       width={"100%"}
                     >
                       <CheckboxComp
-                        value={item.DEFAULT_VALUE || ""}
+                        value={item.value || ""}
                         optionsString={item.DEFAULT_VAL_INDEX}
                         labelsString={{
                           TEXT_EN_ITEM_CONTENT: item.TEXT_EN_ITEM_CONTENT || "",
@@ -729,7 +732,7 @@ const ContentByTab = ({
                               if (item.no === menuContent.no) {
                                 return {
                                   ...menuContent,
-                                  DEFAULT_VALUE: newValue,
+                                  value: newValue,
                                 };
                               }
                               return menuContent;
@@ -780,7 +783,7 @@ const ContentByTab = ({
                     </Stack>
 
                     <SwitchPrimary
-                      value={item.DEFAULT_VALUE === "01"}
+                      value={item.value === "01"}
                       onChange={(e) => {
                         handleClearError(item.no);
                         const isOn = e.target.checked ? "01" : "00";
@@ -788,7 +791,7 @@ const ContentByTab = ({
                         setMenuContentList(
                           menuContentList.map((menuContent) => {
                             if (item.no === menuContent.no) {
-                              return { ...menuContent, DEFAULT_VALUE: isOn };
+                              return { ...menuContent, value: isOn };
                             }
                             return menuContent;
                           })
@@ -853,7 +856,7 @@ const ContentByTab = ({
                                     return {
                                       ...menuContent,
                                       ONOFF_TOGGLE: String(isOn),
-                                      DEFAULT_VALUE: item?.DEFAULT_VALUE,
+                                      value: item?.value,
                                     };
                                   }
                                   return menuContent;
@@ -872,14 +875,14 @@ const ContentByTab = ({
                             ? "hidden"
                             : "visible",
                       }}
-                      value={item.DEFAULT_VALUE}
+                      value={item.value}
                       onChange={(value: string) => {
                         setMenuContentList(
                           menuContentList.map((menuContent) => {
                             if (item.no === menuContent.no) {
                               return {
                                 ...menuContent,
-                                DEFAULT_VALUE: value,
+                                value: value,
                               };
                             }
                             return menuContent;
@@ -933,14 +936,14 @@ const ContentByTab = ({
                       )}
                     </Stack>
                     <TimeSeHMAButton
-                      values={(item.DEFAULT_VALUE as unknown as string[]) || []}
+                      values={(item.value as unknown as string[]) || []}
                       onChange={(value: string[]) => {
                         setMenuContentList(
                           menuContentList.map((menuContent) => {
                             if (item.no === menuContent.no) {
                               return {
                                 ...menuContent,
-                                DEFAULT_VALUE: value as unknown as string,
+                                value: value as unknown as string,
                               };
                             }
                             return menuContent;
@@ -1010,8 +1013,8 @@ const ContentByTab = ({
                       )}
                     </Stack>
                     <CheckboxEditButton
-                      checkedValue={item?.DEFAULT_VALUE?.[0] || ""}
-                      inputValue={item?.DEFAULT_VALUE?.[1] || ""}
+                      checkedValue={item?.value?.[0] || ""}
+                      inputValue={item?.value?.[1] || ""}
                       VALUE_MIN={item.VALUE_MIN}
                       VALUE_MAX={item.VALUE_MAX}
                       optionsString={item.DEFAULT_VAL_INDEX}
@@ -1027,7 +1030,7 @@ const ContentByTab = ({
                             if (item.no === menuContent.no) {
                               return {
                                 ...menuContent,
-                                DEFAULT_VALUE: newValue as unknown as string,
+                                value: newValue as unknown as string,
                               };
                             }
                             return menuContent;
@@ -1058,7 +1061,7 @@ const ContentByTab = ({
                   >
                     {getLocalizedText(item, lang)}
                   </div>
-                  <div>{item.DEFAULT_VALUE || "-"}</div>
+                  <div>{item.value || "-"}</div>
                 </Stack>
               );
             })}
