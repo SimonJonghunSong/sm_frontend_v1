@@ -11,11 +11,14 @@ interface ProfileEntry {
 
 const MAX_PARAMETERS_PER_LINE = 20;
 
-const formatValue = (value: string): string => {
+const formatValue = (value: string | number): string => {
   if (!value) return "";
-
   // 줄 바꿈을 공백으로 변환하고 연속된 공백을 하나로 통일
-  const formattedValue = value.replace(/\n/g, " ").replace(/\s+/g, " ").trim();
+  const formattedValue = value
+    .toString()
+    .replace(/\n/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 
   // 숫자인 경우에만 처리 (음수 부호가 있는 경우도 고려)
   if (/^-?\d+$/.test(formattedValue)) {
