@@ -1,10 +1,19 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import { Button, IconButton, Skeleton, Stack } from "@mui/material";
+import {
+  Button,
+  IconButton,
+  Skeleton,
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import Modal from "@/components/Modal";
@@ -16,6 +25,7 @@ import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
+import { getJsonDataFromIDB } from "@/utils/idbModelUtil";
 
 const modalColumns: (t) => GridColDef[] = (t) => [
   {
@@ -223,7 +233,34 @@ export default function DeviceList() {
                   e.stopPropagation();
                   setImei(params.value.port.port.imei);
                   resetTab();
-                  router.push(`/configuration/device-status`);
+
+                  // Get the current device's model name and firmware version
+                  const currentModelName =
+                    params.value.port.modelVersion?.split("_")[0];
+                  console.log(currentModelName, "currentModelName");
+                  // Check if there are any devices in IndexedDB with the same model name
+                  getJsonDataFromIDB(currentModelName)
+                    .then((deviceData: any) => {
+                      if (
+                        deviceData &&
+                        Array.isArray(deviceData) &&
+                        deviceData.length > 0
+                      ) {
+                        // Found matching device data
+                        router.push(`/device-configuration`);
+                      } else {
+                        // No matching devices, proceed with navigation
+                        router.push(`/configuration/device-status`);
+                      }
+                    })
+                    .catch((error) => {
+                      console.error(
+                        "Error checking for matching devices:",
+                        error
+                      );
+                      // Continue with navigation even if there's an error
+                      router.push(`/configuration/device-status`);
+                    });
                 }}
               >
                 {t("device.device_list.configure")}

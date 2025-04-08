@@ -198,7 +198,7 @@ const ContentByTab = ({
   const [menuContentList, setMenuContentList] = useState<ModelConfigWithData[]>(
     []
   );
-  console.log(menuContentList);
+
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
   const { lang } = useLangStore();
