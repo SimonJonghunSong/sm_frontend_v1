@@ -1,5 +1,9 @@
 import { ModelConfig } from "@/src/api/services/model/type";
 import { FormControlLabel, Checkbox } from "@mui/material";
+import {
+  binaryStringGroupedToHex,
+  hexToBinaryStringGrouped,
+} from "app/(auth)/device-configuration/utils/functions";
 import { useEffect, useState } from "react";
 
 interface Props {
@@ -24,6 +28,8 @@ export default function CheckboxComp({
   hasAllCheckbox = true,
 }: Props) {
   const [allChecked, setAllChecked] = useState(false);
+
+  console.log("value :::", value);
 
   /**
    * 체크박스 규칙
@@ -86,17 +92,24 @@ export default function CheckboxComp({
       .join("")
       .trim();
 
-    onChange(newValueString);
+    console.log("newValueString :::", newValueString);
+
+    onChange(binaryStringGroupedToHex(newValueString));
   };
 
   const handleCheckboxChange = (index: number) => {
     const totalBits = optionsString.split(", ").length;
 
+    console.log("totalBits :::", totalBits);
+
     // 기존 값을 파싱하고 길이 부족한 경우 0으로 채움
-    const currentBits = value.replaceAll(" ", "").split("") ?? [];
+    const currentBits =
+      hexToBinaryStringGrouped(value).replaceAll(" ", "").split("") ?? [];
     while (currentBits.length < totalBits) {
       currentBits.push("0");
     }
+
+    console.log("currentBits :::", currentBits);
 
     // toggle
     currentBits[index] = currentBits[index] === "1" ? "0" : "1";
@@ -107,14 +120,22 @@ export default function CheckboxComp({
       .join("")
       .trim();
 
-    onChange(newValue);
+    console.log("newValue :::", newValue);
+    console.log(
+      "binaryStringGroupedToHex(newValue) :::",
+      binaryStringGroupedToHex(newValue)
+    );
+
+    onChange(binaryStringGroupedToHex(newValue));
   };
 
   useEffect(() => {
     let allChecked = true;
 
     for (let i = 0; i < optionsString.split(", ").length; i++) {
-      if (value.replaceAll(" ", "").split("")[i] !== "1") {
+      if (
+        hexToBinaryStringGrouped(value).replaceAll(" ", "").split("")[i] !== "1"
+      ) {
         allChecked = false;
         break;
       }
@@ -177,7 +198,9 @@ export default function CheckboxComp({
             )
               ?.replace(/[\r\n]+/g, " ")
               .split(",")[index];
-            const values = value.replaceAll(" ", "").split("");
+            const values = hexToBinaryStringGrouped(value)
+              .replaceAll(" ", "")
+              .split("");
 
             return (
               <FormControlLabel

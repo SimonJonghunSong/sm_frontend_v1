@@ -202,8 +202,12 @@ function fieldToEditString(fieldData: Field): string {
     case "combo":
       if ("list" in fieldData) {
         const options = parseComboList(fieldData.list);
+
         const selectValue = options.find(
-          (item) => item.value === fieldData.value
+          (item) =>
+            (Number(item.realValue) < 10
+              ? `0${item.realValue}`
+              : item.realValue) === fieldData.value
         ).realValue;
 
         const editValue =
@@ -211,6 +215,7 @@ function fieldToEditString(fieldData: Field): string {
 
         return `${optionId}#${editValue}`;
       }
+
     case "alert_id":
       const checked = `0${fieldData.value}`;
       const hexValue =
@@ -239,50 +244,7 @@ export function useTransformConfigDataWithModelInfo({
 
   const [isDirty, setIsDirty] = useState(false);
   const [originData, setOriginData] = useState(data || []);
-  const formData = useMemo(
-    () =>
-      (originData || [])
-        .map((tabObj) => {
-          const [tabName, tabFields] = Object.entries(tabObj)[0];
-          if (blacklist.includes(tabName)) return null;
-
-          let tabInfo: TabInfo | undefined;
-          const fields: Field[] = [];
-
-          tabFields.forEach((fieldObj) => {
-            const [fieldName, fieldDataArray] = Object.entries(fieldObj)[0];
-
-            if (fieldName === "info") {
-              tabInfo = (fieldDataArray as TabInfo[])[0];
-            } else {
-              const fieldData = (fieldDataArray as Field[])[0];
-
-              const processedField = processField(fieldData, fieldName);
-              if (processedField) {
-                fields.push(processedField);
-              }
-            }
-          });
-
-          if (!tabInfo && tabName === "info") {
-            return {
-              tabName,
-              info: tabFields?.[0] || {},
-              fields: [],
-            };
-          }
-
-          if (!tabInfo) return null;
-
-          return {
-            tabName,
-            info: tabInfo,
-            fields,
-          };
-        })
-        .filter((field) => field !== null) || [],
-    [originData]
-  );
+  const [formData, setFormData] = useState([]);
 
   const resetData = useCallback(() => {
     setOriginData(data);
@@ -290,23 +252,9 @@ export function useTransformConfigDataWithModelInfo({
 
   const getEditDataForPage = useCallback(
     (updateMenuList: ModelConfigWithData[]) => {
-      console.log("updateMenuList :::", updateMenuList);
       const updateMenuObject = updateMenuList.reduce((acc, cur) => {
         if (cur?.JSON_ID) {
           switch (cur.UI_INPUT_TYPE) {
-            case "checkbox":
-              console.log("cur :::", cur);
-              console.log("cur.value :::", cur.value);
-
-              return {
-                ...acc,
-                [cur.JSON_ID]: binaryStringGroupedToHex(
-                  cur.value ||
-                    padZerosWithSpaces(
-                      cur.DEFAULT_VAL_INDEX?.split(",").length || 0
-                    )
-                ),
-              };
             default:
               return { ...acc, [cur.JSON_ID]: cur.value };
           }
@@ -314,6 +262,48 @@ export function useTransformConfigDataWithModelInfo({
 
         return acc;
       }, {});
+
+      setFormData((prev) => {
+        return prev.map((item) => {
+          const hasChild = item.fields.some((field) => {
+            return updateMenuObject[field.number];
+          });
+
+          if (hasChild) {
+            return {
+              ...item,
+              fields: item.fields.map((field) => {
+                console.log("field :::", field);
+                if (updateMenuObject[field.number]) {
+                  switch (field.type) {
+                    case "combo":
+                      const selectValue = field.options?.find(
+                        (item) =>
+                          (Number(item.realValue) < 10
+                            ? `0${item.realValue}`
+                            : item.realValue) === updateMenuObject[field.number]
+                      )?.value;
+
+                      return {
+                        ...field,
+                        value: selectValue,
+                      };
+                    default:
+                      return {
+                        ...field,
+                        value: updateMenuObject[field.number],
+                      };
+                  }
+                }
+
+                return field;
+              }),
+            };
+          }
+
+          return item;
+        });
+      });
 
       const updateFormData = formData.reduce((acc, cur) => {
         const hasChild = cur.fields.some((field) => {
@@ -325,39 +315,12 @@ export function useTransformConfigDataWithModelInfo({
             ...acc,
             {
               ...cur,
-              fields: cur.fields
-                .filter((item) => {
-                  if (!!updateMenuObject[item.number]) {
-                    let isChanged = false;
-
-                    switch (item.type) {
-                      case "combo":
-                        const realValue = item.options.find(
-                          (option) => option.value === item.value
-                        ).realValue;
-
-                        isChanged =
-                          (realValue < 10
-                            ? `0${realValue}`
-                            : `${realValue}`) !== updateMenuObject[item.number];
-                        break;
-                      default:
-                        isChanged =
-                          item.value !== updateMenuObject[item.number];
-                        break;
-                    }
-
-                    return isChanged;
-                  }
-
-                  return false;
-                })
-                .map((item) => {
-                  return {
-                    ...item,
-                    value: updateMenuObject[item.number],
-                  };
-                }),
+              fields: cur.fields.map((item) => {
+                return {
+                  ...item,
+                  value: updateMenuObject[item.number],
+                };
+              }),
             },
           ];
         }
@@ -373,16 +336,11 @@ export function useTransformConfigDataWithModelInfo({
       for (let i = 0; i < pageDatas.length; i++) {
         const pageData = pageDatas[i];
 
-        console.log("pageData :::", pageData);
-        console.log("result :::", result);
-
         const tabType = pageData.info.type;
         const tabId =
           Number(pageData.info.tab_id) < 10
             ? `0${pageData.info.tab_id}`
             : pageData.info.tab_id;
-
-        console.log("tabType :::", tabType);
 
         // 특수 처리가 필요한 타입 분기 처리
         switch (tabType) {
@@ -451,8 +409,6 @@ export function useTransformConfigDataWithModelInfo({
         }
       }
 
-      console.log("result :::", result);
-
       return result;
     },
     [formData]
@@ -486,13 +442,56 @@ export function useTransformConfigDataWithModelInfo({
 
       return acc + `${tabId};${tabEditStrings.join(";")}`;
     }, "");
-
-    console.log("editString >>>", editString);
   }, [formData]);
 
   useEffect(() => {
     setOriginData(data);
   }, [data]);
+
+  useEffect(() => {
+    setFormData(
+      (originData || [])
+        .map((tabObj) => {
+          const [tabName, tabFields] = Object.entries(tabObj)[0];
+          if (blacklist.includes(tabName)) return null;
+
+          let tabInfo: TabInfo | undefined;
+          const fields: Field[] = [];
+
+          tabFields.forEach((fieldObj) => {
+            const [fieldName, fieldDataArray] = Object.entries(fieldObj)[0];
+
+            if (fieldName === "info") {
+              tabInfo = (fieldDataArray as TabInfo[])[0];
+            } else {
+              const fieldData = (fieldDataArray as Field[])[0];
+
+              const processedField = processField(fieldData, fieldName);
+              if (processedField) {
+                fields.push(processedField);
+              }
+            }
+          });
+
+          if (!tabInfo && tabName === "info") {
+            return {
+              tabName,
+              info: tabFields?.[0] || {},
+              fields: [],
+            };
+          }
+
+          if (!tabInfo) return null;
+
+          return {
+            tabName,
+            info: tabInfo,
+            fields,
+          };
+        })
+        .filter((field) => field !== null) || []
+    );
+  }, [originData]);
 
   return {
     originData,
