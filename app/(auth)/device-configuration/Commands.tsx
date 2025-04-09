@@ -1,6 +1,7 @@
 import useSerial from "@/src/hooks/useSerial";
-import { Button, Stack } from "@mui/material";
+import { Button, Input, Stack, TextField } from "@mui/material";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 const Commands = ({ data, imei }: { data: any; imei: string }) => {
   const t = useTranslations();
@@ -13,20 +14,19 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
   const fields = commands?.fields[0].list[0];
 
   const transformedFields = fields
-    ? Object.values(fields)
-        .map((field: string) => {
-          const parts = field.split(";");
-          const jsonId = parts[parts.length - 1];
-          const title = parts[1];
-          const middlePart = `${parts[2]};${parts[3]}`;
+    ? Object.values(fields).map((field: string) => {
+        const parts = field.split(";");
+        const jsonId = parts[parts.length - 1];
+        const title = parts[1];
+        const middlePart = `${parts[2]};${parts[3]}`;
 
-          return {
-            JSON_ID: jsonId,
-            title: title,
-            middlePart: middlePart,
-          };
-        })
-        .filter((field) => field.middlePart === "0;2")
+        return {
+          JSON_ID: jsonId,
+          title: title,
+          middlePart: middlePart,
+          type: middlePart === "0;2" ? "button" : "input",
+        };
+      })
     : [];
 
   const handleSend = async (jsonId: string) => {
@@ -39,31 +39,50 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
     });
   };
 
+  const handleInputChange = async (jsonId: string, value: string) => {
+    const prefixJsonId = jsonId.slice(0, 2);
+    const suffixJsonId = jsonId.slice(2, 4);
+    await write({
+      data: `AT^CMD;${imei};${prefixJsonId};${suffixJsonId};${value}`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
+
   return (
     <div>
       <Stack flexWrap="wrap" direction="row" gap={"40px"}>
         {transformedFields.map((field) => {
-          return (
-            <Stack
-              direction="row"
-              alignItems="center"
-              gap="8px"
-              height="56px"
-              width="calc(50% - 20px)"
-            >
-              <Stack flex={1}>{field.title}</Stack>
-              <div>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  sx={{ height: 30 }}
-                  onClick={() => handleSend(field.JSON_ID)}
-                >
-                  {t("configuration.commands.send")}
-                </Button>
-              </div>
-            </Stack>
-          );
+          if (field.type === "button") {
+            return (
+              <Stack
+                direction="row"
+                alignItems="center"
+                gap="8px"
+                height="56px"
+                width="calc(50% - 20px)"
+              >
+                <Stack flex={1}>{field.title}</Stack>
+                <div>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleSend(field.JSON_ID)}
+                  >
+                    {t("configuration.commands.send")}
+                  </Button>
+                </div>
+              </Stack>
+            );
+          } else {
+            return (
+              <InputField
+                imei={imei}
+                field={field}
+                onSend={(value) => handleInputChange(field.JSON_ID, value)}
+              />
+            );
+          }
         })}
       </Stack>
     </div>
@@ -71,6 +90,50 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
 };
 
 export default Commands;
+
+const InputField = ({
+  imei,
+  field,
+  onSend,
+}: {
+  imei: string;
+  field: {
+    JSON_ID: string;
+    title: string;
+    middlePart: string;
+    type: string;
+  };
+  onSend: (value: string) => void;
+}) => {
+  const t = useTranslations();
+  const [value, setValue] = useState("");
+  return (
+    <Stack
+      direction="column"
+      justifyContent="center"
+      gap="16px"
+      height="56px"
+      width="calc(50% - 20px)"
+    >
+      <Stack flex={1}>{field.title}</Stack>
+      <Stack direction="row" gap="8px">
+        <TextField
+          fullWidth
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+        />
+        <Button
+          variant="outlined"
+          color="secondary"
+          style={{ flexShrink: 0 }}
+          onClick={() => onSend(value)}
+        >
+          {t("configuration.commands.send")}
+        </Button>
+      </Stack>
+    </Stack>
+  );
+};
 
 /**
    * fields의 값 형식

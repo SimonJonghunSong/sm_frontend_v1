@@ -44,7 +44,7 @@ const menuHeaderMap = {
   Report: ["RPT", "RMAP", "ASGNALT", "ASGNSTT", "DBDCFG", "RMC"],
   Tracking: ["PRO", "FTR"],
   "Input/Output(I/O)": ["INP", "OUT"],
-  Geofence: ["GEOCONP", "CGF"],
+  Geofence: ["GEOCONP", "CGF", "PLC", "CGF"],
   BLE: ["BLE", "BEG_BLE", "BLESEN"],
   Accessories: ["TAS", "SRL", "ECU", "WTE"],
   RF: ["RFC", "RFD"],
@@ -90,9 +90,11 @@ const ModelInfoPage = () => {
   const { formData, getEditDataForPage } = useTransformConfigDataWithModelInfo({
     data: portList.find(({ port }) => port.imei === imei)?.packageToJson
       .synctrak,
-    blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
+    blacklist: ["info"],
   });
 
+  console.log(formData);
+  // "Circular Geofence", "Polygon Geofence"
   const [sideBarList, setSideBarList] = useState<
     {
       no: number;
