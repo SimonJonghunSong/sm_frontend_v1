@@ -20,19 +20,19 @@ import TimeHMA from "app/(auth)/model-info/TimeHMA";
 import TimeSeHMAButton from "app/(auth)/model-info/TimeSeHMAButton";
 import CheckboxEdit from "./CheckboxEdit";
 import ModelInfoController from "./Controller";
-
 import CheckboxEditButton from "app/(auth)/model-info/CheckboxEditButton";
 import { convertModelConfigToProfile } from "@/src/utils/profileUtil";
 import { fileDownload } from "@/utils/fileDownload";
 import AssignMenus from "app/(auth)/model-info/AssignMenus";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import useSerial from "@/src/hooks/useSerial";
-import { hexToBinaryStringGrouped } from "app/(auth)/device-configuration/utils/functions";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
 import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import Commands from "./Commands";
 import FullLoading from "@/components/FullLoading";
 import CheckboxComp from "app/(auth)/device-configuration/CheckboxComp";
+import useSerialStore from "@/src/stores/useSerialStore";
+import Geofence from "./Geofence";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -80,6 +80,7 @@ const ModelInfoPage = () => {
   >([]);
 
   const { getCurrentImei } = useSerialConfigurationStore();
+  const { setPackageFetchingStart } = useSerialStore();
   const imei = getCurrentImei();
 
   // data
@@ -177,6 +178,29 @@ const ModelInfoPage = () => {
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
+  const handleRefreshJsonPacket = async () => {
+    setIsFullLoading(true);
+    currentPort.port.grpNo = currentPort.jsonPackageCount;
+    setPackageFetchingStart({ imei: currentPort.port.imei });
+
+    const commands = Array.from(
+      { length: currentPort.jsonPackageCount },
+      (_, i) => `${AT_GET_JSON}${i + 1}`
+    );
+    currentPort.port.isjsonpackagefetching = true;
+    for (const command of commands) {
+      await delayPromise(100); // 100ms 지연
+
+      write({
+        data: command,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    }
+
+    setIsFullLoading(false);
+  };
+
   useEffect(() => {
     const firstLoad = async () => {
       const currentPort = portList.find(({ port }) => port.imei === imei);
@@ -241,6 +265,7 @@ const ModelInfoPage = () => {
           setAllMenuContentList(updatedContent);
         }}
         getEditDataForPage={getEditDataForPage}
+        onRefreshJsonPacket={handleRefreshJsonPacket}
       />
       {renderConfirmModal()}
     </div>
@@ -259,6 +284,7 @@ const ContentByTab = ({
   formData,
   onUpdateAllMenuContent,
   getEditDataForPage,
+  onRefreshJsonPacket,
 }: {
   tab: string;
   modelName: string;
@@ -269,6 +295,7 @@ const ContentByTab = ({
   formData: any[];
   onUpdateAllMenuContent: (content: ModelConfigWithData[]) => void;
   getEditDataForPage: (updatedMenuList: ModelConfigWithData[]) => string[];
+  onRefreshJsonPacket: () => void;
 }) => {
   const t = useTranslations();
   const {
@@ -679,6 +706,7 @@ const ContentByTab = ({
             modelName={modelName}
             fwVer={fwVer}
             onExportProfile={onExportProfile}
+            onRefreshJsonPacket={onRefreshJsonPacket}
           />
           <Stack
             flexWrap="wrap"
@@ -1008,6 +1036,8 @@ const ContentByTab = ({
               </Stack>
             ) : tab === "Commands" ? (
               <Commands data={formData} imei={imei} />
+            ) : tab === "Geofence" ? (
+              <Geofence imei={imei} />
             ) : (
               // Device Status가 아닌 탭은 그룹핑하여 렌더링
               groupedMenuContent.map((group, groupIndex) => (
@@ -1481,6 +1511,7 @@ const ContentByTab = ({
                       }
 
                       if (isSwitch) {
+                        console.log("isSwitch ::: ", item, item.value === "01");
                         return (
                           <Stack
                             direction={"row"}
@@ -1524,7 +1555,7 @@ const ContentByTab = ({
                             </Stack>
 
                             <SwitchPrimary
-                              value={item.value === "01"}
+                              checked={item.value === "01"}
                               onChange={(e) => {
                                 handleClearError(item.no);
                                 const isOn = e.target.checked ? "01" : "00";

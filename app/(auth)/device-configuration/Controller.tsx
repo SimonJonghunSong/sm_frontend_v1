@@ -2,6 +2,7 @@ import { Button, IconButton, Radio, Stack, Tooltip, Chip } from "@mui/material";
 import React, { useRef } from "react";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { GridColDef } from "@mui/x-data-grid";
 import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
@@ -19,12 +20,14 @@ interface ModelInfoControllerProps {
   modelName: string;
   fwVer: string;
   onExportProfile: () => void;
+  onRefreshJsonPacket: () => void;
 }
 
 export default function ModelInfoController({
   modelName,
   fwVer,
   onExportProfile,
+  onRefreshJsonPacket,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
@@ -262,6 +265,12 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
 
           <IconButton onClick={onExportProfile}>
             <FileDownloadOutlinedIcon sx={{ color: "var(--black)" }} />
+          </IconButton>
+        </Stack>
+
+        <Stack direction="row" gap="8px" alignItems="center">
+          <IconButton onClick={onRefreshJsonPacket}>
+            <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
           </IconButton>
         </Stack>
 

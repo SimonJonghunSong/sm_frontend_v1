@@ -21,7 +21,6 @@ import DataTable from "@/components/dataTable";
 import { PolygonData, useMapManager } from "@/src/hooks/useMapManager";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
-import { useSearchParams } from "next/navigation";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import {
   getPolygonGeofenceData,

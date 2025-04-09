@@ -62,6 +62,7 @@ interface SerialPort {
   readonly writable: WritableStream<Uint8Array>;
   open(options: SerialOptions): Promise<void>;
   close(): Promise<void>;
+  needsGeofenceRefetch?: boolean;
 }
 
 interface SerialOptions {
