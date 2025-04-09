@@ -6,7 +6,6 @@ import useModelInfoStore from "@/src/stores/useModelInfo";
 import {
   deleteJsonDataFromIDB,
   getJsonDataFromIDB,
-  updateParametersInIDB,
 } from "@/utils/idbModelUtil";
 import { ModelConfigWithData } from "@/src/api/services/model/type";
 import SideMenu from "./SideMenu";
@@ -27,11 +26,10 @@ import { convertModelConfigToProfile } from "@/src/utils/profileUtil";
 import { fileDownload } from "@/utils/fileDownload";
 import AssignMenus from "app/(auth)/model-info/AssignMenus";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerial from "@/src/hooks/useSerial";
-import useSerialStore from "@/src/stores/useSerialStore";
 import { hexToBinaryStringGrouped } from "app/(auth)/device-configuration/utils/functions";
 import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
+import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -147,7 +145,6 @@ const ModelInfoPage = () => {
             // 패킷 카운트 처리가 필요한 경우 여기에 추가
           };
 
-          const AT_GET_JSON = "AT^GETJSON=";
           const DELAY_MS = 100;
 
           const commands = Array.from(
@@ -522,7 +519,6 @@ const ContentByTab = ({
         const relevantFormData = formData.filter(
           (item) => item.info?.hdr && currentTabHeaders.includes(item.info.hdr)
         );
-
         // 모든 필드를 포함하도록 수정
         const validJsonIds = new Set();
 
@@ -615,7 +611,7 @@ const ContentByTab = ({
 
     // Create a map to store items grouped by hdr
     const groupedMap = new Map<string, ModelConfigWithData[]>();
-    console.log(formData);
+
     // Group items by hdr
     menuContentList.forEach((item) => {
       // Find the corresponding formData item to get the hdr
