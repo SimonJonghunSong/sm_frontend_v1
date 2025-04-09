@@ -30,6 +30,8 @@ import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStor
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialStore from "@/src/stores/useSerialStore";
+import { hexToBinaryStringGrouped } from "app/(auth)/device-configuration/utils/functions";
+import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -84,7 +86,7 @@ const ModelInfoPage = () => {
     func: { write },
   } = useSerial();
 
-  const { formData, resetData } = useTransformedConfigData({
+  const { formData, getEditDataForPage } = useTransformConfigDataWithModelInfo({
     data: portList.find(({ port }) => port.imei === imei).packageToJson
       .synctrak,
     blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
@@ -216,6 +218,7 @@ const ModelInfoPage = () => {
         onUpdateAllMenuContent={(updatedContent) => {
           setAllMenuContentList(updatedContent);
         }}
+        getEditDataForPage={getEditDataForPage}
       />
       {renderConfirmModal()}
     </div>
@@ -233,6 +236,7 @@ const ContentByTab = ({
   onExportProfile,
   formData,
   onUpdateAllMenuContent,
+  getEditDataForPage,
 }: {
   tab: string;
   modelName: string;
@@ -242,6 +246,7 @@ const ContentByTab = ({
   onExportProfile: () => void;
   formData: any[];
   onUpdateAllMenuContent: (content: ModelConfigWithData[]) => void;
+  getEditDataForPage: (updatedMenuList: ModelConfigWithData[]) => string[];
 }) => {
   const t = useTranslations();
   const {
@@ -271,6 +276,8 @@ const ContentByTab = ({
 
   const handleSendClick = async (depth3?: string) => {
     setErrorList({});
+
+    console.log("binaryStringGroupedToHextest ::::");
 
     // 현재 탭에 맞는 데이터를 가져옴
     let dataToSend = [];
@@ -429,11 +436,14 @@ const ContentByTab = ({
         // 각 청크를 AT^PRG 형식으로 전송
         for (const chunk of chunks) {
           const command = `AT^PRG;${imei};${tabId};${chunk.join(";")}`;
-          await write({
-            data: command,
-            port: currentPort.port,
-            writer: currentPort.writer,
-          });
+          console.log("command :::", command);
+
+          // 아래 로직으로 분리 필요시 주석 해제
+          // await write({
+          //   data: command,
+          //   port: currentPort.port,
+          //   writer: currentPort.writer,
+          // });
         }
       }
 
@@ -445,6 +455,19 @@ const ContentByTab = ({
         }
         return item;
       });
+
+      const resultCommands = getEditDataForPage(updatedMenuContentList);
+
+      for (const chunk of resultCommands) {
+        const command = `AT^PRG;${imei};${chunk}`;
+        console.log("command :::", command);
+
+        await write({
+          data: command,
+          port: currentPort.port,
+          writer: currentPort.writer,
+        });
+      }
 
       setMenuContentList(updatedMenuContentList);
 
@@ -560,6 +583,14 @@ const ContentByTab = ({
                         ? String(value).padStart(2, "0")
                         : value;
 
+                    if (content.UI_INPUT_TYPE === "checkbox") {
+                      console.log("content :::", content);
+                      return {
+                        ...content,
+                        value: hexToBinaryStringGrouped(formattedValue),
+                      };
+                    }
+
                     return {
                       ...content,
                       value: formattedValue,
@@ -570,6 +601,8 @@ const ContentByTab = ({
             }
             return content;
           });
+
+        console.log("filteredContent :::", filteredContent);
 
         setMenuContentList(filteredContent);
       }
