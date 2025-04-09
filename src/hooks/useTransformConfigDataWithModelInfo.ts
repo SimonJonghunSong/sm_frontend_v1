@@ -241,7 +241,7 @@ export function useTransformConfigDataWithModelInfo({
   const [originData, setOriginData] = useState(data || []);
   const formData = useMemo(
     () =>
-      originData
+      (originData || [])
         .map((tabObj) => {
           const [tabName, tabFields] = Object.entries(tabObj)[0];
           if (blacklist.includes(tabName)) return null;
