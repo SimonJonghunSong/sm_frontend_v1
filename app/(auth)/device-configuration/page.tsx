@@ -20,7 +20,7 @@ import TimeHMA from "app/(auth)/model-info/TimeHMA";
 import TimeSeHMAButton from "app/(auth)/model-info/TimeSeHMAButton";
 import CheckboxEdit from "./CheckboxEdit";
 import ModelInfoController from "./Controller";
-import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
+
 import CheckboxEditButton from "app/(auth)/model-info/CheckboxEditButton";
 import { convertModelConfigToProfile } from "@/src/utils/profileUtil";
 import { fileDownload } from "@/utils/fileDownload";
@@ -32,6 +32,7 @@ import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformCon
 import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
 import Commands from "./Commands";
 import FullLoading from "@/components/FullLoading";
+import CheckboxComp from "app/(auth)/device-configuration/CheckboxComp";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -139,33 +140,6 @@ const ModelInfoPage = () => {
         return;
       default:
         setTab(tab);
-        // 탭 변경 시 JSON 패킷 새로고침
-        const currentPort = portList.find(({ port }) => port.imei === imei);
-        if (currentPort) {
-          currentPort.port.grpNo = currentPort.jsonPackageCount;
-          currentPort.port.isjsonpackagefetching = true;
-          currentPort.port.onjsonpacketcountup = (count) => {
-            // 패킷 카운트 처리가 필요한 경우 여기에 추가
-          };
-
-          const DELAY_MS = 100;
-
-          const commands = Array.from(
-            { length: currentPort.jsonPackageCount },
-            (_, i) => `${AT_GET_JSON}${i + 1}`
-          );
-          setIsFullLoading(true);
-          for (const command of commands) {
-            await new Promise((resolve) => setTimeout(resolve, DELAY_MS)); // 100ms 지연
-
-            await write({
-              data: command,
-              port: currentPort.port,
-              writer: currentPort.writer,
-            });
-          }
-          setIsFullLoading(false);
-        }
     }
   };
 
@@ -198,6 +172,50 @@ const ModelInfoPage = () => {
     };
     fetchJsonData();
   }, [modelName]);
+
+  const currentPort = portList.find(({ port }) => port.imei === imei);
+
+  useEffect(() => {
+    const firstLoad = async () => {
+      const currentPort = portList.find(({ port }) => port.imei === imei);
+      if (currentPort) {
+        currentPort.port.grpNo = currentPort.jsonPackageCount;
+        currentPort.port.isjsonpackagefetching = true;
+        currentPort.port.onjsonpacketcountup = (count) => {
+          // 패킷 카운트 처리가 필요한 경우 여기에 추가
+        };
+
+        const DELAY_MS = 100;
+
+        const commands = Array.from(
+          { length: currentPort.jsonPackageCount },
+          (_, i) => `${AT_GET_JSON}${i + 1}`
+        );
+        setIsFullLoading(true);
+        for (const command of commands) {
+          await new Promise((resolve) => setTimeout(resolve, DELAY_MS)); // 100ms 지연
+
+          await write({
+            data: command,
+            port: currentPort.port,
+            writer: currentPort.writer,
+          });
+        }
+        setIsFullLoading(false);
+      }
+    };
+
+    if (!currentPort.port.writable || !currentPort.port.readable) {
+      setIsFullLoading(true);
+    } else {
+      setIsFullLoading(false);
+      firstLoad();
+    }
+  }, [
+    currentPort.port.writable,
+    currentPort.port.readable,
+    currentPort.port.ismodelinfofetching,
+  ]);
 
   return (
     <div className="pageWrap">
@@ -263,6 +281,8 @@ const ContentByTab = ({
   const [menuContentList, setMenuContentList] = useState<ModelConfigWithData[]>(
     []
   );
+
+  console.log("formData :::", formData);
 
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
@@ -452,13 +472,20 @@ const ContentByTab = ({
       // 전송 성공 후 menuContentList와 allMenuContentList 업데이트
       const updatedMenuContentList = menuContentList.map((item) => {
         const sentItem = dataToSend.find((sent) => sent.no === item.no);
+
+        console.log("sentItem :::", sentItem);
+
         if (sentItem) {
           return { ...item, value: sentItem.value };
         }
         return item;
       });
 
-      const resultCommands = getEditDataForPage(updatedMenuContentList);
+      console.log("dataToSend :::", dataToSend);
+      console.log("menuContentList :::", menuContentList);
+      console.log("updatedMenuContentList :::", updatedMenuContentList);
+
+      const resultCommands = getEditDataForPage(dataToSend);
 
       for (const chunk of resultCommands) {
         const command = `AT^PRG;${imei};${chunk}`;
@@ -584,14 +611,6 @@ const ContentByTab = ({
                         ? String(value).padStart(2, "0")
                         : value;
 
-                    if (content.UI_INPUT_TYPE === "checkbox") {
-                      console.log("content :::", content);
-                      return {
-                        ...content,
-                        value: hexToBinaryStringGrouped(formattedValue),
-                      };
-                    }
-
                     return {
                       ...content,
                       value: formattedValue,
@@ -609,6 +628,8 @@ const ContentByTab = ({
       }
     }
   }, [tab]);
+
+  console.log("menuContentList ::::", menuContentList);
 
   // Group menuContentList by hdr
   const groupedMenuContent = useMemo(() => {
@@ -1014,6 +1035,8 @@ const ContentByTab = ({
                     gap={tab == DEVICE_STATUS ? "0 40px" : "40px"}
                   >
                     {group.items.map((item, idx) => {
+                      console.log("item@@ :::", item);
+
                       const isDeviceStatus = tab == DEVICE_STATUS;
                       const isButton = item.UI_INPUT_TYPE === "button";
                       const isDropdown = item.UI_INPUT_TYPE === "dropdown";
@@ -1435,6 +1458,8 @@ const ContentByTab = ({
                                 }}
                                 lang={lang}
                                 onChange={(newValue) => {
+                                  console.log("newValue222 ::::", newValue);
+
                                   setMenuContentList(
                                     menuContentList.map((menuContent) => {
                                       if (item.no === menuContent.no) {
