@@ -30,6 +30,8 @@ import useSerial from "@/src/hooks/useSerial";
 import { hexToBinaryStringGrouped } from "app/(auth)/device-configuration/utils/functions";
 import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
 import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import Commands from "./Commands";
+import FullLoading from "@/components/FullLoading";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -70,6 +72,7 @@ export const getLocalizedText = (
 
 const ModelInfoPage = () => {
   const [tab, setTab] = useState<string>();
+  const [isFullLoading, setIsFullLoading] = useState(false);
   const [showHiddenParameters, setShowHiddenParameters] = useState(false);
   const [allMenuContentList, setAllMenuContentList] = useState<
     ModelConfigWithData[]
@@ -85,7 +88,7 @@ const ModelInfoPage = () => {
   } = useSerial();
 
   const { formData, getEditDataForPage } = useTransformConfigDataWithModelInfo({
-    data: portList.find(({ port }) => port.imei === imei).packageToJson
+    data: portList.find(({ port }) => port.imei === imei)?.packageToJson
       .synctrak,
     blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
   });
@@ -151,7 +154,7 @@ const ModelInfoPage = () => {
             { length: currentPort.jsonPackageCount },
             (_, i) => `${AT_GET_JSON}${i + 1}`
           );
-
+          setIsFullLoading(true);
           for (const command of commands) {
             await new Promise((resolve) => setTimeout(resolve, DELAY_MS)); // 100ms 지연
 
@@ -161,6 +164,7 @@ const ModelInfoPage = () => {
               writer: currentPort.writer,
             });
           }
+          setIsFullLoading(false);
         }
     }
   };
@@ -197,6 +201,7 @@ const ModelInfoPage = () => {
 
   return (
     <div className="pageWrap">
+      {isFullLoading && <FullLoading />}
       <SideMenu
         sideMenuItems={sideBarList}
         activeTab={tab}
@@ -978,6 +983,8 @@ const ContentByTab = ({
                   })}
                 </Stack>
               </Stack>
+            ) : tab === "Commands" ? (
+              <Commands data={formData} imei={imei} />
             ) : (
               // Device Status가 아닌 탭은 그룹핑하여 렌더링
               groupedMenuContent.map((group, groupIndex) => (
