@@ -161,7 +161,12 @@ function parseAssignList(
   });
 }
 
-function processField(fieldData: Field, fieldName: string): Field | null {
+function processField(
+  fieldData: Field,
+  fieldName: string,
+  tabInfo?: TabInfo
+): Field | null {
+  const tabId = tabInfo?.tab_id;
   let name = fieldName;
   const targetIndex = name.lastIndexOf("(");
   const targetIndex2 = name.lastIndexOf(")");
@@ -181,10 +186,20 @@ function processField(fieldData: Field, fieldName: string): Field | null {
         return { ...fieldData, fieldName, name, number, assignList };
       }
       return { ...fieldData, fieldName, name, number };
+    case "alert_id":
+      return {
+        ...fieldData,
+        fieldName,
+        name,
+        number: `${tabId}${
+          Number(fieldData.ID) < 10
+            ? `0${Number(fieldData.ID)}`
+            : Number(fieldData.ID)
+        }`,
+      };
     case "edit":
     case "ip":
     case "any":
-    case "alert_id":
     case "sAssign":
     case "mAssign":
     case "lAssign":
@@ -217,12 +232,14 @@ function fieldToEditString(fieldData: Field): string {
       }
 
     case "alert_id":
-      const checked = `0${fieldData.value}`;
-      const hexValue =
-        Number(fieldData.alert_id).toString(16).length < 2
-          ? `0${Number(fieldData.alert_id).toString(16).toUpperCase()}`
-          : Number(fieldData.alert_id).toString(16).toUpperCase();
-      return `${optionId}#${checked}${hexValue}`;
+      const checked = fieldData.value.slice(0, 2);
+      const hexValue = Number(fieldData.value.slice(2))
+        .toString(16)
+        .toUpperCase();
+
+      return `${optionId}#${checked}${
+        hexValue.length < 2 ? `0${hexValue}` : hexValue
+      }`;
     case "sAssign":
     case "mAssign":
     case "lAssign":
@@ -287,6 +304,15 @@ export function useTransformConfigDataWithModelInfo({
                         ...field,
                         value: selectValue,
                       };
+                    case "alert_id":
+                      const value = updateMenuObject[field.number].slice(1, 2);
+                      const alertId = updateMenuObject[field.number].slice(2);
+
+                      return {
+                        ...field,
+                        value: value,
+                        alert_id: alertId,
+                      };
                     default:
                       return {
                         ...field,
@@ -340,7 +366,6 @@ export function useTransformConfigDataWithModelInfo({
           Number(pageData.info.tab_id) < 10
             ? `0${pageData.info.tab_id}`
             : pageData.info.tab_id;
-
         // 특수 처리가 필요한 타입 분기 처리
         switch (tabType) {
           case "assign":
@@ -465,7 +490,11 @@ export function useTransformConfigDataWithModelInfo({
             } else {
               const fieldData = (fieldDataArray as Field[])[0];
 
-              const processedField = processField(fieldData, fieldName);
+              const processedField = processField(
+                fieldData,
+                fieldName,
+                tabInfo
+              );
               if (processedField) {
                 fields.push(processedField);
               }

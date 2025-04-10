@@ -42,7 +42,7 @@ const SHOW_HIDDEN_PARAMETERS = "Show Hidden Parameters";
 const menuHeaderMap = {
   Network: ["NTW", "GSM"],
   System: ["IGN", "DPA", "PWR"],
-  Report: ["RPT", "RMAP", "ASGNALT", "ASGNSTT", "DBDCFG", "RMC"],
+  Report: ["RPT", "RMAP", "ASGNALT", "ASGNSTT", "DBDCFG", "RMC", "ALTCFG1"],
   Tracking: ["PRO", "FTR"],
   "Input/Output(I/O)": ["INP", "OUT"],
   Geofence: ["GEOCONP", "CGF", "PLC", "CGF"],
@@ -95,7 +95,6 @@ const ModelInfoPage = () => {
     blacklist: ["info"],
   });
 
-  console.log(formData);
   // "Circular Geofence", "Polygon Geofence"
   const [sideBarList, setSideBarList] = useState<
     {
@@ -326,8 +325,6 @@ const ContentByTab = ({
   const handleSendClick = async (depth3?: string) => {
     setErrorList({});
 
-    console.log("binaryStringGroupedToHextest ::::");
-
     // 현재 탭에 맞는 데이터를 가져옴
     let dataToSend = [];
 
@@ -485,7 +482,6 @@ const ContentByTab = ({
         // 각 청크를 AT^PRG 형식으로 전송
         for (const chunk of chunks) {
           const command = `AT^PRG;${imei};${tabId};${chunk.join(";")}`;
-          console.log("command :::", command);
 
           // 아래 로직으로 분리 필요시 주석 해제
           // await write({
@@ -500,23 +496,16 @@ const ContentByTab = ({
       const updatedMenuContentList = menuContentList.map((item) => {
         const sentItem = dataToSend.find((sent) => sent.no === item.no);
 
-        console.log("sentItem :::", sentItem);
-
         if (sentItem) {
           return { ...item, value: sentItem.value };
         }
         return item;
       });
 
-      console.log("dataToSend :::", dataToSend);
-      console.log("menuContentList :::", menuContentList);
-      console.log("updatedMenuContentList :::", updatedMenuContentList);
-
       const resultCommands = getEditDataForPage(dataToSend);
 
       for (const chunk of resultCommands) {
         const command = `AT^PRG;${imei};${chunk}`;
-        console.log("command :::", command);
 
         await write({
           data: command,
@@ -535,7 +524,7 @@ const ContentByTab = ({
         }
         return item;
       });
-      console.log(updatedAllMenuContentList, "updatedAllMenuContentList");
+
       // 부모 컴포넌트의 allMenuContentList 업데이트
       onUpdateAllMenuContent(updatedAllMenuContentList);
     } catch (error) {
@@ -624,13 +613,29 @@ const ContentByTab = ({
                     return fullId === content.JSON_ID;
                   });
 
+                  let value = "";
+
                   if (matchingField) {
-                    const value =
-                      matchingField.type === "combo"
-                        ? matchingField.options.find(
-                            ({ value }) => value === matchingField.value
-                          )?.realValue
-                        : matchingField.value;
+                    switch (matchingField.type) {
+                      case "combo":
+                        value = matchingField.options.find(
+                          ({ value }) => value === matchingField.value
+                        )?.realValue;
+                        break;
+                      case "alert_id":
+                        const alertValue = matchingField.value;
+
+                        value = `${
+                          Number(alertValue) < 10
+                            ? `0${alertValue}`
+                            : alertValue
+                        }${matchingField.alert_id}`;
+
+                        break;
+                      default:
+                        value = matchingField.value;
+                        break;
+                    }
 
                     // 10 이하의 숫자는 2자리 형식으로 변환 (01, 02, 03...)
                     const formattedValue =
@@ -648,8 +653,6 @@ const ContentByTab = ({
             }
             return content;
           });
-
-        console.log("filteredContent :::", filteredContent);
 
         setMenuContentList(filteredContent);
       }
@@ -1749,9 +1752,20 @@ const ContentByTab = ({
                       if (isCheckboxEdit) {
                         return (
                           <CheckboxEdit
+                            value={item.value}
+                            onChange={(newValue) => {
+                              setMenuContentList(
+                                menuContentList.map((menuContent) => {
+                                  if (item.no === menuContent.no) {
+                                    return { ...menuContent, value: newValue };
+                                  }
+                                  return menuContent;
+                                })
+                              );
+                            }}
                             title={getLocalizedText(item, lang)}
                             info={
-                              lang === "en"
+                              item.TEXT_EN_INFO
                                 ? item.TEXT_EN_INFO
                                 : lang === "es"
                                 ? item.TEXT_ES_INFO

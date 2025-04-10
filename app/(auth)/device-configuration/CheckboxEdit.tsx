@@ -6,10 +6,19 @@ interface CheckboxEditProps {
   title: string;
   info?: string;
   jsonId: string;
+  value: string;
+  onChange: (newValue: string) => void;
 }
 
-const CheckboxEdit = ({ title, info, jsonId }: CheckboxEditProps) => {
-  const [value, setValue] = useState(true);
+const CheckboxEdit = ({
+  title,
+  info,
+  jsonId,
+  value,
+  onChange,
+}: CheckboxEditProps) => {
+  const checked = value.startsWith("01");
+  const inputValue = value.slice(2);
   /**
    * 체크박스 값 형식 설명 (예: "0164")
    *
@@ -23,6 +32,14 @@ const CheckboxEdit = ({ title, info, jsonId }: CheckboxEditProps) => {
    * - "01": 체크박스가 체크된 상태
    * - "64": 16진수 값
    */
+  const handleCheckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.checked ? "01" : "00";
+    onChange(`${newValue}${inputValue}`);
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    onChange(`${checked ? "01" : "00"}${newValue}`);
+  };
   return (
     <Stack
       direction="row"
@@ -36,11 +53,13 @@ const CheckboxEdit = ({ title, info, jsonId }: CheckboxEditProps) => {
         gap="8px"
         sx={{ marginBottom: "12px" }}
       >
-        <Checkbox
-          checked={value}
-          onChange={(e) => setValue(e.target.checked)}
+        <Checkbox checked={checked} onChange={handleCheckChange} />
+        <TextField
+          sx={{ width: 50 }}
+          defaultValue="00"
+          value={inputValue}
+          onChange={handleInputChange}
         />
-        <TextField sx={{ width: 50 }} defaultValue="00" />
       </Stack>
       <InputBox.Head>
         <InputBox.Title>{title}</InputBox.Title>
