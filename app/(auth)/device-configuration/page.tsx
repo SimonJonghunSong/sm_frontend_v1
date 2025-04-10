@@ -42,7 +42,16 @@ const SHOW_HIDDEN_PARAMETERS = "Show Hidden Parameters";
 const menuHeaderMap = {
   Network: ["NTW", "GSM"],
   System: ["IGN", "DPA", "PWR"],
-  Report: ["RPT", "RMAP", "ASGNALT", "ASGNSTT", "DBDCFG", "RMC", "ALTCFG1"],
+  Report: [
+    "RPT",
+    "RMAP",
+    "ASGNALT",
+    "ASGNSTT",
+    "DBDCFG",
+    "RMC",
+    "ALTCFG1",
+    "ALTCFG2",
+  ],
   Tracking: ["PRO", "FTR"],
   "Input/Output(I/O)": ["INP", "OUT"],
   Geofence: ["GEOCONP", "CGF", "PLC", "CGF"],

@@ -232,8 +232,10 @@ function fieldToEditString(fieldData: Field): string {
       }
 
     case "alert_id":
-      const checked = fieldData.value.slice(0, 2);
-      const hexValue = Number(fieldData.value.slice(2))
+      console.log("fieldData :::", fieldData);
+
+      const checked = fieldData.value?.slice(0, 2) || "00";
+      const hexValue = Number(fieldData.value?.slice(2) || "0")
         .toString(16)
         .toUpperCase();
 
@@ -335,6 +337,8 @@ export function useTransformConfigDataWithModelInfo({
           return updateMenuObject[field.number];
         });
 
+        console.log("field :::", cur);
+
         if (hasChild) {
           return [
             ...acc,
@@ -353,87 +357,96 @@ export function useTransformConfigDataWithModelInfo({
         return acc;
       }, []);
 
+      console.log("updateFormData ::", updateFormData);
+
       const pageDatas = updateFormData;
       let result: string[] = [];
 
       if (!pageDatas.length) return [];
+      try {
+        for (let i = 0; i < pageDatas.length; i++) {
+          const pageData = pageDatas[i];
 
-      for (let i = 0; i < pageDatas.length; i++) {
-        const pageData = pageDatas[i];
+          const tabType = pageData.info.type;
+          const tabId =
+            Number(pageData.info.tab_id) < 10
+              ? `0${pageData.info.tab_id}`
+              : pageData.info.tab_id;
+          // 특수 처리가 필요한 타입 분기 처리
+          switch (tabType) {
+            case "assign":
+              const mapId = pageData.info.map_id as string;
+              const mapIdPrefix = mapId.slice(0, 2);
+              const mapIdSuffix = mapId.slice(2);
 
-        const tabType = pageData.info.type;
-        const tabId =
-          Number(pageData.info.tab_id) < 10
-            ? `0${pageData.info.tab_id}`
-            : pageData.info.tab_id;
-        // 특수 처리가 필요한 타입 분기 처리
-        switch (tabType) {
-          case "assign":
-            const mapId = pageData.info.map_id as string;
-            const mapIdPrefix = mapId.slice(0, 2);
-            const mapIdSuffix = mapId.slice(2);
+              const string16Data = parseInt(
+                pageData.fields.toReversed().reduce((acc, cur) => {
+                  return acc + cur.value;
+                }, "0"),
+                2
+              )
+                .toString(16)
+                .toUpperCase();
 
-            const string16Data = parseInt(
-              pageData.fields.toReversed().reduce((acc, cur) => {
-                return acc + cur.value;
-              }, "0"),
-              2
-            )
-              .toString(16)
-              .toUpperCase();
+              const fullDataEditString = `${mapIdPrefix};${mapIdSuffix}#${new Array(
+                8 - string16Data.length
+              )
+                .fill(0)
+                .join("")}${string16Data}`;
 
-            const fullDataEditString = `${mapIdPrefix};${mapIdSuffix}#${new Array(
-              8 - string16Data.length
-            )
-              .fill(0)
-              .join("")}${string16Data}`;
-
-            const assignEditStrings: string[] = (
-              pageData.fields as Field[]
-            ).reduce((acc, cur) => {
-              return [...acc, fieldToEditString(cur)];
-            }, [] as string[]);
-
-            if (assignEditStrings.length === 0) return [];
-
-            if (assignEditStrings.length > 20) {
-              const splitEditStrings = splitArrayIntoChunks(assignEditStrings);
-
-              result = result.concat(
-                splitEditStrings.map((item) => `${tabId};${item.join(";")}`)
-              );
-            } else {
-              result = result.concat([
-                `${tabId};${assignEditStrings.join(";")}`,
-              ]);
-            }
-
-            // 첫번째 요약 데이터 삽입
-            result.unshift(fullDataEditString);
-            break;
-          default:
-            const editStrings: string[] = (pageData.fields as Field[]).reduce(
-              (acc, cur) => {
+              const assignEditStrings: string[] = (
+                pageData.fields as Field[]
+              ).reduce((acc, cur) => {
                 return [...acc, fieldToEditString(cur)];
-              },
-              [] as string[]
-            );
+              }, [] as string[]);
 
-            if (editStrings.length === 0) result = result.concat([]);
+              if (assignEditStrings.length === 0) return [];
 
-            if (editStrings.length > 20) {
-              const splitEditStrings = splitArrayIntoChunks(editStrings);
+              if (assignEditStrings.length > 20) {
+                const splitEditStrings =
+                  splitArrayIntoChunks(assignEditStrings);
 
-              result = result.concat(
-                splitEditStrings.map((item) => `${tabId};${item.join(";")}`)
+                result = result.concat(
+                  splitEditStrings.map((item) => `${tabId};${item.join(";")}`)
+                );
+              } else {
+                result = result.concat([
+                  `${tabId};${assignEditStrings.join(";")}`,
+                ]);
+              }
+
+              // 첫번째 요약 데이터 삽입
+              result.unshift(fullDataEditString);
+              break;
+            default:
+              const editStrings: string[] = (pageData.fields as Field[]).reduce(
+                (acc, cur) => {
+                  return [...acc, fieldToEditString(cur)];
+                },
+                [] as string[]
               );
-            } else {
-              result = result.concat([`${tabId};${editStrings.join(";")}`]);
-            }
-        }
-      }
 
-      return result;
+              if (editStrings.length === 0) result = result.concat([]);
+
+              if (editStrings.length > 20) {
+                const splitEditStrings = splitArrayIntoChunks(editStrings);
+
+                result = result.concat(
+                  splitEditStrings.map((item) => `${tabId};${item.join(";")}`)
+                );
+              } else {
+                result = result.concat([`${tabId};${editStrings.join(";")}`]);
+              }
+          }
+        }
+
+        console.log("updateMenuList :::", updateMenuList);
+        console.log("result :::", result);
+
+        return result;
+      } catch (e) {
+        console.log("e ::::", e);
+      }
     },
     [formData]
   );
