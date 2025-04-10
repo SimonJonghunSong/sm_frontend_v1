@@ -19,8 +19,6 @@ export default function TimeHMA({
   unit = 1,
   hourType = 12,
 }: Props) {
-  console.log("value inner ::", value);
-
   const renderHour = () => {
     if (hourType === 12) {
       return [

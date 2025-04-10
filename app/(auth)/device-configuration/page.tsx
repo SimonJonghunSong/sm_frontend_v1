@@ -107,7 +107,9 @@ const ModelInfoPage = () => {
     }[]
   >([]);
   const { getModelName, getFwVer } = useModelInfoStore();
-  const modelName = useMemo(() => getModelName(), [getModelName]);
+
+  const currentPort = portList.find(({ port }) => port.imei === imei);
+  const modelName = currentPort?.modelVersion?.split("_")[0] || "";
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
 
   const t = useTranslations();
@@ -175,8 +177,6 @@ const ModelInfoPage = () => {
     };
     fetchJsonData();
   }, [modelName]);
-
-  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const handleRefreshJsonPacket = async () => {
     setIsFullLoading(true);
@@ -310,8 +310,6 @@ const ContentByTab = ({
   const [menuContentList, setMenuContentList] = useState<ModelConfigWithData[]>(
     []
   );
-
-  console.log("formData :::", formData);
 
   const [errorList, setErrorList] = useState<Record<number, string>>({});
 
@@ -657,8 +655,6 @@ const ContentByTab = ({
       }
     }
   }, [tab]);
-
-  console.log("menuContentList ::::", menuContentList);
 
   // Group menuContentList by hdr
   const groupedMenuContent = useMemo(() => {
@@ -1067,8 +1063,6 @@ const ContentByTab = ({
                     gap={tab == DEVICE_STATUS ? "0 40px" : "40px"}
                   >
                     {group.items.map((item, idx) => {
-                      console.log("item@@ :::", item);
-
                       const isDeviceStatus = tab == DEVICE_STATUS;
                       const isButton = item.UI_INPUT_TYPE === "button";
                       const isDropdown = item.UI_INPUT_TYPE === "dropdown";
@@ -1490,8 +1484,6 @@ const ContentByTab = ({
                                 }}
                                 lang={lang}
                                 onChange={(newValue) => {
-                                  console.log("newValue222 ::::", newValue);
-
                                   setMenuContentList(
                                     menuContentList.map((menuContent) => {
                                       if (item.no === menuContent.no) {
@@ -1511,7 +1503,6 @@ const ContentByTab = ({
                       }
 
                       if (isSwitch) {
-                        console.log("isSwitch ::: ", item, item.value === "01");
                         return (
                           <Stack
                             direction={"row"}

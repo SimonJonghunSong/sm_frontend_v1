@@ -273,27 +273,11 @@ export function useTransformConfigDataWithModelInfo({
             return {
               ...item,
               fields: item.fields.map((field) => {
-                console.log("field :::", field);
                 if (updateMenuObject[field.number]) {
-                  switch (field.type) {
-                    case "combo":
-                      const selectValue = field.options?.find(
-                        (item) =>
-                          (Number(item.realValue) < 10
-                            ? `0${item.realValue}`
-                            : item.realValue) === updateMenuObject[field.number]
-                      )?.value;
-
-                      return {
-                        ...field,
-                        value: selectValue,
-                      };
-                    default:
-                      return {
-                        ...field,
-                        value: updateMenuObject[field.number],
-                      };
-                  }
+                  return {
+                    ...field,
+                    value: updateMenuObject[field.number],
+                  };
                 }
 
                 return field;
