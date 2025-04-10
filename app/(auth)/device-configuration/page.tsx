@@ -54,7 +54,7 @@ const menuHeaderMap = {
   ],
   Tracking: ["PRO", "FTR"],
   "Input/Output(I/O)": ["INP", "OUT"],
-  Geofence: ["GEOCONP", "CGF", "PLC", "CGF"],
+  Geofence: ["GEOCONP", "GEOCONF", "CGF", "PLC", "CGF"],
   BLE: ["BLE", "BEG_BLE", "BLESEN"],
   Accessories: ["TAS", "SRL", "ECU", "WTE"],
   RF: ["RFC", "RFD"],
@@ -104,7 +104,6 @@ const ModelInfoPage = () => {
     blacklist: ["info"],
   });
 
-  // "Circular Geofence", "Polygon Geofence"
   const [sideBarList, setSideBarList] = useState<
     {
       no: number;
@@ -114,7 +113,7 @@ const ModelInfoPage = () => {
       index: number;
     }[]
   >([]);
-  const { getModelName, getFwVer } = useModelInfoStore();
+  const { getFwVer } = useModelInfoStore();
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort?.modelVersion?.split("_")[0] || "";

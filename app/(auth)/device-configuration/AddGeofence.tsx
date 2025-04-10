@@ -19,6 +19,7 @@ import {
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
 import CircularType from "./components/CircularType";
+import PolygonType from "./components/PolygonType";
 import { toast } from "react-toastify";
 import { delayPromise } from "@/src/hooks/useSerial";
 import {
@@ -42,116 +43,17 @@ interface AddGeofenceProps {
   onBack: () => void;
 }
 
-// PolygonType 컴포넌트를 직접 포함
-interface PolygonTypeProps {
-  polygon?: PolygonData;
-  removePolygonPoint?: (polygon: PolygonData, index: number) => void;
-  max: number;
-  excludeGroupId?: number[];
-  groupId?: number;
-  onChangeGroupId: (id: number) => void;
-}
-
-const PolygonType = ({
-  polygon,
-  removePolygonPoint,
-  max,
-  excludeGroupId = [],
-  groupId,
-  onChangeGroupId,
-}: PolygonTypeProps) => {
-  return (
-    <Stack gap="20px">
-      <InputBox>
-        <InputBox.Head>
-          <InputBox.Title>
-            Group ID<i>*</i>
-          </InputBox.Title>
-          <InputBox.Info tooltipText="tooptip example" />
-          <InputBox.Number>50/60</InputBox.Number>
-        </InputBox.Head>
-        <InputBox.Body>
-          <Select
-            value={groupId || ""}
-            sx={{ width: "100%" }}
-            onChange={(e) => onChangeGroupId(Number(e.target.value))}
-          >
-            {Array.from({ length: max }, (_, i) => i + 1)
-              .filter((id) => !excludeGroupId.includes(id))
-              .map((id) => (
-                <MenuItem key={id} value={id}>
-                  {id}
-                </MenuItem>
-              ))}
-          </Select>
-        </InputBox.Body>
-      </InputBox>
-      {polygon && (
-        <DataTable
-          rows={polygon.path.map((point, index) => ({
-            id: index,
-            no: index + 1,
-            lat: point.lat,
-            lng: point.lng,
-            delete: {
-              onDelete: () => removePolygonPoint(polygon, index),
-            },
-          }))}
-          columns={[
-            {
-              field: "no",
-              headerName: "No",
-              width: 60,
-              headerAlign: "center",
-              align: "center",
-            },
-            {
-              field: "lat",
-              headerName: "Latitude",
-              flex: 1,
-              headerAlign: "center",
-              align: "center",
-            },
-            {
-              field: "lng",
-              headerName: "Longitude",
-              flex: 1,
-              headerAlign: "center",
-              align: "center",
-            },
-            {
-              field: "delete",
-              headerName: "Delete",
-              width: 80,
-              headerAlign: "center",
-              align: "center",
-              renderCell: (e) => (
-                <IconButton
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    e.value.onDelete();
-                  }}
-                >
-                  <DeleteForeverOutlinedIcon />
-                </IconButton>
-              ),
-            },
-          ]}
-        />
-      )}
-    </Stack>
-  );
-};
-
 const center = {
   lat: 37.564823,
   lng: 126.976951,
 };
 
 const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
-  const [type, setType] = useState("circular");
-  const [groupId, setGroupId] = useState<number>(undefined);
-  const [isFullLoading, setIsFullLoading] = useState<boolean>(false);
+  const [type, setType] = useState<"circular" | "polygon">("circular");
+  const [groupId, setGroupId] = useState<number>();
+  const [isFullLoading, setIsFullLoading] = useState(false);
+  const [enterAlert, setEnterAlert] = useState(false);
+  const [exitAlert, setExitAlert] = useState(false);
   const isCircleOutputActiveBuffer = useRef<string>();
   const mapManager = useMapManager();
   const {
@@ -180,16 +82,14 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
 
   const handleTypeChange = (e: SelectChangeEvent<string>) => {
     const paramsType = e.target.value;
-    // 기존 도형 제거
-    if (mapManager.polygons.length > 0) {
-      mapManager.removePolygon(mapManager.polygons[0].id);
+    if (paramsType !== type) {
+      if (mapManager.circles.length > 0) {
+        mapManager.removeCircle(mapManager.circles[0].id);
+      }
+      setType(paramsType as "circular" | "polygon");
+      // 그룹 ID 초기화
+      setGroupId(undefined);
     }
-    if (mapManager.circles.length > 0) {
-      mapManager.removeCircle(mapManager.circles[0].id);
-    }
-    setType(paramsType);
-    // 그룹 ID 초기화
-    setGroupId(undefined);
   };
 
   // 지도에 도형이 그려질 때마다 기존 도형을 제거하는 함수
@@ -206,6 +106,11 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
 
     // mapManager의 completeOverlay 함수 호출
     mapManager.completeOverlay(overlay);
+  };
+
+  const handleAlertStateChange = (enterAlert: boolean, exitAlert: boolean) => {
+    setEnterAlert(enterAlert);
+    setExitAlert(exitAlert);
   };
 
   const handleAdd = () => {
@@ -282,10 +187,14 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
           currentPort.port.needsGeofenceRefetch = true;
           onBack();
         };
+        // Convert alert states to hex string
+        const alertHexString = `${enterAlert ? "01" : "00"}${
+          exitAlert ? "01" : "00"
+        }`;
 
         write({
           data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}${
-            isOutputActive ? "01010000000000" : "0101"
+            isOutputActive ? `${alertHexString}0000000000` : alertHexString
           }`,
           port: currentPort.port,
           writer: currentPort.writer,
@@ -305,13 +214,20 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
     const isPolygonSpeedLimitDisabled =
       polygonList[groupId - 1].split("#")[1].length === 6;
 
+    // Convert alert states to hex string
+    const alertHexString = `${enterAlert ? "01" : "00"}${
+      exitAlert ? "01" : "00"
+    }`;
+
     write({
       data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
         2,
         "0"
       )}#${mapManager.polygons[0].path.length
         .toString(16)
-        .padStart(2, "0")}0101${isPolygonSpeedLimitDisabled ? "" : "00000000"}`,
+        .padStart(2, "0")}${alertHexString}${
+        isPolygonSpeedLimitDisabled ? "" : "00000000"
+      }`,
       port: currentPort.port,
       writer: currentPort.writer,
     });
@@ -424,15 +340,25 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
               }
               groupId={groupId}
               onChangeGroupId={setGroupId}
+              onAlertStateChange={handleAlertStateChange}
+              initialEnterAlert={enterAlert}
+              initialExitAlert={exitAlert}
             />
           ) : (
             <PolygonType
-              polygon={mapManager.polygons[0]}
-              removePolygonPoint={mapManager.removePolygonPoint}
               max={polygonGeofenceMax ? Number(polygonGeofenceMax) : 0}
+              removePolygonPoint={mapManager.removePolygonPoint}
               excludeGroupId={polygonData.map(({ groupId }) => groupId)}
+              polygon={
+                mapManager.polygons.length > 0
+                  ? mapManager.polygons[0]
+                  : undefined
+              }
               groupId={groupId}
               onChangeGroupId={setGroupId}
+              onAlertStateChange={handleAlertStateChange}
+              initialEnterAlert={enterAlert}
+              initialExitAlert={exitAlert}
             />
           )}
           <Button variant="contained" onClick={handleAdd}>

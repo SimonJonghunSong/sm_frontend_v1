@@ -34,7 +34,6 @@ import {
   AT_GET_CIRCULAR_GEOFENCE_255_LIST,
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
   AT_GET_POLYGON_GEOFENCE_LIST,
-  AT_REQ,
   CR,
   POLYGON_GEOFENCE_POINTS,
 } from "@/src/hooks/useSerial/constant";
@@ -55,13 +54,7 @@ import {
   parseResponseToPolygonData,
 } from "../configuration/geofence/utils";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
-import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import {
-  convertCoordinatesToHexString,
-  convertCircleCoordinatesToHexString,
-} from "@/utils/coordinateToHex";
-import type { PolygonData } from "@/src/hooks/useMapManager";
-import { toast } from "react-toastify";
+import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
 
 interface GeofenceProps {
   imei: string;
@@ -102,6 +95,7 @@ interface EditCircularViewProps {
 
 // 동적 임포트를 사용하여 AddGeofence 컴포넌트 로드
 const AddGeofence = lazy(() => import("./AddGeofence"));
+const EditGeofence = lazy(() => import("./EditGeofence"));
 
 const columns: GridColDef[] = [
   {
@@ -252,26 +246,28 @@ const ListView = ({
 // 편집 뷰 컴포넌트 (폴리곤)
 const EditPolygonView = ({ imei, groupId, onBack }: EditPolygonViewProps) => {
   return (
-    <Stack direction="column" gap="20px">
-      <Button variant="outlined" onClick={onBack}>
-        Back to List
-      </Button>
-      <div>Edit Polygon Geofence (Group ID: {groupId})</div>
-      {/* 여기에 폴리곤 편집 폼 구현 */}
-    </Stack>
+    <Suspense fallback={<div>Loading...</div>}>
+      <EditGeofence
+        imei={imei}
+        groupId={groupId}
+        type="polygon"
+        onBack={onBack}
+      />
+    </Suspense>
   );
 };
 
 // 편집 뷰 컴포넌트 (원형)
 const EditCircularView = ({ imei, groupId, onBack }: EditCircularViewProps) => {
   return (
-    <Stack direction="column" gap="20px">
-      <Button variant="outlined" onClick={onBack}>
-        Back to List
-      </Button>
-      <div>Edit Circular Geofence (Group ID: {groupId})</div>
-      {/* 여기에 원형 편집 폼 구현 */}
-    </Stack>
+    <Suspense fallback={<div>Loading...</div>}>
+      <EditGeofence
+        imei={imei}
+        groupId={groupId}
+        type="circular"
+        onBack={onBack}
+      />
+    </Suspense>
   );
 };
 
@@ -295,7 +291,7 @@ const Geofence = ({ imei }: GeofenceProps) => {
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
-  const { formData } = useTransformedConfigData({
+  const { formData, getEditDataForPage } = useTransformConfigDataWithModelInfo({
     data: portList.find(({ port }) => port.imei === imei).packageToJson
       .synctrak,
     blacklist: ["info"],
@@ -563,6 +559,104 @@ const Geofence = ({ imei }: GeofenceProps) => {
     })();
   }, [isCircularFetchReady]);
 
+  const renderGeofenceConfig = () => {
+    const geofenceConfig = formData.find(({ info }) => {
+      info.tab_id === "90";
+    });
+
+    if (!geofenceConfig) return null;
+
+    const geoConfigFields = geofenceConfig.fields.map(({ ID }) => ID); // ["0", "1", "2"]
+
+    const renderConfigItem = (
+      fieldId: string,
+      title: string,
+      number: string,
+      tooltipText: React.ReactNode
+    ) => {
+      if (!geoConfigFields.includes(fieldId)) return null;
+
+      return (
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          gap="10px"
+          sx={{ width: "calc(50% - 20px)" }}
+        >
+          <Stack direction="row" alignItems="center" gap="5px">
+            <InputBox.Title>{title}</InputBox.Title>
+            <InputBox.Info tooltipText={tooltipText} />
+            <InputBox.Number>{number}</InputBox.Number>
+          </Stack>
+          <InputBox.Body>
+            <SwitchPrimary />
+          </InputBox.Body>
+        </Stack>
+      );
+    };
+
+    return (
+      <Stack>
+        <InputBox>
+          <Stack direction="row" justifyContent="space-between">
+            <InputBox.Head>
+              <InputBox.Title>
+                <div className="pageTitle" style={{ marginBottom: 0 }}>
+                  Geofence Config
+                </div>
+              </InputBox.Title>
+            </InputBox.Head>
+            <Button color="secondary" variant="contained" onClick={() => {}}>
+              Send
+            </Button>
+          </Stack>
+        </InputBox>
+
+        <InputBox>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            flexWrap="wrap"
+            gap="20px"
+          >
+            {renderConfigItem(
+              "0",
+              "Polygon Speed Limit",
+              "9000",
+              <>
+                Set whether to use the Speed Limit Buzzer in the Polygon
+                Geofence Settings.
+                <br />• Default : Off
+              </>
+            )}
+            {renderConfigItem(
+              "2",
+              "Circular Buzzer Speed Limit",
+              "9002",
+              <>
+                Set whether to use the Speed Limit Buzzer in the Circular
+                Geofence Settings.
+                <br />• Default : Off
+              </>
+            )}
+            {renderConfigItem(
+              "1",
+              "Circular Output Active",
+              "9001",
+              <>
+                Set whether to use the Output Active & Delay Time in the
+                Circular Geofence Settings.
+                <br />• Default : Off
+              </>
+            )}
+          </Stack>
+        </InputBox>
+      </Stack>
+    );
+  };
+
   // 현재 뷰에 따라 적절한 컴포넌트 렌더링
   const renderCurrentView = () => {
     switch (currentView) {
@@ -613,7 +707,8 @@ const Geofence = ({ imei }: GeofenceProps) => {
   return (
     <div className="pageWrap" style={{ flex: 1 }}>
       {isFullLoading && <FullLoading />}
-      <article className="contentWrap">
+      <Stack flex={1} gap={"20px"}>
+        {renderGeofenceConfig()}
         <Stack
           direction="row"
           justifyContent="space-between"
@@ -627,15 +722,11 @@ const Geofence = ({ imei }: GeofenceProps) => {
                   Geofence
                 </div>
               </InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>1700</InputBox.Number>
-              {/* <span className="notification"/> */}
             </InputBox.Head>
           </InputBox>
-          <SwitchPrimary />
         </Stack>
         {renderCurrentView()}
-      </article>
+      </Stack>
     </div>
   );
 };

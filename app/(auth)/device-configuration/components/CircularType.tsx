@@ -2,6 +2,8 @@
 
 import { Stack, Select, MenuItem, TextField } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
+import { SwitchPrimary } from "@/components/switches";
+import React from "react";
 
 interface CircularTypeProps {
   id?: number;
@@ -18,6 +20,9 @@ interface CircularTypeProps {
   updateCircleRadius?: (circleId: number, newRadius: number) => void;
   groupId?: number;
   onChangeGroupId: (id: number) => void;
+  onAlertStateChange?: (enterAlert: boolean, exitAlert: boolean) => void;
+  initialEnterAlert?: boolean;
+  initialExitAlert?: boolean;
 }
 
 const CircularType = ({
@@ -31,7 +36,29 @@ const CircularType = ({
   excludeGroupId = [],
   groupId,
   onChangeGroupId,
+  onAlertStateChange,
+  initialEnterAlert = false,
+  initialExitAlert = false,
 }: CircularTypeProps) => {
+  const [enterAlert, setEnterAlert] = React.useState(initialEnterAlert);
+  const [exitAlert, setExitAlert] = React.useState(initialExitAlert);
+  const isUpdatingFromProps = React.useRef(false);
+
+  React.useEffect(() => {
+    if (enterAlert !== initialEnterAlert || exitAlert !== initialExitAlert) {
+      isUpdatingFromProps.current = true;
+      setEnterAlert(initialEnterAlert);
+      setExitAlert(initialExitAlert);
+    }
+  }, [initialEnterAlert, initialExitAlert]);
+
+  React.useEffect(() => {
+    if (!isUpdatingFromProps.current && onAlertStateChange) {
+      onAlertStateChange(enterAlert, exitAlert);
+    }
+    isUpdatingFromProps.current = false;
+  }, [enterAlert, exitAlert, onAlertStateChange]);
+
   return (
     <Stack gap="20px">
       <InputBox>
@@ -40,7 +67,6 @@ const CircularType = ({
             Group ID<i>*</i>
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
-          <InputBox.Number>50/60</InputBox.Number>
         </InputBox.Head>
         <InputBox.Body>
           <Select
@@ -66,7 +92,6 @@ const CircularType = ({
                 Latitude<i>*</i>
               </InputBox.Title>
               <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>50/60</InputBox.Number>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -85,7 +110,6 @@ const CircularType = ({
                 Longitude<i>*</i>
               </InputBox.Title>
               <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>50/60</InputBox.Number>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -104,7 +128,6 @@ const CircularType = ({
                 Radius<i>*</i>
               </InputBox.Title>
               <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>50/60</InputBox.Number>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -115,6 +138,96 @@ const CircularType = ({
               />
             </InputBox.Body>
           </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Enter Alert</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <SwitchPrimary
+                checked={enterAlert}
+                onChange={(e) => setEnterAlert(e.target.checked)}
+              />
+            </InputBox.Body>
+          </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Exit Alert</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <SwitchPrimary
+                checked={exitAlert}
+                onChange={(e) => setExitAlert(e.target.checked)}
+              />
+            </InputBox.Body>
+          </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Output Active</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <Select value={"select-1"} sx={{ width: "100%" }}>
+                <MenuItem value={"select-1"}>Select</MenuItem>
+              </Select>
+            </InputBox.Body>
+          </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Output Keep Active</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <SwitchPrimary />
+            </InputBox.Body>
+          </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Output Active Delay</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                type="number"
+                fullWidth
+                placeholder="0"
+                inputProps={{ min: 0, max: 3600 }}
+                helperText="Input only between 0 ~ 3,600"
+              />
+            </InputBox.Body>
+          </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Buzzer Speed Limit</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <TextField
+                type="number"
+                fullWidth
+                placeholder="0"
+                inputProps={{ min: 0, max: 3600 }}
+                helperText="Input only between 0 ~ 3,600"
+              />
+            </InputBox.Body>
+          </InputBox>
+
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>Anti Jamming</InputBox.Title>
+              <InputBox.Info tooltipText="tooptip example" />
+            </InputBox.Head>
+            <InputBox.Body>
+              <SwitchPrimary />
+            </InputBox.Body>
+          </InputBox>
         </>
       )}
     </Stack>
@@ -122,3 +235,5 @@ const CircularType = ({
 };
 
 export default CircularType;
+
+// Output 1, Output 2, Output 3, Output 4, All Outputs

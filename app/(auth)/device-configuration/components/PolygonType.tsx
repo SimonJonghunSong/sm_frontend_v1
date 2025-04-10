@@ -1,10 +1,12 @@
 "use client";
 
-import { Stack, Select, MenuItem, IconButton } from "@mui/material";
+import { Stack, Select, MenuItem, IconButton, TextField } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
 import DataTable from "@/components/dataTable";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import type { PolygonData } from "@/src/hooks/useMapManager";
+import React from "react";
+import { SwitchPrimary } from "@/components/switches";
 
 interface PolygonTypeProps {
   polygon?: PolygonData;
@@ -13,6 +15,9 @@ interface PolygonTypeProps {
   excludeGroupId?: number[];
   groupId?: number;
   onChangeGroupId: (id: number) => void;
+  onAlertStateChange?: (enterAlert: boolean, exitAlert: boolean) => void;
+  initialEnterAlert?: boolean;
+  initialExitAlert?: boolean;
 }
 
 const PolygonType = ({
@@ -22,7 +27,17 @@ const PolygonType = ({
   excludeGroupId = [],
   groupId,
   onChangeGroupId,
+  onAlertStateChange,
+  initialEnterAlert = false,
+  initialExitAlert = false,
 }: PolygonTypeProps) => {
+  const [enterAlert, setEnterAlert] = React.useState(initialEnterAlert);
+  const [exitAlert, setExitAlert] = React.useState(initialExitAlert);
+
+  React.useEffect(() => {
+    onAlertStateChange?.(enterAlert, exitAlert);
+  }, [enterAlert, exitAlert, onAlertStateChange]);
+
   return (
     <Stack gap="20px">
       <InputBox>
@@ -31,7 +46,6 @@ const PolygonType = ({
             Group ID<i>*</i>
           </InputBox.Title>
           <InputBox.Info tooltipText="tooptip example" />
-          <InputBox.Number>50/60</InputBox.Number>
         </InputBox.Head>
         <InputBox.Body>
           <Select
@@ -102,6 +116,96 @@ const PolygonType = ({
           ]}
         />
       )}
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Enter Alert</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <SwitchPrimary
+            checked={enterAlert}
+            onChange={(e) => setEnterAlert(e.target.checked)}
+          />
+        </InputBox.Body>
+      </InputBox>
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Exit Alert</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <SwitchPrimary
+            checked={exitAlert}
+            onChange={(e) => setExitAlert(e.target.checked)}
+          />
+        </InputBox.Body>
+      </InputBox>
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Output Active</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <Select value={"select-1"} sx={{ width: "100%" }}>
+            <MenuItem value={"select-1"}>Select</MenuItem>
+          </Select>
+        </InputBox.Body>
+      </InputBox>
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Output Keep Active</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <SwitchPrimary />
+        </InputBox.Body>
+      </InputBox>
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Output Active Delay</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <TextField
+            type="number"
+            fullWidth
+            placeholder="0"
+            inputProps={{ min: 0, max: 3600 }}
+            helperText="Input only between 0 ~ 3,600"
+          />
+        </InputBox.Body>
+      </InputBox>
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Buzzer Speed Limit</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <TextField
+            type="number"
+            fullWidth
+            placeholder="0"
+            inputProps={{ min: 0, max: 3600 }}
+            helperText="Input only between 0 ~ 3,600"
+          />
+        </InputBox.Body>
+      </InputBox>
+
+      <InputBox>
+        <InputBox.Head>
+          <InputBox.Title>Anti Jamming</InputBox.Title>
+          <InputBox.Info tooltipText="tooptip example" />
+        </InputBox.Head>
+        <InputBox.Body>
+          <SwitchPrimary />
+        </InputBox.Body>
+      </InputBox>
     </Stack>
   );
 };

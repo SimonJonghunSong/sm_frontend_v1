@@ -1,11 +1,6 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { splitArrayIntoChunks } from "../functions";
-import { useSearchParams } from "next/navigation";
 import { ModelConfigWithData } from "@/src/api/services/model/type";
-import {
-  binaryStringGroupedToHex,
-  padZerosWithSpaces,
-} from "app/(auth)/device-configuration/utils/functions";
 
 interface BaseField {
   fieldName: string;
@@ -259,8 +254,6 @@ export function useTransformConfigDataWithModelInfo({
   data,
   blacklist = [],
 }: UseTransformedConfigDataProps) {
-  const searchParams = useSearchParams();
-
   const [isDirty, setIsDirty] = useState(false);
   const [originData, setOriginData] = useState(data || []);
   const [formData, setFormData] = useState([]);

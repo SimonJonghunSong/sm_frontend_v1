@@ -151,7 +151,6 @@ export default function Page() {
           // toast("Save Success", { type: "success" });
           router.push(`/configuration/geofence`);
         };
-
         write({
           data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}${
             isOutputActive ? "01010000000000" : "0101"
