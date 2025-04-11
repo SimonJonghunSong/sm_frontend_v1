@@ -79,7 +79,14 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
     const onLoad = useCallback(
       (map: google.maps.Map) => {
         mapRef.current = map;
-        map.setCenter(center);
+
+        navigator.geolocation.getCurrentPosition((position) => {
+          const currentLocation = new google.maps.LatLng(
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          map.setCenter(currentLocation || center);
+        });
 
         if (!ref) return;
         if (typeof ref === "function") {
