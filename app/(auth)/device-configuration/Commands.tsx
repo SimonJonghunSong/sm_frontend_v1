@@ -1,7 +1,9 @@
 import useSerial from "@/src/hooks/useSerial";
 import { Button, Input, Stack, TextField } from "@mui/material";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { getLogsByIMEI, clearLogsByIMEI } from "@/utils/idbLogUtil";
+import styles from "../_cmd-tool/styles.module.scss";
 
 const Commands = ({ data, imei }: { data: any; imei: string }) => {
   const t = useTranslations();
@@ -12,6 +14,11 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const commands = data.find((item) => item.info.hdr === "CMD");
   const fields = commands?.fields[0].list[0];
+  const [logs, setLogs] = useState<any[]>([]);
+  const logContainerRef = useRef<HTMLDivElement>(null);
+  const broadcastChannel = useRef<BroadcastChannel>(
+    new BroadcastChannel("command_log")
+  );
 
   const transformedFields = fields
     ? Object.values(fields).map((field: string) => {
@@ -28,6 +35,44 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
         };
       })
     : [];
+
+  const loadLogs = async () => {
+    if (imei) {
+      const logData = await getLogsByIMEI(imei);
+      setLogs(logData);
+
+      // 로그가 업데이트되면 스크롤을 아래로 내립니다
+      setTimeout(() => {
+        if (logContainerRef.current) {
+          logContainerRef.current.scrollTop =
+            logContainerRef.current.scrollHeight;
+        }
+      }, 100);
+    }
+  };
+
+  useEffect(() => {
+    // 페이지 진입 시 해당 IMEI의 로그를 초기화합니다
+    const initLogs = async () => {
+      if (imei) {
+        await clearLogsByIMEI(imei);
+        setLogs([]);
+      }
+    };
+
+    initLogs();
+
+    // 로그 업데이트를 수신하는 이벤트 리스너 설정
+    broadcastChannel.current.onmessage = ({ data }) => {
+      if (data.status === "updated" && data.imei === imei) {
+        loadLogs();
+      }
+    };
+
+    return () => {
+      broadcastChannel.current.close();
+    };
+  }, [imei]);
 
   const handleSend = async (jsonId: string) => {
     const prefixJsonId = jsonId.slice(0, 2);
@@ -50,17 +95,24 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
   };
 
   return (
-    <div>
-      <Stack flexWrap="wrap" direction="row" gap={"40px"}>
-        {transformedFields.map((field) => {
+    <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
+      <Stack
+        flexWrap="wrap"
+        direction="row"
+        gap={"20px"}
+        sx={{ width: "100%" }}
+      >
+        {transformedFields.map((field, index) => {
           if (field.type === "button") {
             return (
               <Stack
+                key={index}
                 direction="row"
                 alignItems="center"
                 gap="8px"
                 height="56px"
-                width="calc(50% - 20px)"
+                width="calc(50% - 10px)"
+                sx={{ minWidth: "200px" }}
               >
                 <Stack flex={1}>{field.title}</Stack>
                 <div>
@@ -77,7 +129,7 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
           } else {
             return (
               <InputField
-                imei={imei}
+                key={index}
                 field={field}
                 onSend={(value) => handleInputChange(field.JSON_ID, value)}
               />
@@ -85,6 +137,123 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
           }
         })}
       </Stack>
+
+      {/* 명령 로그 표시 영역 */}
+      <div
+        className={styles.logWrap}
+        style={{
+          marginTop: "20px",
+          height: "300px",
+          width: "100%",
+          border: "1px solid #e0e0e0",
+          borderRadius: "8px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+        }}
+      >
+        <div
+          style={{
+            padding: "10px 16px",
+            borderBottom: "1px solid #e0e0e0",
+            backgroundColor: "#f5f5f5",
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+            fontWeight: 500,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          Command Log
+        </div>
+        <div
+          ref={logContainerRef}
+          className={styles.logContainer}
+          style={{
+            padding: "16px",
+            overflowY: "auto",
+            height: "calc(100% - 42px)",
+            width: "100%",
+            backgroundColor: "#fafafa",
+          }}
+        >
+          {logs.length === 0 ? (
+            <div
+              style={{
+                color: "#757575",
+                textAlign: "center",
+                marginTop: "30px",
+                fontStyle: "italic",
+              }}
+            >
+              No Logs
+            </div>
+          ) : (
+            logs.map((logItem, index) => (
+              <div
+                key={index}
+                style={{
+                  wordBreak: "break-word",
+                  marginBottom: "12px",
+                  padding: "0 0 12px 0",
+                  borderBottom:
+                    index < logs.length - 1 ? "1px dashed #e0e0e0" : "none",
+                }}
+              >
+                {logItem.write && (
+                  <div
+                    className={styles.logReq}
+                    style={{
+                      backgroundColor: "#e3f2fd",
+                      padding: "8px 12px",
+                      borderRadius: "4px",
+                      marginBottom: logItem.read ? "8px" : "0",
+                      fontFamily: "monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        color: "#616161",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {new Date(logItem.write.timestamp).toLocaleTimeString()}
+                    </div>
+                    <div>
+                      <span style={{ color: "#0d47a1" }}>&gt;</span>{" "}
+                      {logItem.write.data}
+                    </div>
+                  </div>
+                )}
+                {logItem.read && (
+                  <div
+                    className={styles.logRes}
+                    style={{
+                      backgroundColor: "#f1f8e9",
+                      padding: "8px 12px",
+                      borderRadius: "4px",
+                      fontFamily: "monospace",
+                      fontSize: "13px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        color: "#616161",
+                        marginBottom: "4px",
+                      }}
+                    >
+                      {new Date(logItem.read.timestamp).toLocaleTimeString()}
+                    </div>
+                    <div>{logItem.read.data}</div>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };
@@ -92,11 +261,9 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
 export default Commands;
 
 const InputField = ({
-  imei,
   field,
   onSend,
 }: {
-  imei: string;
   field: {
     JSON_ID: string;
     title: string;
@@ -111,9 +278,10 @@ const InputField = ({
     <Stack
       direction="column"
       justifyContent="center"
-      gap="16px"
+      gap="8px"
       height="56px"
-      width="calc(50% - 20px)"
+      width="calc(50% - 10px)"
+      sx={{ minWidth: "200px" }}
     >
       <Stack flex={1}>{field.title}</Stack>
       <Stack direction="row" gap="8px">
@@ -121,6 +289,7 @@ const InputField = ({
           fullWidth
           value={value}
           onChange={(e) => setValue(e.target.value)}
+          size="small"
         />
         <Button
           variant="outlined"

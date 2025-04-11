@@ -78,6 +78,24 @@ export const getLogsByIMEI = async (IMEI: string) => {
   return result ? result.LogPairs : [];
 };
 
+// 특정 IMEI의 로그만 삭제
+export const clearLogsByIMEI = async (IMEI: string) => {
+  const db = await initDB();
+  const transaction = db.transaction(STORE_NAME, "readwrite");
+  const store = transaction.objectStore(STORE_NAME);
+
+  // 해당 IMEI 레코드가 있는지 확인
+  const existingLogs = await store.get(IMEI);
+
+  if (existingLogs) {
+    // 로그를 빈 배열로 초기화한 후 저장
+    existingLogs.LogPairs = [];
+    await store.put(existingLogs);
+  }
+
+  await transaction.done;
+};
+
 // 전체 로그 삭제
 export const clearLogs = async () => {
   const db = await initDB();
