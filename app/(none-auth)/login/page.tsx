@@ -261,7 +261,7 @@ export default function page() {
           </InputBox>
           <InputBox>
             <InputBox.Head>
-              <InputBox.Title>{t("login.id")}</InputBox.Title>
+              <InputBox.Title>{t("login.id")} ID</InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
               <TextField
@@ -275,13 +275,8 @@ export default function page() {
                   background: isAnonymous ? "#F3F3F3" : undefined,
                 }}
                 onChange={(e) => {
-                  // const regex = /^[a-zA-Z0-9]*$/; // 영어 대소문자와 숫자만 허용
                   const value = e.target.value;
 
-                  // // 입력값 중 허용되지 않는 문자 제거
-                  // if (!regex.test(value)) {
-                  //   e.target.value = value.replace(/[^a-zA-Z0-9]/g, "");
-                  // }
                   e.target.value = value.replace(/[\u3131-\uD79D]/g, "");
                   setInputId(e.target.value);
                 }}

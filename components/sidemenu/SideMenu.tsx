@@ -65,8 +65,6 @@ export default function SideMenu({
       },
     });
 
-  console.log("isSideMenu");
-
   const loginMutation = useMutation({
     mutationFn: logout,
     onSettled: () => {
