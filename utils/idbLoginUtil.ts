@@ -149,16 +149,12 @@ export const offlineLogin = async (body: AuthLoginBody) => {
     return null;
   }
 
-  console.log("user :::", user);
-
   return user;
 };
 
 // 온라인 전환시 재로그인 처리
 export const olineChangeWithLogin = async (userId: string) => {
   const loginUser = await getUserByEmail(userId);
-
-  console.log("loginUser ::", loginUser);
 
   if (!loginUser) {
     return null;
