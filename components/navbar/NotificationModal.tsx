@@ -2,11 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import { toast } from "react-toastify";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 import { Stack, IconButton, Tabs, Tab } from "@mui/material";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
-import { delNoti, getNoti, readNoti } from "@/src/api/services/notification";
+import { getNoti, readNoti } from "@/src/api/services/notification";
 
 interface NotificationModalProps {
   onClose: () => void;
