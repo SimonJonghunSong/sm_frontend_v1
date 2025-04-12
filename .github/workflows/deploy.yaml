@@ -20,7 +20,10 @@ jobs:
             export PATH=$PATH:/usr/local/lib/nodejs/node-v22.11.0-linux-x64/bin
             npm cache clean --force
             cd /home/simon/stsunlab-sync-master
+            if [ -f .env.local ]; then cp .env.local .env.local.backup; fi
+            git reset --hard HEAD
             git pull https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/stsunlab-sync-master.git
+            if [ -f .env.local.backup ]; then cp .env.local.backup .env.local; fi
             npm install
             npm run build
             /home/simon/restart.sh
