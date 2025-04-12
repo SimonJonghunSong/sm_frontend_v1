@@ -4,24 +4,14 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import {
-  Button,
-  IconButton,
-  Skeleton,
-  Stack,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-} from "@mui/material";
+import { Button, IconButton, Skeleton, Stack } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import Modal from "@/components/Modal";
 import useModal from "@/utils/useModal";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import { AT_EDIT_PREFIX, AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
-import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";

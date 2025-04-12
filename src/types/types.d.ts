@@ -63,6 +63,7 @@ interface SerialPort {
   open(options: SerialOptions): Promise<void>;
   close(): Promise<void>;
   needsGeofenceRefetch?: boolean;
+  isReadyToUse?: boolean;
 }
 
 interface SerialOptions {

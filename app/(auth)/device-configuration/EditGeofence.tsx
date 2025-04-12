@@ -11,8 +11,8 @@ import {
   getCircularGeofenceData,
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
-import CircularType from "./components/CircularType";
-import PolygonType from "./components/PolygonType";
+import CircularType from "./(components)/CircularType";
+import PolygonType from "./(components)/PolygonType";
 import { toast } from "react-toastify";
 import {
   AT_EDIT_PREFIX,
