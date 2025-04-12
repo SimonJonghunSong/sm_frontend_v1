@@ -4,7 +4,7 @@ import useAuthStore from "@/utils/useAuthStore";
 
 const AuthCheck = () => {
   const router = useRouter();
-  const { token, userId, userRole } = useAuthStore();
+  const { token, userId } = useAuthStore();
 
   const isProduction = process.env.NODE_ENV === "production";
 

@@ -10,13 +10,14 @@ import { ReactQueryStreamedHydration } from "@tanstack/react-query-next-experime
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import useAuthStore from "@/utils/useAuthStore";
-import { toast } from "react-toastify";
+import useNetworkMonitor from "@/utils/useNetworkMonitorStore";
 
 export default function ReactQueryProvider({
   children,
 }: React.PropsWithChildren) {
   const router = useRouter();
   const { setToken, setRefreshToken, setUserId, setUserRole } = useAuthStore();
+  const { reset } = useNetworkMonitor();
   const [client] = useState(
     new QueryClient({
       queryCache: new QueryCache({
@@ -34,6 +35,7 @@ export default function ReactQueryProvider({
             setUserRole(undefined);
             setToken(undefined);
             setRefreshToken(undefined);
+            reset();
             router.replace("/login");
           }
         },
@@ -56,19 +58,9 @@ export default function ReactQueryProvider({
             if (error.status === 401) {
               setToken(undefined);
               setRefreshToken(undefined);
+              reset();
               router.replace("/login");
             }
-
-            console.log("error >>>", error);
-
-            // toast(
-            //   error.response?.data?.response?.reason ||
-            //     error.response?.data?.message ||
-            //     "Error",
-            //   {
-            //     type: "error",
-            //   }
-            // );
           },
         },
       },

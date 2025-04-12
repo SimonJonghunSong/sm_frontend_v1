@@ -6,6 +6,7 @@ interface NetworkState {
   isSelfOffline?: boolean;
   setIsOnline: (online: boolean) => void;
   setIsSelfOffline: (online: boolean) => void;
+  reset: () => void;
 }
 
 const useNetworkMonitor = create(
@@ -15,6 +16,12 @@ const useNetworkMonitor = create(
       isSelfOffline: false,
       setIsOnline: (onlineStatus) => set({ isOnline: onlineStatus }),
       setIsSelfOffline: (isSelfOffline) => set({ isSelfOffline }),
+      reset: () =>
+        set({
+          isOnline:
+            typeof window !== "undefined" ? navigator.onLine : undefined,
+          isSelfOffline: false,
+        }),
     }),
     {
       name: "network-monitor",

@@ -46,7 +46,7 @@ export default function SideMenu({
   const router = useRouter();
   const t = useTranslations();
   const pathname = usePathname();
-  const { isOnline } = useNetworkMonitor();
+  const { isOnline, reset } = useNetworkMonitor();
   const { hiddenParameter, toggleHiddenParameter } = useParameterStore();
   const { resetData } = useModelPkgStore();
 
@@ -67,19 +67,18 @@ export default function SideMenu({
 
   const loginMutation = useMutation({
     mutationFn: logout,
-  });
-
-  const purgeAuthSetting = async () => {
-    try {
-      await loginMutation.mutateAsync();
-    } catch (error) {
-    } finally {
+    onSettled: () => {
       setToken(undefined);
       setUserId(undefined);
       setUserRole(undefined);
       setRefreshToken(undefined);
+      reset();
       router.replace("/login");
-    }
+    },
+  });
+
+  const purgeAuthSetting = async () => {
+    loginMutation.mutate();
   };
 
   const getSubHref = (href: string) => {
