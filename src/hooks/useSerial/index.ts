@@ -160,7 +160,7 @@ const useSerial = () => {
       }, 10000);
 
       await write({
-        data: "AT",
+        data: HEALTH_CHECK,
         writer,
         port,
       });
@@ -199,30 +199,12 @@ const useSerial = () => {
             port?.onbuffervalue(value);
           }
 
-          if (value.includes("AT") && !port.isReadyToUse) {
-            port.isReadyToUse = true;
-
-            await write({
-              data: HEALTH_CHECK,
-              writer,
-              port,
-            });
-          }
-          if (port.isReadyToUse) {
+          if (
+            port.isReadyToUse &&
+            (!value.includes("PST;Rdy") || !value.includes("Rdy;UP"))
+          ) {
             // HEALTH CHECK & MODEL INFO
-            if (value.includes("PST;Rdy")) {
-              const dataField = value.trim().split(";")[2];
-              if (dataField === "UP") {
-                port.ismodelinfofetching = true;
-                port.injectedId = nanoid();
-                setConnectingPortCount((prev) => prev + 1);
-                write({
-                  data: AT_GET_MODEL_INFO,
-                  port,
-                  writer,
-                });
-              }
-            } else if (port.ismodelinfofetching) {
+            if (port.ismodelinfofetching) {
               modelVersionBufferRef.current.set(
                 port.injectedId,
                 (modelVersionBufferRef.current.get(port.injectedId) || "") +
@@ -540,6 +522,21 @@ const useSerial = () => {
                 jsonPacketBufferCountRef.current.set(currentImei, 0);
                 port.isjsonpackagefetching = false;
               }
+            }
+          }
+
+          if (value.includes("PST;Rdy") && !port.isReadyToUse) {
+            const dataField = value.trim().split(";")[2];
+            if (dataField === "UP") {
+              port.isReadyToUse = true;
+              port.ismodelinfofetching = true;
+              port.injectedId = nanoid();
+              setConnectingPortCount((prev) => prev + 1);
+              write({
+                data: AT_GET_MODEL_INFO,
+                port,
+                writer,
+              });
             }
           }
         }
