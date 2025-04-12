@@ -6,7 +6,6 @@ import Link from "next/link";
 import Stack from "@mui/material/Stack";
 import Checkbox from "@mui/material/Checkbox";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import logo from "/public/images/logo-dark.svg";
 import OfflineErrorDialog from "@/components/OfflineErrorDialog";
 import { useOnlineStatus } from "./(hooks)/useOnlineStatus";
@@ -18,7 +17,6 @@ import {
 } from "./(dialog)";
 
 export default function LoginPage() {
-  const router = useRouter();
   const t = useTranslations("login");
   const isNavigatorOnline = useOnlineStatus();
 
