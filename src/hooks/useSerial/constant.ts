@@ -1,5 +1,5 @@
 export const HEALTH_CHECK = "AT^$PSTRdy";
-export const AT_GET_IMEI = "AT^CMD;;07;68";
+export const AT_GET_IMEI = "AT^$ReqJsonPk;No;1";
 export const AT_GET_MODEL_INFO = "AT^$PSTVer;1234";
 export const AT_GET_JSON_PACKAGE_COUNT_COMMAND = "AT^$PSTGetJson";
 export const AT_GET_JSON = "AT^$ReqJsonPk;No;";

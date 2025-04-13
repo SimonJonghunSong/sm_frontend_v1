@@ -233,7 +233,7 @@ const useSerial = () => {
 
               if (value.includes(CR)) {
                 const imeiBuffer = imeiBufferRef.current.get(port.injectedId);
-                const currentImei = imeiBuffer.trim().split(";")[1];
+                const currentImei = imeiBuffer.match(/"I"\s*:\s*"(\d+)"/)[1];
                 const alreadyInGlobalData = getPortList().some(
                   ({ imei }) => imei === currentImei
                 );
