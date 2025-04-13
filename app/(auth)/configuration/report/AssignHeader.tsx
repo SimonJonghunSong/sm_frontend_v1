@@ -96,7 +96,14 @@ export default function AssignHeader() {
           </Stack>
           <ArrowForwardIosOutlinedIcon sx={{ color: "var(--grey5)" }} />
           <Stack gap="32px">
-            <Stack sx={{ width: "100%", height: 206 ,minHeight: 206 ,maxHeight: 206  }}>
+            <Stack
+              sx={{
+                width: "100%",
+                height: 206,
+                minHeight: 206,
+                maxHeight: 206,
+              }}
+            >
               <p>Small Data (2Byte)</p>
 
               <div className={styles.listWrap}>
@@ -128,7 +135,14 @@ export default function AssignHeader() {
                 </Stack>
               </div>
             </Stack>
-            <Stack sx={{ width: "100%", height: 206 ,minHeight: 206 ,maxHeight: 206  }}>
+            <Stack
+              sx={{
+                width: "100%",
+                height: 206,
+                minHeight: 206,
+                maxHeight: 206,
+              }}
+            >
               <p>Medium Data (4Byte)</p>
 
               <div className={styles.listWrap}>
@@ -147,7 +161,14 @@ export default function AssignHeader() {
                 </Stack>
               </div>
             </Stack>
-            <Stack sx={{ width: "100%", height: 206 ,minHeight: 206 ,maxHeight: 206  }}>
+            <Stack
+              sx={{
+                width: "100%",
+                height: 206,
+                minHeight: 206,
+                maxHeight: 206,
+              }}
+            >
               <p>Large Data (8Byte)</p>
               <div className={styles.listWrap}>
                 <Stack
@@ -189,7 +210,6 @@ export default function AssignHeader() {
                     <CancelOutlinedIcon sx={{ width: 22, height: 22 }} />
                   </IconButton>
                 </Stack>
-                
               </div>
             </Stack>
           </Stack>

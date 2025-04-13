@@ -64,6 +64,13 @@ interface SerialPort {
   close(): Promise<void>;
   needsGeofenceRefetch?: boolean;
   isReadyToUse?: boolean;
+  isCsvFetching: boolean;
+  onCsvDataFetched?: (data: string) => void;
+  onEndCsvDataFetched?: () => void;
+  onEndCurrentSttDataFetched?: (data: string) => void;
+  onEndCurrentAltDataFetched?: (data: string) => void;
+  isSttDataFetching?: boolean;
+  isAltDataFetching?: boolean;
 }
 
 interface SerialOptions {

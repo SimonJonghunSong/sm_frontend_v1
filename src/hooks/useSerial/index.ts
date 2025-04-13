@@ -43,6 +43,8 @@ const updateIndexedDB = async (
 const DELAY_MS = 100;
 
 const useSerial = () => {
+  const altDataBufferRef = useRef("");
+  const sttDataBufferRef = useRef("");
   const modelVersionBufferRef = useRef(new Map());
   const imeiBufferRef = useRef(new Map());
   const totalGrpNoBufferRef = useRef(new Map());
@@ -359,11 +361,27 @@ const useSerial = () => {
                 broadcastChannel
               );
 
-              if (value.includes(CR)) {
-                const blob = new Blob([csv], { type: "text/plain" });
+              port?.onCsvDataFetched?.(value);
+              if (isEndOfMessage(value)) {
+                port.isCsvFetching = false;
+                port.onEndCsvDataFetched?.();
                 csvBufferRef.current.set(port.imei, "");
-                fileDownload(blob, `${port.imei}.profile`);
                 csvBufferRef.current.set(port.imei, undefined);
+              }
+            } else if (port.isSttDataFetching) {
+              sttDataBufferRef.current += value;
+              if (isEndOfMessage(value)) {
+                port.onEndCurrentSttDataFetched?.(sttDataBufferRef.current);
+                sttDataBufferRef.current = "";
+                port.isSttDataFetching = false;
+              }
+            } else if (port.isAltDataFetching) {
+              altDataBufferRef.current += value;
+
+              if (isEndOfMessage(value)) {
+                port.onEndCurrentAltDataFetched?.(altDataBufferRef.current);
+                altDataBufferRef.current = "";
+                port.isAltDataFetching = false;
               }
             } else if (value.includes("RPR")) {
               await updateIndexedDB(
