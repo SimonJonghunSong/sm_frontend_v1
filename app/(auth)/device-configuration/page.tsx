@@ -183,9 +183,9 @@ const ModelInfoPage = () => {
           ...menuSectionList.slice(0, 11),
           {
             no: 100,
-            textEn: "AssignHeader",
-            textEs: "AsignarCabecera",
-            textPt: "AtribuirCabeçalho",
+            textEn: "Assign Header",
+            textEs: "Asignar Cabecera",
+            textPt: "Atribuir Cabeçalho",
             index: 100,
           },
           ...menuSectionList.slice(11),
@@ -739,7 +739,7 @@ const ContentByTab = ({
               <Commands data={formData} imei={imei} />
             ) : tab === "Geofence" ? (
               <Geofence imei={imei} />
-            ) : tab === "AssignHeader" ? (
+            ) : tab === "Assign Header" ? (
               <AssignHeader imei={imei} />
             ) : (
               // Device Status가 아닌 탭은 그룹핑하여 렌더링
