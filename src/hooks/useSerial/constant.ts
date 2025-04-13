@@ -5,8 +5,14 @@ export const AT_GET_JSON_PACKAGE_COUNT_COMMAND = "AT^$PSTGetJson";
 export const AT_GET_JSON = "AT^$ReqJsonPk;No;";
 export const AT_GET_CSV = "AT^$PSTGetCsv";
 export const AT_EDIT_PREFIX = "AT^PRG;";
+export const AT_GET_ASSIGN_MAP_STT = "AT^CMD;4309999001;05;07";
+export const AT_GET_ASSIGN_MAP_ALT = "AT^CMD;4309999001;05;08";
 export const AT_REQ = "AT^REQ;";
 export const AT_CMD = "AT^CMD;";
+export const AT_SET_ASSIGN_STT = "AT^PRG;0000000000;10;";
+export const AT_SET_ASSIGN_STT_ITEM = "AT^PRG;0000000000;11;";
+export const AT_SET_ASSIGN_ALT = "AT^PRG;0000000000;10;";
+export const AT_SET_ASSIGN_ALT_ITEM = "AT^PRG;0000000000;12;";
 export const AT_GET_POLYGON_GEOFENCE_LIST = (imei: string) => [
   `${AT_REQ}${imei};53;00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19`,
   `${AT_REQ}${imei};53;20,21,22,23,24,25,26,27,28,29`,
