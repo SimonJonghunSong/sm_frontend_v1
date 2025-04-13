@@ -159,7 +159,7 @@ const ModelInfoPage = () => {
   useEffect(() => {
     const fetchJsonData = async () => {
       const jsonData =
-        ((await getJsonDataFromIDB("TEST")) as ModelConfigWithData[]) || [];
+        ((await getJsonDataFromIDB(modelName)) as ModelConfigWithData[]) || [];
 
       const menuSectionList = (jsonData || [])
         .filter((item) => item.Depth2 === SIDE_BAR)
