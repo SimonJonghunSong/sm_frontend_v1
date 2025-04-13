@@ -7,31 +7,41 @@ import React from "react";
 
 interface CircularTypeProps {
   id?: number;
-  lat?: number;
-  long?: number;
-  radius?: number;
-  max: number;
-  excludeGroupId?: number[];
+  updateCircleRadius?: (circleId: number, newRadius: number) => void;
   updateCircleCenter?: (
     circleId: number,
     newLat: number,
     newLng: number
   ) => void;
-  updateCircleRadius?: (circleId: number, newRadius: number) => void;
+  lat?: number;
+  long?: number;
+  radius?: number;
+  max: number;
+  excludeGroupId?: number[];
   groupId?: number;
   onChangeGroupId: (id: number) => void;
   onAlertStateChange?: (enterAlert: boolean, exitAlert: boolean) => void;
   initialEnterAlert?: boolean;
   initialExitAlert?: boolean;
+  showOutputActive?: boolean;
+  showBuzzerSpeedLimit?: boolean;
+  outputActiveValue?: string;
+  onOutputActiveValueChange?: (value: string) => void;
+  outputKeepActive?: boolean;
+  onOutputKeepActiveChange?: (value: boolean) => void;
+  outputActiveDelay?: number;
+  onOutputActiveDelayChange?: (value: number) => void;
+  buzzerSpeedLimit?: number;
+  onBuzzerSpeedLimitChange?: (value: number) => void;
 }
 
 const CircularType = ({
   id,
+  updateCircleRadius,
+  updateCircleCenter,
   lat,
   long,
   radius,
-  updateCircleCenter,
-  updateCircleRadius,
   max,
   excludeGroupId = [],
   groupId,
@@ -39,10 +49,21 @@ const CircularType = ({
   onAlertStateChange,
   initialEnterAlert = false,
   initialExitAlert = false,
+  showOutputActive = false,
+  showBuzzerSpeedLimit = false,
+  outputActiveValue = "00",
+  onOutputActiveValueChange = () => {},
+  outputKeepActive = false,
+  onOutputKeepActiveChange = () => {},
+  outputActiveDelay = 0,
+  onOutputActiveDelayChange = () => {},
+  buzzerSpeedLimit = 0,
+  onBuzzerSpeedLimitChange = () => {},
 }: CircularTypeProps) => {
   const [enterAlert, setEnterAlert] = React.useState(initialEnterAlert);
   const [exitAlert, setExitAlert] = React.useState(initialExitAlert);
   const isUpdatingFromProps = React.useRef(false);
+  console.log(showOutputActive, showBuzzerSpeedLimit);
 
   React.useEffect(() => {
     if (enterAlert !== initialEnterAlert || exitAlert !== initialExitAlert) {
@@ -165,59 +186,98 @@ const CircularType = ({
             </InputBox.Body>
           </InputBox>
 
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>Output Active</InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
-            </InputBox.Head>
-            <InputBox.Body>
-              <Select value={"select-1"} sx={{ width: "100%" }}>
-                <MenuItem value={"select-1"}>Select</MenuItem>
-              </Select>
-            </InputBox.Body>
-          </InputBox>
+          {showOutputActive && (
+            <>
+              <InputBox>
+                <InputBox.Head>
+                  <InputBox.Title>Output Active</InputBox.Title>
+                  <InputBox.Info tooltipText="Output Active 설정" />
+                </InputBox.Head>
+                <InputBox.Body>
+                  <Select
+                    value={outputActiveValue}
+                    sx={{ width: "100%" }}
+                    onChange={(e) => onOutputActiveValueChange(e.target.value)}
+                  >
+                    <MenuItem value="00">None</MenuItem>
+                    <MenuItem value="01">Output1 Active</MenuItem>
+                    <MenuItem value="02">Output2 Active</MenuItem>
+                    <MenuItem value="03">Output3 Active</MenuItem>
+                    <MenuItem value="04">Output4 Active</MenuItem>
+                    <MenuItem value="05">Output All Active</MenuItem>
+                    <MenuItem value="06">Output1 Keep Active</MenuItem>
+                    <MenuItem value="07">Output2 Keep Active</MenuItem>
+                    <MenuItem value="08">Output3 Keep Active</MenuItem>
+                    <MenuItem value="09">Output4 Keep Active</MenuItem>
+                    <MenuItem value="0A">Output All Keep Active</MenuItem>
+                  </Select>
+                </InputBox.Body>
+              </InputBox>
 
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>Output Keep Active</InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
-            </InputBox.Head>
-            <InputBox.Body>
-              <SwitchPrimary />
-            </InputBox.Body>
-          </InputBox>
+              <InputBox>
+                <InputBox.Head>
+                  <InputBox.Title>Output Keep Active</InputBox.Title>
+                  <InputBox.Info tooltipText="Output Keep Active 설정" />
+                </InputBox.Head>
+                <InputBox.Body>
+                  <SwitchPrimary
+                    checked={outputKeepActive}
+                    onChange={(e) => onOutputKeepActiveChange(e.target.checked)}
+                  />
+                </InputBox.Body>
+              </InputBox>
 
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>Output Active Delay</InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                type="number"
-                fullWidth
-                placeholder="0"
-                inputProps={{ min: 0, max: 3600 }}
-                helperText="Input only between 0 ~ 3,600"
-              />
-            </InputBox.Body>
-          </InputBox>
+              <InputBox>
+                <InputBox.Head>
+                  <InputBox.Title>Output Active Delay</InputBox.Title>
+                  <InputBox.Info tooltipText="지연 시간 설정 (0~3600초)" />
+                </InputBox.Head>
+                <InputBox.Body>
+                  <TextField
+                    type="number"
+                    fullWidth
+                    value={outputActiveDelay}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      // 범위 내 값만 허용
+                      if (value >= 0 && value <= 3600) {
+                        onOutputActiveDelayChange(value);
+                      }
+                    }}
+                    placeholder="0"
+                    inputProps={{ min: 0, max: 3600 }}
+                    helperText="Input only between 0 ~ 3,600"
+                  />
+                </InputBox.Body>
+              </InputBox>
+            </>
+          )}
 
-          <InputBox>
-            <InputBox.Head>
-              <InputBox.Title>Buzzer Speed Limit</InputBox.Title>
-              <InputBox.Info tooltipText="tooptip example" />
-            </InputBox.Head>
-            <InputBox.Body>
-              <TextField
-                type="number"
-                fullWidth
-                placeholder="0"
-                inputProps={{ min: 0, max: 3600 }}
-                helperText="Input only between 0 ~ 3,600"
-              />
-            </InputBox.Body>
-          </InputBox>
+          {showBuzzerSpeedLimit && (
+            <InputBox>
+              <InputBox.Head>
+                <InputBox.Title>Buzzer Speed Limit</InputBox.Title>
+                <InputBox.Info tooltipText="속도 제한 설정 (0~3600, 0은 비활성화)" />
+              </InputBox.Head>
+              <InputBox.Body>
+                <TextField
+                  type="number"
+                  fullWidth
+                  value={buzzerSpeedLimit}
+                  onChange={(e) => {
+                    const value = Number(e.target.value);
+                    // 범위 내 값만 허용
+                    if (value >= 0 && value <= 3600) {
+                      onBuzzerSpeedLimitChange(value);
+                    }
+                  }}
+                  placeholder="0"
+                  inputProps={{ min: 0, max: 3600 }}
+                  helperText="Input only between 0 ~ 3,600 (0 to disable)"
+                />
+              </InputBox.Body>
+            </InputBox>
+          )}
 
           <InputBox>
             <InputBox.Head>

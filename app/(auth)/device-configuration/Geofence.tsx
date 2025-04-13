@@ -291,11 +291,12 @@ const Geofence = ({ imei }: GeofenceProps) => {
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
-  const { formData, getEditDataForPage } = useTransformConfigDataWithModelInfo({
-    data: portList.find(({ port }) => port.imei === imei).packageToJson
-      .synctrak,
-    blacklist: ["info"],
-  });
+  const { formData, getFormFields, getEditDataForPage } =
+    useTransformedConfigData({
+      data: portList.find(({ port }) => port.imei === imei).packageToJson
+        .synctrak,
+      blacklist: ["info"],
+    });
 
   const polygonGeofenceMax = formData.find(({ info }) => info.tab_id === "53")
     ?.info.max;
@@ -533,6 +534,7 @@ const Geofence = ({ imei }: GeofenceProps) => {
 
   useEffect(() => {
     if (!circularGeofenceMax || !isCircularFetchReady) return;
+    if (!currentPort.port.writable || !currentPort.port.readable) return;
 
     currentPort.port.circularfetchcount = 0;
     currentPort.port.iscircularfetching = true;
@@ -560,8 +562,9 @@ const Geofence = ({ imei }: GeofenceProps) => {
   }, [isCircularFetchReady]);
 
   const renderGeofenceConfig = () => {
+    if (currentView !== "list") return null;
     const geofenceConfig = formData.find(({ info }) => {
-      info.tab_id === "90";
+      return info.tab_id === "90";
     });
 
     if (!geofenceConfig) return null;
@@ -575,6 +578,15 @@ const Geofence = ({ imei }: GeofenceProps) => {
       tooltipText: React.ReactNode
     ) => {
       if (!geoConfigFields.includes(fieldId)) return null;
+
+      const fieldName = geofenceConfig.fields.find(
+        ({ ID }) => ID === fieldId
+      )?.fieldName;
+
+      const { value, onChange } = getFormFields(
+        geofenceConfig.tabName,
+        fieldName
+      );
 
       return (
         <Stack
@@ -590,7 +602,12 @@ const Geofence = ({ imei }: GeofenceProps) => {
             <InputBox.Number>{number}</InputBox.Number>
           </Stack>
           <InputBox.Body>
-            <SwitchPrimary />
+            <SwitchPrimary
+              checked={value === "Enable"}
+              onChange={(e) =>
+                onChange(e.target.checked ? "Enable" : "Disable")
+              }
+            />
           </InputBox.Body>
         </Stack>
       );
@@ -607,7 +624,19 @@ const Geofence = ({ imei }: GeofenceProps) => {
                 </div>
               </InputBox.Title>
             </InputBox.Head>
-            <Button color="secondary" variant="contained" onClick={() => {}}>
+            <Button
+              color="secondary"
+              variant="contained"
+              onClick={() => {
+                write({
+                  data: `${AT_EDIT_PREFIX}${imei};${getEditDataForPage(
+                    geofenceConfig.tabName
+                  )}`,
+                  port: currentPort.port,
+                  writer: currentPort.writer,
+                });
+              }}
+            >
               Send
             </Button>
           </Stack>

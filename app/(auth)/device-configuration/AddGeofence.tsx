@@ -54,13 +54,36 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [enterAlert, setEnterAlert] = useState(false);
   const [exitAlert, setExitAlert] = useState(false);
+  const [loadSettingsComplete, setLoadSettingsComplete] = useState(false);
+  const [buzzerSpeedLimit, setBuzzerSpeedLimit] = useState<string>("");
+
+  // 설정 상태 추가
+  const [polygonSpeedLimit, setPolygonSpeedLimit] = useState(false);
+  const [circularBuzzerSpeedLimit, setCircularBuzzerSpeedLimit] =
+    useState(false);
+  const [circularOutputActive, setCircularOutputActive] = useState(false);
+  // Output Active 값 (00~0A)
+  const [outputActiveValue, setOutputActiveValue] = useState("00");
+  // Output Keep Active (00 또는 01)
+  const [outputKeepActive, setOutputKeepActive] = useState(false);
+  // Output Active Delay (0~3600)
+  const [outputActiveDelay, setOutputActiveDelay] = useState(20); // 기본값 20초
+  // Buzzer Speed Limit Value (0~3600)
+  const [buzzerSpeedLimitValue, setBuzzerSpeedLimitValue] = useState(0); // 0은 비활성화
+
+  console.log(
+    polygonSpeedLimit,
+    circularBuzzerSpeedLimit,
+    circularOutputActive
+  );
+
   const isCircleOutputActiveBuffer = useRef<string>();
+  const settingsBuffer = useRef<string>("");
   const mapManager = useMapManager();
   const {
     state: { portList },
     func: { write },
   } = useSerial();
-
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const polygonList = currentPort.polygonGeofenceData;
@@ -79,6 +102,155 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
     ?.info.max;
   const circularGeofenceMax = formData.find(({ info }) => info.tab_id === "50")
     ?.info.max;
+
+  // 설정 데이터 요청 및 처리를 위한 useEffect
+  useEffect(() => {
+    if (!currentPort?.port?.readable || !currentPort?.port?.writable) {
+      return;
+    }
+
+    // 이미 설정을 로드했으면 중복 요청 방지
+    if (loadSettingsComplete) {
+      return;
+    }
+
+    console.log(`${type} 설정 요청 시작`);
+
+    // 기존 핸들러 백업
+    const originalBufferValue = currentPort.port.onbuffervalue;
+
+    // 버퍼 초기화
+    settingsBuffer.current = "";
+
+    // 설정 요청 결과 처리 핸들러
+    currentPort.port.onbuffervalue = (value) => {
+      settingsBuffer.current += value;
+
+      if (value.includes(CR)) {
+        console.log("설정 응답:", settingsBuffer.current);
+
+        const responseParts = settingsBuffer.current.split(CR);
+
+        if (type === "polygon") {
+          // Polygon 설정 처리
+          const validResponse = responseParts.find((part) =>
+            part.includes(";90;00")
+          );
+
+          if (validResponse) {
+            console.log("폴리곤 설정 응답:", validResponse);
+
+            // 초기값으로 모두 false 설정
+            setPolygonSpeedLimit(false);
+
+            // RRE로 시작하는 유효한 응답인지 확인
+            if (validResponse.startsWith("RRE")) {
+              // 응답 파싱하여 필요한 데이터 추출
+              // 형식: RRE;0000000000;90;00#01
+              const parts = validResponse.split(";");
+              if (parts.length >= 4) {
+                const paramValue = parts[3].split("#");
+                if (paramValue.length >= 2) {
+                  // 00#01이면 Polygon Speed Limit => true, 00#00이면 false
+                  if (paramValue[0] === "00") {
+                    setPolygonSpeedLimit(paramValue[1] === "01");
+                  }
+                }
+              }
+            }
+
+            // 완료 표시 및 핸들러 복원
+            setLoadSettingsComplete(true);
+            currentPort.port.onbuffervalue = originalBufferValue;
+          }
+        } else {
+          // Circular 설정 처리
+          // 초기값으로 모두 false 설정
+          setCircularOutputActive(false);
+          setCircularBuzzerSpeedLimit(false);
+
+          // 유효한 응답 찾기
+          const validResponses = responseParts.filter(
+            (part) =>
+              part.includes(";90;") &&
+              (part.includes("01#") || part.includes("02#"))
+          );
+
+          if (validResponses.length > 0) {
+            console.log("원형 설정 응답:", validResponses);
+
+            // 각 응답을 처리
+            validResponses.forEach((response) => {
+              // RRE로 시작하는 유효한 응답인지 확인
+              if (!response.startsWith("RRE")) return;
+
+              const parts = response.split(";");
+              if (parts.length < 4) return;
+
+              // 마지막 부분에 여러 파라미터가 있을 수 있음 (예: 01#01;02#01)
+              const paramPairs = parts.slice(3).join(";").split(";");
+
+              // 각 파라미터 쌍을 처리
+              paramPairs.forEach((pair) => {
+                const paramData = pair.split("#");
+                if (paramData.length < 2) return;
+
+                const paramId = paramData[0]; // 01 또는 02
+                const paramValue = paramData[1]; // 값 (00 또는 01)
+
+                // 01#01이면 Circular Output Active => true, 01#00이면 false
+                if (paramId === "01") {
+                  setCircularOutputActive(paramValue === "01");
+                }
+                // 02#01 Circular Buzzer Speed Limit => true, 02#00이면 false
+                else if (paramId === "02") {
+                  setCircularBuzzerSpeedLimit(paramValue === "01");
+                }
+              });
+            });
+
+            // 완료 처리
+            setLoadSettingsComplete(true);
+            currentPort.port.onbuffervalue = originalBufferValue;
+          }
+        }
+      }
+    };
+
+    // 타입에 따라 적절한 요청 보내기
+    if (type === "polygon") {
+      // Polygon 설정 요청
+      write({
+        data: `${AT_REQ}${imei};90;00`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    } else {
+      // Circular 설정 요청
+      write({
+        data: `${AT_REQ}${imei};90;01,02`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    }
+
+    // 정리 함수
+    return () => {
+      currentPort.port.onbuffervalue = originalBufferValue;
+    };
+  }, [
+    type,
+    currentPort?.port?.readable,
+    currentPort?.port?.writable,
+    imei,
+    write,
+    loadSettingsComplete,
+  ]);
+
+  // 타입이 변경되면 설정 로드 상태 초기화하여 새로운 요청 트리거
+  useEffect(() => {
+    setLoadSettingsComplete(false);
+  }, [type]);
 
   const handleTypeChange = (e: SelectChangeEvent<string>) => {
     const paramsType = e.target.value;
@@ -153,52 +325,78 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
         }
       );
     } else {
-      const circleOutputActiveFetchPromise = new Promise<boolean>((resolve) => {
-        currentPort.port.iscircleoutputactivefetching = true;
-        currentPort.port.circleoutputactivehandler = (value) => {
-          isCircleOutputActiveBuffer.current += value;
-          if (value.includes(CR)) {
-            currentPort.port.iscircleoutputactivefetching = false;
-            const isEnable =
-              isCircleOutputActiveBuffer.current.split("#")[1] === "01" &&
-              !isCircleOutputActiveBuffer.current.includes("USP");
-            isCircleOutputActiveBuffer.current = undefined;
-            resolve(isEnable);
-          }
-        };
-        write({
-          data: `${AT_REQ}${imei};90;01`,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        });
+      const circleIndex = findCircleIndexByNumber(groupId - 1);
+      const circle = mapManager.circles[0];
+      const coordinateToHexString = convertCircleCoordinatesToHexString({
+        lat: circle.center.lat,
+        lng: circle.center.lng,
+        radius: circle.radius,
       });
 
-      circleOutputActiveFetchPromise.then((isOutputActive) => {
-        const circleIndex = findCircleIndexByNumber(groupId - 1);
-        const circle = mapManager.circles[0];
-        const coordinateToHexString = convertCircleCoordinatesToHexString({
-          lat: circle.center.lat,
-          lng: circle.center.lng,
-          radius: circle.radius,
-        });
+      currentPort.port.oneditsuccess = () => {
+        // 지오펜스 추가 후 리스트로 돌아갈 때 데이터 리페칭을 위한 플래그 설정
+        currentPort.port.needsGeofenceRefetch = true;
+        onBack();
+      };
 
-        currentPort.port.oneditsuccess = () => {
-          // 지오펜스 추가 후 리스트로 돌아갈 때 데이터 리페칭을 위한 플래그 설정
-          currentPort.port.needsGeofenceRefetch = true;
-          onBack();
-        };
-        // Convert alert states to hex string
-        const alertHexString = `${enterAlert ? "01" : "00"}${
-          exitAlert ? "01" : "00"
-        }`;
+      // Convert alert states to hex string
+      const alertHexString = `${enterAlert ? "01" : "00"}${
+        exitAlert ? "01" : "00"
+      }`;
 
-        write({
-          data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}${
-            isOutputActive ? `${alertHexString}0000000000` : alertHexString
-          }`,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        });
+      // 문서에 따라 다양한 상태 조합에 맞게 데이터 형식 구성
+      let dataString = "";
+
+      // 1. 기본 정보: 좌표와 알림 상태 (항상 포함)
+      const baseData = `${coordinateToHexString}${alertHexString}`;
+
+      // Output Active 값과 Keep Active 값
+      const outActValue = circularOutputActive ? outputActiveValue : "00";
+      const keepActiveValue = outputKeepActive ? "01" : "00";
+
+      // Output Active Delay 값 계산 (초 단위 값 * 1,000,000을 16진수로 변환)
+      // 기본값 사용하지 않고 사용자 입력값 사용
+      console.log("Using Output Active Delay:", outputActiveDelay);
+      const outActDelayValue = Math.floor(outputActiveDelay * 1000000)
+        .toString(16)
+        .padStart(8, "0")
+        .toUpperCase();
+
+      // Buzzer Speed Limit 값 계산
+      // SPEED_1 값: 값이 0이면 "00000000", 그렇지 않으면 값 * 1,000,000을 16진수로 변환
+      const speedLimitValueHex =
+        buzzerSpeedLimitValue > 0
+          ? Math.floor(buzzerSpeedLimitValue * 1000000)
+              .toString(16)
+              .padStart(8, "0")
+              .toUpperCase()
+          : "00000000";
+
+      // BUZZER_SPEED_LIMIT 값: 값이 0이면 "00" (disabled), 그렇지 않으면 "01" (enabled)
+      const buzzerSpeedLimitFlag = buzzerSpeedLimitValue > 0 ? "01" : "00";
+
+      // 고정 접미사
+      const fixedSuffix = "0078";
+
+      // 2. 상태 조합에 따른 추가 데이터
+      if (circularOutputActive && circularBuzzerSpeedLimit) {
+        // 둘 다 활성화: 모든 값 포함
+        dataString = `${baseData}${outActValue}${outActDelayValue}${speedLimitValueHex}${buzzerSpeedLimitFlag}${fixedSuffix}`;
+      } else if (circularOutputActive && !circularBuzzerSpeedLimit) {
+        // Output Active만 활성화: Output Active 값과 Delay 값 포함
+        dataString = `${baseData}${outActValue}${outActDelayValue}`;
+      } else if (!circularOutputActive && circularBuzzerSpeedLimit) {
+        // Buzzer Speed Limit만 활성화: Buzzer Speed Limit 값만 포함
+        dataString = `${baseData}${speedLimitValueHex}${buzzerSpeedLimitFlag}${fixedSuffix}`;
+      } else {
+        // 둘 다 비활성화: 기본 정보만 포함
+        dataString = baseData;
+      }
+
+      write({
+        data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${dataString}`,
+        port: currentPort.port,
+        writer: currentPort.writer,
       });
     }
   };
@@ -211,13 +409,21 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
       onBack();
     };
 
-    const isPolygonSpeedLimitDisabled =
-      polygonList[groupId - 1].split("#")[1].length === 6;
-
     // Convert alert states to hex string
     const alertHexString = `${enterAlert ? "01" : "00"}${
       exitAlert ? "01" : "00"
     }`;
+
+    // Convert buzzerSpeedLimit to hex string (multiplied by 1000000)
+    const speedLimitHexString = polygonSpeedLimit
+      ? Math.floor(Number(buzzerSpeedLimit) * 1000000)
+          .toString(16)
+          .padStart(8, "0")
+          .toUpperCase()
+      : "00000000";
+
+    // CRC 또는 추가 데이터 문자열 (형식에 맞춰 추가)
+    const additionalHexData = "0000";
 
     write({
       data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
@@ -226,7 +432,7 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
       )}#${mapManager.polygons[0].path.length
         .toString(16)
         .padStart(2, "0")}${alertHexString}${
-        isPolygonSpeedLimitDisabled ? "" : "00000000"
+        polygonSpeedLimit ? speedLimitHexString + additionalHexData : ""
       }`,
       port: currentPort.port,
       writer: currentPort.writer,
@@ -343,6 +549,16 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
               onAlertStateChange={handleAlertStateChange}
               initialEnterAlert={enterAlert}
               initialExitAlert={exitAlert}
+              showOutputActive={circularOutputActive}
+              showBuzzerSpeedLimit={circularBuzzerSpeedLimit}
+              outputActiveValue={outputActiveValue}
+              onOutputActiveValueChange={setOutputActiveValue}
+              outputKeepActive={outputKeepActive}
+              onOutputKeepActiveChange={setOutputKeepActive}
+              outputActiveDelay={outputActiveDelay}
+              onOutputActiveDelayChange={setOutputActiveDelay}
+              buzzerSpeedLimit={buzzerSpeedLimitValue}
+              onBuzzerSpeedLimitChange={setBuzzerSpeedLimitValue}
             />
           ) : (
             <PolygonType
@@ -359,6 +575,9 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
               onAlertStateChange={handleAlertStateChange}
               initialEnterAlert={enterAlert}
               initialExitAlert={exitAlert}
+              showSpeedLimit={polygonSpeedLimit}
+              onBuzzerSpeedLimitChange={setBuzzerSpeedLimit}
+              initialBuzzerSpeedLimit={buzzerSpeedLimit}
             />
           )}
           <Button variant="contained" onClick={handleAdd}>

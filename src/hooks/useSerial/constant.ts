@@ -12,10 +12,41 @@ export const AT_GET_POLYGON_GEOFENCE_LIST = (imei: string) => [
   `${AT_REQ}${imei};53;20,21,22,23,24,25,26,27,28,29`,
 ];
 
+export const AT_GET_POLYGON_INFO = (imei: string, groupId: number) =>
+  `${AT_REQ}${imei};53;${groupId.toString().padStart(2, "0")}`;
+
+export const parsePolygonInfo = (response: string) => {
+  console.log(response, ":::::::response");
+  // For 6-character response like "050101"
+  if (response.length === 6) {
+    return {
+      enterAlert: response.substring(2, 4) === "01",
+      exitAlert: response.substring(4, 6) === "01",
+    };
+  }
+  // For 18-character response like "05 01 01 001e8480 06db"
+  else if (response.length === 18) {
+    const speedLimitHex = response.substring(7, 15);
+    // Convert hex to decimal and divide by 1000000 to get speed in km/h
+    const speedLimit = parseInt(speedLimitHex, 16) / 1000000;
+
+    return {
+      enterAlert: response.substring(2, 4) === "01",
+      exitAlert: response.substring(4, 6) === "01",
+      buzzerSpeedLimit: speedLimit.toFixed(2), // Format to 2 decimal places
+    };
+  }
+
+  return null;
+};
+
 export const POLYGON_GEOFENCE_POINTS = [
   60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78,
   79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89,
 ];
+
+// 050101
+// 050101 001e8480 06db
 
 export const AT_GET_CIRCULAR_GEOFENCE_255_LIST = (imei: string) => [
   `${AT_REQ}${imei};50;25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44`,
