@@ -34,6 +34,7 @@ import CheckboxComp from "app/(auth)/device-configuration/CheckboxComp";
 import useSerialStore from "@/src/stores/useSerialStore";
 import Geofence from "./Geofence";
 import DeviceStausConfiguration from "./(components)/DeviceStausConfiguration/page";
+import AssignHeader from "app/(auth)/device-configuration/AssignHeader";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -178,7 +179,17 @@ const ModelInfoPage = () => {
       );
 
       if (menuSectionList.length > 0) {
-        setSideBarList(menuSectionList);
+        setSideBarList([
+          ...menuSectionList.slice(0, 11),
+          {
+            no: 100,
+            textEn: "AssignHeader",
+            textEs: "AsignarCabecera",
+            textPt: "AtribuirCabeçalho",
+            index: 100,
+          },
+          ...menuSectionList.slice(11),
+        ]);
         setAllMenuContentList(menuContentList);
         setTab(menuSectionList[0].textEn);
       }
@@ -728,6 +739,8 @@ const ContentByTab = ({
               <Commands data={formData} imei={imei} />
             ) : tab === "Geofence" ? (
               <Geofence imei={imei} />
+            ) : tab === "AssignHeader" ? (
+              <AssignHeader imei={imei} />
             ) : (
               // Device Status가 아닌 탭은 그룹핑하여 렌더링
               groupedMenuContent.map((group, groupIndex) => (
