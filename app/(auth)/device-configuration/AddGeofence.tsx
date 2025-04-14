@@ -416,7 +416,7 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
 
     // Convert buzzerSpeedLimit to hex string (multiplied by 1000000)
     const speedLimitHexString = polygonSpeedLimit
-      ? Math.floor(Number(buzzerSpeedLimit) * 1000000)
+      ? Math.floor(Number(buzzerSpeedLimit || 0) * 1000000)
           .toString(16)
           .padStart(8, "0")
           .toUpperCase()
