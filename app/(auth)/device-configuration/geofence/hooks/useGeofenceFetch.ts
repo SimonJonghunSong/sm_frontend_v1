@@ -65,8 +65,8 @@ export function useGeofenceFetch(imei: string) {
    */
   const fetchGeofenceData = useCallback(() => {
     // 1. 포트 상태 확인 (readable, writable)
+
     if (!currentPort) {
-      console.log("[fetchGeofenceData] currentPort가 없음, 함수 종료");
       return;
     }
 
@@ -93,15 +93,12 @@ export function useGeofenceFetch(imei: string) {
     currentPort.port.polygonfetchcount = 0;
     currentPort.port.ispolygonfetching = true;
     currentPort.port.polygonmax = polygonGeofenceMax;
-
     // 5. 폴리곤 지오펜스 데이터 페칭 완료 후 콜백
     currentPort.port.onafterpolygongeofence = () => {
-      console.log("[onafterpolygongeofence] 콜백 실행");
       currentPort.port.ispolygonfetching = false;
       // 6. 페칭 완료 후 원형 데이터 페칭 트리거
       setIsCircularFetchReady(true);
       currentPort.port.polygongeofence = "";
-      console.log("[onafterpolygongeofence] 원형 데이터 페칭 트리거됨");
     };
 
     // 7. 폴리곤 지오펜스 데이터 요청 (AT_GET_POLYGON_GEOFENCE_LIST 명령어 전송)
@@ -109,7 +106,6 @@ export function useGeofenceFetch(imei: string) {
       const commands = AT_GET_POLYGON_GEOFENCE_LIST(imei);
 
       for (const command of commands) {
-        console.log("[fetchGeofenceData] 명령어 실행 전:", command);
         await delayPromise(60); // 60ms 지연
 
         try {
@@ -118,11 +114,8 @@ export function useGeofenceFetch(imei: string) {
             port: currentPort.port,
             writer: currentPort.writer,
           });
-        } catch (error) {
-          console.error("[fetchGeofenceData] 명령어 write 실패:", error);
-        }
+        } catch (error) {}
       }
-      console.log("[fetchGeofenceData] 모든 명령어 실행 완료");
     })();
   }, [imei, currentPort]);
 
@@ -241,23 +234,40 @@ export function useGeofenceFetch(imei: string) {
 
         // 3. 원형 지오펜스 데이터 페칭 설정
         currentPort.port.iscircularpointfetching = true;
+        // Reset the buffer before fetching
+        circlePointRef.current = "";
+
         // 4. 응답 데이터 처리 핸들러
         currentPort.port.circlehandler = (value: string) => {
           circlePointRef.current += value;
-          if (value.includes(CR)) {
-            // 5. 응답 데이터 처리
-            const circleData = parseLatLngRadius(circlePointRef.current);
-            if (mapRef.current) {
-              // 6. 지도 중심 위치 조정
-              mapRef.current.setCenter({
-                lat: circleData.center.lat,
-                lng: circleData.center.lng,
-              });
 
+          if (circlePointRef.current.includes(CR)) {
+            try {
+              // 5. 응답 데이터 처리
+              const circleData = parseLatLngRadius(circlePointRef.current);
+
+              if (mapRef.current) {
+                // 6. 지도 중심 위치 조정
+                mapRef.current.setCenter({
+                  lat: circleData.center.lat,
+                  lng: circleData.center.lng,
+                });
+              }
+
+              // 7. 파싱된 데이터 저장 및 표시
+              setFetchedCircleData(circleData);
+
+              // Clear buffer after successful processing
+              circlePointRef.current = "";
+            } catch (error) {
+              console.error(
+                "[useGeofenceFetch] Error parsing circle data:",
+                error
+              );
+              // Clear buffer on error too
               circlePointRef.current = "";
             }
-            // 7. 파싱된 데이터 저장 및 표시
-            setFetchedCircleData(circleData);
+
             currentPort.port.iscircularpointfetching = false;
           }
         };
@@ -266,6 +276,8 @@ export function useGeofenceFetch(imei: string) {
         currentPort.port.onprev = () => {
           currentPort.port.circlehandler = null;
           currentPort.port.iscircularpointfetching = false;
+          // Clear buffer on cleanup
+          circlePointRef.current = "";
         };
 
         // 9. 원형 지오펜스 데이터 요청
@@ -284,17 +296,10 @@ export function useGeofenceFetch(imei: string) {
    * 폴리곤 지오펜스 데이터 페칭이 완료되면 실행됩니다.
    */
   useEffect(() => {
-    console.log("[원형 지오펜스 데이터 페칭] 시작");
-
-    // 1. 원형 지오펜스 최대 개수 확인 (formData에서 tab_id: "50" 확인)
     if (!currentPort || !isCircularFetchReady) return;
 
     const circularGeofenceMax = Number(
       formData.find((item) => item.info.tab_id === "50")?.info.max || 0
-    );
-    console.log(
-      "[원형 지오펜스 데이터 페칭] circularGeofenceMax:",
-      circularGeofenceMax
     );
 
     // 2. 원형 지오펜스 최대 개수가 없거나 페칭 준비가 안 되었으면 종료
@@ -313,25 +318,17 @@ export function useGeofenceFetch(imei: string) {
     currentPort.port.circularfetchcount = 0;
     currentPort.port.iscircularfetching = true;
     currentPort.port.circlemax = Number(circularGeofenceMax);
-    console.log("[원형 지오펜스 데이터 페칭] 페칭 설정:", {
-      circularfetchcount: currentPort.port.circularfetchcount,
-      iscircularfetching: currentPort.port.iscircularfetching,
-      circlemax: currentPort.port.circlemax,
-    });
 
     // 4. 원형 지오펜스 데이터 페칭 완료 후 콜백
     currentPort.port.onaftercirculargeofence = () => {
-      console.log("[onaftercirculargeofence] 콜백 실행");
       currentPort.port.iscircularfetching = false;
       setIsLoading(false);
       setIsCircularFetchReady(false);
       currentPort.port.circulargeofence = "";
-      console.log("[onaftercirculargeofence] 페칭 완료 처리됨");
     };
 
     // 5. 원형 지오펜스 데이터 요청 (AT_GET_CIRCULAR_GEOFENCE_LIST 명령어 전송)
     (async () => {
-      console.log("[원형 지오펜스 데이터 페칭] 명령어 실행 시작");
       const commands =
         circularGeofenceMax === 255
           ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
@@ -346,18 +343,8 @@ export function useGeofenceFetch(imei: string) {
             port: currentPort.port,
             writer: currentPort.writer,
           });
-          console.log(
-            "[원형 지오펜스 데이터 페칭] 명령어 write 성공:",
-            command
-          );
-        } catch (error) {
-          console.error(
-            "[원형 지오펜스 데이터 페칭] 명령어 write 실패:",
-            error
-          );
-        }
+        } catch (error) {}
       }
-      console.log("[원형 지오펜스 데이터 페칭] 모든 명령어 실행 완료");
     })();
   }, [
     isCircularFetchReady,

@@ -223,7 +223,9 @@ const Geofence = ({ imei }) => {
     // 지오펜스 추가/편집 후 리스트로 돌아왔을 때 데이터 리페칭
     if (currentPort?.port?.needsGeofenceRefetch) {
       currentPort.port.needsGeofenceRefetch = false;
-      fetchGeofenceData();
+      setTimeout(() => {
+        fetchGeofenceData();
+      }, 500);
     }
   };
 
