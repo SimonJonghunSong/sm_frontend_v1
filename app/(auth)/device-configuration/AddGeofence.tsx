@@ -7,7 +7,6 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  IconButton,
 } from "@mui/material";
 import Maps from "@/components/Map";
 import InputBox from "@/components/inputbox/InputBox";
@@ -34,9 +33,6 @@ import {
   convertCircleCoordinatesToHexString,
 } from "@/utils/coordinateToHex";
 import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
-import type { PolygonData } from "@/src/hooks/useMapManager";
-import DataTable from "@/components/dataTable";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
 interface AddGeofenceProps {
   imei: string;
@@ -70,12 +66,6 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
   const [outputActiveDelay, setOutputActiveDelay] = useState(20); // 기본값 20초
   // Buzzer Speed Limit Value (0~3600)
   const [buzzerSpeedLimitValue, setBuzzerSpeedLimitValue] = useState(0); // 0은 비활성화
-
-  console.log(
-    polygonSpeedLimit,
-    circularBuzzerSpeedLimit,
-    circularOutputActive
-  );
 
   const isCircleOutputActiveBuffer = useRef<string>();
   const settingsBuffer = useRef<string>("");
@@ -114,8 +104,6 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
       return;
     }
 
-    console.log(`${type} 설정 요청 시작`);
-
     // 기존 핸들러 백업
     const originalBufferValue = currentPort.port.onbuffervalue;
 
@@ -127,8 +115,6 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
       settingsBuffer.current += value;
 
       if (value.includes(CR)) {
-        console.log("설정 응답:", settingsBuffer.current);
-
         const responseParts = settingsBuffer.current.split(CR);
 
         if (type === "polygon") {
@@ -177,8 +163,6 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
           );
 
           if (validResponses.length > 0) {
-            console.log("원형 설정 응답:", validResponses);
-
             // 각 응답을 처리
             validResponses.forEach((response) => {
               // RRE로 시작하는 유효한 응답인지 확인
@@ -416,7 +400,7 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
 
     // Convert buzzerSpeedLimit to hex string (multiplied by 1000000)
     const speedLimitHexString = polygonSpeedLimit
-      ? Math.floor(Number(buzzerSpeedLimit) * 1000000)
+      ? Math.floor(Number(buzzerSpeedLimit || 0) * 1000000)
           .toString(16)
           .padStart(8, "0")
           .toUpperCase()
@@ -505,7 +489,6 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
                 Type<i>*</i>
               </InputBox.Title>
               <InputBox.Info tooltipText="tooptip example" />
-              <InputBox.Number>50/60</InputBox.Number>
             </InputBox.Head>
             <InputBox.Body>
               <Select

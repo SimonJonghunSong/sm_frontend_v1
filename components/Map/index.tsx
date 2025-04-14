@@ -18,7 +18,7 @@ import type { CircleType, MarkerType, PolygonType, PolylineType } from "./type";
 
 interface MapComponentProps extends GoogleMapProps {
   apiKey: string;
-  center: google.maps.LatLngLiteral;
+  center?: google.maps.LatLngLiteral;
   markers?: MarkerType[];
   polylines?: PolylineType[];
   polygons?: PolygonType[];
