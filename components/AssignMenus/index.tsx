@@ -1,3 +1,5 @@
+"use client";
+
 import { IconButton, MenuItem, Select, Stack } from "@mui/material";
 import styles from "./styles.module.scss";
 import Checkbox from "@mui/material/Checkbox";
@@ -147,7 +149,7 @@ export default function AssignMenus({
     console.log("data :::", data);
 
     return (
-      <Stack width={"100%"} flex={1}>
+      <Stack width={"100%"} flex={1} overflow={"auto"}>
         <div className={styles.listWrap}>
           {data.map((item, index) => (
             <FormControl
