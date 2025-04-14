@@ -60,6 +60,11 @@ export default function AssignHeader({ imei }: Props) {
     m_assigns: [],
     l_assigns: [],
   });
+  const [defaultSttIndexes, setDefaultSttIndexes] = useState({
+    s_assigns: [],
+    m_assigns: [],
+    l_assigns: [],
+  });
   const [updateSttDatas, setUpdateSttDatas] = useState({
     s_assigns: [],
     m_assigns: [],
@@ -75,6 +80,11 @@ export default function AssignHeader({ imei }: Props) {
 
   // alt
   const [altData, setAltData] = useState({
+    s_assigns: [],
+    m_assigns: [],
+    l_assigns: [],
+  });
+  const [defaultAltIndexes, setDefaultAltIndexes] = useState({
     s_assigns: [],
     m_assigns: [],
     l_assigns: [],
@@ -139,6 +149,12 @@ export default function AssignHeader({ imei }: Props) {
             ),
           });
 
+          setDefaultSttIndexes({
+            s_assigns: sItemsArray.map((item) => parseInt(item)),
+            m_assigns: mItemsArray.map((item) => parseInt(item)),
+            l_assigns: lItemsArray.map((item) => parseInt(item)),
+          });
+
           currentPort.port.isAltDataFetching = true;
           currentPort.port.onEndCurrentAltDataFetched = (data) => {
             const currentCsvData = data.split("RES;0000000000;05;08;")[1];
@@ -148,6 +164,10 @@ export default function AssignHeader({ imei }: Props) {
 
             const [currentChecked, sItems, mItems, lItems] =
               currentCsvValuesArray;
+
+            console.log("sItems :::", sItems);
+            console.log("mItems :::", mItems);
+            console.log("lItems :::", lItems);
 
             const sItemsArray = sItems.split(",");
             const mItemsArray = mItems.split(",");
@@ -171,6 +191,12 @@ export default function AssignHeader({ imei }: Props) {
                   ? { ...item, value: "1" }
                   : item
               ),
+            });
+
+            setDefaultAltIndexes({
+              s_assigns: sItemsArray.map((item) => parseInt(item)),
+              m_assigns: mItemsArray.map((item) => parseInt(item)),
+              l_assigns: lItemsArray.map((item) => parseInt(item)),
             });
 
             setIsFullLoading(false);
@@ -222,6 +248,8 @@ export default function AssignHeader({ imei }: Props) {
     while (updateDataString16.length < 8) {
       updateDataString16 = "0" + updateDataString16;
     }
+
+    console.log("updateSttDatas :::", updateSttDatas);
 
     const pageSAssigns = pageData?.fields?.filter(
       (item) => item.type === "sAssign"
@@ -292,9 +320,9 @@ export default function AssignHeader({ imei }: Props) {
         });
 
         const updateItems = {
-          s_assigns: updateSttDatas.s_assigns.map((item) => item.id),
-          m_assigns: updateSttDatas.m_assigns.map((item) => item.id),
-          l_assigns: updateSttDatas.l_assigns.map((item) => item.id),
+          s_assigns: updateSttDatas.s_assigns.map((item) => item?.id),
+          m_assigns: updateSttDatas.m_assigns.map((item) => item?.id),
+          l_assigns: updateSttDatas.l_assigns.map((item) => item?.id),
         };
 
         setSttData((prev) => ({
@@ -332,6 +360,14 @@ export default function AssignHeader({ imei }: Props) {
                 }
           ),
         }));
+
+        console.log("updateSttDatas :::", updateSttDatas);
+
+        setDefaultSttIndexes({
+          s_assigns: updateSttDatas.s_assigns.map((item) => parseInt(item?.id)),
+          m_assigns: updateSttDatas.m_assigns.map((item) => parseInt(item?.id)),
+          l_assigns: updateSttDatas.l_assigns.map((item) => parseInt(item?.id)),
+        });
 
         setIsFullLoading(false);
       }, 500);
@@ -428,9 +464,9 @@ export default function AssignHeader({ imei }: Props) {
         });
 
         const updateItems = {
-          s_assigns: updateAltDatas.s_assigns.map((item) => item.id),
-          m_assigns: updateAltDatas.m_assigns.map((item) => item.id),
-          l_assigns: updateAltDatas.l_assigns.map((item) => item.id),
+          s_assigns: updateAltDatas.s_assigns.map((item) => item?.id),
+          m_assigns: updateAltDatas.m_assigns.map((item) => item?.id),
+          l_assigns: updateAltDatas.l_assigns.map((item) => item?.id),
         };
 
         setAltData((prev) => ({
@@ -469,6 +505,14 @@ export default function AssignHeader({ imei }: Props) {
           ),
         }));
 
+        console.log("updateAltDatas :::", updateAltDatas);
+
+        setDefaultAltIndexes({
+          s_assigns: updateAltDatas.s_assigns.map((item) => parseInt(item?.id)),
+          m_assigns: updateAltDatas.m_assigns.map((item) => parseInt(item?.id)),
+          l_assigns: updateAltDatas.l_assigns.map((item) => parseInt(item?.id)),
+        });
+
         setIsFullLoading(false);
       }, 500);
     }, 500);
@@ -504,9 +548,9 @@ export default function AssignHeader({ imei }: Props) {
         <div>
           <AssignMenus
             key={
-              sttData["s_assigns"].length +
-              sttData["m_assigns"].length +
-              sttData["l_assigns"].length
+              defaultSttIndexes.s_assigns.length +
+              defaultSttIndexes.m_assigns.length +
+              defaultSttIndexes.l_assigns.length
             }
             smallItems={(sttData["s_assigns"] || []).map((item) => ({
               id: item.id,
@@ -526,6 +570,9 @@ export default function AssignHeader({ imei }: Props) {
               description: item.description,
               value: item.value,
             }))}
+            defaultSmallIndexes={defaultSttIndexes.s_assigns}
+            defaultMediumIndexes={defaultSttIndexes.m_assigns}
+            defaultLargeIndexes={defaultSttIndexes.l_assigns}
             onChange={(
               smallDataIndexes,
               mediumDataIndexes,
@@ -544,9 +591,9 @@ export default function AssignHeader({ imei }: Props) {
         <div>
           <AssignMenus
             key={
-              altData["s_assigns"].length +
-              altData["m_assigns"].length +
-              altData["l_assigns"].length
+              defaultAltIndexes.s_assigns.length +
+              defaultAltIndexes.m_assigns.length +
+              defaultAltIndexes.l_assigns.length
             }
             smallItems={(altData["s_assigns"] || []).map((item) => ({
               id: item.id,
@@ -566,6 +613,9 @@ export default function AssignHeader({ imei }: Props) {
               description: item.description,
               value: item.value,
             }))}
+            defaultSmallIndexes={defaultAltIndexes.s_assigns}
+            defaultMediumIndexes={defaultAltIndexes.m_assigns}
+            defaultLargeIndexes={defaultAltIndexes.l_assigns}
             onChange={(
               smallDataIndexes,
               mediumDataIndexes,

@@ -49,6 +49,11 @@ export default function page() {
     m_assigns: [],
     l_assigns: [],
   });
+  const [defaultSttIndexes, setDefaultSttIndexes] = useState({
+    s_assigns: [],
+    m_assigns: [],
+    l_assigns: [],
+  });
   const [updateSttDatas, setUpdateSttDatas] = useState({
     s_assigns: [],
     m_assigns: [],
@@ -64,6 +69,11 @@ export default function page() {
 
   // alt
   const [altData, setAltData] = useState({
+    s_assigns: [],
+    m_assigns: [],
+    l_assigns: [],
+  });
+  const [defaultAltIndexes, setDefaultAltIndexes] = useState({
     s_assigns: [],
     m_assigns: [],
     l_assigns: [],
@@ -214,6 +224,12 @@ export default function page() {
             ),
           });
 
+          setDefaultSttIndexes({
+            s_assigns: sItemsArray.map((item) => parseInt(item)),
+            m_assigns: mItemsArray.map((item) => parseInt(item)),
+            l_assigns: lItemsArray.map((item) => parseInt(item)),
+          });
+
           currentPort.port.isAltDataFetching = true;
           currentPort.port.onEndCurrentAltDataFetched = (data) => {
             console.log("ttttt ::::", data);
@@ -251,6 +267,12 @@ export default function page() {
                   : item
               ),
             });
+
+            setDefaultAltIndexes({
+              s_assigns: sItemsArray.map((item) => parseInt(item)),
+              m_assigns: mItemsArray.map((item) => parseInt(item)),
+              l_assigns: lItemsArray.map((item) => parseInt(item)),
+            });
           };
 
           write({
@@ -283,9 +305,9 @@ export default function page() {
     return (
       <AssignMenus
         key={
-          altData["s_assigns"].length +
-          altData["m_assigns"].length +
-          altData["l_assigns"].length
+          defaultAltIndexes.s_assigns.length +
+          defaultAltIndexes.m_assigns.length +
+          defaultAltIndexes.l_assigns.length
         }
         smallItems={(altData["s_assigns"] || []).map((item) => ({
           id: item.id,
@@ -305,6 +327,9 @@ export default function page() {
           description: item.description,
           value: item.value,
         }))}
+        defaultSmallIndexes={defaultAltIndexes.s_assigns}
+        defaultMediumIndexes={defaultAltIndexes.m_assigns}
+        defaultLargeIndexes={defaultAltIndexes.l_assigns}
         onChange={(smallDataIndexes, mediumDataIndexes, largeDataIndexes) => {
           setUpdateAltDatas({
             s_assigns: smallDataIndexes,
@@ -320,9 +345,9 @@ export default function page() {
     return (
       <AssignMenus
         key={
-          sttData["s_assigns"].length +
-          sttData["m_assigns"].length +
-          sttData["l_assigns"].length
+          defaultSttIndexes.s_assigns.length +
+          defaultSttIndexes.m_assigns.length +
+          defaultSttIndexes.l_assigns.length
         }
         smallItems={(sttData["s_assigns"] || []).map((item) => ({
           id: item.id,
@@ -342,6 +367,9 @@ export default function page() {
           description: item.description,
           value: item.value,
         }))}
+        defaultSmallIndexes={defaultSttIndexes.s_assigns}
+        defaultMediumIndexes={defaultSttIndexes.m_assigns}
+        defaultLargeIndexes={defaultSttIndexes.l_assigns}
         onChange={(smallDataIndexes, mediumDataIndexes, largeDataIndexes) => {
           setUpdateSttDatas({
             s_assigns: smallDataIndexes,
@@ -449,9 +477,9 @@ export default function page() {
         console.log("csvData :::", sttData);
 
         const updateItems = {
-          s_assigns: updateSttDatas.s_assigns.map((item) => item.id),
-          m_assigns: updateSttDatas.m_assigns.map((item) => item.id),
-          l_assigns: updateSttDatas.l_assigns.map((item) => item.id),
+          s_assigns: updateSttDatas.s_assigns.map((item) => item?.id),
+          m_assigns: updateSttDatas.m_assigns.map((item) => item?.id),
+          l_assigns: updateSttDatas.l_assigns.map((item) => item?.id),
         };
 
         setSttData((prev) => ({
@@ -489,12 +517,14 @@ export default function page() {
                 }
           ),
         }));
+
+        setDefaultSttIndexes({
+          s_assigns: updateSttDatas.s_assigns.map((item) => parseInt(item?.id)),
+          m_assigns: updateSttDatas.m_assigns.map((item) => parseInt(item?.id)),
+          l_assigns: updateSttDatas.l_assigns.map((item) => parseInt(item?.id)),
+        });
       }, 500);
     }, 500);
-
-    console.log("commands :::", commands);
-    console.log("commands :::", commands.slice(0, 20));
-    console.log("commands :::", commands.slice(20));
   };
 
   const handleSendAlt = () => {
@@ -590,9 +620,9 @@ export default function page() {
         });
 
         const updateItems = {
-          s_assigns: updateAltDatas.s_assigns.map((item) => item.id),
-          m_assigns: updateAltDatas.m_assigns.map((item) => item.id),
-          l_assigns: updateAltDatas.l_assigns.map((item) => item.id),
+          s_assigns: updateAltDatas.s_assigns.map((item) => item?.id),
+          m_assigns: updateAltDatas.m_assigns.map((item) => item?.id),
+          l_assigns: updateAltDatas.l_assigns.map((item) => item?.id),
         };
 
         setAltData((prev) => ({
@@ -630,6 +660,12 @@ export default function page() {
                 }
           ),
         }));
+
+        setDefaultAltIndexes({
+          s_assigns: updateAltDatas.s_assigns.map((item) => parseInt(item?.id)),
+          m_assigns: updateAltDatas.m_assigns.map((item) => parseInt(item?.id)),
+          l_assigns: updateAltDatas.l_assigns.map((item) => parseInt(item?.id)),
+        });
       }, 500);
     }, 500);
 

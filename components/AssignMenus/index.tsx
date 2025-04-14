@@ -22,6 +22,9 @@ interface Props {
   smallItems?: AssignItem[];
   mediumItems?: AssignItem[];
   largeItems?: AssignItem[];
+  defaultSmallIndexes?: number[];
+  defaultMediumIndexes?: number[];
+  defaultLargeIndexes?: number[];
   onChange?: (
     smallDataIndexes: AssignItem[],
     mediumDataIndexes: AssignItem[],
@@ -37,26 +40,19 @@ export default function AssignMenus({
   smallItems = [],
   mediumItems = [],
   largeItems = [],
+  defaultSmallIndexes = [],
+  defaultMediumIndexes = [],
+  defaultLargeIndexes = [],
   onChange,
 }: Props) {
   const { lang } = useLangStore();
   const [dataType, setDataType] = useState<"small" | "medium" | "large">(null);
-  const [smallDataIndexes, setSmallDataIndexes] = useState<number[]>(
-    smallItems
-      .filter((item) => item.value === "1")
-      .map((item) => parseInt(item.id))
-  );
-
-  const [mediumDataIndexes, setMediumDataIndexes] = useState<number[]>(
-    mediumItems
-      .filter((item) => item.value === "1")
-      .map((item) => parseInt(item.id))
-  );
-  const [largeDataIndexes, setLargeDataIndexes] = useState<number[]>(
-    largeItems
-      .filter((item) => item.value === "1")
-      .map((item) => parseInt(item.id))
-  );
+  const [smallDataIndexes, setSmallDataIndexes] =
+    useState<number[]>(defaultSmallIndexes);
+  const [mediumDataIndexes, setMediumDataIndexes] =
+    useState<number[]>(defaultMediumIndexes);
+  const [largeDataIndexes, setLargeDataIndexes] =
+    useState<number[]>(defaultLargeIndexes);
 
   const handleAddIndex = (type: "small" | "medium" | "large", id: number) => {
     switch (type) {
@@ -184,9 +180,15 @@ export default function AssignMenus({
 
   useEffect(() => {
     onChange?.(
-      smallItems.filter((item) => smallDataIndexes.includes(Number(item.id))),
-      mediumItems.filter((item) => mediumDataIndexes.includes(Number(item.id))),
-      largeItems.filter((item) => largeDataIndexes.includes(Number(item.id)))
+      smallDataIndexes.map((item) =>
+        smallItems.find((innerItem) => Number(innerItem.id) === item)
+      ),
+      mediumDataIndexes.map((item) =>
+        mediumItems.find((innerItem) => Number(innerItem.id) === item)
+      ),
+      largeDataIndexes.map((item) =>
+        largeItems.find((innerItem) => Number(innerItem.id) === item)
+      )
     );
   }, [smallDataIndexes, mediumDataIndexes, largeDataIndexes]);
 
