@@ -277,7 +277,9 @@ const Geofence = ({ imei }: GeofenceProps) => {
   const [fetchedPolygonData, setFetchedPolygonData] = useState<PolygonType>();
   const [fetcheCircleData, setFetchedCircleData] = useState<CircleType>();
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
-  const [typeFilter, setTypeFilter] = useState<string>("All");
+  const [typeFilter, setTypeFilter] = useState<"All" | "Polygon" | "Circular">(
+    "All"
+  );
   const [isFullLoading, setIsFullLoading] = useState<boolean>(false);
   const mapRef = useRef<google.maps.Map>(null);
   const polygonPointRef = useRef("");
