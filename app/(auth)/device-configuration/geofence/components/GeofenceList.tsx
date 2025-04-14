@@ -6,10 +6,75 @@ import {
   SelectChangeEvent,
   Button,
   Box,
+  IconButton,
 } from "@mui/material";
 import Maps from "@/components/Map";
 import DataTable from "@/components/dataTable";
 import { ListViewProps } from "../types";
+import { GridColDef } from "@mui/x-data-grid";
+import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
+
+/**
+ * 지오펜스 테이블 컬럼 정의
+ */
+const columns: GridColDef[] = [
+  {
+    field: "no",
+    headerName: "No",
+    width: 60,
+    headerAlign: "center",
+    align: "center",
+  },
+  {
+    field: "type",
+    headerName: "Type",
+    flex: 1,
+    headerAlign: "center",
+    align: "center",
+  },
+  {
+    field: "groupId",
+    headerName: "Group",
+    width: 70,
+    headerAlign: "center",
+    align: "center",
+  },
+  {
+    field: "edit",
+    headerName: "Edit",
+    width: 60,
+    headerAlign: "center",
+    align: "center",
+    renderCell: (e) => (
+      <IconButton
+        onClick={(event) => {
+          event.stopPropagation();
+          e.value.onEdit();
+        }}
+      >
+        <EditOutlinedIcon />
+      </IconButton>
+    ),
+  },
+  {
+    field: "delete",
+    headerName: "Delete",
+    width: 80,
+    headerAlign: "center",
+    align: "center",
+    renderCell: (e) => (
+      <IconButton
+        onClick={(event) => {
+          event.stopPropagation();
+          e.value.onDelete();
+        }}
+      >
+        <DeleteForeverOutlinedIcon />
+      </IconButton>
+    ),
+  },
+];
 
 /**
  * 리스트 뷰 컴포넌트
@@ -66,7 +131,7 @@ const GeofenceList: React.FC<ListViewProps> = ({
           onRowClick={onRowClick}
           disableRowClick={false}
           rows={rows}
-          columns={[]} // Columns will be passed from parent
+          columns={columns}
           footerButton={
             <Button variant="text" color="info">
               Delete

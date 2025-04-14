@@ -17,6 +17,10 @@ import { GeofenceViewType } from "./geofence/types";
 import GeofenceConfig from "./geofence/components/GeofenceConfig";
 import GeofenceList from "./geofence/components/GeofenceList";
 import { useGeofenceFetch } from "./geofence/hooks/useGeofenceFetch";
+import {
+  getCircularGeofenceData,
+  getPolygonGeofenceData,
+} from "@/src/hooks/useSerial/utils";
 
 // Lazy load components
 const AddGeofence = React.lazy(() => import("./AddGeofence"));
@@ -61,7 +65,11 @@ const Geofence = ({ imei }) => {
   // 참조 및 상태 관리
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
-  const { setPolygonGeofence, setCircularGeofence } = useSerialStore();
+  const {
+    setPolygonGeofence,
+    setCircularGeofence,
+    setJsonPackageOfSerialPortForUpdate,
+  } = useSerialStore();
 
   // 시리얼 통신 관련
   const {
@@ -72,7 +80,7 @@ const Geofence = ({ imei }) => {
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
   // 설정 데이터 관련
-  const { formData, getFormFields, getEditDataForPage } =
+  const { formData, getFormFields, getEditDataForPage, originData } =
     useTransformedConfigData({
       data: currentPort?.packageToJson?.synctrak,
       blacklist: ["info"],
@@ -96,20 +104,6 @@ const Geofence = ({ imei }) => {
    */
   const rows = useMemo(() => {
     if (!currentPort) return [];
-
-    // Import these from geofence/utils
-    const getPolygonGeofenceData = (list) =>
-      list.map((item, index) => ({
-        type: "polygon",
-        groupId: index + 1,
-        polygonCount: parseInt(item.split("#")[1]?.substring(0, 2) || "0", 16),
-      }));
-
-    const getCircularGeofenceData = (list) =>
-      list.map((item, index) => ({
-        type: "circular",
-        groupId: index + 1,
-      }));
 
     const polygonData = getPolygonGeofenceData(polygonList);
     const circularData = getCircularGeofenceData(circularList);
@@ -241,6 +235,10 @@ const Geofence = ({ imei }) => {
   // 설정 저장 핸들러
   const handleSaveConfig = (tabName: string) => {
     if (!currentPort?.port?.writable) return;
+
+    currentPort.port.oneditsuccess = () => {
+      setJsonPackageOfSerialPortForUpdate({ imei, payload: originData });
+    };
 
     write({
       data: `${AT_EDIT_PREFIX}${imei};${getEditDataForPage(tabName)}`,
