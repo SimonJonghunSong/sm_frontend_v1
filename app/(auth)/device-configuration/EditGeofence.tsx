@@ -57,12 +57,26 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
   const [polygonPointsFetched, setPolygonPointsFetched] = useState(false);
   const [polygonInfo, setPolygonInfo] = useState<any>(null);
   const [polyCount, setPolyCount] = useState<number | null>(null);
+  const [polygonSpeedLimit, setPolygonSpeedLimit] = useState(false);
+  const [circularOutputActive, setCircularOutputActive] = useState(false);
+  const [circularBuzzerSpeedLimit, setCircularBuzzerSpeedLimit] =
+    useState(false);
+  const [loadSettingsComplete, setLoadSettingsComplete] = useState(false);
+
+  // 원형 지오펜스 추가 설정 상태
+  const [outputActiveValue, setOutputActiveValue] = useState("00"); // 00, 01, 02, 03
+  const [outputKeepActive, setOutputKeepActive] = useState(false);
+  const [outputActiveDelay, setOutputActiveDelay] = useState(0);
+  const [buzzerSpeedLimitValue, setBuzzerSpeedLimitValue] = useState(0);
+
+  const settingsBuffer = useRef("");
   const isCircleOutputActiveBuffer = useRef<string>();
   const polygonPointRef = useRef("");
   const circlePointRef = useRef("");
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
   const polygonInfoRef = useRef("");
+  const circleDataBufferRef = useRef("");
   const {
     state: { portList },
     func: { write },
@@ -102,38 +116,176 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
     }
   };
 
+  // CircularType 핸들러 함수들
+  const handleOutputActiveValueChange = (value: string) => {
+    setOutputActiveValue(value);
+  };
+
+  const handleOutputKeepActiveChange = (value: boolean) => {
+    setOutputKeepActive(value);
+  };
+
+  const handleOutputActiveDelayChange = (value: number) => {
+    setOutputActiveDelay(value);
+  };
+
+  const handleBuzzerSpeedLimitChange = (value: number) => {
+    setBuzzerSpeedLimitValue(value);
+  };
+
   // 1. 초기 로딩 및 타입 확인 효과 - 한 번만 실행
   useEffect(() => {
     // 초기화
     setIsFullLoading(true);
     setPolygonInfoFetched(false);
     setPolygonPointsFetched(false);
+    setLoadSettingsComplete(false);
+    settingsBuffer.current = "";
 
     if (!currentPort?.port?.readable || !currentPort?.port?.writable) {
       return;
     }
 
-    if (type === "polygon") {
-      const count = polygonData.find(
-        ({ groupId: id }) => id === groupId
-      )?.polygonCount;
+    // 원래 핸들러 백업
+    const originalBufferValue = currentPort.port.onbuffervalue;
 
-      if (!count) {
-        toast.error("Cannot find polygon data");
-        onBack();
-        return;
+    // 설정 로드용 핸들러
+    currentPort.port.onbuffervalue = (value) => {
+      settingsBuffer.current += value;
+
+      if (value.includes(CR)) {
+        const responseParts = settingsBuffer.current.split(CR);
+
+        if (type === "polygon") {
+          // Polygon 설정 처리
+          const validResponse = responseParts.find((part) =>
+            part.includes(";90;00")
+          );
+
+          if (validResponse) {
+            console.log("폴리곤 설정 응답:", validResponse);
+
+            // 초기값으로 false 설정
+            setPolygonSpeedLimit(false);
+
+            // RRE로 시작하는 유효한 응답인지 확인
+            if (validResponse.startsWith("RRE")) {
+              // 응답 파싱하여 필요한 데이터 추출
+              // 형식: RRE;0000000000;90;00#01
+              const parts = validResponse.split(";");
+              if (parts.length >= 4) {
+                const paramValue = parts[3].split("#");
+                if (paramValue.length >= 2) {
+                  // 00#01이면 Polygon Speed Limit => true, 00#00이면 false
+                  if (paramValue[0] === "00") {
+                    setPolygonSpeedLimit(paramValue[1] === "01");
+                  }
+                }
+              }
+            }
+
+            // 완료 표시 및 핸들러 복원
+            setLoadSettingsComplete(true);
+            currentPort.port.onbuffervalue = originalBufferValue;
+
+            // 폴리곤 데이터 정보 요청 계속 진행
+            const count = polygonData.find(
+              ({ groupId: id }) => id === groupId
+            )?.polygonCount;
+
+            if (!count) {
+              toast.error("Cannot find polygon data");
+              onBack();
+              return;
+            }
+
+            setPolyCount(count);
+          }
+        } else {
+          // Circular 설정 처리
+          // 초기값으로 모두 false 설정
+          setCircularOutputActive(false);
+          setCircularBuzzerSpeedLimit(false);
+
+          // 유효한 응답 찾기
+          const validResponses = responseParts.filter(
+            (part) =>
+              part.includes(";90;") &&
+              (part.includes("01#") || part.includes("02#"))
+          );
+
+          if (validResponses.length > 0) {
+            // 각 응답을 처리
+            validResponses.forEach((response) => {
+              // RRE로 시작하는 유효한 응답인지 확인
+              if (!response.startsWith("RRE")) return;
+
+              const parts = response.split(";");
+              if (parts.length < 4) return;
+
+              // 마지막 부분에 여러 파라미터가 있을 수 있음 (예: 01#01;02#01)
+              const paramPairs = parts.slice(3).join(";").split(";");
+
+              // 각 파라미터 쌍을 처리
+              paramPairs.forEach((pair) => {
+                const paramData = pair.split("#");
+                if (paramData.length < 2) return;
+
+                const paramId = paramData[0]; // 01 또는 02
+                const paramValue = paramData[1]; // 값 (00 또는 01)
+
+                // 01#01이면 Circular Output Active => true, 01#00이면 false
+                if (paramId === "01") {
+                  setCircularOutputActive(paramValue === "01");
+                }
+                // 02#01 Circular Buzzer Speed Limit => true, 02#00이면 false
+                else if (paramId === "02") {
+                  setCircularBuzzerSpeedLimit(paramValue === "01");
+                }
+              });
+            });
+
+            // 완료 처리
+            setLoadSettingsComplete(true);
+            currentPort.port.onbuffervalue = originalBufferValue;
+          }
+
+          // Circular 타입은 폴리곤 데이터를 확인하지 않고 바로 진행
+        }
       }
+    };
 
-      setPolyCount(count);
-      // 폴리곤 정보 요청은 다음 효과에서 처리
+    // 타입에 따라 적절한 초기화 요청 보내기
+    if (type === "polygon") {
+      // 폴리곤 설정 요청 보내기
+      write({
+        data: `${AT_REQ}${imei};90;00`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    } else {
+      // 원형 설정 요청
+      write({
+        data: `${AT_REQ}${imei};90;01,02`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
     }
 
-    return cleanupPolygonHandlers;
+    return () => {
+      cleanupPolygonHandlers();
+      currentPort.port.onbuffervalue = originalBufferValue;
+    };
   }, []); // 빈 의존성 배열로 최초 마운트 시 한 번만 실행
 
   // 2. 폴리곤 정보 요청 효과 - polyCount가 설정된 후에만 실행
   useEffect(() => {
-    if (type !== "polygon" || !polyCount || polygonInfoFetched) {
+    if (
+      type !== "polygon" ||
+      !polyCount ||
+      polygonInfoFetched ||
+      !loadSettingsComplete
+    ) {
       return;
     }
 
@@ -169,7 +321,7 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
           // 폴리곤 정보 파싱
           const polygonInfoData = parsePolygonInfo(responseData);
           console.log("파싱된 폴리곤 정보:", polygonInfoData);
-
+          console.log(polygonInfoData, ":::::::polygonInfoData");
           if (polygonInfoData) {
             setEnterAlert(polygonInfoData.enterAlert);
             setExitAlert(polygonInfoData.exitAlert);
@@ -207,6 +359,7 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
     currentPort?.port?.readable,
     currentPort?.port?.writable,
     polygonInfoFetched,
+    loadSettingsComplete,
   ]);
 
   // 3. 폴리곤 포인트 요청 효과 - 폴리곤 정보가 로드된 후에만 실행
@@ -316,7 +469,7 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
 
   // 4. 원형 데이터 로드 효과 - circular 타입일 때만 실행
   useEffect(() => {
-    if (type !== "circular") {
+    if (type !== "circular" || !loadSettingsComplete) {
       return;
     }
 
@@ -329,62 +482,135 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
     const circleIndex = findCircleIndexByNumber(groupId - 1);
     currentPort.port.iscircularpointfetching = true;
     currentPort.port.circlehandler = (value) => {
-      if (value.includes(CR)) {
-        const circleData = parseLatLngRadius(value);
+      circleDataBufferRef.current += value;
 
-        // 맵에 원 그리기
-        const newCircle = new google.maps.Circle({
-          center: circleData.center,
-          radius: circleData.radius,
-          map: mapRef.current,
-          editable: true,
-        });
+      if (circleDataBufferRef.current.includes(CR)) {
+        try {
+          const circleData = parseLatLngRadius(circleDataBufferRef.current);
+          console.log(
+            "원형 데이터 파싱 결과:",
+            JSON.stringify(circleData, null, 2)
+          );
+          console.log("좌표:", circleData.center.lat, circleData.center.lng);
+          console.log("반경:", circleData.radius);
 
-        mapManager.shapesRef.current.push({
-          overlay: newCircle,
-          type: google.maps.drawing.OverlayType.CIRCLE,
-        });
-
-        mapManager.addCircle({
-          id: 0,
-          radius: circleData.radius,
-          center: circleData.center,
-        });
-        mapManager.registerEditableHandlers();
-
-        if (mapRef.current) {
-          mapRef.current.setCenter({
-            lat: circleData.center.lat,
-            lng: circleData.center.lng,
+          // 맵에 원 그리기
+          const newCircle = new google.maps.Circle({
+            center: circleData.center,
+            radius: circleData.radius,
+            map: mapRef.current,
+            editable: true,
           });
+
+          mapManager.shapesRef.current.push({
+            overlay: newCircle,
+            type: google.maps.drawing.OverlayType.CIRCLE,
+          });
+
+          const circleId = 0;
+          mapManager.addCircle({
+            id: circleId,
+            radius: Number(circleData.radius),
+            center: {
+              lat: Number(circleData.center.lat),
+              lng: Number(circleData.center.lng),
+            },
+          });
+
+          mapManager.registerEditableHandlers();
+
+          if (mapRef.current) {
+            mapRef.current.setCenter({
+              lat: circleData.center.lat,
+              lng: circleData.center.lng,
+            });
+          }
+
+          // alert 상태와 다른 설정 값 파싱
+          if (circularList[groupId - 1]) {
+            const alertData = circularList[groupId - 1].split("#")[1];
+            console.log("알림 데이터:", alertData);
+
+            if (alertData?.length >= 24) {
+              // alert 상태 설정
+              setEnterAlert(alertData.slice(20, 22) === "01");
+              setExitAlert(alertData.slice(22, 24) === "01");
+
+              // 추가 설정 파싱 및 설정 (길이에 따라 다른 설정 존재)
+              if (alertData.length > 24 && circularOutputActive) {
+                // outputActiveValue가 있는 경우 (기본값 "00" 사용)
+                setOutputActiveValue(
+                  alertData.length >= 26 ? alertData.slice(24, 26) : "00"
+                );
+
+                // outputActiveDelay가 있는 경우 (16진수 값을 10진수로 변환, 기본값 0 사용)
+                if (alertData.length >= 34) {
+                  const delayHex = alertData.slice(26, 34);
+                  try {
+                    const delayValue = parseInt(delayHex, 16) / 1000000; // 16진수에서 초 단위로 변환
+                    setOutputActiveDelay(delayValue);
+                  } catch (e) {
+                    console.error("딜레이 값 파싱 오류:", e);
+                    setOutputActiveDelay(0);
+                  }
+                }
+              }
+
+              // buzzerSpeedLimit 값이 있는 경우
+              if (alertData.length > 34 && circularBuzzerSpeedLimit) {
+                try {
+                  const speedLimitHex = alertData.slice(34, 42);
+                  const speedLimitValue = parseInt(speedLimitHex, 16) / 1000000; // 16진수에서 초 단위로 변환
+                  setBuzzerSpeedLimitValue(speedLimitValue);
+                } catch (e) {
+                  console.error("속도 제한 값 파싱 오류:", e);
+                  setBuzzerSpeedLimitValue(0);
+                }
+              }
+            }
+          } else {
+            console.warn(
+              "circularList에서 해당 groupId의 데이터를 찾을 수 없습니다:",
+              groupId - 1
+            );
+          }
+
+          setIsFullLoading(false);
+          currentPort.port.iscircularpointfetching = false;
+          // Clear the buffer after processing
+          circleDataBufferRef.current = "";
+        } catch (e) {
+          console.error("원형 데이터 파싱 중 오류 발생:", e);
+          setIsFullLoading(false);
+          currentPort.port.iscircularpointfetching = false;
+          // Clear the buffer on error as well
+          circleDataBufferRef.current = "";
         }
-
-        // alert 상태 파싱
-        const alertData = circularList[groupId - 1].split("#")[1];
-
-        if (alertData.length >= 24) {
-          setEnterAlert(alertData.slice(20, 22) === "01");
-          setExitAlert(alertData.slice(22, 24) === "01");
-        }
-
-        setIsFullLoading(false);
-        currentPort.port.iscircularpointfetching = false;
       }
     };
 
     // 원형 데이터 요청
-    write({
-      data: `AT^REQ;${imei};${circleIndex}`,
-      port: currentPort.port,
-      writer: currentPort.writer,
-    });
+    setTimeout(() => {
+      write({
+        data: `AT^REQ;${imei};${circleIndex}`,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    }, 1000);
 
     // 정리 함수
     return () => {
       currentPort.port.circlehandler = null;
       currentPort.port.iscircularpointfetching = false;
+      // Clear the buffer on cleanup
+      circleDataBufferRef.current = "";
     };
-  }, [type, currentPort?.port?.readable, currentPort?.port?.writable]);
+  }, [
+    type,
+    currentPort?.port?.readable,
+    currentPort?.port?.writable,
+    loadSettingsComplete,
+  ]);
 
   // 저장 버튼 클릭 핸들러
   const handleSave = () => {
@@ -422,53 +648,75 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
         }
       );
     } else {
-      const circleOutputActiveFetchPromise = new Promise<boolean>((resolve) => {
-        currentPort.port.iscircleoutputactivefetching = true;
-        currentPort.port.circleoutputactivehandler = (value) => {
-          isCircleOutputActiveBuffer.current += value;
-          if (value.includes(CR)) {
-            currentPort.port.iscircleoutputactivefetching = false;
-            const isEnable =
-              isCircleOutputActiveBuffer.current.split("#")[1] === "01" &&
-              !isCircleOutputActiveBuffer.current.includes("USP");
-            isCircleOutputActiveBuffer.current = undefined;
-            resolve(isEnable);
-          }
-        };
-        write({
-          data: `${AT_REQ}${imei};90;01`,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        });
+      // 원형 지오펜스 설정에 이미 로드된 값 사용
+      const circleIndex = findCircleIndexByNumber(groupId - 1);
+      const circle = mapManager.circles[0];
+      const coordinateToHexString = convertCircleCoordinatesToHexString({
+        lat: circle.center.lat,
+        lng: circle.center.lng,
+        radius: circle.radius,
       });
 
-      circleOutputActiveFetchPromise.then((isOutputActive) => {
-        const circleIndex = findCircleIndexByNumber(groupId - 1);
-        const circle = mapManager.circles[0];
-        const coordinateToHexString = convertCircleCoordinatesToHexString({
-          lat: circle.center.lat,
-          lng: circle.center.lng,
-          radius: circle.radius,
-        });
+      currentPort.port.oneditsuccess = () => {
+        // Set flag for data refetch when returning to list
+        currentPort.port.needsGeofenceRefetch = true;
+        onBack();
+      };
 
-        currentPort.port.oneditsuccess = () => {
-          // Set flag for data refetch when returning to list
-          currentPort.port.needsGeofenceRefetch = true;
-          onBack();
-        };
+      // Convert alert states to hex string
+      const alertHexString = `${enterAlert ? "01" : "00"}${
+        exitAlert ? "01" : "00"
+      }`;
 
-        // Convert alert states to hex string
-        const alertHexString = `${enterAlert ? "01" : "00"}${
-          exitAlert ? "01" : "00"
-        }`;
+      // 문서에 따라 다양한 상태 조합에 맞게 데이터 형식 구성
+      let dataString = "";
 
-        write({
-          data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${coordinateToHexString}${
-            isOutputActive ? `${alertHexString}0000000000` : alertHexString
-          }`,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        });
+      // 1. 기본 정보: 좌표와 알림 상태 (항상 포함)
+      const baseData = `${coordinateToHexString}${alertHexString}`;
+
+      // Output Active 값 - 사용자가 설정한 값 사용
+      const outActValue = circularOutputActive ? outputActiveValue : "00";
+
+      // Output Active Delay 값 - 사용자가 설정한 값 사용
+      const outActDelayValue = Math.floor(outputActiveDelay * 1000000)
+        .toString(16)
+        .padStart(8, "0")
+        .toUpperCase();
+
+      // Buzzer Speed Limit 값 - 사용자가 설정한 값 사용
+      const speedLimitValueHex =
+        buzzerSpeedLimitValue > 0
+          ? Math.floor(buzzerSpeedLimitValue * 1000000)
+              .toString(16)
+              .padStart(8, "0")
+              .toUpperCase()
+          : "00000000";
+
+      // BUZZER_SPEED_LIMIT 값
+      const buzzerSpeedLimitFlag = circularBuzzerSpeedLimit ? "01" : "00";
+      console.log(speedLimitValueHex);
+      // 고정 접미사
+      const fixedSuffix = "0078";
+
+      // 2. 상태 조합에 따른 추가 데이터
+      if (circularOutputActive && circularBuzzerSpeedLimit) {
+        // 둘 다 활성화: 모든 값 포함
+        dataString = `${baseData}${outActValue}${outActDelayValue}${speedLimitValueHex}${buzzerSpeedLimitFlag}${fixedSuffix}`;
+      } else if (circularOutputActive && !circularBuzzerSpeedLimit) {
+        // Output Active만 활성화: Output Active 값과 Delay 값 포함
+        dataString = `${baseData}${outActValue}${outActDelayValue}`;
+      } else if (!circularOutputActive && circularBuzzerSpeedLimit) {
+        // Buzzer Speed Limit만 활성화: Buzzer Speed Limit 값만 포함
+        dataString = `${baseData}${speedLimitValueHex}${buzzerSpeedLimitFlag}${fixedSuffix}`;
+      } else {
+        // 둘 다 비활성화: 기본 정보만 포함
+        dataString = baseData;
+      }
+
+      write({
+        data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${dataString}`,
+        port: currentPort.port,
+        writer: currentPort.writer,
       });
     }
   };
@@ -548,17 +796,17 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
               updateCircleCenter={mapManager.updateCircleCenter}
               lat={
                 mapManager.circles.length > 0
-                  ? Number(mapManager.circles[0].center.lat.toFixed(6))
+                  ? mapManager.circles[0].center.lat
                   : undefined
               }
               long={
                 mapManager.circles.length > 0
-                  ? Number(mapManager.circles[0].center.lng.toFixed(6))
+                  ? mapManager.circles[0].center.lng
                   : undefined
               }
               radius={
                 mapManager.circles.length > 0
-                  ? Number(mapManager.circles[0].radius.toFixed(6))
+                  ? mapManager.circles[0].radius
                   : undefined
               }
               groupId={groupId}
@@ -566,6 +814,16 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
               onAlertStateChange={handleAlertStateChange}
               initialEnterAlert={enterAlert}
               initialExitAlert={exitAlert}
+              showOutputActive={circularOutputActive}
+              showBuzzerSpeedLimit={circularBuzzerSpeedLimit}
+              outputActiveValue={outputActiveValue}
+              onOutputActiveValueChange={handleOutputActiveValueChange}
+              outputKeepActive={outputKeepActive}
+              onOutputKeepActiveChange={handleOutputKeepActiveChange}
+              outputActiveDelay={outputActiveDelay}
+              onOutputActiveDelayChange={handleOutputActiveDelayChange}
+              buzzerSpeedLimit={buzzerSpeedLimitValue}
+              onBuzzerSpeedLimitChange={handleBuzzerSpeedLimitChange}
             />
           ) : (
             <PolygonType
@@ -584,6 +842,8 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
               onAlertStateChange={handleAlertStateChange}
               initialEnterAlert={enterAlert}
               initialExitAlert={exitAlert}
+              showSpeedLimit={polygonSpeedLimit}
+              initialBuzzerSpeedLimit={polygonInfo?.buzzerSpeedLimit || 0}
             />
           )}
         </Stack>
