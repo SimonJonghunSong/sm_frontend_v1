@@ -101,10 +101,7 @@ const GeofenceList: React.FC<ListViewProps> = ({
 
   return (
     <Stack direction="row" gap="40px" mb="40px">
-      <Stack
-        gap="20px"
-        sx={{ width: "50%", height: "500px", overflowY: "scroll" }}
-      >
+      <Stack direction={"column"} gap="20px" sx={{ flex: 1 }}>
         <Stack
           direction="row"
           gap="8px"
@@ -125,22 +122,28 @@ const GeofenceList: React.FC<ListViewProps> = ({
             Add
           </Button>
         </Stack>
-        <DataTable
-          noDataMessage="No registered geofence"
-          disablePagination={false}
-          onRowClick={onRowClick}
-          disableRowClick={false}
-          rows={rows}
-          columns={columns}
-          footerButton={
-            <Button variant="text" color="info">
-              Delete
-            </Button>
-          }
-        />
+
+        <Stack
+          gap="20px"
+          sx={{ width: "100%", height: "500px", overflowY: "scroll" }}
+        >
+          <DataTable
+            noDataMessage="No registered geofence"
+            disablePagination={false}
+            onRowClick={onRowClick}
+            disableRowClick={false}
+            rows={rows}
+            columns={columns}
+            footerButton={
+              <Button variant="text" color="info">
+                Delete
+              </Button>
+            }
+          />
+        </Stack>
       </Stack>
 
-      <Stack gap="20px" sx={{ width: "50%", height: "500px" }}>
+      <Stack gap="20px" sx={{ flex: 1, height: "500px" }}>
         <Box flex={1}>
           <Maps
             ref={mapRef}
