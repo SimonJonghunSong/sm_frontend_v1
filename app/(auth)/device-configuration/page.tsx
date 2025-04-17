@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import useModelInfoTabStore from "@/src/stores/useModelInfoTabStore";
 import {
   deleteJsonDataFromIDB,
   getJsonDataFromIDB,
@@ -83,7 +84,6 @@ export const getLocalizedText = (
 };
 
 const ModelInfoPage = () => {
-  const [tab, setTab] = useState<string>();
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [showHiddenParameters, setShowHiddenParameters] = useState(false);
   const [allMenuContentList, setAllMenuContentList] = useState<
@@ -116,10 +116,12 @@ const ModelInfoPage = () => {
     }[]
   >([]);
   const { getFwVer } = useModelInfoStore();
+  const { getTab, setTab } = useModelInfoTabStore();
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort?.modelVersion?.split("_")[0] || "";
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const tab = useMemo(() => getTab(), [getTab]);
 
   const t = useTranslations();
   const router = useRouter();
@@ -145,15 +147,15 @@ const ModelInfoPage = () => {
     fileDownload(blob, filename);
   };
 
-  const handleTabChange = async (tab: string) => {
-    switch (tab) {
+  const handleTabChange = (newTab: string) => {
+    switch (newTab) {
       case DELETE_MODEL:
         toggle();
         break;
       case SHOW_HIDDEN_PARAMETERS:
         return;
       default:
-        setTab(tab);
+        setTab(newTab);
     }
   };
 
