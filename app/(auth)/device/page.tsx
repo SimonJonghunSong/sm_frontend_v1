@@ -17,6 +17,13 @@ export default function page() {
     func: { requestPort },
     state: { portList: portState },
   } = useSerial();
+  const goDeviceList = () => redirect("device/list");
+
+  useEffect(() => {
+    if (portState.some((port) => port.reader && port.writer)) {
+      goDeviceList();
+    }
+  }, []);
 
   return (
     <div className="pageWrap">
@@ -35,7 +42,7 @@ export default function page() {
           ) : step === "FAILED" ? (
             <Failed setStep={setStep} />
           ) : step === "SUCCESS" ? (
-            redirect("/device/list")
+            goDeviceList()
           ) : undefined}
         </Stack>
       </article>

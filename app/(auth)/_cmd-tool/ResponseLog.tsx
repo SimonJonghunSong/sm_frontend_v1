@@ -296,7 +296,7 @@ export default function ResponseLog({
   };
 
   useEffect(() => {
-    setIsCmdModalWide(expand);
+    setIsCmdModalWide?.(expand);
   }, [expand]);
 
   return (

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import useModelInfoTabStore from "@/src/stores/useModelInfoTabStore";
 import {
   deleteJsonDataFromIDB,
   getJsonDataFromIDB,
@@ -53,7 +54,6 @@ export const getLocalizedText = (
 };
 
 const ModelInfoPage = () => {
-  const [tab, setTab] = useState<string>();
   const [showHiddenParameters, setShowHiddenParameters] = useState(false);
   const [allMenuContentList, setAllMenuContentList] = useState<
     ModelConfigWithData[]
@@ -69,8 +69,10 @@ const ModelInfoPage = () => {
     }[]
   >([]);
   const { getModelName, getFwVer } = useModelInfoStore();
+  const { getTab, setTab } = useModelInfoTabStore();
   const modelName = useMemo(() => getModelName(), [getModelName]);
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const tab = getTab();
 
   const t = useTranslations();
   const router = useRouter();
@@ -96,15 +98,15 @@ const ModelInfoPage = () => {
     fileDownload(blob, filename);
   };
 
-  const handleTabChange = (tab: string) => {
-    switch (tab) {
+  const handleTabChange = (newTab: string) => {
+    switch (newTab) {
       case DELETE_MODEL:
         toggle();
         break;
       case SHOW_HIDDEN_PARAMETERS:
         return;
       default:
-        setTab(tab);
+        setTab(newTab);
     }
   };
 
@@ -145,7 +147,9 @@ const ModelInfoPage = () => {
       if (menuSectionList.length > 0) {
         setSideBarList(menuSectionList);
         setAllMenuContentList(menuContentList);
-        setTab(menuSectionList[0].textEn);
+        if (!tab) {
+          setTab(menuSectionList[0].textEn);
+        }
       }
     };
     fetchJsonData();

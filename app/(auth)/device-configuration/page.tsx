@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationTabStore";
+
 import {
   deleteJsonDataFromIDB,
   getJsonDataFromIDB,
@@ -35,11 +37,14 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import Geofence from "./Geofence";
 import DeviceStausConfiguration from "./(components)/DeviceStausConfiguration/page";
 import AssignHeader from "app/(auth)/device-configuration/AssignHeader";
+import useCmdStore from "@/src/stores/useCmdStore";
+import styles from "./styles.module.scss";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
 const DEVICE_STATUS = "Device Status";
 const SHOW_HIDDEN_PARAMETERS = "Show Hidden Parameters";
+const CMD_TOOL = "CMD Tool";
 
 const menuHeaderMap = {
   Network: ["NTW", "GSM"],
@@ -83,7 +88,6 @@ export const getLocalizedText = (
 };
 
 const ModelInfoPage = () => {
-  const [tab, setTab] = useState<string>();
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [showHiddenParameters, setShowHiddenParameters] = useState(false);
   const [allMenuContentList, setAllMenuContentList] = useState<
@@ -116,10 +120,12 @@ const ModelInfoPage = () => {
     }[]
   >([]);
   const { getFwVer } = useModelInfoStore();
+  const { getTab, setTab } = useDeviceConfigurationTabStore();
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort?.modelVersion?.split("_")[0] || "";
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const tab = getTab();
 
   const t = useTranslations();
   const router = useRouter();
@@ -134,6 +140,8 @@ const ModelInfoPage = () => {
     ),
   });
 
+  const { toggleOpen } = useCmdStore();
+
   const handleExportProfile = () => {
     const profile = convertModelConfigToProfile(
       allMenuContentList,
@@ -145,15 +153,18 @@ const ModelInfoPage = () => {
     fileDownload(blob, filename);
   };
 
-  const handleTabChange = async (tab: string) => {
-    switch (tab) {
+  const handleTabChange = (newTab: string) => {
+    switch (newTab) {
       case DELETE_MODEL:
         toggle();
         break;
       case SHOW_HIDDEN_PARAMETERS:
         return;
+      case CMD_TOOL:
+        toggleOpen();
+        break;
       default:
-        setTab(tab);
+        setTab(newTab);
     }
   };
 

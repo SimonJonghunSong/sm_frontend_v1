@@ -41,6 +41,12 @@ export default function SideMenu({
     <aside className={styles.sideMenuWrap}>
       <ul className={styles.sideMenu}>
         {sideMenuItems.map(({ textEn, textEs, textPt }) => {
+          if (
+            textEn === "CMD Tool" ||
+            textEn === "Commands" ||
+            textEn === "F/W Update"
+          )
+            return null;
           if (textEn === "Show Hidden Parameters") {
             return (
               <li key={textEn}>
@@ -62,28 +68,7 @@ export default function SideMenu({
               </li>
             );
           }
-          if (textEn === "F/W Update") {
-            return (
-              <li
-                key={textEn}
-                className={activeTab === textEn ? styles.active : undefined}
-                onClick={() => onTabChange(textEn)}
-              >
-                <Stack
-                  direction="row"
-                  gap="8px"
-                  alignItems="center"
-                  padding="8px 0 8px"
-                  borderTop="1px solid #4D4D56"
-                >
-                  <button>
-                    {getSideMenuIcon(textEn)}
-                    {lang === "en" ? textEn : lang === "es" ? textEs : textPt}
-                  </button>
-                </Stack>
-              </li>
-            );
-          }
+
           return (
             <li
               key={textEn}

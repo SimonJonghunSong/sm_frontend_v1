@@ -26,7 +26,7 @@ export default function CmdTool({
   >([]);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
-    setIsCmdModalWide(false);
+    setIsCmdModalWide?.(false);
     setValue(newValue);
   };
 
