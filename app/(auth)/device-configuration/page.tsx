@@ -37,11 +37,14 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import Geofence from "./Geofence";
 import DeviceStausConfiguration from "./(components)/DeviceStausConfiguration/page";
 import AssignHeader from "app/(auth)/device-configuration/AssignHeader";
+import useCmdStore from "@/src/stores/useCmdStore";
+import styles from "./styles.module.scss";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
 const DEVICE_STATUS = "Device Status";
 const SHOW_HIDDEN_PARAMETERS = "Show Hidden Parameters";
+const CMD_TOOL = "CMD Tool";
 
 const menuHeaderMap = {
   Network: ["NTW", "GSM"],
@@ -137,6 +140,8 @@ const ModelInfoPage = () => {
     ),
   });
 
+  const { toggleOpen } = useCmdStore();
+
   const handleExportProfile = () => {
     const profile = convertModelConfigToProfile(
       allMenuContentList,
@@ -155,6 +160,9 @@ const ModelInfoPage = () => {
         break;
       case SHOW_HIDDEN_PARAMETERS:
         return;
+      case CMD_TOOL:
+        toggleOpen();
+        break;
       default:
         setTab(newTab);
     }

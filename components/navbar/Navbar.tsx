@@ -35,6 +35,7 @@ import { getNoti } from "@/src/api/services/notification";
 import SearchConfigurationModal from "./SearchConfigurationModal";
 import SearchModelInfoModal from "./SearchModelInfoModal";
 import SearchDeviceConfigurationModal from "./SearchDeviceConfigurationModal";
+import useCmdStore from "@/src/stores/useCmdStore";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -119,10 +120,10 @@ export default function Navbar() {
   const { lang } = useLangStore();
   const { userRole } = useAuthStore();
   const router = useRouter();
-
+  const [isCmdModalWide, setIsCmdModalWide] = useState(false);
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
 
-  const [cmdModal, cmdModalToggle] = useModal();
+  const { isOpen: cmdModal, toggleOpen: cmdModalToggle } = useCmdStore();
   const [networkModal, networkModalToggle] = useModal();
   const [searchDeviceConfigurationModal, searchDeviceConfigurationModalToggle] =
     useModal();
@@ -473,12 +474,13 @@ export default function Navbar() {
             hideBackdrop
             hasMinimize
             closeButton
-            open={cmdModal}
+            open
             toggleOpen={cmdModalToggle}
-            width="1240px"
+            width={isCmdModalWide ? "1240px" : "700px"}
             hasFooter={false}
+            disableScrollLock
           >
-            <CmdModal />
+            <CmdModal setIsCmdModalWide={setIsCmdModalWide} />
           </Modal>
         )}
 
@@ -541,43 +543,11 @@ export default function Navbar() {
   );
 }
 
-// 검색 결과 타입 정의
-type SearchResult = {
-  category: string;
-  parameter: string;
-};
-
-// 검색 함수
-const searchParameters = (
-  searchTerm: string,
-  data: Record<string, string[]>
-): SearchResult[] => {
-  const results: SearchResult[] = [];
-
-  // 대소문자 구분 없이 검색하기 위해 소문자로 변환
-  const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-
-  if (!normalizedSearchTerm) return results;
-
-  Object.entries(data).forEach(([category, parameters]) => {
-    // 파라미터만 검색
-    const matchedParams = parameters.filter((param) =>
-      param.toLowerCase().includes(normalizedSearchTerm)
-    );
-
-    // 매칭된 파라미터가 있으면 결과에 추가
-    matchedParams.forEach((param) => {
-      results.push({
-        category,
-        parameter: param,
-      });
-    });
-  });
-
-  return results;
-};
-
-function CmdModal() {
+function CmdModal({
+  setIsCmdModalWide,
+}: {
+  setIsCmdModalWide: (isWide: boolean) => void;
+}) {
   const searchRef = useRef<HTMLInputElement>();
 
   useEffect(() => {
@@ -586,5 +556,5 @@ function CmdModal() {
     }
   }, []);
 
-  return <CmdTool />;
+  return <CmdTool setIsCmdModalWide={setIsCmdModalWide} />;
 }
