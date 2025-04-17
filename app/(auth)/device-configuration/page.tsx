@@ -3,7 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import useModelInfoStore from "@/src/stores/useModelInfo";
-import useModelInfoTabStore from "@/src/stores/useModelInfoTabStore";
+import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationTabStore";
+
 import {
   deleteJsonDataFromIDB,
   getJsonDataFromIDB,
@@ -116,12 +117,12 @@ const ModelInfoPage = () => {
     }[]
   >([]);
   const { getFwVer } = useModelInfoStore();
-  const { getTab, setTab } = useModelInfoTabStore();
+  const { getTab, setTab } = useDeviceConfigurationTabStore();
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort?.modelVersion?.split("_")[0] || "";
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
-  const tab = useMemo(() => getTab(), [getTab]);
+  const tab = getTab();
 
   const t = useTranslations();
   const router = useRouter();

@@ -34,6 +34,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getNoti } from "@/src/api/services/notification";
 import SearchConfigurationModal from "./SearchConfigurationModal";
 import SearchModelInfoModal from "./SearchModelInfoModal";
+import SearchDeviceConfigurationModal from "./SearchDeviceConfigurationModal";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -173,15 +174,16 @@ export default function Navbar() {
   }, []);
 
   const handleSearchClick = (e) => {
-    if (pathname.includes("configuration")) {
+    if (pathname.includes("device-configuration")) {
+      // 디바이스 연결 후 커스터밍한 페이지로 검색 토글
+      searchDeviceConfigurationModalToggle();
+    } else if (pathname.includes("configuration")) {
       // 디바이스 연결 후 모델 정보 검색 토글
       networkModalToggle();
     } else if (pathname.includes("model-info")) {
       // 디바이스 연결 없이 모델 정보 검색 토글
+      console.log("searchDeviceConfigurationModalToggle");
       searchModelInfoModalToggle();
-    } else {
-      // 디바이스 연결 후 커스터밍한 페이지로 검색 토글
-      searchDeviceConfigurationModalToggle();
     }
   };
 
@@ -278,7 +280,7 @@ export default function Navbar() {
           width="720px"
           hasFooter={false}
         >
-          <SearchConfigurationModal
+          <SearchDeviceConfigurationModal
             onClose={searchDeviceConfigurationModalToggle}
           />
         </Modal>
