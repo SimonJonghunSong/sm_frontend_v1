@@ -55,7 +55,7 @@ const CheckboxEdit = ({
       >
         <Checkbox checked={checked} onChange={handleCheckChange} />
         <TextField
-          sx={{ width: 50 }}
+          sx={{ width: 60 }}
           defaultValue="00"
           value={inputValue}
           onChange={handleInputChange}

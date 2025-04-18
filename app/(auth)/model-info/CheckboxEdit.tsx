@@ -40,7 +40,7 @@ const CheckboxEdit = ({ title, info, jsonId }: CheckboxEditProps) => {
           checked={value}
           onChange={(e) => setValue(e.target.checked)}
         />
-        <TextField sx={{ width: 50 }} defaultValue="00" />
+        <TextField sx={{ width: 60 }} defaultValue="00" />
       </Stack>
       <InputBox.Head>
         <InputBox.Title>{title}</InputBox.Title>

@@ -261,7 +261,7 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
               }}
             />
             <TextField
-              sx={{ width: 50 }}
+              sx={{ width: 60 }}
               value={field.alert_id}
               onChange={(e) => {
                 onChange(field.value, {
