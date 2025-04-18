@@ -74,18 +74,21 @@ export default function CheckboxEditButton({
               value={inputValue}
               onChange={(e) => {
                 let newValue = e.target.value;
-
-                // 숫자 타입일 경우 범위 검증
+                onChange([checkedValue, newValue]);
+              }}
+              onBlur={(e) => {
                 if (VALUE_MIN !== undefined && VALUE_MAX !== undefined) {
-                  const numValue = Number(newValue);
+                  const numValue = Number(e.target.value);
+                  let newValue = e.target.value;
+
                   if (numValue > Number(VALUE_MAX)) {
                     newValue = String(VALUE_MAX);
                   } else if (numValue < Number(VALUE_MIN)) {
                     newValue = String(VALUE_MIN);
                   }
-                }
 
-                onChange([checkedValue, newValue]);
+                  onChange([checkedValue, newValue]);
+                }
               }}
             />
 

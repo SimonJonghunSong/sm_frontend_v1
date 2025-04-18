@@ -1080,26 +1080,7 @@ const ContentByTab = ({
                                       value={item.value}
                                       onChange={(e) => {
                                         handleClearError(item.no);
-
                                         let newValue = e.target.value;
-
-                                        // 숫자 타입일 경우 범위 검증
-                                        if (
-                                          item.VALUE_MIN !== undefined &&
-                                          item.VALUE_MAX !== undefined
-                                        ) {
-                                          const numValue = Number(newValue);
-                                          if (
-                                            numValue > Number(item.VALUE_MAX)
-                                          ) {
-                                            newValue = String(item.VALUE_MAX);
-                                          } else if (
-                                            numValue < Number(item.VALUE_MIN)
-                                          ) {
-                                            newValue = String(item.VALUE_MIN);
-                                          }
-                                        }
-
                                         setMenuContentList(
                                           menuContentList.map((menuContent) => {
                                             if (item.no === menuContent.no) {
@@ -1111,6 +1092,43 @@ const ContentByTab = ({
                                             return menuContent;
                                           })
                                         );
+                                      }}
+                                      onBlur={(e) => {
+                                        if (
+                                          item.VALUE_MIN !== undefined &&
+                                          item.VALUE_MAX !== undefined
+                                        ) {
+                                          const numValue = Number(
+                                            e.target.value
+                                          );
+                                          let newValue = e.target.value;
+
+                                          if (
+                                            numValue > Number(item.VALUE_MAX)
+                                          ) {
+                                            newValue = String(item.VALUE_MAX);
+                                          } else if (
+                                            numValue < Number(item.VALUE_MIN)
+                                          ) {
+                                            newValue = String(item.VALUE_MIN);
+                                          }
+
+                                          setMenuContentList(
+                                            menuContentList.map(
+                                              (menuContent) => {
+                                                if (
+                                                  item.no === menuContent.no
+                                                ) {
+                                                  return {
+                                                    ...menuContent,
+                                                    value: newValue,
+                                                  };
+                                                }
+                                                return menuContent;
+                                              }
+                                            )
+                                          );
+                                        }
                                       }}
                                     />
 
