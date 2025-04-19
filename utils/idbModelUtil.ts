@@ -143,3 +143,26 @@ export const updateParametersInIDB = async (
     throw error;
   }
 };
+
+export const checkModelDataExists = async (
+  modelName: string
+): Promise<boolean> => {
+  try {
+    const db = (await initDB()) as IDBDatabase;
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([STORE_NAME], "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+
+      const request = store.get(modelName);
+
+      request.onsuccess = () => {
+        const data = request.result;
+        resolve(!!data);
+      };
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Error checking data in IndexedDB:", error);
+    return false;
+  }
+};

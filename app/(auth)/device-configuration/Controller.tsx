@@ -27,6 +27,9 @@ import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import { checkModelDataExists } from "@/utils/idbModelUtil";
+import { useRouter } from "next/navigation";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 interface ModelInfoControllerProps {
   modelName: string;
@@ -43,6 +46,8 @@ export default function ModelInfoController({
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
+  const router = useRouter();
+
   const { setImei, resetTab, getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const [modelNameState, setModelNameState] = useState<string>(imei);
@@ -51,6 +56,10 @@ export default function ModelInfoController({
     func: { setIsDisconnected, setIsConnected },
   } = useSerial();
   const currentPort = portList.find(({ port }) => port.imei === modelNameState);
+  const {
+    setModelName: setModelNameFromModelInfoStore,
+    setFwVer: setFwVerFromModelInfoStore,
+  } = useModelInfoStore();
 
   const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
@@ -131,10 +140,32 @@ export default function ModelInfoController({
   //   }
   // };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setImei(event.target.value);
-    resetTab();
-    setModelNameState(event.target.value);
+  const handleChange = async (event: SelectChangeEvent) => {
+    const targetProt = portList.find(
+      ({ port }) => port.imei === event.target.value
+    );
+    const targetModelName = targetProt.modelVersion?.split("_")[0];
+    const targetFwVer =
+      targetProt.modelVersion?.split("_")[
+        targetProt.modelVersion?.split("_").length - 1
+      ];
+
+    const targetModelHasIdbData = await checkModelDataExists(targetModelName);
+
+    if (targetModelHasIdbData) {
+      setImei(event.target.value);
+      resetTab();
+      setModelNameState(event.target.value);
+      return;
+    } else {
+      setModelNameFromModelInfoStore(targetModelName);
+      setFwVerFromModelInfoStore(targetFwVer);
+      router.replace(`/device-configuration`);
+    }
+
+    // setImei(event.target.value);
+    // resetTab();
+    // setModelNameState(event.target.value);
   };
 
   const handleUploadProfileConfirm = () => {

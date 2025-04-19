@@ -26,6 +26,9 @@ import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { useTranslations } from "next-intl";
+import { checkModelDataExists } from "@/utils/idbModelUtil";
+import { useRouter } from "next/navigation";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 const DELAY_MS = 100;
 
@@ -33,6 +36,7 @@ export default function Controller() {
   const { getCurrentImei, setImei, resetTab } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const t = useTranslations();
+  const router = useRouter();
   const [modelName, setModelName] = useState<string>(imei);
   const [path, setPath] = useState<File>();
   const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
@@ -46,6 +50,11 @@ export default function Controller() {
   } = useSerial();
   const { setPackageFetchingStart } = useSerialStore();
   const currentPort = portList.find(({ port }) => port.imei === imei);
+
+  const {
+    setModelName: setModelNameFromModelInfoStore,
+    setFwVer: setFwVerFromModelInfoStore,
+  } = useModelInfoStore();
 
   const {
     state: { isDownloading, percentage },
@@ -62,10 +71,28 @@ export default function Controller() {
   const [loadModal, loadModalToggle] = useModal();
   const [uploadModal, uploadModalToggle] = useModal();
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setImei(event.target.value);
-    resetTab();
-    setModelName(event.target.value);
+  const handleChange = async (event: SelectChangeEvent) => {
+    const targetProt = portList.find(
+      ({ port }) => port.imei === event.target.value
+    );
+    const targetModelName = targetProt?.modelVersion?.split("_")[0];
+    const targetFwVer =
+      targetProt?.modelVersion?.split("_")[
+        targetProt?.modelVersion?.split("_").length - 1
+      ];
+
+    const targetModelHasIdbData = await checkModelDataExists(targetModelName);
+
+    if (targetModelHasIdbData) {
+      setImei(event.target.value);
+      resetTab();
+      setModelName(event.target.value);
+      return;
+    } else {
+      setModelNameFromModelInfoStore(targetModelName);
+      setFwVerFromModelInfoStore(targetFwVer);
+      router.replace(`/device-configuration`);
+    }
   };
   const handleApply = () => {
     applyModalToggle();
@@ -261,6 +288,7 @@ export default function Controller() {
               </MenuItem>
             );
           })}
+          <MenuItem value={"test"}>test</MenuItem>
         </Select>
         {!currentPort.isDisconnected ? (
           <Button
