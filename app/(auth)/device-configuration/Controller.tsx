@@ -1,5 +1,15 @@
-import { Button, IconButton, Radio, Stack, Tooltip, Chip } from "@mui/material";
-import React, { useRef } from "react";
+import {
+  Button,
+  IconButton,
+  Radio,
+  Stack,
+  Tooltip,
+  Chip,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+} from "@mui/material";
+import React, { useRef, useState } from "react";
 import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
@@ -15,6 +25,8 @@ import {
 } from "@/src/api/services/profile";
 import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
+import useSerial from "@/src/hooks/useSerial";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 interface ModelInfoControllerProps {
   modelName: string;
@@ -30,6 +42,15 @@ export default function ModelInfoController({
   onRefreshJsonPacket,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
+
+  const { setImei, resetTab, getCurrentImei } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
+  const [modelNameState, setModelNameState] = useState<string>(imei);
+  const {
+    state: { portList },
+    func: { setIsDisconnected, setIsConnected },
+  } = useSerial();
+  const currentPort = portList.find(({ port }) => port.imei === modelNameState);
 
   const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
@@ -109,6 +130,12 @@ export default function ModelInfoController({
   //     console.error("Error creating download link:", error);
   //   }
   // };
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setImei(event.target.value);
+    resetTab();
+    setModelNameState(event.target.value);
+  };
 
   const handleUploadProfileConfirm = () => {
     // TODO: 일단 고정 string으로 생성하여 보내도록 구현함
@@ -272,7 +299,52 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
           <IconButton onClick={onRefreshJsonPacket}>
             <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
           </IconButton>
+          <Select
+            value={modelNameState}
+            onChange={handleChange}
+            sx={{ width: 168 }}
+          >
+            {portList.map(({ modelVersion, imei }, idx) => {
+              return (
+                <MenuItem key={idx.toString()} value={imei}>
+                  {modelVersion?.split("_")[0]}({imei})
+                </MenuItem>
+              );
+            })}
+          </Select>
+          {!currentPort.isDisconnected ? (
+            <Button
+              variant="outlined"
+              color="secondary"
+              disabled={
+                !currentPort.port.readable && !currentPort.port.writable
+              }
+              onClick={() => {
+                setIsDisconnected({ imei: currentPort.port.imei });
+              }}
+            >
+              {t("configuration.profile_menu.disconnect")}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="secondary"
+              disabled={
+                !currentPort.port.readable && !currentPort.port.writable
+              }
+              onClick={() => {
+                setIsConnected({ imei: currentPort.port.imei });
+              }}
+            >
+              {t("configuration.profile_menu.connect")}
+            </Button>
+          )}
         </Stack>
+        {/* <Stack direction="row" gap="8px" alignItems="center">
+          <IconButton onClick={onRefreshJsonPacket}>
+            <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
+          </IconButton>
+        </Stack> */}
 
         {/* Apply Modal */}
         <Modal
