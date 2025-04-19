@@ -154,6 +154,15 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
 
   const handleImageChange = (e) => {
     const imageFile = e.target.files[0];
+
+    if (imageFile.size > 5 * 1024 * 1024) {
+      openErrorPopup(
+        t("popup.model.add_model_pop_up.the_image_file_size_is_too_large")
+      );
+      e.target.value = ""; // 파일 선택 취소
+      return;
+    }
+
     if (imageFile) {
       const reader = new FileReader();
       reader.onloadend = () => {

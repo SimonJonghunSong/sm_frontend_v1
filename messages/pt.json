@@ -1650,7 +1650,8 @@
       "add_model_pop_up": {
         "added_successfully!": "Adicionado com sucesso!",
         "this_model_name_is_already_registered": "Este nome de modelo já está registrado.",
-        "are_you_sure_you_want_to_leave_this_page_without_adding?": "Você tem certeza de que deseja sair desta página sem adicionar?"
+        "are_you_sure_you_want_to_leave_this_page_without_adding?": "Você tem certeza de que deseja sair desta página sem adicionar?",
+        "the_image_file_size_is_too_large": "O arquivo é muito grande. \nFaça o upload de um arquivo menor que 5 MB."
       },
       "edit_model_pop_up": {
         "saved_successfully!": "Salvo com sucesso!",
