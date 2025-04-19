@@ -95,59 +95,30 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
   };
 
   return (
-    <div style={{ width: "100%", maxWidth: "100%", overflowX: "hidden" }}>
-      <Stack
-        flexWrap="wrap"
-        direction="row"
-        gap={"20px"}
-        sx={{ width: "100%" }}
-      >
-        {transformedFields.map((field, index) => {
-          if (field.type === "button") {
-            return (
-              <Stack
-                key={index}
-                direction="row"
-                alignItems="center"
-                gap="8px"
-                height="56px"
-                width="calc(50% - 10px)"
-                sx={{ minWidth: "200px" }}
-              >
-                <Stack flex={1}>{field.title}</Stack>
-                <div>
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    onClick={() => handleSend(field.JSON_ID)}
-                  >
-                    {t("configuration.commands.send")}
-                  </Button>
-                </div>
-              </Stack>
-            );
-          } else {
-            return (
-              <InputField
-                key={index}
-                field={field}
-                onSend={(value) => handleInputChange(field.JSON_ID, value)}
-              />
-            );
-          }
-        })}
-      </Stack>
-
+    <div
+      style={{
+        width: "100%",
+        maxWidth: "100%",
+        overflowX: "hidden",
+        height: "80vh",
+        overflowY: "auto",
+        padding: "20px",
+        paddingTop: "0px",
+      }}
+    >
       {/* 명령 로그 표시 영역 */}
       <div
         className={styles.logWrap}
         style={{
-          marginTop: "20px",
+          marginBottom: "20px",
           height: "300px",
           width: "100%",
           border: "1px solid #e0e0e0",
           borderRadius: "8px",
           boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+          position: "sticky",
+          top: 0,
+          zIndex: 2,
         }}
       >
         <div
@@ -254,6 +225,47 @@ const Commands = ({ data, imei }: { data: any; imei: string }) => {
           )}
         </div>
       </div>
+      <Stack
+        flexWrap="wrap"
+        direction="row"
+        gap={"20px"}
+        sx={{ width: "100%" }}
+      >
+        {transformedFields.map((field, index) => {
+          if (field.type === "button") {
+            return (
+              <Stack
+                key={index}
+                direction="row"
+                alignItems="center"
+                gap="8px"
+                height="56px"
+                width="calc(50% - 10px)"
+                sx={{ minWidth: "200px" }}
+              >
+                <Stack flex={1}>{field.title}</Stack>
+                <div>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => handleSend(field.JSON_ID)}
+                  >
+                    {t("configuration.commands.send")}
+                  </Button>
+                </div>
+              </Stack>
+            );
+          } else {
+            return (
+              <InputField
+                key={index}
+                field={field}
+                onSend={(value) => handleInputChange(field.JSON_ID, value)}
+              />
+            );
+          }
+        })}
+      </Stack>
     </div>
   );
 };
