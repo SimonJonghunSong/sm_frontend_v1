@@ -234,7 +234,7 @@ export default function Controller() {
             {t("configuration.profile_menu.upload")}
           </Button>
         </Tooltip>
-        <IconButton onClick={getProfileAllData}>
+        <IconButton onClick={() => getProfileAllData(true)}>
           <FileDownloadOutlinedIcon sx={{ color: "var(--black)" }} />
         </IconButton>
       </Stack>

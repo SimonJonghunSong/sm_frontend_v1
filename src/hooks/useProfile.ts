@@ -305,7 +305,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     });
   };
 
-  const getProfileAllData = async () => {
+  const getProfileAllData = async (isDownload: boolean = true) => {
     setPercentage(0);
     setIsDownloading(true);
     await getJsonPkg({});
@@ -370,14 +370,18 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
       type: "text/plain;charset=utf-8",
     });
 
-    fileDownload(
-      blob,
-      `${port.modelinfo.split("_")[0]}_${
-        port.modelinfo.split("_")[port.modelinfo.split("_").length - 1]
-      }.profile`
-    );
+    if (isDownload) {
+      fileDownload(
+        blob,
+        `${port.modelinfo.split("_")[0]}_${
+          port.modelinfo.split("_")[port.modelinfo.split("_").length - 1]
+        }.profile`
+      );
+    }
 
     setIsDownloading(false);
+
+    return text;
   };
 
   return {
