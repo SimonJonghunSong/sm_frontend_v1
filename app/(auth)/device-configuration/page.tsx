@@ -277,7 +277,7 @@ const ModelInfoPage = () => {
     currentPort.port.ismodelinfofetching,
   ]);
 
-  const { deviceVersionsObject } = useDeviceVersions({
+  const { deviceVersionsObject, isLoading } = useDeviceVersions({
     isFechedPackage,
     currentPort,
     write,
@@ -285,7 +285,7 @@ const ModelInfoPage = () => {
 
   return (
     <div className="pageWrap">
-      {isFullLoading && <FullLoading />}
+      {(isFullLoading || isLoading) && <FullLoading />}
       <SideMenu
         sideMenuItems={sideBarList}
         activeTab={tab}

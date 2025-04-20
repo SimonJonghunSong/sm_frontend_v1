@@ -43,6 +43,8 @@ const updateIndexedDB = async (
 const DELAY_MS = 300;
 
 const useSerial = () => {
+  const fetchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const altDataBufferRef = useRef("");
   const sttDataBufferRef = useRef("");
   const deviceVersionsBufferRef = useRef("");
@@ -346,9 +348,21 @@ const useSerial = () => {
                 });
               }
             } else if (
-              value.includes("$PST;CSV;") ||
+              port.isCsvFetching ||
               csvBufferRef.current.get(port.imei)
             ) {
+              if (!fetchTimeoutRef.current) {
+                fetchTimeoutRef.current = setTimeout(() => {
+                  window.alert(
+                    "Port not responding after 10 seconds, read page and try again"
+                  );
+                  port.isCsvFetching = false;
+                  port.onEndCsvDataFetched = null;
+                  port.onCsvDataFetched = null;
+                  window.location.reload();
+                }, 10000);
+              }
+
               const csv = csvBufferRef.current.get(port.imei);
               csvBufferRef.current.set(
                 port.imei,
@@ -363,7 +377,13 @@ const useSerial = () => {
               );
 
               port?.onCsvDataFetched?.(value);
+
               if (isEndOfMessage(value)) {
+                if (fetchTimeoutRef.current) {
+                  clearTimeout(fetchTimeoutRef.current);
+                  fetchTimeoutRef.current = null;
+                }
+
                 port.isCsvFetching = false;
                 port.onEndCsvDataFetched?.();
                 csvBufferRef.current.set(port.imei, "");

@@ -93,6 +93,7 @@ export default function useDeviceVersions({
   currentPort: any;
   write: any;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const deviceVersionsObjectRef = useRef<Record<string, string>>({});
   const [deviceVersionsObject, setDeviceVersionsObject] = useState<
     Record<string, string>
@@ -113,6 +114,7 @@ export default function useDeviceVersions({
     }
 
     if (currentPort.port.isReadyToUse && isFechedPackage) {
+      setIsLoading(true);
       console.log("ready~~!!!");
       const DELAY_MS = 100;
 
@@ -156,8 +158,9 @@ export default function useDeviceVersions({
   useEffect(() => {
     if (isFechedDeviceVersions) {
       setDeviceVersionsObject(deviceVersionsObjectRef.current);
+      setIsLoading(false);
     }
   }, [isFechedDeviceVersions]);
 
-  return { deviceVersionsObject };
+  return { deviceVersionsObject, isLoading };
 }

@@ -65,8 +65,6 @@ export default function NetworkStatusCheck() {
 
   // Sync Service Worker
   useEffect(() => {
-    console.log("test ::::");
-
     if (FORCE_ONLINE_MODE_PATHS.includes(pathname)) {
       sendMessage({
         type: "SYNC_NETWORK_STATE",

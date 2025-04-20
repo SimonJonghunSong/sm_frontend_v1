@@ -185,8 +185,6 @@ export default function page() {
     if (currentPort.port.isReadyToUse) {
       currentPort.port.isCsvFetching = true;
       currentPort.port.onCsvDataFetched = (data) => {
-        console.log("data :::::", data);
-
         csvDataRef.current += data;
       };
       currentPort.port.onEndCsvDataFetched = () => {
@@ -232,8 +230,6 @@ export default function page() {
 
           currentPort.port.isAltDataFetching = true;
           currentPort.port.onEndCurrentAltDataFetched = (data) => {
-            console.log("ttttt ::::", data);
-
             const currentCsvData = data.split("RES;0000000000;05;08;")[1];
             const currentCsvValuesArray = currentCsvData
               .replaceAll("\r", "")
