@@ -86,11 +86,6 @@ function Before({ setStep, requestPort }) {
         >
           {t("device_detecting.detect_device")}
         </Button>
-        <FormControlLabel
-          value="AutoConnect"
-          control={<Checkbox />}
-          label="Auto-Connect"
-        />
       </Stack>
     </>
   );
@@ -146,12 +141,6 @@ function Ing({
           >
             {t("device_detecting.cancel")}
           </Button>
-          <FormControlLabel
-            value="AutoConnect"
-            control={<Checkbox />}
-            label="Auto-Connect"
-            disabled
-          />
         </Stack>
       </>
     );
@@ -181,11 +170,6 @@ function Failed({ setStep }) {
         >
           {t("device_detecting.retry")}
         </Button>
-        <FormControlLabel
-          value="AutoConnect"
-          control={<Checkbox />}
-          label={t("device_detecting.auto-connect")}
-        />
       </Stack>
     </>
   );

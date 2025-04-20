@@ -267,10 +267,7 @@
       "network_*": "Network",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -345,10 +342,7 @@
       "network_*": "Network",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Features",
       "wi-fi": "Wi-Fi",
@@ -378,7 +372,6 @@
     "device_detecting": {
       "please_plug_devices_into_the_usb_ports": "Please plug devices into the USB ports.",
       "detect_device": "Detect Device",
-      "auto-connect": "Auto-Connect",
       "detecting_devices": "Detecting devices...",
       "cancel": "Cancel",
       "no_devices_detected": "No devices detected.",
