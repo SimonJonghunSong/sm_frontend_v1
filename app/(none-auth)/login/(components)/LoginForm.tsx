@@ -193,13 +193,6 @@ export default function LoginForm({
               }
               setCountryData={(country) => {
                 setIsUndefinedCountry(false);
-                setLang(
-                  country === "brasil"
-                    ? "pt"
-                    : country === "méxico"
-                    ? "es"
-                    : "en"
-                );
                 setSelectCountry(country);
               }}
             />
