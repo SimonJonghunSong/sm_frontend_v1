@@ -12,8 +12,14 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { CR } from "@/src/hooks/useSerial/constant";
 import dayjs from "dayjs";
+import useCommandStore from "@/utils/useCommandStore";
+import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 
-const columns = (handleSend: (message: string) => void): GridColDef[] => [
+const columns = (
+  handleSend: (message: string, updateIndex?: number) => void,
+  handleDelete: (idx: number) => void,
+  updateCommand: (id: number, message: string) => void
+): GridColDef[] => [
   {
     field: "col1",
     headerName: "No.",
@@ -38,7 +44,13 @@ const columns = (handleSend: (message: string) => void): GridColDef[] => [
               height: 30,
             },
           }}
-          defaultValue={params.value.value}
+          value={params.value.value}
+          onChange={(e) => {
+            const newValue = e.target.value;
+            console.log("newValue :::", newValue);
+            console.log("params.value.id :::", params.value.id);
+            updateCommand(params.value.id, newValue);
+          }}
         />
       </Stack>
     ),
@@ -56,135 +68,32 @@ const columns = (handleSend: (message: string) => void): GridColDef[] => [
         sx={{ width: 60, height: 30 }}
         onClick={(e) => {
           e.stopPropagation();
-          handleSend(params.row.col2.value);
+
+          handleSend(params.row.col2.value, params.row.id);
         }}
       >
         Send
       </Button>
     ),
   },
-];
+  {
+    field: "col4",
+    headerName: "Delete",
+    width: 80,
+    headerAlign: "center",
+    align: "center",
+    renderCell: (params) => (
+      <IconButton
+        onClick={(e) => {
+          console.log("params :::", params);
 
-const rows = [
-  {
-    id: 0,
-    col1: "01",
-    col2: { id: "1", value: "AT^$PSTDBG=E" },
-    col3: { id: "1" },
-  },
-  {
-    id: 1,
-    col1: "02",
-    col2: { id: "1", value: "AT^$PSTDBG=G" },
-    col3: { id: "1" },
-  },
-  {
-    id: 2,
-    col1: "03",
-    col2: { id: "1", value: "AT^$ESN_READ=" },
-    col3: { id: "1" },
-  },
-  {
-    id: 3,
-    col1: "04",
-    col2: { id: "1", value: "AT^$StartFM" },
-    col3: { id: "1" },
-  },
-  {
-    id: 4,
-    col1: "05",
-    col2: { id: "1", value: "AT^$FRCSLP" },
-    col3: { id: "1" },
-  },
-  {
-    id: 5,
-    col1: "06",
-    col2: { id: "1", value: "AT^CMD;;01;02" },
-    col3: { id: "1" },
-  },
-  {
-    id: 6,
-    col1: "07",
-    col2: { id: "1", value: "AT^CMD;;01;03" },
-    col3: { id: "1" },
-  },
-  {
-    id: 7,
-    col1: "08",
-    col2: { id: "1", value: "AT+CPIN?" },
-    col3: { id: "1" },
-  },
-  {
-    id: 8,
-    col1: "09",
-    col2: { id: "1", value: "AT+CEREG?" },
-    col3: { id: "1" },
-  },
-  {
-    id: 9,
-    col1: "10",
-    col2: { id: "1", value: "AT+QJDR?" },
-    col3: { id: "1" },
-  },
-  {
-    id: 10,
-    col1: "11",
-    col2: { id: "1", value: "AT^$PSTDBG=E" },
-    col3: { id: "1" },
-  },
-  {
-    id: 11,
-    col1: "12",
-    col2: { id: "1", value: "AT^$PSTDBG=G" },
-    col3: { id: "1" },
-  },
-  {
-    id: 12,
-    col1: "13",
-    col2: { id: "1", value: "AT^$ESN_READ=" },
-    col3: { id: "1" },
-  },
-  {
-    id: 13,
-    col1: "14",
-    col2: { id: "1", value: "AT^$StartFM" },
-    col3: { id: "1" },
-  },
-  {
-    id: 14,
-    col1: "15",
-    col2: { id: "1", value: "AT^$FRCSLP" },
-    col3: { id: "1" },
-  },
-  {
-    id: 15,
-    col1: "16",
-    col2: { id: "1", value: "AT^CMD;;01;02" },
-    col3: { id: "1" },
-  },
-  {
-    id: 16,
-    col1: "17",
-    col2: { id: "1", value: "AT^CMD;;01;03" },
-    col3: { id: "1" },
-  },
-  {
-    id: 17,
-    col1: "18",
-    col2: { id: "1", value: "AT+CPIN?" },
-    col3: { id: "1" },
-  },
-  {
-    id: 18,
-    col1: "19",
-    col2: { id: "1", value: "AT+CEREG?" },
-    col3: { id: "1" },
-  },
-  {
-    id: 19,
-    col1: "20",
-    col2: { id: "1", value: "AT+QJDR?" },
-    col3: { id: "1" },
+          e.stopPropagation();
+          handleDelete(params.row.id);
+        }}
+      >
+        <DeleteForeverOutlinedIcon />
+      </IconButton>
+    ),
   },
 ];
 
@@ -229,8 +138,22 @@ export default function ResponseLog({
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
-  const handleSendMessage = (message: string) => {
+  const { commands, addCommand, removeCommand, updateCommand } =
+    useCommandStore();
+  const rows = commands.map((command, idx) => ({
+    id: command.id,
+    col1: `${idx + 1}`,
+    col2: { id: command.id, value: command.message },
+    col3: { id: command.id },
+    col4: { id: command.id },
+  }));
+
+  const handleSendMessage = (message: string, updateIndex?: number) => {
     console.log("message :::::", message);
+
+    if (updateIndex === undefined) {
+      addCommand(message);
+    }
 
     try {
       const port = currentPort.port;
@@ -415,7 +338,11 @@ export default function ResponseLog({
               <div>
                 <DataTable
                   rows={rows}
-                  columns={columns(handleSendMessage)}
+                  columns={columns(
+                    handleSendMessage,
+                    removeCommand,
+                    updateCommand
+                  )}
                   rowHeight={42}
                   disablePagination
                   disableRowClick
@@ -437,7 +364,7 @@ export default function ResponseLog({
                 for (const idx of selectedIdxs) {
                   const target = rows[idx];
 
-                  handleSendMessage(target.col2.value);
+                  handleSendMessage(target.col2.value, idx);
 
                   console.log("asdasd ::::");
 
