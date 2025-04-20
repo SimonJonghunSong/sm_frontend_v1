@@ -312,11 +312,11 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
           toggleOpen={uploadModalToggle}
           title="Confirm"
           confirm={handleUploadProfileConfirm}
-          confirmButtonText="Save"
+          confirmButtonText="Yes"
           width="360px"
         >
           <Stack>
-            <span>Are you sure you want to upload profile to Scuti?</span>
+            <span>Are you sure you want to upload the profile to Scuti?</span>
           </Stack>
         </Modal>
       </Stack>

@@ -276,10 +276,6 @@ export default function Page() {
               <Maps
                 apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
                 zoom={13}
-                center={{
-                  lat: 37.564823,
-                  lng: 126.976951,
-                }}
                 drawingModes={
                   (type === "circular"
                     ? ["circle"]

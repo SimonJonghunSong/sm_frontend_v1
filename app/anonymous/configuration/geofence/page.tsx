@@ -111,11 +111,6 @@ const columns: GridColDef[] = [
   },
 ];
 
-const center = {
-  lat: 37.564823,
-  lng: 126.976951,
-};
-
 export default function Page() {
   const router = useRouter();
   const { getCurrentImei } = useSerialConfigurationStore();
@@ -468,7 +463,6 @@ export default function Page() {
                 ref={mapRef}
                 apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
                 zoom={13}
-                center={center}
                 drawingModes={
                   ["circle", "polygon"] as google.maps.drawing.OverlayType[]
                 }

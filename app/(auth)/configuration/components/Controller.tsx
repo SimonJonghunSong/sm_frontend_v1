@@ -106,15 +106,7 @@ export default function Controller() {
   const handleUpload = () => {
     uploadModalToggle();
   };
-  const handleClosePort = () => {
-    close({
-      port: currentPort.port,
-      writableStreamClosed: currentPort.writableStreamClosed,
-      readableStreamClosed: currentPort.readableStreamClosed,
-      reader: currentPort.reader,
-      writer: currentPort.writer,
-    });
-  };
+
   const handleRefreshJsonPacket = async () => {
     setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
@@ -277,8 +269,22 @@ export default function Controller() {
       </Stack>
 
       <Stack direction="row" gap="8px" alignItems="center">
-        <IconButton onClick={handleRefreshJsonPacket}>
-          <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
+        <IconButton
+          disabled={
+            (!currentPort.port.readable && !currentPort.port.writable) ||
+            currentPort.isDisconnected
+          }
+          onClick={handleRefreshJsonPacket}
+        >
+          <RefreshOutlinedIcon
+            sx={{
+              color:
+                (!currentPort.port.readable && !currentPort.port.writable) ||
+                currentPort.isDisconnected
+                  ? "var(--grey4)"
+                  : "var(--black)",
+            }}
+          />
         </IconButton>
         <Select value={modelName} onChange={handleChange} sx={{ width: 168 }}>
           {portList.map(({ modelVersion, imei }, idx) => {
@@ -407,7 +413,7 @@ export default function Controller() {
         width="360px"
       >
         <Stack>
-          <span>Are you sure you want to upload profile to Scuti?</span>
+          <span>Are you sure you want to upload the profile to Scuti?</span>
           {showUploadChanges && (
             <TextField
               value={"Show Changed Value..."}

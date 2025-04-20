@@ -39,11 +39,6 @@ interface AddGeofenceProps {
   onBack: () => void;
 }
 
-const center = {
-  lat: 37.564823,
-  lng: 126.976951,
-};
-
 const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
   const [type, setType] = useState<"circular" | "polygon">("circular");
   const [groupId, setGroupId] = useState<number>();
@@ -574,7 +569,6 @@ const AddGeofence = ({ imei, onBack }: AddGeofenceProps) => {
           <Maps
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
             zoom={13}
-            center={center}
             drawingModes={
               [
                 type === "circular" ? "circle" : "polygon",

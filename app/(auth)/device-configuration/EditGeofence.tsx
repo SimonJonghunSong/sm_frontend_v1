@@ -44,11 +44,6 @@ interface EditGeofenceProps {
   onBack: () => void;
 }
 
-const center = {
-  lat: 37.564823,
-  lng: 126.976951,
-};
-
 const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
   const [isFullLoading, setIsFullLoading] = useState(true);
   const [enterAlert, setEnterAlert] = useState(false);
@@ -854,7 +849,6 @@ const EditGeofence = ({ imei, groupId, type, onBack }: EditGeofenceProps) => {
               ref={mapRef}
               apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
               zoom={13}
-              center={center}
               drawingModes={
                 [
                   type === "circular" ? "circle" : "polygon",

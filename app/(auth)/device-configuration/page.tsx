@@ -38,7 +38,6 @@ import Geofence from "./Geofence";
 import DeviceStausConfiguration from "./(components)/DeviceStausConfiguration/page";
 import AssignHeader from "app/(auth)/device-configuration/AssignHeader";
 import useCmdStore from "@/src/stores/useCmdStore";
-import styles from "./styles.module.scss";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 
 const SIDE_BAR = "Side Bar";

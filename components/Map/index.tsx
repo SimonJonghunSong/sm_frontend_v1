@@ -85,7 +85,7 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
             position.coords.latitude,
             position.coords.longitude
           );
-          map.setCenter(currentLocation || center);
+          map.setCenter(center || currentLocation);
         });
 
         if (!ref) return;

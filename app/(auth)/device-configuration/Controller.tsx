@@ -327,8 +327,22 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
         </Stack>
 
         <Stack direction="row" gap="8px" alignItems="center">
-          <IconButton onClick={onRefreshJsonPacket}>
-            <RefreshOutlinedIcon sx={{ color: "var(--black)" }} />
+          <IconButton
+            disabled={
+              (!currentPort.port.readable && !currentPort.port.writable) ||
+              currentPort.isDisconnected
+            }
+            onClick={onRefreshJsonPacket}
+          >
+            <RefreshOutlinedIcon
+              sx={{
+                color:
+                  (!currentPort.port.readable && !currentPort.port.writable) ||
+                  currentPort.isDisconnected
+                    ? "var(--grey4)"
+                    : "var(--black)",
+              }}
+            />
           </IconButton>
           <Select
             value={modelNameState}
@@ -424,11 +438,11 @@ GEOCONF,PRG;;90;00#01;01#01;02#01
           toggleOpen={uploadModalToggle}
           title="Confirm"
           confirm={handleUploadProfileConfirm}
-          confirmButtonText="Save"
+          confirmButtonText="Yes"
           width="360px"
         >
           <Stack>
-            <span>Are you sure you want to upload profile to Scuti?</span>
+            <span>Are you sure you want to upload the profile to Scuti?</span>
           </Stack>
         </Modal>
       </Stack>

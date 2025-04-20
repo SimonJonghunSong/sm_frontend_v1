@@ -1,22 +1,13 @@
 "use client";
 
-import sampleMap from "/public/images/sample-map.png";
-import {
-  Box,
-  Button,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Stack,
-} from "@mui/material";
-import React, { useState } from "react";
+import { Box, Button, Stack } from "@mui/material";
+import React from "react";
 import Controller from "../components/Controller";
-import Image from "next/image";
-import InputBox from "../../../../components/inputbox/InputBox";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 import FullLoading from "@/components/FullLoading";
+import Maps from "@/components/Map";
 
 export default function Page() {
   const { getCurrentImei } = useSerialConfigurationStore();
@@ -26,12 +17,7 @@ export default function Page() {
     state: { portList },
   } = useSerial();
   const currentPort = portList.find(({ port }) => port.imei === imei);
-  const [version, setVersion] = useState<string>("1.1.1");
   const modelName = currentPort.modelVersion?.split("_")[0] || "";
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setVersion(event.target.value);
-  };
 
   const { deviceVersionsObject, isLoading } = useDeviceVersions({
     isFechedPackage: true,
@@ -39,7 +25,13 @@ export default function Page() {
     write,
   });
 
-  console.log("deviceVersionsObject :::", deviceVersionsObject);
+  const handleReboot = async () => {
+    await write({
+      data: `AT^CMD;${imei};03;03`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
 
   return (
     <>
@@ -109,7 +101,7 @@ export default function Page() {
                 borderBottom="1px solid var(--grey3)"
               >
                 <div className="list-title">RTC Time</div>
-                <div>Jan/01/2024 18:04:39</div>
+                <div>-</div>
               </Stack>
             </Stack>
 
@@ -132,7 +124,7 @@ export default function Page() {
                 borderBottom="1px solid var(--grey3)"
               >
                 <div className="list-title">GPS modem F/W</div>
-                <div>1.1.1</div>
+                <div>-</div>
               </Stack>
 
               <Stack
@@ -163,7 +155,7 @@ export default function Page() {
                 borderBottom="1px solid var(--grey3)"
               >
                 <div className="list-title">WWAN State</div>
-                <div>Connected with Server</div>
+                <div>-</div>
               </Stack>
               <Stack
                 direction="row"
@@ -178,6 +170,7 @@ export default function Page() {
                     variant="outlined"
                     color="secondary"
                     sx={{ height: 30 }}
+                    onClick={handleReboot}
                   >
                     Reboot
                   </Button>
@@ -189,11 +182,25 @@ export default function Page() {
           <Stack direction="row" gap="40px">
             <Stack sx={{ width: "50%" }}>
               <div className="pageTitle">GNSS Information</div>
-              <Box>
-                <Image
-                  src={sampleMap}
-                  alt="sampleMap"
-                  style={{ display: "block", width: "100%", height: "auto" }}
+              <Box sx={{ width: "100%", height: "400px" }}>
+                <Maps
+                  apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
+                  center={{
+                    lat: currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lat
+                      ? Number(
+                          currentPort.packageToJson.synctrak?.[0]?.info?.[0]
+                            ?.lat
+                        )
+                      : undefined,
+                    lng: currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lng
+                      ? Number(
+                          currentPort.packageToJson.synctrak?.[0]?.info?.[0]
+                            ?.lng
+                        )
+                      : undefined,
+                  }}
+                  disableDrawing
+                  zoom={15}
                 />
               </Box>
               <Stack
@@ -230,7 +237,7 @@ export default function Page() {
                 borderBottom="1px solid var(--grey3)"
               >
                 <div className="list-title">Angle</div>
-                <div>0.744</div>
+                <div>-</div>
               </Stack>
               <Stack
                 direction="row"
@@ -240,7 +247,7 @@ export default function Page() {
                 borderBottom="1px solid var(--grey3)"
               >
                 <div className="list-title">Speed</div>
-                <div>0 km/h</div>
+                <div>-</div>
               </Stack>
             </Stack>
 
@@ -258,7 +265,7 @@ export default function Page() {
                     <span>Modem Status</span>
                   </Stack>
                 </div>
-                <div>On</div>
+                <div>-</div>
               </Stack>
               <Stack
                 direction="row"
@@ -272,7 +279,7 @@ export default function Page() {
                     <span>Network Status</span>
                   </Stack>
                 </div>
-                <div>Activated</div>
+                <div>-</div>
               </Stack>
 
               <Stack
@@ -287,7 +294,7 @@ export default function Page() {
                     <span>Current Operator</span>
                   </Stack>
                 </div>
-                <div>42402</div>
+                <div>-</div>
               </Stack>
               <Stack
                 direction="row"
@@ -301,7 +308,7 @@ export default function Page() {
                     <span>Signal Level</span>
                   </Stack>
                 </div>
-                <div>Excellent Signal</div>
+                <div>-</div>
               </Stack>
               <Stack
                 direction="row"
@@ -315,7 +322,7 @@ export default function Page() {
                     <span>Socket Type</span>
                   </Stack>
                 </div>
-                <div>Avl data sending</div>
+                <div>-</div>
               </Stack>
               <Stack
                 direction="row"
@@ -329,7 +336,7 @@ export default function Page() {
                     <span>Socket</span>
                   </Stack>
                 </div>
-                <div>13.0.0.0 : 27676 (TCP)</div>
+                <div>-</div>
               </Stack>
             </Stack>
           </Stack>

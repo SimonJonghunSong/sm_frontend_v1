@@ -1,32 +1,33 @@
 "use client";
 
-import sampleMap from "/public/images/sample-map.png";
-import { Box, Button, SelectChangeEvent, Stack } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { Box, Button, Stack } from "@mui/material";
+import React, { useRef } from "react";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
+import Maps from "@/components/Map";
 
 export default function DeviceStausConfiguration({
   deviceVersionsObject,
 }: {
   deviceVersionsObject: Record<string, string>;
 }) {
+  const mapRef = useRef<google.maps.Map | null>(null);
   const { getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const {
     state: { portList },
+    func: { write },
   } = useSerial();
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort.modelVersion?.split("_")[0] || "";
 
-  const { formData, originData } = useTransformConfigDataWithModelInfo({
-    data: portList.find(({ port }) => port.imei === imei)?.packageToJson
-      .synctrak,
-  });
-
-  console.log(formData, originData);
+  const handleReboot = async () => {
+    await write({
+      data: `AT^CMD;${imei};03;03`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
 
   return (
     <div className="pageWrap" style={{ width: "100%" }}>
@@ -92,7 +93,7 @@ export default function DeviceStausConfiguration({
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">RTC Time</div>
-              <div>Jan/01/2024 18:04:39</div>
+              <div>-</div>
             </Stack>
           </Stack>
 
@@ -115,7 +116,7 @@ export default function DeviceStausConfiguration({
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">GPS modem F/W</div>
-              <div>1.1.1</div>
+              <div>-</div>
             </Stack>
 
             <Stack
@@ -146,7 +147,7 @@ export default function DeviceStausConfiguration({
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">WWAN State</div>
-              <div>Connected with Server</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -161,6 +162,7 @@ export default function DeviceStausConfiguration({
                   variant="outlined"
                   color="secondary"
                   sx={{ height: 30 }}
+                  onClick={handleReboot}
                 >
                   Reboot
                 </Button>
@@ -172,11 +174,24 @@ export default function DeviceStausConfiguration({
         <Stack direction="row" gap="40px">
           <Stack sx={{ width: "50%" }}>
             <div className="pageTitle">GNSS Information</div>
-            <Box>
-              <Image
-                src={sampleMap}
-                alt="sampleMap"
-                style={{ display: "block", width: "100%", height: "auto" }}
+            <Box sx={{ width: "100%", height: "400px" }}>
+              <Maps
+                ref={mapRef}
+                apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
+                center={{
+                  lat: currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lat
+                    ? Number(
+                        currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lat
+                      )
+                    : undefined,
+                  lng: currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lng
+                    ? Number(
+                        currentPort.packageToJson.synctrak?.[0]?.info?.[0]?.lng
+                      )
+                    : undefined,
+                }}
+                disableDrawing
+                zoom={15}
               />
             </Box>
             <Stack
@@ -211,7 +226,7 @@ export default function DeviceStausConfiguration({
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Angle</div>
-              <div>0.744</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -221,7 +236,7 @@ export default function DeviceStausConfiguration({
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Speed</div>
-              <div>0 km/h</div>
+              <div>-</div>
             </Stack>
           </Stack>
 
@@ -239,7 +254,7 @@ export default function DeviceStausConfiguration({
                   <span>Modem Status</span>
                 </Stack>
               </div>
-              <div>On</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -253,7 +268,7 @@ export default function DeviceStausConfiguration({
                   <span>Network Status</span>
                 </Stack>
               </div>
-              <div>Activated</div>
+              <div>-</div>
             </Stack>
 
             <Stack
@@ -268,7 +283,7 @@ export default function DeviceStausConfiguration({
                   <span>Current Operator</span>
                 </Stack>
               </div>
-              <div>42402</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -282,7 +297,7 @@ export default function DeviceStausConfiguration({
                   <span>Signal Level</span>
                 </Stack>
               </div>
-              <div>Excellent Signal</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -296,7 +311,7 @@ export default function DeviceStausConfiguration({
                   <span>Socket Type</span>
                 </Stack>
               </div>
-              <div>Avl data sending</div>
+              <div>-</div>
             </Stack>
             <Stack
               direction="row"
@@ -310,7 +325,7 @@ export default function DeviceStausConfiguration({
                   <span>Socket</span>
                 </Stack>
               </div>
-              <div>13.0.0.0 : 27676 (TCP)</div>
+              <div>-</div>
             </Stack>
           </Stack>
         </Stack>
