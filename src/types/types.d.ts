@@ -71,6 +71,8 @@ interface SerialPort {
   onEndCurrentAltDataFetched?: (data: string) => void;
   isSttDataFetching?: boolean;
   isAltDataFetching?: boolean;
+  isDeviceVersionsFetching?: boolean;
+  onEndDeviceVersionsFetched?: (data: string) => void;
 }
 
 interface SerialOptions {

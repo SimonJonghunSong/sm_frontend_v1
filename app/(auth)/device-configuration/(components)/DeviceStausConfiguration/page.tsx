@@ -2,20 +2,23 @@
 
 import sampleMap from "/public/images/sample-map.png";
 import { Box, Button, SelectChangeEvent, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { useTransformConfigDataWithModelInfo } from "@/src/hooks/useTransformConfigDataWithModelInfo";
 
-export default function DeviceStausConfiguration() {
+export default function DeviceStausConfiguration({
+  deviceVersionsObject,
+}: {
+  deviceVersionsObject: Record<string, string>;
+}) {
   const { getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const {
     state: { portList },
   } = useSerial();
   const currentPort = portList.find(({ port }) => port.imei === imei);
-  const [version, setVersion] = useState<string>("1.1.1");
   const modelName = currentPort.modelVersion?.split("_")[0] || "";
 
   const { formData, originData } = useTransformConfigDataWithModelInfo({
@@ -49,7 +52,7 @@ export default function DeviceStausConfiguration() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">F/W Version</div>
-              <div>{version}</div>
+              <div>{deviceVersionsObject?.Main || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -59,7 +62,7 @@ export default function DeviceStausConfiguration() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">BLE Version</div>
-              <div>B.1.0.6</div>
+              <div>{deviceVersionsObject?.BLE || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -69,7 +72,7 @@ export default function DeviceStausConfiguration() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Wifi Version</div>
-              <div>W.2.1.0</div>
+              <div>{deviceVersionsObject?.WIFI || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -79,7 +82,7 @@ export default function DeviceStausConfiguration() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">MCU Version</div>
-              <div>99.1.53</div>
+              <div>{deviceVersionsObject?.MCU || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -123,7 +126,7 @@ export default function DeviceStausConfiguration() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Backup Battery Voltage</div>
-              <div>10 mV.</div>
+              <div>{deviceVersionsObject?.BATTERY_VOLTAGE || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -133,7 +136,7 @@ export default function DeviceStausConfiguration() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">GNSS State</div>
-              <div>BNSS Fixed</div>
+              <div>{deviceVersionsObject?.GNSS || "-"}</div>
             </Stack>
             <Stack
               direction="row"

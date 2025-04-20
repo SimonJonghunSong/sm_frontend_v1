@@ -45,6 +45,7 @@ const DELAY_MS = 300;
 const useSerial = () => {
   const altDataBufferRef = useRef("");
   const sttDataBufferRef = useRef("");
+  const deviceVersionsBufferRef = useRef("");
   const modelVersionBufferRef = useRef(new Map());
   const imeiBufferRef = useRef(new Map());
   const totalGrpNoBufferRef = useRef(new Map());
@@ -407,6 +408,16 @@ const useSerial = () => {
                 port.onprev = null;
               } else {
                 port.iserrorvalue = true;
+              }
+            } else if (port.isDeviceVersionsFetching) {
+              deviceVersionsBufferRef.current += value;
+              if (isEndOfMessage(value)) {
+                port.onEndDeviceVersionsFetched?.(
+                  deviceVersionsBufferRef.current
+                );
+                port.onEndDeviceVersionsFetched = null;
+                deviceVersionsBufferRef.current = "";
+                port.isDeviceVersionsFetching = false;
               }
             } else if (port.ispolygonfetching) {
               port.polygongeofence = (port.polygongeofence || "") + value;

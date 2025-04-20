@@ -39,6 +39,7 @@ import DeviceStausConfiguration from "./(components)/DeviceStausConfiguration/pa
 import AssignHeader from "app/(auth)/device-configuration/AssignHeader";
 import useCmdStore from "@/src/stores/useCmdStore";
 import styles from "./styles.module.scss";
+import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 
 const SIDE_BAR = "Side Bar";
 const DELETE_MODEL = "Delete Model";
@@ -97,6 +98,8 @@ const ModelInfoPage = () => {
   const { getCurrentImei } = useSerialConfigurationStore();
   const { setPackageFetchingStart } = useSerialStore();
   const imei = getCurrentImei();
+
+  const [isFechedPackage, setIsFechedPackage] = useState(false);
 
   // data
   const {
@@ -258,6 +261,7 @@ const ModelInfoPage = () => {
           });
         }
         setIsFullLoading(false);
+        setIsFechedPackage(true);
       }
     };
 
@@ -272,6 +276,12 @@ const ModelInfoPage = () => {
     currentPort.port.readable,
     currentPort.port.ismodelinfofetching,
   ]);
+
+  const { deviceVersionsObject } = useDeviceVersions({
+    isFechedPackage,
+    currentPort,
+    write,
+  });
 
   return (
     <div className="pageWrap">
@@ -296,6 +306,7 @@ const ModelInfoPage = () => {
         }}
         getEditDataForPage={getEditDataForPage}
         onRefreshJsonPacket={handleRefreshJsonPacket}
+        deviceVersionsObject={deviceVersionsObject}
       />
       {renderConfirmModal()}
     </div>
@@ -315,6 +326,7 @@ const ContentByTab = ({
   onUpdateAllMenuContent,
   getEditDataForPage,
   onRefreshJsonPacket,
+  deviceVersionsObject,
 }: {
   tab: string;
   modelName: string;
@@ -326,6 +338,7 @@ const ContentByTab = ({
   onUpdateAllMenuContent: (content: ModelConfigWithData[]) => void;
   getEditDataForPage: (updatedMenuList: ModelConfigWithData[]) => string[];
   onRefreshJsonPacket: () => void;
+  deviceVersionsObject: Record<string, string>;
 }) => {
   const t = useTranslations();
   const {
@@ -745,7 +758,9 @@ const ContentByTab = ({
           >
             {tab === "Device Status" ? (
               // Device Status 탭은 그룹핑 없이 직접 렌더링
-              <DeviceStausConfiguration />
+              <DeviceStausConfiguration
+                deviceVersionsObject={deviceVersionsObject}
+              />
             ) : tab === "Commands" ? (
               <Commands data={formData} imei={imei} />
             ) : tab === "Geofence" ? (

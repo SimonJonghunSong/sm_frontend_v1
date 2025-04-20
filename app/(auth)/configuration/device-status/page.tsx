@@ -15,11 +15,13 @@ import Image from "next/image";
 import InputBox from "../../../../components/inputbox/InputBox";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 
 export default function Page() {
   const { getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const {
+    func: { write },
     state: { portList },
   } = useSerial();
   const currentPort = portList.find(({ port }) => port.imei === imei);
@@ -29,6 +31,14 @@ export default function Page() {
   const handleChange = (event: SelectChangeEvent) => {
     setVersion(event.target.value);
   };
+
+  const { deviceVersionsObject } = useDeviceVersions({
+    isFechedPackage: true,
+    currentPort,
+    write,
+  });
+
+  console.log("deviceVersionsObject :::", deviceVersionsObject);
 
   return (
     <div className="pageWrap" style={{ width: "100%" }}>
@@ -56,7 +66,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">F/W Version</div>
-              <div>{version}</div>
+              <div>{deviceVersionsObject?.Main || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -66,7 +76,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">BLE Version</div>
-              <div>B.1.0.6</div>
+              <div>{deviceVersionsObject?.BLE || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -76,7 +86,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Wifi Version</div>
-              <div>W.2.1.0</div>
+              <div>{deviceVersionsObject?.WIFI || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -86,7 +96,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">MCU Version</div>
-              <div>99.1.53</div>
+              <div>{deviceVersionsObject?.MCU || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -130,7 +140,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">Backup Battery Voltage</div>
-              <div>10 mV.</div>
+              <div>{deviceVersionsObject?.BATTERY_VOLTAGE || "-"}</div>
             </Stack>
             <Stack
               direction="row"
@@ -140,7 +150,7 @@ export default function Page() {
               borderBottom="1px solid var(--grey3)"
             >
               <div className="list-title">GNSS State</div>
-              <div>BNSS Fixed</div>
+              <div>{deviceVersionsObject?.GNSS || "-"}</div>
             </Stack>
             <Stack
               direction="row"
