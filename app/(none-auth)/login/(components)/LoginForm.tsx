@@ -263,7 +263,7 @@ export default function LoginForm({
         </InputBox.Body>
       </InputBox>
       <div className={styles.loginHelpWrap}>
-        <div>
+        {/* <div>
           <Link
             className="underlineTextButton"
             href="/find-id"
@@ -279,7 +279,7 @@ export default function LoginForm({
           >
             {t("login.find_password")}
           </Link>
-        </div>
+        </div> */}
         <div>
           <FormControlLabel
             control={
