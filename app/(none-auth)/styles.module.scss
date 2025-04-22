@@ -1,17 +1,11 @@
 .loginHelpWrap {
-    transform: translate(0, -16px);
+  transform: translate(0, -16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  > div:first-child {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    >div {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    >div:first-child {
-        color: var(--primary);
-        display: flex;
-        gap: 2px;
-    }
+    gap: 2px;
+  }
 }
