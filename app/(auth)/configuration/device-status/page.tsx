@@ -5,8 +5,6 @@ import React from "react";
 import Controller from "../components/Controller";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import useDeviceVersions from "@/src/hooks/useDeviceVersions";
-import FullLoading from "@/components/FullLoading";
 import Maps from "@/components/Map";
 
 export default function Page() {
@@ -19,11 +17,12 @@ export default function Page() {
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort.modelVersion?.split("_")[0] || "";
 
-  const { deviceVersionsObject, isLoading } = useDeviceVersions({
-    isFechedPackage: true,
-    currentPort,
-    write,
-  });
+  const deviceVersionsObject: any = {};
+  // const { deviceVersionsObject, isLoading } = useDeviceVersions({
+  //   isFechedPackage: true,
+  //   currentPort,
+  //   write,
+  // });
 
   const handleReboot = async () => {
     await write({
@@ -35,7 +34,6 @@ export default function Page() {
 
   return (
     <>
-      {isLoading && <FullLoading />}
       <div className="pageWrap" style={{ width: "100%" }}>
         <article className="contentWrap">
           <Controller />

@@ -177,6 +177,7 @@ export default function page() {
     currentPort.port.ismodelinfofetching,
   ]);
 
+  console.log("originData :::", originData);
   useEffect(() => {
     if (!currentPort.port.writable || !currentPort.port.readable) {
       return;

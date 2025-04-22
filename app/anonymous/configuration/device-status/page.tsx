@@ -6,8 +6,6 @@ import Controller from "../components/Controller";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import Maps from "@/components/Map";
-import useDeviceVersions from "@/src/hooks/useDeviceVersions";
-import FullLoading from "@/components/FullLoading";
 
 export default function Page() {
   const { getCurrentImei } = useSerialConfigurationStore();
@@ -19,11 +17,13 @@ export default function Page() {
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort.modelVersion?.split("_")[0] || "";
 
-  const { deviceVersionsObject, isLoading } = useDeviceVersions({
-    isFechedPackage: true,
-    currentPort,
-    write,
-  });
+  const deviceVersionsObject: any = {};
+
+  // const { deviceVersionsObject, isLoading } = useDeviceVersions({
+  //   isFechedPackage: true,
+  //   currentPort,
+  //   write,
+  // });
 
   const handleReboot = async () => {
     await write({
@@ -35,7 +35,6 @@ export default function Page() {
 
   return (
     <>
-      {isLoading && <FullLoading />}
       <div className="pageWrap" style={{ width: "100%" }}>
         <article className="contentWrap">
           <Controller />
