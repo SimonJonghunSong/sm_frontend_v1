@@ -225,162 +225,164 @@ export default function MyInfoPage() {
   };
 
   const renderPassword = () => {
-    return (
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap="8px"
-        height="56px"
-        borderBottom="1px solid var(--grey3)"
-      >
-        <div className="list-title">{t("settings.my_info.password")}</div>
-        <div>
-          <Controller
-            name="pw"
-            control={form.control}
-            rules={{
-              validate: {
-                length: (value) =>
-                  value?.length >= 8 || t("error.At_least_8_characters"),
-                case: (value) =>
-                  (/[A-Z]/.test(value) && /[a-z]/.test(value)) ||
-                  t("error.At_least_1_upper/lowercase"),
-                number: (value) =>
-                  /\d/.test(value) || t("error.At_least_1_number"),
-              },
-            }}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <Stack direction="row" gap={2} alignItems="center">
-                  <TextField
-                    placeholder={t("settings.my_info.change_password")}
-                    id="input2"
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: 320 }}
-                    error={!!error}
-                    type={showPassword ? "text" : "password"}
-                    {...field}
-                    onChange={({ target }) => {
-                      const value = target.value;
+    if (isRoot || isGuest)
+      return (
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap="8px"
+          height="56px"
+          borderBottom="1px solid var(--grey3)"
+        >
+          <div className="list-title">{t("settings.my_info.password")}</div>
+          <div>
+            <Controller
+              name="pw"
+              control={form.control}
+              rules={{
+                validate: {
+                  length: (value) =>
+                    value?.length >= 8 || t("error.At_least_8_characters"),
+                  case: (value) =>
+                    (/[A-Z]/.test(value) && /[a-z]/.test(value)) ||
+                    t("error.At_least_1_upper/lowercase"),
+                  number: (value) =>
+                    /\d/.test(value) || t("error.At_least_1_number"),
+                },
+              }}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <TextField
+                      placeholder={t("settings.my_info.change_password")}
+                      id="input2"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: 320 }}
+                      error={!!error}
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                      onChange={({ target }) => {
+                        const value = target.value;
 
-                      // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
-                      target.value = value.replace(/[\u3131-\uD79D]/g, "");
-                      field.onChange(value);
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? (
-                            <VisibilityOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          ) : (
-                            <VisibilityOffOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          )}
-                        </IconButton>
-                      ),
-                    }}
-                  />
-
-                  {error?.message && (
-                    <InputErrorText
-                      style={{ paddingTop: 0 }}
-                      text={error.message}
+                        // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                        target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                        field.onChange(value);
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? (
+                              <VisibilityOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            ) : (
+                              <VisibilityOffOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            )}
+                          </IconButton>
+                        ),
+                      }}
                     />
-                  )}
-                </Stack>
-              );
-            }}
-          />
-        </div>
-      </Stack>
-    );
+
+                    {error?.message && (
+                      <InputErrorText
+                        style={{ paddingTop: 0 }}
+                        text={error.message}
+                      />
+                    )}
+                  </Stack>
+                );
+              }}
+            />
+          </div>
+        </Stack>
+      );
   };
 
   const renderConfirmPassword = () => {
-    return (
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap="8px"
-        height="56px"
-        borderBottom="1px solid var(--grey3)"
-      >
-        <div className="list-title">
-          {t("settings.my_info.confirm_password")}
-        </div>
-        <div>
-          <Controller
-            control={form.control}
-            name="confirmedPw"
-            rules={{
-              validate: {
-                same: (value, { pw }) =>
-                  value === pw || t("error.Passwords_do_not_match"),
-              },
-            }}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <Stack direction="row" gap={2} alignItems="center">
-                  <TextField
-                    placeholder={t("settings.my_info.change_password")}
-                    id="input1"
-                    variant="outlined"
-                    size="small"
-                    sx={{ width: 320 }}
-                    error={!!error}
-                    type={showPassword ? "text" : "password"}
-                    {...field}
-                    onChange={({ target }) => {
-                      const value = target.value;
+    if (isRoot || isGuest)
+      return (
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap="8px"
+          height="56px"
+          borderBottom="1px solid var(--grey3)"
+        >
+          <div className="list-title">
+            {t("settings.my_info.confirm_password")}
+          </div>
+          <div>
+            <Controller
+              control={form.control}
+              name="confirmedPw"
+              rules={{
+                validate: {
+                  same: (value, { pw }) =>
+                    value === pw || t("error.Passwords_do_not_match"),
+                },
+              }}
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <TextField
+                      placeholder={t("settings.my_info.change_password")}
+                      id="input1"
+                      variant="outlined"
+                      size="small"
+                      sx={{ width: 320 }}
+                      error={!!error}
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                      onChange={({ target }) => {
+                        const value = target.value;
 
-                      // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
-                      target.value = value.replace(/[\u3131-\uD79D]/g, "");
-                      field.onChange(value);
-                    }}
-                    InputProps={{
-                      endAdornment: (
-                        <IconButton
-                          aria-label="toggle password visibility"
-                          onClick={handleClickShowPassword}
-                          onMouseDown={handleMouseDownPassword}
-                          edge="end"
-                        >
-                          {showPassword ? (
-                            <VisibilityOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          ) : (
-                            <VisibilityOffOutlinedIcon
-                              sx={{ color: "var(--grey5)" }}
-                            />
-                          )}
-                        </IconButton>
-                      ),
-                    }}
-                  />
-
-                  {error?.message && (
-                    <InputErrorText
-                      style={{ paddingTop: 0 }}
-                      text={error.message}
+                        // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                        target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                        field.onChange(value);
+                      }}
+                      InputProps={{
+                        endAdornment: (
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                          >
+                            {showPassword ? (
+                              <VisibilityOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            ) : (
+                              <VisibilityOffOutlinedIcon
+                                sx={{ color: "var(--grey5)" }}
+                              />
+                            )}
+                          </IconButton>
+                        ),
+                      }}
                     />
-                  )}
-                </Stack>
-              );
-            }}
-          />
-        </div>
-      </Stack>
-    );
+
+                    {error?.message && (
+                      <InputErrorText
+                        style={{ paddingTop: 0 }}
+                        text={error.message}
+                      />
+                    )}
+                  </Stack>
+                );
+              }}
+            />
+          </div>
+        </Stack>
+      );
   };
 
   const renderCountry = () => {
@@ -473,41 +475,44 @@ export default function MyInfoPage() {
   const renderDepartment = () => {
     if (
       userRole?.toUpperCase() === "ROOT" ||
-      userRole?.toUpperCase() === "GUEST"
+      userRole?.toUpperCase() === "GUEST" ||
+      userRole?.toUpperCase() === "CLIENT" ||
+      userRole?.toUpperCase() === "CUSTOMER"
     )
       return null;
-    return (
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap="8px"
-        height="56px"
-        borderBottom="1px solid var(--grey3)"
-      >
-        <div className="list-title">{t("settings.my_info.department")}</div>
-        <div>
-          <Controller
-            control={form.control}
-            name="department"
-            render={({ field }) => {
-              return (
-                <TextField
-                  sx={{ width: 320 }}
-                  {...field}
-                  onChange={({ target }) => {
-                    const value = target.value;
+    else
+      return (
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap="8px"
+          height="56px"
+          borderBottom="1px solid var(--grey3)"
+        >
+          <div className="list-title">{t("settings.my_info.department")}</div>
+          <div>
+            <Controller
+              control={form.control}
+              name="department"
+              render={({ field }) => {
+                return (
+                  <TextField
+                    sx={{ width: 320 }}
+                    {...field}
+                    onChange={({ target }) => {
+                      const value = target.value;
 
-                    // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
-                    target.value = value.replace(/[\u3131-\uD79D]/g, "");
-                    field.onChange(value);
-                  }}
-                />
-              );
-            }}
-          />
-        </div>
-      </Stack>
-    );
+                      // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
+                      target.value = value.replace(/[\u3131-\uD79D]/g, "");
+                      field.onChange(value);
+                    }}
+                  />
+                );
+              }}
+            />
+          </div>
+        </Stack>
+      );
   };
 
   const renderTaxId = () => {
@@ -526,29 +531,7 @@ export default function MyInfoPage() {
         borderBottom="1px solid var(--grey3)"
       >
         <div className="list-title">{t("settings.my_info.tax_id")}</div>
-        <div>
-          <Controller
-            control={form.control}
-            name="taxId"
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <TextField
-                  error={!!error}
-                  sx={{ width: 320 }}
-                  {...field}
-                  onChange={({ target }) => {
-                    const value = target.value;
-
-                    // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
-                    target.value = value.replace(/[\u3131-\uD79D]/g, "");
-                    field.onChange(value);
-                  }}
-                />
-              );
-            }}
-          />
-        </div>
+        <div>{data?.tax_id}</div>
       </Stack>
     );
   };
@@ -560,73 +543,55 @@ export default function MyInfoPage() {
       userRole?.toUpperCase() === "ADMIN"
     )
       return null;
-    return (
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap="8px"
-        height="56px"
-        borderBottom="1px solid var(--grey3)"
-      >
-        <div className="list-title">{t("settings.my_info.alias")}</div>
-        <div>
-          <Controller
-            control={form.control}
-            name="alias"
-            rules={{ required: true }}
-            render={({ field, fieldState: { error } }) => {
-              return (
-                <TextField
-                  sx={{ width: 320 }}
-                  error={!!error}
-                  {...field}
-                  onChange={({ target }) => {
-                    const value = target.value;
-
-                    // 한글(유니코드 범위: 0xAC00-0xD7AF) 제거
-                    target.value = value.replace(/[\u3131-\uD79D]/g, "");
-                    field.onChange(value);
-                  }}
-                />
-              );
-            }}
-          />
-        </div>
-      </Stack>
-    );
+    else
+      return (
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap="8px"
+          height="56px"
+          borderBottom="1px solid var(--grey3)"
+        >
+          <div className="list-title">{t("settings.my_info.alias")}</div>
+          <div>{data?.alias}</div>
+        </Stack>
+      );
   };
 
   const renderNdaContract = () => {
     if (
       userRole?.toUpperCase() === "ROOT" ||
       userRole?.toUpperCase() === "GUEST" ||
-      userRole?.toUpperCase() === "ADMIN"
+      userRole?.toUpperCase() === "ADMIN" ||
+      userRole?.toUpperCase() === "CLIENT" ||
+      userRole?.toUpperCase() === "CUSTOMER"
     )
       return null;
-    return (
-      <Stack
-        direction="row"
-        alignItems="center"
-        gap="8px"
-        height="56px"
-        borderBottom="1px solid var(--grey3)"
-      >
-        <div className="list-title">{t("settings.my_info.nda_contract")}</div>
-        <Stack direction="row" gap={1}>
-          <TextField sx={{ width: 320 }} inputProps={{ readOnly: true }} />
-          <Button variant="contained" color="secondary" component="label">
-            <input
-              style={{ display: "none" }}
-              type="file"
-              accept=".jpg, .jpeg, .png, .pdf"
-              hidden
-              // onChange={handleFileChange} // TODO
-            />
-            {t("settings.my_info.upload")}
-          </Button>
+    else
+      return (
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap="8px"
+          height="56px"
+          borderBottom="1px solid var(--grey3)"
+        >
+          <div className="list-title">{t("settings.my_info.nda_contract")}</div>
+          <Stack direction="row" gap={1}>
+            <TextField sx={{ width: 320 }} inputProps={{ readOnly: true }} />
+            <Button variant="contained" color="secondary" component="label">
+              <input
+                style={{ display: "none" }}
+                type="file"
+                accept=".jpg, .jpeg, .png, .pdf"
+                hidden
+                // onChange={handleFileChange} // TODO
+              />
+              {t("settings.my_info.upload")}
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-    );
+      );
   };
 
   return (
@@ -657,22 +622,24 @@ export default function MyInfoPage() {
               {renderConfirmPassword()}
               {renderCountry()}
               {renderRole()}
-              {renderAffiliation()}
-              {renderDepartment()}
+              {/* {renderAffiliation()} */}
+              {/* {renderDepartment()} */}
               {renderTaxId()}
               {renderAlias()}
               {renderNdaContract()}
             </Stack>
-            <Stack direction="row" justifyContent="flex-end" marginTop="40px">
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                disabled={!form.formState.isValid}
-              >
-                {t("settings.my_info.save")}
-              </Button>
-            </Stack>
+            {isRoot || isGuest ? (
+              <Stack direction="row" justifyContent="flex-end" marginTop="40px">
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  disabled={!form.formState.isValid}
+                >
+                  {t("settings.my_info.save")}
+                </Button>
+              </Stack>
+            ) : null}
           </form>
         </article>
       </div>

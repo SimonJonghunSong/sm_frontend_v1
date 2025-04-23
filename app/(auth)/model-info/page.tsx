@@ -154,7 +154,6 @@ const ModelInfoPage = () => {
     };
     fetchJsonData();
   }, [modelName]);
-
   return (
     <div className="pageWrap">
       <SideMenu
@@ -296,7 +295,7 @@ const ContentByTab = ({
     setMenuContentList(
       allMenuContentList.filter((content) => content.Depth2 === tab)
     );
-  }, [tab]);
+  }, [tab, allMenuContentList]);
 
   return (
     <>

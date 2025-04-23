@@ -419,24 +419,32 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
     const files = Array.from(event.target.files || []);
     if (files.length === 0) return;
 
-    try {
-      const newFiles = await Promise.all(
-        files.map(async (file) => {
-          const { model, version } = await parseProfileFile(file);
-          return {
-            id: file.name,
-            col0: { id: file.name },
-            col1: model,
-            col2: version,
-            col3: file.name,
-            col4: formatDate(new Date().toISOString()),
-            col6: { id: file.name },
-            isLocal: true,
-          };
-        })
-      );
+    if (
+      selectedFiles.find(
+        (uploadedFile) => uploadedFile.id === event.target.files[0].name
+      )
+    )
+      return;
 
-      setSelectedFiles((prev) => [...prev, ...newFiles]);
+    try {
+      const uploadedFile = files[0];
+      const { model, version } = await parseProfileFile(uploadedFile);
+      if (model !== modelName || version !== fwVer) {
+        return;
+      }
+
+      const newFile = {
+        id: uploadedFile.name,
+        col0: { id: uploadedFile.name },
+        col1: model,
+        col2: version,
+        col3: uploadedFile.name,
+        col4: formatDate(new Date().toISOString()),
+        col6: { id: uploadedFile.name },
+        isLocal: true,
+      };
+
+      setSelectedFiles((prev) => [...prev, newFile]);
     } catch (error) {
       console.error("Error parsing profile files:", error);
     }
@@ -546,7 +554,7 @@ function LoadModal({ modelName, fwVer }: { modelName: string; fwVer: string }) {
         ref={fileInputRef}
         onChange={handleFileUpload}
         accept=".profile"
-        multiple
+        multiple={false}
         style={{ display: "none" }}
       />
       <Stack gap="8px" direction="row" justifyContent="flex-end">

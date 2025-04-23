@@ -1,11 +1,10 @@
 .loginHelpWrap {
   transform: translate(0, -16px);
   display: flex;
-  align-items: center;
-  justify-content: center;
 
   > div:first-child {
     display: flex;
+    margin-left: auto;
     gap: 2px;
   }
 }

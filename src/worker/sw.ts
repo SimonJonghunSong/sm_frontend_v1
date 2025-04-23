@@ -14,14 +14,11 @@ const urlsToCache = [
   "/find-password/success",
 
   "/model",
-  // "/model/admin",
 
   "/device",
   "/device/list",
 
   "/cmd",
-
-  // "/account",
 
   "/configuration",
   "/configuration/geofence",
@@ -31,10 +28,6 @@ const urlsToCache = [
   "/configuration/fw-update",
   "/configuration/edit-profile",
 
-  // "/server",
-  // "/server/mqtt",
-  // "/server/scuti",
-
   "/settings",
   "/settings/languages",
   "/settings/my-info",
@@ -42,25 +35,6 @@ const urlsToCache = [
 
   "/offline.html",
 ];
-// const urlsToCache = [
-//   "/",
-//   "/404",
-
-//   "/login",
-
-//   "/device",
-//   "/device/list",
-
-//   "/configuration",
-//   "/configuration/geofence",
-//   "/configuration/geofence/add",
-//   "/configuration/geofence/edit/circular",
-//   "/configuration/geofence/edit/polygon",
-//   "/configuration/fw-update",
-//   "/configuration/edit-profile",
-
-//   "/offline.html",
-// ];
 
 // broadcase
 const swToClientBroadcast = new BroadcastChannel("sw-to-client");
