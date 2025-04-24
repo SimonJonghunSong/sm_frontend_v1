@@ -1,34 +1,30 @@
+// 1. React 및 내장 훅
+import React, { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useMutation } from "@tanstack/react-query";
 import {
   Button,
   IconButton,
   MenuItem,
-  Radio,
   Select,
   SelectChangeEvent,
   Stack,
-  TextField,
   Tooltip,
 } from "@mui/material";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import React, { useEffect, useState } from "react";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import Modal from "@/components/Modal";
-import useModal from "@/utils/useModal";
-import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import { GridColDef } from "@mui/x-data-grid";
-import DataTable from "@/components/dataTable";
-import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import useSerialStore from "@/src/stores/useSerialStore";
-import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
-import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
+import LoadProfileDialog from "./LoadProfileDialog";
+import useModal from "@/utils/useModal";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
+import useProfile from "@/src/hooks/useProfile";
+import useSerialStore from "@/src/stores/useSerialStore";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { useTranslations } from "next-intl";
-import { checkModelDataExists } from "@/utils/idbModelUtil";
-import { useRouter } from "next/navigation";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import { AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import { uploadProfile } from "@/src/api/services/profile";
+import { checkModelDataExists } from "@/utils/idbModelUtil";
 
 const DELAY_MS = 100;
 
@@ -38,15 +34,12 @@ export default function Controller() {
   const t = useTranslations();
   const router = useRouter();
   const [modelName, setModelName] = useState<string>(imei);
-  const [path, setPath] = useState<File>();
-  const [showSaveChanges, setShowSaveChanges] = useState<boolean>(false);
-  const [showUploadChanges, setShowUploadChanges] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [packageCount, setPackageCount] = useState(0);
 
   const {
     state: { portList },
-    func: { close, write, setIsDisconnected, setIsConnected },
+    func: { write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setPackageFetchingStart } = useSerialStore();
   const currentPort = portList.find(({ port }) => port.imei === imei);
@@ -66,10 +59,18 @@ export default function Controller() {
     writeSerial: write,
   });
 
+  const uploadProfileMutation = useMutation({
+    mutationFn: uploadProfile,
+  });
   const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
   const [loadModal, loadModalToggle] = useModal();
   const [uploadModal, uploadModalToggle] = useModal();
+
+  const [isOpenCommonPopup, toggleIsOpenCommonPopup] = useModal();
+
+  const commonPopupTitle = useRef("");
+  const commonPopupMessage = useRef("");
 
   const handleChange = async (event: SelectChangeEvent) => {
     const targetProt = portList.find(
@@ -107,6 +108,55 @@ export default function Controller() {
     uploadModalToggle();
   };
 
+  const handleUploadProfileConfirm = async () => {
+    const profileData = await getProfileAllData(false);
+    const fwVer =
+      currentPort.modelVersion?.split("_")[
+        currentPort.modelVersion?.split("_").length - 1
+      ];
+    const mockFile = new File(
+      [profileData.join("\n")],
+      `${modelName}_${fwVer}.profile`,
+      {
+        type: "text/plain",
+      }
+    );
+
+    const formData = new FormData();
+    formData.append(
+      "json",
+      JSON.stringify({
+        profile_info: [
+          {
+            model_name: modelName,
+            model_version: fwVer,
+            nickname: `profile_${Date.now()}`,
+          },
+        ],
+      })
+    );
+    formData.append("profile", mockFile);
+
+    uploadProfileMutation
+      .mutateAsync(formData)
+      .then(() => {
+        toggleIsOpenCommonPopup();
+        commonPopupTitle.current = t("common.popup.success");
+        // TODO: 임의 에러 메시지 표기중
+        commonPopupMessage.current = t(
+          "configuration.popup_message.success_upload_profile"
+        );
+      })
+      .catch(() => {
+        toggleIsOpenCommonPopup();
+        commonPopupTitle.current = t("common.popup.error");
+        // TODO: 임의 에러 메시지 표기중
+        commonPopupMessage.current = t(
+          "configuration.popup_message.failed_upload_profile"
+        );
+      });
+  };
+
   const handleRefreshJsonPacket = async () => {
     setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
@@ -134,17 +184,6 @@ export default function Controller() {
     setPackageCount(0);
   };
 
-  const toggleSaveChanges = () => {
-    setShowSaveChanges(!showSaveChanges);
-  };
-
-  const toggleUploadChanges = () => {
-    setShowUploadChanges(!showUploadChanges);
-  };
-
-  const handlePathChange = (e) => {
-    setPath(e.target.files[0]);
-  };
   useEffect(() => {
     if (
       currentPort.port.writable &&
@@ -263,9 +302,9 @@ export default function Controller() {
             {t("configuration.profile_menu.upload")}
           </Button>
         </Tooltip>
-        <IconButton onClick={() => getProfileAllData(true)}>
+        {/* <IconButton onClick={() => getProfileAllData(true)}>
           <FileDownloadOutlinedIcon sx={{ color: "var(--black)" }} />
-        </IconButton>
+        </IconButton> */}
       </Stack>
 
       <Stack direction="row" gap="8px" alignItems="center">
@@ -294,7 +333,6 @@ export default function Controller() {
               </MenuItem>
             );
           })}
-          <MenuItem value={"test"}>test</MenuItem>
         </Select>
         {!currentPort.isDisconnected ? (
           <Button
@@ -343,51 +381,14 @@ export default function Controller() {
         open={saveModal}
         toggleOpen={saveModalToggle}
         title="Confirm"
-        confirm={() => {}}
+        confirm={async () => {
+          await getProfileAllData(true);
+        }}
         confirmButtonText="Yes"
         width="360px"
       >
         <Stack>
           <span>Are you sure you want to save profile?</span>
-          <Stack direction="row" gap="8px" mt={1}>
-            <TextField
-              fullWidth
-              value={path?.name || ""}
-              inputProps={{ readOnly: true }}
-            />
-            <Button variant="outlined" color="secondary" component="label">
-              <input
-                style={{ display: "none" }}
-                type="file"
-                hidden
-                onChange={handlePathChange}
-              />
-              {t("popup.configuration.profile_menu.path")}
-            </Button>
-          </Stack>
-          <Button sx={{ width: "fit-content" }} onClick={toggleSaveChanges}>
-            {t("popup.configuration.profile_menu.show_changes")}
-          </Button>
-          {showSaveChanges && (
-            <TextField
-              value={"Show Changed Value..."}
-              multiline
-              rows={1}
-              inputProps={{ readOnly: true }}
-              sx={{
-                mt: 2,
-                flexGrow: 1,
-                height: "160px",
-                "& .MuiInputBase-root": {
-                  padding: "10px 12px",
-                  height: "100% !important",
-                },
-                "& textarea": {
-                  height: "100% !important",
-                },
-              }}
-            />
-          )}
         </Stack>
       </Modal>
 
@@ -397,10 +398,13 @@ export default function Controller() {
         open={loadModal}
         toggleOpen={loadModalToggle}
         title="Load Profile"
-        width="720px"
+        width="1240px"
         hasFooter={false}
       >
-        <LoadModal />
+        <LoadProfileDialog
+          modelName={modelName}
+          fwVer={currentPort.modelVersion.split("_")[1]}
+        />
       </Modal>
 
       {/* Upload Modal */}
@@ -408,34 +412,29 @@ export default function Controller() {
         open={uploadModal}
         toggleOpen={uploadModalToggle}
         title="Confirm"
-        confirm={() => {}}
+        confirm={handleUploadProfileConfirm}
         confirmButtonText="Yes"
         width="360px"
       >
         <Stack>
           <span>Are you sure you want to upload the profile to Scuti?</span>
-          {showUploadChanges && (
-            <TextField
-              value={"Show Changed Value..."}
-              multiline
-              rows={1}
-              inputProps={{ readOnly: true }}
-              sx={{
-                mt: 2,
-                flexGrow: 1,
-                height: "160px",
-                "& .MuiInputBase-root": {
-                  padding: "10px 12px",
-                  height: "100% !important",
-                },
-                "& textarea": {
-                  height: "100% !important",
-                },
-              }}
-            />
-          )}
         </Stack>
       </Modal>
+
+      {isOpenCommonPopup && (
+        <Modal
+          open
+          width={"357px"}
+          toggleOpen={toggleIsOpenCommonPopup}
+          title={commonPopupTitle.current}
+        >
+          <Stack>
+            <span style={{ wordBreak: "keep-all" }}>
+              {commonPopupMessage.current}
+            </span>
+          </Stack>
+        </Modal>
+      )}
     </Stack>
   );
 }
@@ -514,102 +513,3 @@ const rows = [
     col6: { id: "8" },
   },
 ];
-
-function LoadModal() {
-  const [selectedValue, setSelectedValue] = React.useState<string>();
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedValue(event.target.value);
-  };
-
-  const columns: GridColDef[] = [
-    {
-      field: "col0",
-      headerName: "",
-      width: 80,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => (
-        <Radio
-          checked={selectedValue === params.value.id}
-          onChange={handleChange}
-          value={params.value.id}
-          name="radio-buttons"
-        />
-      ),
-    },
-    {
-      field: "col1",
-      headerName: "Model Name",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "col2",
-      headerName: "File Name",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-    },
-    {
-      field: "col3",
-      headerName: "Date",
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-    },
-    // {
-    //   field: "col4",
-    //   headerName: "Port",
-    //   flex: 1,
-    //   headerAlign: "center",
-    //   align: "center",
-    // },
-
-    {
-      field: "col6",
-      headerName: "Delete",
-      width: 80,
-      headerAlign: "center",
-      align: "center",
-      renderCell: () => (
-        <IconButton onClick={(e) => e.stopPropagation()}>
-          <DeleteForeverOutlinedIcon />
-        </IconButton>
-      ),
-    },
-  ];
-
-  return (
-    <Stack gap="24px">
-      <Stack gap="8px" direction="row" justifyContent="flex-end">
-        <Button variant="outlined" color="secondary" sx={{ width: 210 }}>
-          Load from PC
-        </Button>
-        <Button variant="outlined" color="secondary" sx={{ width: 210 }}>
-          Load from Scuti
-        </Button>
-      </Stack>
-
-      <DataTable
-        rows={rows}
-        columns={columns}
-        checkbox={false}
-        disablePagination
-        minHeight={"auto"}
-      />
-
-      <Stack gap="8px" alignItems="flex-end">
-        <Button
-          variant="contained"
-          color="secondary"
-          sx={{ width: 210 }}
-          disabled={!selectedValue}
-        >
-          Load
-        </Button>
-      </Stack>
-    </Stack>
-  );
-}
