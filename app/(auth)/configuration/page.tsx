@@ -113,8 +113,6 @@ export default function page() {
     return (formData || []).find((item) => item.tabName === tab);
   }, [formData, tab]);
 
-  console.log("tab :::", tab);
-
   const isSaveDisabled = useMemo(
     () => !getEditDataForPage(tab).length,
     [getEditDataForPage]
@@ -177,7 +175,6 @@ export default function page() {
     currentPort.port.ismodelinfofetching,
   ]);
 
-  console.log("originData :::", originData);
   useEffect(() => {
     if (!currentPort.port.writable || !currentPort.port.readable) {
       return;
@@ -391,16 +388,12 @@ export default function page() {
       updateDataString += updateSttDatas.s_assigns[i - 1] ? "1" : "0";
     }
 
-    console.log("updateDataString :::", updateDataString);
-
     let updateDataString16 = parseInt(updateDataString, 2).toString(16);
 
     // updateDataString16 값의 길이가 8이 되도록 앞에 0을 채우고 싶어
     while (updateDataString16.length < 8) {
       updateDataString16 = "0" + updateDataString16;
     }
-
-    console.log("updateDataString16 :::", updateDataString16);
 
     const pageSAssigns = pageData?.fields?.filter(
       (item) => item.type === "sAssign"
@@ -469,9 +462,6 @@ export default function page() {
           port: currentPort.port,
           writer: currentPort.writer,
         });
-
-        console.log("updateSttDatas :::", updateSttDatas);
-        console.log("csvData :::", sttData);
 
         const updateItems = {
           s_assigns: updateSttDatas.s_assigns.map((item) => item?.id),

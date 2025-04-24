@@ -6,7 +6,6 @@ import styles from "./styles.module.scss";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import SyncOutlinedIcon from "@mui/icons-material/SyncOutlined";
 import { Divider } from "@mui/material";
 import { SwitchSecondary } from "../switches";
 import useParameterStore from "../../utils/useParameterStore";
@@ -189,29 +188,6 @@ export default function SideMenu({
                     onChange={() => toggleHiddenParameter()}
                   />
                 </div>
-              </li>
-              <li
-                className={
-                  pathname.startsWith("/configuration/fw-update")
-                    ? styles.active
-                    : undefined
-                }
-              >
-                <Divider
-                  sx={{ borderColor: "var(--grey7)", marginBottom: "16px" }}
-                />
-                <Link
-                  href={getSubHref("/configuration/fw-update")}
-                  onClick={(e) => {
-                    if (!isOnline) {
-                      e.preventDefault();
-                      setOfflineErrorDialog(true);
-                    }
-                  }}
-                >
-                  <SyncOutlinedIcon />
-                  <span>F/W Update</span>
-                </Link>
               </li>
             </>
           )}

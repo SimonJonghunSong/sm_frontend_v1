@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { ToastContainer } from "react-toastify";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import { redirect, usePathname, useRouter } from "next/navigation";
 import useSerial from "@/src/hooks/useSerial";
@@ -106,7 +105,6 @@ const ConfigurationLayout = ({ children }) => {
         />
         {children}
       </div>
-      <ToastContainer />
     </>
   );
 };
