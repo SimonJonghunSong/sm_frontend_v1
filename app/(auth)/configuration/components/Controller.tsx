@@ -403,7 +403,11 @@ export default function Controller() {
       >
         <LoadProfileDialog
           modelName={modelName}
-          fwVer={currentPort.modelVersion.split("_")[1]}
+          fwVer={
+            currentPort.modelVersion?.split("_")[
+              currentPort.modelVersion?.split("_").length - 1
+            ]
+          }
         />
       </Modal>
 
