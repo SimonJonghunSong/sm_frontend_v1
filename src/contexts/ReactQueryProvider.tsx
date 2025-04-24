@@ -27,10 +27,7 @@ export default function ReactQueryProvider({
           console.log(error);
 
           // Unauthrized || error.response.data.response.code === 5204 => No token provided
-          if (
-            error.status === 401 ||
-            error.response.data.response.code === 5204
-          ) {
+          if (error.status === 401) {
             setUserId(undefined);
             setUserRole(undefined);
             setToken(undefined);
