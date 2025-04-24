@@ -3,9 +3,8 @@
 import React, { useReducer, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { AxiosError } from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import styles from "../styles.module.scss";
-import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
 import {
   Button,
   Checkbox,
@@ -16,11 +15,12 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
+import ImageOutlinedIcon from "@mui/icons-material/ImageOutlined";
+import styles from "../styles.module.scss";
 import Modal from "@/components/Modal";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { addModel } from "@/src/api/services/model";
-import { AxiosError } from "axios";
 
 export interface FormState {
   devName: string;
@@ -86,6 +86,9 @@ const initialState: FormState = {
   settingFile: undefined,
   hide: false,
 };
+
+const MAX_IMAGE_SIZE_MB = 5;
+const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
 interface Props {
   handleCloseModal: () => void;
@@ -153,28 +156,25 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
   const [imagePreview, setThumbnailPreview] = useState(null);
 
   const handleImageChange = (e) => {
-    const imageFile = e.target.files[0];
+    const imageFile = e.target.files?.[0];
+    if (!imageFile) return;
 
-    if (imageFile.size > 5 * 1024 * 1024) {
-      openErrorPopup(
-        t("popup.model.add_model_pop_up.the_image_file_size_is_too_large")
-      );
+    if (imageFile.size > MAX_IMAGE_SIZE_BYTES) {
+      openErrorPopup(t("popup.model.add_model_pop_up.image_size_exceeds_5mb"));
       e.target.value = ""; // 파일 선택 취소
       return;
     }
 
-    if (imageFile) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setThumbnailPreview(reader.result);
-      };
-      reader.readAsDataURL(imageFile);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setThumbnailPreview(reader.result);
+    };
+    reader.readAsDataURL(imageFile);
 
-      dispatch({
-        type: "SET_IMAGE_FILE",
-        value: imageFile,
-      });
-    }
+    dispatch({
+      type: "SET_IMAGE_FILE",
+      value: imageFile,
+    });
   };
 
   const handleSupportedNetworkType = (

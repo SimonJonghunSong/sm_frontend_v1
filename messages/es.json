@@ -1645,7 +1645,8 @@
         "added_successfully!": "¡Añadido exitosamente!",
         "this_model_name_is_already_registered": "Este nombre de modelo ya está registrado.",
         "are_you_sure_you_want_to_leave_this_page_without_adding?": "¿Está seguro de que desea salir de esta página sin añadir?",
-        "the_image_file_size_is_too_large": "El archivo es demasiado grande. \nSube un archivo más pequeño de 5 MB."
+        "the_image_file_size_is_too_large": "El archivo es demasiado grande. \nSube un archivo más pequeño de 5 MB.",
+        "image_size_exceeds_5mb": "El tamaño de la imagen supera los 5MB."
       },
       "edit_model_pop_up": {
         "saved_successfully!": "¡Guardado exitosamente!",
