@@ -6,7 +6,122 @@ import useSerial from "@/src/hooks/useSerial";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { useEffect, useState } from "react";
-import NetworkTab from "app/(auth)/device-info/components/NetworkTab";
+import NetworkTab from "app/(auth)/device-info/(tabs)/NetworkTab";
+
+// Type definitions
+interface FieldInfo {
+  tab_id: string;
+  [key: string]: any;
+}
+
+interface FieldValue {
+  ID: string;
+  value: string;
+  list?: Array<{ [key: string]: string }>;
+  [key: string]: any;
+}
+
+interface FieldItem {
+  [key: string]: FieldValue[];
+}
+
+interface FieldWithInfo {
+  info: FieldInfo[];
+}
+
+type Field = FieldItem | FieldWithInfo;
+
+export interface FormField {
+  value: string;
+  realValue: string;
+  list: string[] | null;
+}
+
+interface FormData {
+  [key: string]: FormField;
+}
+
+// Helper functions
+const formatFieldId = (id: string): string => {
+  const numId = Number(id);
+  return numId < 10 ? `0${id}` : id;
+};
+
+const getRealValue = (field: FieldValue): string => {
+  if (!field.list) return field.value;
+
+  const realValueSource = Object.values(field.list[0])?.find((item: string) =>
+    item?.includes(`${field.value};`)
+  );
+
+  const realValue = realValueSource?.split(";")[0]
+    ? Number(realValueSource.split(";")[0])
+    : -1;
+
+  if (realValue === -1) return field.value;
+  return realValue < 10 ? `0${realValue}` : realValue.toString();
+};
+
+const getList = (field: FieldValue): string[] => {
+  if (!field.list) return null;
+
+  return Object.values(field.list[0]).map((item) =>
+    Number(item.split(";")[0]) < 10
+      ? `0${item.split(";")[0]}`
+      : item.split(";")[0]
+  );
+};
+
+const transformFieldData = (
+  field: Field,
+  tabId: string
+): [string, FormField] | null => {
+  const key = Object.keys(field)[0];
+  if (key === "info") return null;
+
+  const fieldData = (field as FieldItem)[key][0];
+  if (!fieldData?.ID) return null;
+
+  const fieldId = formatFieldId(fieldData.ID);
+  const realValue = getRealValue(fieldData);
+  const optionsValueList = getList(fieldData);
+
+  return [
+    `${tabId}${fieldId}`,
+    {
+      value: fieldData.value,
+      realValue,
+      list: optionsValueList,
+    },
+  ];
+};
+
+const transformOriginData = (originData: any[]): FormData => {
+  return originData.reduce((acc: FormData, item) => {
+    const key = Object.keys(item)[0];
+    const fields = item[key];
+    if (!fields || !Array.isArray(fields)) return acc;
+
+    // Find tab_id from the info field
+    const infoField = fields.find((f) => "info" in f) as
+      | FieldWithInfo
+      | undefined;
+    if (!infoField) return acc;
+
+    const tabId = infoField.info[0]?.tab_id;
+    if (!tabId) return acc;
+
+    fields.forEach((field) => {
+      const transformedField = transformFieldData(field, tabId);
+      if (transformedField) {
+        const [key, value] = transformedField;
+        acc[key] = value;
+      }
+    });
+
+    return acc;
+  }, {});
+};
 
 export default function DeviceInfoPage() {
   // data
@@ -24,11 +139,10 @@ export default function DeviceInfoPage() {
 
   const [tab, setTab] = useState("Network");
   const [formData, setFormData] = useState<{
-    [key: string]: { value: string; realValue: string } | null;
+    [key: string]: FormField | null;
   }>(null);
 
   const handleTabChange = (tab: string) => {
-    console.log("tab :::", tab);
     setTab(tab);
   };
 
@@ -40,65 +154,12 @@ export default function DeviceInfoPage() {
         return null;
     }
   };
-
+  console.log(formData);
   useEffect(() => {
-    if (!formData) {
-      setFormData(
-        originData.reduce((acc, item) => {
-          const fields: any = Object.values(item)?.[0];
-          if (!fields?.length) {
-            return acc;
-          }
-
-          const tabId = fields[0].info?.[0]?.tab_id;
-
-          console.log("tabInfo :::", fields[0].info);
-
-          if (!tabId) {
-            return acc;
-          }
-
-          fields.forEach((field) => {
-            const key = Object.keys(field)[0];
-            if (key === "info") {
-              return;
-            }
-
-            const fieldId =
-              Number(Object.values(field)?.[0]?.[0]?.ID) < 10
-                ? `0${Object.values(field)?.[0]?.[0]?.ID}`
-                : Object.values(field)?.[0]?.[0]?.ID;
-            const fieldValue = Object.values(field)?.[0]?.[0]?.value;
-            const fieldList = Object.values(field)?.[0]?.[0]?.list;
-            let realValue = fieldList
-              ? Object.values(fieldList[0])?.findIndex((item: string) =>
-                  item?.includes(`${fieldValue};`)
-                )
-              : fieldValue;
-
-            if (fieldList && Number(realValue) < 10) {
-              realValue = `0${realValue}`;
-            }
-
-            if (!fieldId) {
-              return acc;
-            }
-
-            console.log("`${tabId}${fieldId}` ::::", `${tabId}${fieldId}`);
-            console.log("key :::", key);
-            console.log("fieldList :::", fieldList);
-
-            acc[`${tabId}${fieldId}`] = {
-              value: fieldValue,
-              realValue,
-            };
-          });
-
-          return acc;
-        }, {} as { [key: string]: { value: string; realValue: string } })
-      );
+    if (!formData && originData) {
+      setFormData(transformOriginData(originData));
     }
-  }, [originData]);
+  }, [originData, formData]);
 
   return (
     <div className="pageWrap">

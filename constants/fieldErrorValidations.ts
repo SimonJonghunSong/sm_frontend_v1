@@ -1,4 +1,21 @@
 export const FIELD_ERRORS = {
+  alphaNumericPattern: {
+    en: "Characters A-Z, a-z, 0-9 are allowed.",
+    es: "Se permiten caracteres A-Z, a-z, 0-9.",
+    pt: "Caracteres A-Z, a-z, 0-9 são permitidos.",
+  },
+
+  alphaNumericPatternWithSymbols: {
+    en: "Characters A-Z, a-z, 0-9, and symbols '-.' are allowed.",
+    es: 'Se permiten caracteres A-Z, a-z, 0-9, y símbolos "-."',
+    pt: 'Caracteres A-Z, a-z, 0-9 e símbolos "-." são permitidos.',
+  },
+
+  invalidUrl: {
+    en: "Invalid URL format.",
+    es: "Formato de URL inválido.",
+    pt: "Formato de URL inválido.",
+  },
   "1001": {
     en: "Characters A-Z, a-z, 0-9 are allowed, Max: 100 Characters",
     es: "Se permiten caracteres A-Z, a-z, 0-9.",

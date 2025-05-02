@@ -10,6 +10,7 @@ interface InputBoxProps {
 
 interface ChildComponentProps {
   children: ReactNode;
+  className?: string;
 }
 
 export default function InputBox({ children, style }: InputBoxProps) {

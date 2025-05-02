@@ -547,6 +547,22 @@ export const FIELD_VALIDATIONS = {
           pt: "México",
         },
       },
+      {
+        value: "02",
+        label: {
+          en: "Europe",
+          es: "Europa",
+          pt: "Europa",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Brazil",
+          es: "Brasil",
+          pt: "Brasil",
+        },
+      },
     ],
   },
   "1017": {
@@ -5491,6 +5507,17 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  // 1670
+  // 1673
+  // 1676
+  // 1679
+  // 1685
+  // 1688
+  // 1682
+  // 1697
+  // 1681
+  // 1684
+
   "1670": {
     title: {
       en: "Parking Tracking Time (seconds)",
