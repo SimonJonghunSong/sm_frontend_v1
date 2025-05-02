@@ -77,6 +77,24 @@ export default function LoginPage() {
         <span>Anonymous</span>
       </Stack>
 
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="center"
+        gap="4px"
+        sx={{
+          color: "var(--grey5)",
+          position: "absolute",
+          bottom: 0,
+          width: "100%",
+          left: "50%",
+          right: "50%",
+          transform: "translate(-50%, -50%)",
+        }}
+      >
+        <span>202505020917</span>
+      </Stack>
+
       {errorDialog && <ErrorDialog onClose={() => setErrorDialog(false)} />}
       {offlineErrorDialog && (
         <OfflineErrorDialog onClose={() => setOfflineErrorDialog(false)} />
