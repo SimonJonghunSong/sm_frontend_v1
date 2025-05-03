@@ -75,10 +75,10 @@ export const SwitchPrimary = styled((props: any) => (
       border: "6px solid #fff",
     },
     "&.Mui-disabled .MuiSwitch-thumb": {
-      color: "#ff0",
+      color: "#fff",
     },
     "&.Mui-disabled + .MuiSwitch-track": {
-      opacity: 0.7,
+      opacity: 0.5,
     },
   },
   "& .MuiSwitch-thumb": {
