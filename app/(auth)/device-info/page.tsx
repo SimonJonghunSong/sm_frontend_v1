@@ -3,10 +3,13 @@
 import SideMenu from "@/components/sidemenu/SideMenu";
 import { sideMenuItems } from "./sideMenuItems";
 import useSerial from "@/src/hooks/useSerial";
-import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
+// import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { useEffect, useState } from "react";
 import NetworkTab from "app/(auth)/device-info/(tabs)/NetworkTab";
+import SystemTab from "./(tabs)/SystemTab";
+import ReportTab from "./(tabs)/ReportTab";
+import TrackingTab from "./(tabs)/TrackingTab";
 
 // Type definitions
 interface FieldInfo {
@@ -32,9 +35,11 @@ interface FieldWithInfo {
 type Field = FieldItem | FieldWithInfo;
 
 export interface FormField {
+  key: string;
   value: string;
   realValue: string;
   list: string[] | null;
+  alert_id: string | null;
 }
 
 interface FormData {
@@ -89,9 +94,11 @@ const transformFieldData = (
   return [
     `${tabId}${fieldId}`,
     {
+      key,
       value: fieldData.value,
       realValue,
       list: optionsValueList,
+      alert_id: fieldData.alert_id,
     },
   ];
 };
@@ -132,7 +139,6 @@ export default function DeviceInfoPage() {
 
   const { getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
-  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const originData = portList.find(({ port }) => port.imei === imei)
     .packageToJson.synctrak;
@@ -150,11 +156,17 @@ export default function DeviceInfoPage() {
     switch (tab) {
       case "Network":
         return <NetworkTab formData={formData} setFormData={setFormData} />;
+      case "System":
+        return <SystemTab formData={formData} setFormData={setFormData} />;
+      case "Report":
+        return <ReportTab formData={formData} setFormData={setFormData} />;
+      case "Tracking":
+        return <TrackingTab formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }
   };
-  console.log(formData);
+
   useEffect(() => {
     if (!formData && originData) {
       setFormData(transformOriginData(originData));

@@ -61,6 +61,7 @@ const TextInputField = ({
         onChange={(e) => onChange(id, e.target.value)}
         error={error}
         helperText={helperText}
+        required={isRequired}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
         InputProps={
           type === "password" && {

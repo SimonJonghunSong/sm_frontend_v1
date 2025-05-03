@@ -1,0 +1,286 @@
+import { useRef } from "react";
+import styled from "styled-components";
+import { useTranslations } from "next-intl";
+import { Button, Stack } from "@mui/material";
+import { FormField } from "../page";
+import NumericInputField from "../(components)/NumericInputField";
+import SwitchField from "../(components)/SwitchField";
+
+interface Props {
+  formData: {
+    [key: string]: FormField;
+  };
+  onChange: (id: string, value: string) => void;
+}
+
+const Power = ({ formData, onChange }: Props) => {
+  const t = useTranslations();
+  const formRef = useRef<HTMLFormElement>(null);
+
+  // TODO 렌더링 조건 추가 유틸로 만들어서 한번에 처리
+  if (!formData) return null;
+
+  const handleChange = (id: string, value: string) => {
+    onChange(id, value);
+  };
+
+  const validateForm = (): boolean => {
+    // formRef가 null이면 유효성 검사를 할 수 없음
+    if (!formRef.current) return true;
+
+    // 폼 내의 모든 input 요소 중 aria-invalid="true" 속성을 가진 요소 찾기
+    const invalidInputs = formRef.current.querySelectorAll(
+      '[aria-invalid="true"]'
+    );
+
+    if (invalidInputs.length > 0) {
+      // 첫 번째 유효하지 않은 입력 필드로 스크롤
+      (invalidInputs[0] as HTMLElement).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      // 포커스 설정
+      (invalidInputs[0] as HTMLElement).focus();
+
+      return false;
+    }
+
+    return true;
+  };
+
+  return (
+    <Form
+      ref={formRef}
+      onSubmit={(e) => {
+        e.preventDefault();
+
+        // 폼 유효성 검사 실행
+        if (!validateForm()) {
+          return; // 유효하지 않은 필드가 있으면 제출을 중단
+        }
+
+        // 모든 필드 값을 포함한 객체 생성
+        const fieldValues = Object.keys(formData).reduce((acc, key) => {
+          if (
+            [
+              "1930",
+              "1931",
+              "1933",
+              "1934",
+              "1935",
+              "1939",
+              "1940",
+              "1941",
+              "1942",
+              "1943",
+              "1944",
+              "1949",
+              "1952",
+              "1953",
+              "1954",
+              "1959",
+            ].includes(key)
+          ) {
+            acc[key] = {
+              id: key,
+              value: formData[key].value,
+              realValue: formData[key].realValue,
+            };
+          }
+          return acc;
+        }, {});
+
+        // 필드 값들을 사용하여 수행할 작업
+        console.log("Form values:", fieldValues);
+
+        // 여기에 데이터 제출 로직 추가
+      }}
+    >
+      <h1>{t("configuration.system.power")}</h1>
+
+      <>
+        <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
+          <SwitchField id="1930" formData={formData} onChange={handleChange} />
+          <SwitchField id="1931" formData={formData} onChange={handleChange} />
+
+          <NumericInputField
+            id="1933"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1934"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1935"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1939"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1940"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1941"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1942"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          <NumericInputField
+            id="1943"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+
+          {!!formData["1944"] && (
+            <Stack gap={"16px"} style={{ width: "calc(50% - 8px)" }}>
+              <SwitchField
+                id="1944"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+
+              {formData["1944"]?.realValue === "01" && (
+                <>
+                  <NumericInputField
+                    id="1945"
+                    formData={formData}
+                    onChange={handleChange}
+                    isRequired
+                    style={{ width: "100%" }}
+                  />
+                  <NumericInputField
+                    id="1946"
+                    formData={formData}
+                    onChange={handleChange}
+                    isRequired
+                    style={{ width: "100%" }}
+                  />
+                </>
+              )}
+            </Stack>
+          )}
+
+          {!!formData["1949"] && (
+            <Stack gap={"16px"} style={{ width: "calc(50% - 8px)" }}>
+              <SwitchField
+                id="1949"
+                formData={formData}
+                onChange={handleChange}
+              />
+
+              {formData["1949"]?.realValue === "01" && (
+                <>
+                  {/* // TODO Checkbox 추가 Power Saving Mode1 Power Saving Mode2 문서에 없음 ㅡㅡ*/}
+
+                  {/* <NumericInputField
+                    id="1950"
+                    formData={formData}
+                    onChange={handleChange}
+                    isRequired
+                    style={{ width: "100%" }}
+                  /> */}
+                </>
+              )}
+            </Stack>
+          )}
+
+          {!!formData["1952"] && (
+            <Stack gap={"32px"} style={{ width: "calc(50% - 8px)" }}>
+              <SwitchField
+                id="1952"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+
+              {formData["1952"]?.realValue === "01" && (
+                <>
+                  <NumericInputField
+                    id="1953"
+                    formData={formData}
+                    onChange={handleChange}
+                    isRequired
+                    style={{ width: "100%" }}
+                    isSwitch
+                  />
+                  <NumericInputField
+                    id="1954"
+                    formData={formData}
+                    onChange={handleChange}
+                    isRequired
+                    style={{ width: "100%" }}
+                    isSwitch
+                  />
+                </>
+              )}
+            </Stack>
+          )}
+
+          <SwitchField id="1919" formData={formData} onChange={handleChange} />
+
+          <NumericInputField
+            id="1959"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            isSwitch
+          />
+        </Stack>
+
+        <Stack direction="row" justifyContent="flex-end">
+          <Button color="secondary" variant="contained" type="submit">
+            {t("notify.send")}
+          </Button>
+        </Stack>
+      </>
+    </Form>
+  );
+};
+
+export default Power;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 1px 5px 0px #0000001a;
+  border-radius: 8px;
+  padding: 24px;
+  gap: 16px;
+
+  h1 {
+    padding: 16px 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 14px;
+  }
+`;
