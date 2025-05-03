@@ -4822,7 +4822,64 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
-    list: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Select",
+          es: "Seleccionar",
+          pt: "Selecionar",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Mode 1",
+          es: "Modo 1",
+          pt: "Modo 1",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "Mode 2",
+          es: "Modo 2",
+          pt: "Modo 2",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Mode 3",
+          es: "Modo 3",
+          pt: "Modo 3",
+        },
+      },
+      {
+        value: "04",
+        label: {
+          en: "Mode 4",
+          es: "Modo 4",
+          pt: "Modo 4",
+        },
+      },
+      {
+        value: "05",
+        label: {
+          en: "Mode 5",
+          es: "Modo 5",
+          pt: "Modo 5",
+        },
+      },
+      {
+        value: "06",
+        label: {
+          en: "Mode 6",
+          es: "Modo 6",
+          pt: "Modo 6",
+        },
+      },
+    ],
   },
   "1601": {
     title: {
@@ -4852,7 +4909,64 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
-    list: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Select",
+          es: "Seleccionar",
+          pt: "Selecionar",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Mode 1",
+          es: "Modo 1",
+          pt: "Modo 1",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "Mode 2",
+          es: "Modo 2",
+          pt: "Modo 2",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Mode 3",
+          es: "Modo 3",
+          pt: "Modo 3",
+        },
+      },
+      {
+        value: "04",
+        label: {
+          en: "Mode 4",
+          es: "Modo 4",
+          pt: "Modo 4",
+        },
+      },
+      {
+        value: "05",
+        label: {
+          en: "Mode 5",
+          es: "Modo 5",
+          pt: "Modo 5",
+        },
+      },
+      {
+        value: "06",
+        label: {
+          en: "Mode 6",
+          es: "Modo 6",
+          pt: "Modo 6",
+        },
+      },
+    ],
   },
   "1603": {
     title: {
@@ -4882,7 +4996,64 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
-    list: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Select",
+          es: "Seleccionar",
+          pt: "Selecionar",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Mode 1",
+          es: "Modo 1",
+          pt: "Modo 1",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "Mode 2",
+          es: "Modo 2",
+          pt: "Modo 2",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Mode 3",
+          es: "Modo 3",
+          pt: "Modo 3",
+        },
+      },
+      {
+        value: "04",
+        label: {
+          en: "Mode 4",
+          es: "Modo 4",
+          pt: "Modo 4",
+        },
+      },
+      {
+        value: "05",
+        label: {
+          en: "Mode 5",
+          es: "Modo 5",
+          pt: "Modo 5",
+        },
+      },
+      {
+        value: "06",
+        label: {
+          en: "Mode 6",
+          es: "Modo 6",
+          pt: "Modo 6",
+        },
+      },
+    ],
   },
   "1606": {
     title: {
@@ -4912,7 +5083,64 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
-    list: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Select",
+          es: "Seleccionar",
+          pt: "Selecionar",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Mode 1",
+          es: "Modo 1",
+          pt: "Modo 1",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "Mode 2",
+          es: "Modo 2",
+          pt: "Modo 2",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Mode 3",
+          es: "Modo 3",
+          pt: "Modo 3",
+        },
+      },
+      {
+        value: "04",
+        label: {
+          en: "Mode 4",
+          es: "Modo 4",
+          pt: "Modo 4",
+        },
+      },
+      {
+        value: "05",
+        label: {
+          en: "Mode 5",
+          es: "Modo 5",
+          pt: "Modo 5",
+        },
+      },
+      {
+        value: "06",
+        label: {
+          en: "Mode 6",
+          es: "Modo 6",
+          pt: "Modo 6",
+        },
+      },
+    ],
   },
   "1611": {
     title: {
@@ -5032,7 +5260,64 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
-    list: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Select",
+          es: "Seleccionar",
+          pt: "Selecionar",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Mode 1",
+          es: "Modo 1",
+          pt: "Modo 1",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "Mode 2",
+          es: "Modo 2",
+          pt: "Modo 2",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Mode 3",
+          es: "Modo 3",
+          pt: "Modo 3",
+        },
+      },
+      {
+        value: "04",
+        label: {
+          en: "Mode 4",
+          es: "Modo 4",
+          pt: "Modo 4",
+        },
+      },
+      {
+        value: "05",
+        label: {
+          en: "Mode 5",
+          es: "Modo 5",
+          pt: "Modo 5",
+        },
+      },
+      {
+        value: "06",
+        label: {
+          en: "Mode 6",
+          es: "Modo 6",
+          pt: "Modo 6",
+        },
+      },
+    ],
   },
   "1621": {
     title: {
@@ -5174,7 +5459,7 @@ export const FIELD_VALIDATIONS = {
       {
         value: "06",
         label: {
-          en: "Mode6",
+          en: "Mode 6",
           es: "Modo 6",
           pt: "Modo 6",
         },
@@ -5323,7 +5608,7 @@ export const FIELD_VALIDATIONS = {
       {
         value: "06",
         label: {
-          en: "Mode6",
+          en: "Mode 6",
           es: "Modo 6",
           pt: "Modo 6",
         },
@@ -5395,7 +5680,7 @@ export const FIELD_VALIDATIONS = {
       {
         value: "06",
         label: {
-          en: "Mode6",
+          en: "Mode 6",
           es: "Modo 6",
           pt: "Modo 6",
         },
@@ -5505,20 +5790,65 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Disabled",
+          es: "Desactivado",
+          pt: "Desativado",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Input1",
+          es: "Entrada 1",
+          pt: "Entrada 1",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "Input2",
+          es: "Entrada 2",
+          pt: "Entrada 2",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Input3",
+          es: "Entrada 3",
+          pt: "Entrada 3",
+        },
+      },
+      {
+        value: "04",
+        label: {
+          en: "Input4",
+          es: "Entrada 4",
+          pt: "Entrada 4",
+        },
+      },
+    ],
+  },
+  "1670": {
+    title: {
+      en: "Time (seconds)",
+      pt: "Tempo (segundos)",
+      es: "Tiempo (segundos)",
+    },
+    tooltip: {
+      en: "Time Interval for which the device will send Status Report in Mode 1.\r\n• Range(On) : 5~86,400\r\n• Default : 180, 3,600(USA&OBD), 3,600(EU&OBD)\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Intervalo de tiempo para el cual el dispositivo enviará el Informe de Estado en el Modo 1.\r\n• Rango ( Activado): 5~86,400\r\n• Predeterminado: 180, 3,600 (EE. UU. y OBD), 3,600 (UE y OBD)\r\n* Si el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\n* Después de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Intervalo de Tempo para o qual o dispositivo enviará Relatório de Status no Modo 1.\r\n• Intervalo (Ligado) : 5~86,400\r\n• Padrão : 180, 3,600 (EUA & OBD), 3,600 (UE & OBD)\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 5,
+    max: 86400,
     list: null,
   },
-  // 1670
-  // 1673
-  // 1676
-  // 1679
-  // 1685
-  // 1688
-  // 1682
-  // 1697
-  // 1681
-  // 1684
-
-  "1670": {
+  "1670_1": {
     title: {
       en: "Parking Tracking Time (seconds)",
       pt: "Tempo de Rastreamento de Estacionamento (segundos)",
@@ -5526,8 +5856,8 @@ export const FIELD_VALIDATIONS = {
     },
     tooltip: {
       en: "Time interval during which the device will send Status Reports when parked or when the ‘Motion Sensor’ option is disabled.\r\n• Range(On) : 5~86,400\r\n• Default : ST4932(600), ST4955LCBW(600)",
-      es: 'El intervalo de tiempo durante el cual el dispositivo enviará informes de estado cuando esté estacionado o cuando la opción "sensor de movimiento" esté desactivada. \r\n• Rango ( Activado): 5~86,400 \r\n• Por defecto :',
-      pt: "El intervalo de tiempo durante el cual el dispositivo enviará informes de estado cuando esté estacionado o cuando la opción de ‘sensor de movimiento’ esté desactivada.\r\n• Rango( Activado): 5~86,400\r\n• Predeterminado:",
+      es: 'El intervalo de tiempo durante el cual el dispositivo enviará informes de estado cuando esté estacionado o cuando la opción "sensor de movimiento" esté desactivada. \r\n• Rango ( Activado): 5~86,400',
+      pt: "El intervalo de tiempo durante el cual el dispositivo enviará informes de estado cuando esté estacionado o cuando la opción de ‘sensor de movimiento’ esté desactivada.\r\n• Rango( Activado): 5~86,400",
     },
     min: 600,
     max: 86400,
@@ -5564,6 +5894,21 @@ export const FIELD_VALIDATIONS = {
     list: null,
   },
   "1673": {
+    title: {
+      en: "Time (seconds)",
+      pt: "Tempo (segundos)",
+      es: "Tiempo (segundos)",
+    },
+    tooltip: {
+      en: "Time Interval for which the device will send Status Report in Mode 2.\r\n• Range(On) : 5~86,400\r\n• Default : 180, 3,600(USA&OBD), 3,600(EU&OBD)\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Intervalo de tiempo para el cual el dispositivo enviará el Informe de Estado en el Modo 2.\r\n• Rango ( Activado): 5~86,400\r\n• Predeterminado: 180, 3,600 (EE. UU. y OBD), 3,600 (UE y OBD)\r\n* Si el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\n* Después de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Intervalo de Tempo para o qual o dispositivo enviará Relatório de Status no Modo 2.\r\n• Intervalo (Ligado) : 5~86,400\r\n• Padrão : 180, 3,600 (EUA & OBD), 3,600 (UE & OBD)\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 5,
+    max: 86400,
+    list: null,
+  },
+  "1673_1": {
     title: {
       en: "Power Saving 1 Parking Tracking Time (seconds)",
       pt: "Tempo de Rastreamento de Estacionamento com Economia de Energia 1 (segundos)",
@@ -5610,6 +5955,21 @@ export const FIELD_VALIDATIONS = {
   },
   "1676": {
     title: {
+      en: "Time (seconds)",
+      pt: "Tempo (segundos)",
+      es: "Tiempo (segundos)",
+    },
+    tooltip: {
+      en: "Time Interval for which the device will send Status Report in Mode 3.\r\n• Range(On) : 5~86,400\r\n• Default : 180, 3,600(USA&OBD), 3,600(EU&OBD)\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Intervalo de tiempo para el cual el dispositivo enviará el Informe de Estado en el Modo 3.\r\n• Rango ( Activado): 5~86,400\r\n• Predeterminado: 180, 3,600 (EE. UU. y OBD), 3,600 (UE y OBD)\r\n* Si el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\n* Después de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Intervalo de Tempo para o qual o dispositivo enviará Relatório de Status no Modo 3.\r\n• Intervalo (Ligado) : 5~86,400\r\n• Padrão : 180, 3,600 (EUA & OBD), 3,600 (UE & OBD)\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 5,
+    max: 86400,
+    list: null,
+  },
+  "1676_1": {
+    title: {
       en: "Power Saving 2 Parking Tracking Time (seconds)",
       pt: "Tempo de Rastreamento de Estacionamento com Economia de Energia 2 (segundos)",
       es: "Tiempo de Rastreo en Estacionamiento con Ahorro de Energía 2 (segundos)",
@@ -5655,6 +6015,21 @@ export const FIELD_VALIDATIONS = {
   },
   "1679": {
     title: {
+      en: "Time (seconds)",
+      pt: "Tempo (segundos)",
+      es: "Tiempo (segundos)",
+    },
+    tooltip: {
+      en: "Time Interval for which the device will send Status Report in Mode 4.\r\n• Range(On) : 5~86,400\r\n• Default : 180, 3,600(USA&OBD), 3,600(EU&OBD)\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Intervalo de tiempo para el cual el dispositivo enviará el Informe de Estado en el Modo 4.\r\n• Rango ( Activado): 5~86,400\r\n• Predeterminado: 180, 3,600 (EE. UU. y OBD), 3,600 (UE y OBD)\r\n* Si el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\n* Después de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Intervalo de Tempo para o qual o dispositivo enviará Relatório de Status no Modo 4.\r\n• Intervalo (Ligado) : 5~86,400\r\n• Padrão : 180, 3,600 (EUA & OBD), 3,600 (UE & OBD)\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 5,
+    max: 86400,
+    list: null,
+  },
+  "1679_1": {
+    title: {
       en: "Driving Tracking Time (seconds)",
       pt: "Tempo de Rastreamento de Condução (segundos)",
       es: "Tiempo de Rastreo en Conducción (segundos)",
@@ -5685,6 +6060,21 @@ export const FIELD_VALIDATIONS = {
   },
   "1681": {
     title: {
+      en: "Heading/Angle (degrees)",
+      pt: "Direção/Ângulo (graus)",
+      es: "Dirección/Ángulo (grados)",
+    },
+    tooltip: {
+      en: "Heading/Angle for which the device will send Status Report in Mode 4.\r\n• Range(On) : 10~179\r\n• Default : Off\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Dirección/Ángulo para el cual el dispositivo enviará el Informe de Estado en el Modo 4.\r\n• Rango ( Activado): 10~179\r\n• Predeterminado: Desactivado\r\n\r\nSi el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\nDespués de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Direção/Ângulo para o qual o dispositivo enviará Relatório de Status no Modo 4.\r\n• Intervalo (Ligado) : 10~179\r\n• Padrão  : Desativado\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 10,
+    max: 179,
+    list: null,
+  },
+  "1681_1": {
+    title: {
       en: "Driving Angle (degrees)",
       pt: "Ângulo de Condução (graus)",
       es: "Ángulo de Conducción (grados)",
@@ -5699,6 +6089,21 @@ export const FIELD_VALIDATIONS = {
     list: null,
   },
   "1682": {
+    title: {
+      en: "Time (seconds)",
+      pt: "Tempo (segundos)",
+      es: "Tiempo (segundos)",
+    },
+    tooltip: {
+      en: "Time Interval for which the device will send Status Report in Mode 5.\r\n• Range(On) : 5~86,400\r\n• Default : 180, 3,600(USA&OBD), 3,600(EU&OBD)\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Intervalo de tiempo para el cual el dispositivo enviará el Informe de Estado en el Modo 5.\r\n• Rango ( Activado): 5~86,400\r\n• Predeterminado: 180, 3,600 (EE. UU. y OBD), 3,600 (UE y OBD)\r\n* Si el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\n* Después de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Intervalo de Tempo para o qual o dispositivo enviará Relatório de Status no Modo 5.\r\n• Intervalo (Ligado) : 5~86,400\r\n• Padrão : 180, 3,600 (EUA & OBD), 3,600 (UE & OBD)\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 5,
+    max: 86400,
+    list: null,
+  },
+  "1682_1": {
     title: {
       en: "DC.Power Tracking Time - Only driving (seconds)",
       pt: "Tempo de Rastreamento com Alimentação DC - Apenas condução (segundos)",
@@ -5730,6 +6135,21 @@ export const FIELD_VALIDATIONS = {
   },
   "1684": {
     title: {
+      en: "Heading/Angle (degrees)",
+      pt: "Direção/Ângulo (graus)",
+      es: "Dirección/Ángulo (grados)",
+    },
+    tooltip: {
+      en: "Heading/Angle for which the device will send Status Report in Mode 5.\r\n• Range(On) : 10~179\r\n• Default : Off\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Dirección/Ángulo para el cual el dispositivo enviará el Informe de Estado en el Modo 5.\r\n• Rango ( Activado): 10~179\r\n• Predeterminado: Desactivado\r\n\r\nSi el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\nDespués de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Direção/Ângulo para o qual o dispositivo enviará Relatório de Status no Modo 5.\r\n• Intervalo (Ligado) : 10~179\r\n• Padrão  : Desativado\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 10,
+    max: 179,
+    list: null,
+  },
+  "1684_1": {
+    title: {
       en: "DC.Power Driving Angle (degrees)",
       pt: "Ângulo de Condução com Alimentação DC (graus)",
       es: "Ángulo de Conducción con Alimentación DC (grados)",
@@ -5744,6 +6164,21 @@ export const FIELD_VALIDATIONS = {
     list: null,
   },
   "1685": {
+    title: {
+      en: "Time (seconds)",
+      pt: "Tempo (segundos)",
+      es: "Tiempo (segundos)",
+    },
+    tooltip: {
+      en: "Time Interval for which the device will send Status Report in Mode 5.\r\n• Range(On) : 5~86,400\r\n• Default : 180, 3,600(USA&OBD), 3,600(EU&OBD)\r\n* If the device detects a change in any of 'Time', 'Distance', or 'Heading/Angle', it sends Status Report.\r\n* After sending Status Report for any change, the time is always reset.",
+      es: "Intervalo de tiempo para el cual el dispositivo enviará el Informe de Estado en el Modo 5.\r\n• Rango ( Activado): 5~86,400\r\n• Predeterminado: 180, 3,600 (EE. UU. y OBD), 3,600 (UE y OBD)\r\n* Si el dispositivo detecta un cambio en cualquiera de 'Tiempo', 'Distancia' o 'Dirección/Ángulo', envía el Informe de Estado.\r\n* Después de enviar el Informe de Estado por cualquier cambio, el tiempo siempre se restablece.",
+      pt: "Intervalo de Tempo para o qual o dispositivo enviará Relatório de Status no Modo 5.\r\n• Intervalo (Ligado) : 5~86,400\r\n• Padrão : 180, 3,600 (EUA & OBD), 3,600 (UE & OBD)\r\n* Se o dispositivo detectar uma mudança em qualquer um dos 'Tempo', 'Distância' ou 'Direção/Ângulo', ele enviará o Relatório de Status.\r\n* Após enviar o Relatório de Status para qualquer alteração, o tempo é sempre redefinido.",
+    },
+    min: 5,
+    max: 86400,
+    list: null,
+  },
+  "1685_1": {
     title: {
       en: "Power Saving 1 Driving Tracking Time (seconds)",
       pt: "Tempo de Rastreamento de Condução com Economia de Energia 1 (segundos)",
@@ -6126,14 +6561,14 @@ export const FIELD_VALIDATIONS = {
   },
   "1717": {
     title: {
-      en: "GPS Pinning at Parking",
-      pt: "Fixação de GPS em Estacionamento",
-      es: "Fijación del GPS en Estacionamiento",
+      en: "GPS On at Motion",
+      pt: "GPS ligado em Movimento",
+      es: "GPS Activado en Movimiento",
     },
     tooltip: {
-      en: "The device obtains the GPS position at the report time in Parking mode.\r\n• Default : On\r\n* The GPS chipset will not be activated during parking mode except at the start of parking. \r\n* To enable this function, the Ignition Type must be set to 'Motion Ignition.",
-      es: "El dispositivo obtiene la posición GPS en el momento del informe en modo de estacionamiento.\r\n• Predeterminado: Activado\r\n* El chipset GPS no se activará durante el modo de estacionamiento, excepto al inicio del estacionamiento.\r\n* Para habilitar esta función, el Tipo de ignición debe estar configurado en 'Ignición por Movimiento'.",
-      pt: "O dispositivo obtém a posição do GPS no horário do relatório em modo de Estacionamento.\r\n• Padrão  : Ativado\r\n* O chipset GPS não será ativado durante o modo de estacionamento, exceto no início do estacionamento.\r\n* Para ativar esta função, o Tipo de Ignição deve ser configurado para 'Ignição por Movimento'.",
+      en: "The device turns on GPS when motion is detected in Motionless Mode.\r\n• Default : On",
+      es: "El dispositivo enciende el GPS cuando se detecta movimiento en el Modo Sin Movimiento. \r\n• Predeterminado: Activado",
+      pt: "O dispositivo ativa o GPS quando o movimento é detectado no Modo Sem Movimento. \r\n• Padrão  : Ativado",
     },
     min: null,
     max: null,
