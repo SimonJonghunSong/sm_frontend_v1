@@ -24,7 +24,7 @@ const NTPServer = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData) return null;
+  if (!formData || (!formData["1076"] && !formData["1077"])) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -85,12 +85,7 @@ const NTPServer = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <h1>NTP Server</h1>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
-      </Stack>
+      <h1>NTP Server</h1>
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <TextInputField
           id="1076"
@@ -109,6 +104,12 @@ const NTPServer = ({ formData, onChange }: Props) => {
           formData={formData}
           onChange={handleChange}
         />
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-end" alignItems="center">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
       </Stack>
     </Form>
   );

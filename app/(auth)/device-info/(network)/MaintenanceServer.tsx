@@ -10,9 +10,8 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
-import SwitchField from "../(components)/SwitchField";
+import TimeHMA from "../(components)/TimeHMA";
 
-// TODO 진행중
 interface Props {
   formData: {
     [key: string]: FormField;
@@ -20,12 +19,25 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const tooltipText = {
+  en: "The SCUTI server (maintenance server) in STSUNLAB operates separately for the customer. STSUNLAB provides commands to change the server's settings (e.g., IP, port, interval). These commands should only be used by customers running the maintenance server independently.",
+  pt: "O servidor SCUTI (servidor de manutenção) no STSUNLAB opera separadamente para o cliente. A STSUNLAB fornece comandos para alterar as configurações do servidor (por exemplo, IP, porta, intervalo). Esses comandos devem ser usados apenas por clientes que operam o servidor de manutenção de forma independente.",
+  es: "El servidor SCUTI (servidor de mantenimiento) en STSUNLAB opera de forma independiente para el cliente. STSUNLAB proporciona comandos para cambiar la configuración del servidor (por ejemplo, IP, puerto, intervalo). Estos comandos solo deben ser utilizados por clientes que operan el servidor de mantenimiento de forma independiente.",
+};
+
 const MaintenanceServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData) return null;
+  if (
+    !formData ||
+    (!formData["1020"] &&
+      !formData["1022"] &&
+      !formData["1021"] &&
+      !formData["1023"])
+  )
+    return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -79,19 +91,20 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
           }
           return acc;
         }, {});
-
+        // 1022 => Access interval disable이면 0으로 값 보낼 것
+        // 1023 => Access time disable이면 00:00 으로 보낼 것
+        // 1023 => Access time enable이면 hh:mm 형식으로 보낼 것
         // 필드 값들을 사용하여 수행할 작업
         console.log("Form values:", fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack direction="row" gap="4px" alignItems="center">
         <h1>Maintenance Server</h1>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
+        <InputBox.Info tooltipText={tooltipText[lang]} />
       </Stack>
+
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <TextInputField
           id="1020"
@@ -120,7 +133,53 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
           isRequired
         />
 
-        <SwitchField id="1023" formData={formData} onChange={handleChange} />
+        {formData["1023"]?.realValue && (
+          <Stack
+            width={"calc(50% - 8px)"}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <Stack direction="row" gap="4px" alignItems="center">
+              <InputBox.Title>
+                {FIELD_VALIDATIONS["1023"].title[lang]}
+              </InputBox.Title>
+              <InputBox.Info
+                tooltipText={
+                  <span style={{ whiteSpace: "pre-wrap" }}>
+                    {FIELD_VALIDATIONS["1023"].tooltip[lang]}
+                  </span>
+                }
+              />
+              <InputBox.Number>1023</InputBox.Number>
+            </Stack>
+            <SwitchPrimary
+              onChange={(e) =>
+                onChange("1023", e.target.checked ? "01:00" : "00:00")
+              }
+              checked={formData["1023"].realValue !== "00:00"}
+            />
+          </Stack>
+        )}
+
+        {formData["1023"]?.realValue &&
+          formData["1023"]?.realValue !== "00:00" && (
+            <TimeHMA
+              value={formData["1023"]?.realValue}
+              onChange={(value) => handleChange("1023", value)}
+              isAm={
+                formData["1023"]?.realValue
+                  ? Number(formData["1023"].realValue.split(":")[0]) < 12
+                  : true
+              }
+            />
+          )}
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
       </Stack>
     </Form>
   );

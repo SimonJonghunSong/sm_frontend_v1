@@ -96,21 +96,17 @@ const MainServer = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <h1>Main Server</h1>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
-      </Stack>
+      <h1>Main Server</h1>
+
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <TextInputField
           id="1005"
           formData={formData}
           onChange={handleChange}
           isRequired
-          error={!/^[A-Za-z0-9\-.]*$/.test(formData["1005"].realValue)}
+          error={!/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)}
           helperText={
-            !/^[A-Za-z0-9\-.]*$/.test(formData["1005"].realValue)
+            !/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)
               ? FIELD_ERRORS["alphaNumericPattern"][lang]
               : undefined
           }
@@ -150,7 +146,7 @@ const MainServer = ({ formData, onChange }: Props) => {
               onChange={(e) =>
                 handleChange("1011", e.target.checked ? "01" : "00")
               }
-              checked={formData["1011"].realValue === "01"}
+              checked={formData["1011"]?.realValue === "01"}
             />
           </Stack>
         </Stack>
@@ -178,6 +174,12 @@ const MainServer = ({ formData, onChange }: Props) => {
           formData={formData}
           onChange={handleChange}
         />
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
       </Stack>
     </Form>
   );

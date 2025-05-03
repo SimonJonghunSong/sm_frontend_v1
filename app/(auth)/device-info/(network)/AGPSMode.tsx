@@ -27,7 +27,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
   const allowedChars = /^[A-Za-z0-9\-./:]*$/;
   const urlPattern = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
 
-  if (!formData) return null;
+  if (!formData || (!formData["1014"] && !formData["1015"])) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -88,9 +88,9 @@ const AGPSMode = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>AGPS Mode</h1>
+          <h1>{t("configuration.network.agps_mode")}</h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
@@ -99,39 +99,41 @@ const AGPSMode = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>1014</InputBox.Number>
-          <SwitchPrimary
-            onChange={(e) =>
-              handleChange("1014", e.target.checked ? "01" : "00")
-            }
-            checked={formData["1014"].realValue === "01"}
-          />
         </Stack>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
+        <SwitchPrimary
+          onChange={(e) => handleChange("1014", e.target.checked ? "01" : "00")}
+          checked={formData["1014"].realValue === "01"}
+        />
       </Stack>
-      {formData["1014"].realValue === "01" && (
+
+      {formData["1014"]?.realValue === "01" && (
         <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
           <TextInputField
             id="1015"
             formData={formData}
             onChange={handleChange}
             error={
-              formData["1015"].realValue &&
-              (!allowedChars.test(formData["1015"].realValue) ||
-                !urlPattern.test(formData["1015"].realValue))
+              formData["1015"]?.realValue &&
+              (!allowedChars.test(formData["1015"]?.realValue) ||
+                !urlPattern.test(formData["1015"]?.realValue))
             }
             helperText={
-              formData["1015"].realValue &&
-              (!allowedChars.test(formData["1015"].realValue)
+              formData["1015"]?.realValue &&
+              (!allowedChars.test(formData["1015"]?.realValue)
                 ? FIELD_ERRORS["alphaNumericPatternWithSymbols"][lang]
-                : !urlPattern.test(formData["1015"].realValue)
+                : !urlPattern.test(formData["1015"]?.realValue)
                 ? FIELD_ERRORS["invalidUrl"][lang]
                 : undefined)
             }
           />
         </Stack>
       )}
+
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
+      </Stack>
     </Form>
   );
 };

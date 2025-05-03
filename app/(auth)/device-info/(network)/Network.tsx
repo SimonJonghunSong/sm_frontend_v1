@@ -87,40 +87,26 @@ const Network = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <h1>{t("model.add_model_pop_up.network_*")}</h1>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
-      </Stack>
+      <h1>{t("model.add_model_pop_up.network_*")}</h1>
+
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        {formData["1013"] && (
-          <SelectField id="1013" formData={formData} onChange={handleChange} />
-        )}
+        <SelectField id="1013" formData={formData} onChange={handleChange} />
 
-        {formData["1054"] && (
-          <SelectField id="1054" formData={formData} onChange={handleChange} />
-        )}
+        <SelectField id="1054" formData={formData} onChange={handleChange} />
 
-        {formData["1027"] && (
-          <NumericInputField
-            id="1027"
-            formData={formData}
-            onChange={handleChange}
-          />
-        )}
+        <NumericInputField
+          id="1027"
+          formData={formData}
+          onChange={handleChange}
+        />
 
-        {formData["1016"] && (
-          <SelectField id="1016" formData={formData} onChange={handleChange} />
-        )}
+        <SelectField id="1016" formData={formData} onChange={handleChange} />
 
-        {formData["1060"] && (
-          <NumericInputField
-            id="1060"
-            formData={formData}
-            onChange={handleChange}
-          />
-        )}
+        <NumericInputField
+          id="1060"
+          formData={formData}
+          onChange={handleChange}
+        />
 
         {formData["1070"] && (
           <Stack width={"calc(50% - 8px)"} gap={"16px"}>
@@ -159,6 +145,12 @@ const Network = ({ formData, onChange }: Props) => {
             )}
           </Stack>
         )}
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
       </Stack>
     </Form>
   );

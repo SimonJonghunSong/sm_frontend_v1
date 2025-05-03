@@ -85,12 +85,8 @@ const Network = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <h1>APN</h1>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
-      </Stack>
+      <h1>APN</h1>
+
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <SelectField id="1000" formData={formData} onChange={handleChange} />
 
@@ -137,6 +133,12 @@ const Network = ({ formData, onChange }: Props) => {
           onChange={handleChange}
           type="password"
         />
+      </Stack>
+
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
       </Stack>
     </Form>
   );

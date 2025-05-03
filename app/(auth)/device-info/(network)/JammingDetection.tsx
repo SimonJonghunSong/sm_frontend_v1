@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack, TextField } from "@mui/material";
@@ -23,11 +23,9 @@ const JammingDetection = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
+  const [isJammingDetection, setIsJammingDetection] = useState(false);
 
-  const allowedChars = /^[A-Za-z0-9\-./:]*$/;
-  const urlPattern = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
-
-  if (!formData) return null;
+  if (!formData || !formData["1061"]) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -101,58 +99,70 @@ const JammingDetection = ({ formData, onChange }: Props) => {
               </span>
             }
           />
-          <InputBox.Number>1061</InputBox.Number>
-          <SwitchPrimary
-            onChange={(e) =>
-              handleChange("1061", e.target.checked ? "01" : "00")
-            }
-            checked={formData["1061"].realValue === "01"}
-          />
         </Stack>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
+        <SwitchPrimary
+          onChange={(e) => {
+            setIsJammingDetection(e.target.checked);
+          }}
+          checked={isJammingDetection}
+        />
       </Stack>
-      {formData["1061"].realValue !== "00" && (
-        <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-          <SelectField id="1061" formData={formData} onChange={handleChange} />
 
-          <NumericInputField
-            id="1065"
-            formData={formData}
-            onChange={handleChange}
-          />
+      {isJammingDetection && (
+        <>
+          <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
+            <SelectField
+              id="1061"
+              formData={formData}
+              onChange={handleChange}
+            />
+            {formData["1061"]?.realValue !== "00" && (
+              <>
+                <NumericInputField
+                  id="1065"
+                  formData={formData}
+                  onChange={handleChange}
+                />
 
-          <NumericInputField
-            id="1062"
-            formData={formData}
-            onChange={handleChange}
-          />
+                <NumericInputField
+                  id="1062"
+                  formData={formData}
+                  onChange={handleChange}
+                />
 
-          <NumericInputField
-            id="1066"
-            formData={formData}
-            onChange={handleChange}
-          />
+                <NumericInputField
+                  id="1066"
+                  formData={formData}
+                  onChange={handleChange}
+                />
 
-          <NumericInputField
-            id="1063"
-            formData={formData}
-            onChange={handleChange}
-          />
+                <NumericInputField
+                  id="1063"
+                  formData={formData}
+                  onChange={handleChange}
+                />
 
-          <NumericInputField
-            id="1067"
-            formData={formData}
-            onChange={handleChange}
-          />
+                <NumericInputField
+                  id="1067"
+                  formData={formData}
+                  onChange={handleChange}
+                />
 
-          <NumericInputField
-            id="1068"
-            formData={formData}
-            onChange={handleChange}
-          />
-        </Stack>
+                <NumericInputField
+                  id="1068"
+                  formData={formData}
+                  onChange={handleChange}
+                />
+              </>
+            )}
+          </Stack>
+
+          <Stack direction="row" justifyContent="flex-end" alignItems="center">
+            <Button color="secondary" variant="contained" type="submit">
+              {t("notify.send")}
+            </Button>
+          </Stack>
+        </>
       )}
     </Form>
   );

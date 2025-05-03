@@ -1,10 +1,13 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
+import InputBox from "@/components/inputbox/InputBox";
+import useLangStore from "@/utils/useLangStore";
+import { SwitchPrimary } from "@/components/switches";
 
 interface Props {
   formData: {
@@ -13,9 +16,17 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const tooltipText = {
+  en: "When the network status is 'No Network' (e.g., SIM PIN Locked, Cannot Attach Network, No SIM, or SIM Card Locked), the output will activate if this status persists for the set delay time.\nThe output will deactivate once the network status returns to normal.\n* Output control for the satellite modem can detect 'No Network' situations.\n• Default : Off",
+  pt: "Quando o status da rede for 'Sem Rede' (por exemplo, SIM com PIN Bloqueado, Não Consegue Conectar à Rede, Sem SIM ou SIM Card Bloqueado), a saída será ativada se esse status persistir pelo tempo de atraso configurado.\nA saída será desativada assim que o status da rede voltar ao normal.\n* O controle de saída para o modem via satélite pode detectar situações de 'Sem Rede'.\n• Padrão  : Desativado",
+  es: "Cuando el estado de la red es 'Sin Red' (por ejemplo, SIM con PIN bloqueado, No puede conectar a la red, Sin SIM, o SIM bloqueada), la salida se activará si este estado persiste durante el tiempo de retraso configurado.\nLa salida se desactivará una vez que el estado de la red vuelva a la normalidad.\n• Predeterminado: Desactivado",
+};
+
 const Satellite = ({ formData, onChange }: Props) => {
   const t = useTranslations();
+  const lang = useLangStore();
   const formRef = useRef<HTMLFormElement>(null);
+  const [isChecked, setIsChecked] = useState(false);
 
   if (!formData) return null;
 
@@ -79,21 +90,47 @@ const Satellite = ({ formData, onChange }: Props) => {
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <h1>Satellite</h1>
-        <Button color="secondary" variant="contained" type="submit">
-          {t("notify.send")}
-        </Button>
-      </Stack>
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <SelectField id="1052" formData={formData} onChange={handleChange} />
+        <Stack direction="row" gap="4px" alignItems="center">
+          <h1>Satellite</h1>
+          <InputBox.Info
+            tooltipText={
+              <span style={{ whiteSpace: "pre-wrap" }}>
+                {tooltipText[lang.lang]}
+              </span>
+            }
+          />
+        </Stack>
 
-        <NumericInputField
-          id="1053"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
+        <SwitchPrimary
+          onChange={(e) => setIsChecked(e.target.checked)}
+          checked={isChecked}
         />
       </Stack>
+
+      {isChecked && (
+        <>
+          <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
+            <SelectField
+              id="1052"
+              formData={formData}
+              onChange={handleChange}
+            />
+
+            <NumericInputField
+              id="1053"
+              formData={formData}
+              onChange={handleChange}
+              isRequired
+            />
+          </Stack>
+
+          <Stack direction="row" justifyContent="flex-end" alignItems="center">
+            <Button color="secondary" variant="contained" type="submit">
+              {t("notify.send")}
+            </Button>
+          </Stack>
+        </>
+      )}
     </Form>
   );
 };
