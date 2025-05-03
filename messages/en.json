@@ -1013,6 +1013,7 @@
       "small_data_(2byte)": "Small Data (2Byte)",
       "medium_data_(4byte)": "Medium Data (4Byte)",
       "large_data_(8byte)": "Large Data (8Byte)",
+      "alert_config": "Alert Config",
       "alert_config_1": "Alert Config 1",
       "ignition_on_(33)": "Ignition On (33)",
       "ignition_off_(34)": "Ignition Off (34)",

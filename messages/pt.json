@@ -996,6 +996,7 @@
       "small_data_(2byte)": "Dados Pequenos (2Bytes)",
       "medium_data_(4byte)": "Dados Médios (4Bytes)",
       "large_data_(8byte)": "Dados Grandes (8Bytes)",
+      "alert_config": "Configuração de Alerta",
       "alert_config_1": "Configuração de Alerta 1",
       "ignition_on_(33)": "Ignição Ligada (33)",
       "ignition_off_(34)": "Ignição Desligada (34)",
