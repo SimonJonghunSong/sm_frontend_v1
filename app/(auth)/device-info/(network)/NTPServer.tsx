@@ -10,6 +10,7 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
+import { hasFormDataFields } from "../(utils)/@index";
 
 // TODO 진행중
 interface Props {
@@ -24,7 +25,8 @@ const NTPServer = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData || (!formData["1076"] && !formData["1077"])) return null;
+  const fieldIds = ["1076", "1077"];
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -69,7 +71,7 @@ const NTPServer = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["1076", "1077"].includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,

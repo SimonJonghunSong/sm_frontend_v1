@@ -2,10 +2,11 @@ import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
-import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
+import { hasFormDataFields } from "../(utils)/@index";
+import TextInputField from "../(components)/TextInputField";
 
 interface Props {
   formData: {
@@ -14,18 +15,23 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldIds = [
+  "1035",
+  "1036",
+  "1037",
+  "1038",
+  "1039",
+  "1040",
+  "1041",
+  "1042",
+  "1043",
+];
+
 const Call = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (
-    !formData ||
-    (!formData["1035"] &&
-      !formData["1041"] &&
-      !formData["1042"] &&
-      !formData["1043"])
-  )
-    return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -69,7 +75,7 @@ const Call = ({ formData, onChange }: Props) => {
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
-          if (["1035", "1041", "1042", "1043"].includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -89,6 +95,45 @@ const Call = ({ formData, onChange }: Props) => {
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <SwitchField id="1035" formData={formData} onChange={handleChange} />
 
+        {formData["1035"]?.realValue === "01" && (
+          <>
+            <TextInputField
+              id="1036"
+              formData={formData}
+              onChange={handleChange}
+            />
+
+            <TextInputField
+              id="1037"
+              formData={formData}
+              onChange={handleChange}
+            />
+
+            <TextInputField
+              id="1038"
+              formData={formData}
+              onChange={handleChange}
+            />
+
+            <TextInputField
+              id="1039"
+              formData={formData}
+              onChange={handleChange}
+            />
+
+            <TextInputField
+              id="1040"
+              formData={formData}
+              onChange={handleChange}
+            />
+          </>
+        )}
+
+        <NumericInputField
+          id="1041"
+          formData={formData}
+          onChange={handleChange}
+        />
         <NumericInputField
           id="1041"
           formData={formData}
