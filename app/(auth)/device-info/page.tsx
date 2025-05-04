@@ -11,6 +11,7 @@ import SystemTab from "./(tabs)/SystemTab";
 import ReportTab from "./(tabs)/ReportTab";
 import TrackingTab from "./(tabs)/TrackingTab";
 import BluetoothTab from "./(tabs)/BluetoothTab";
+import AccessoriesTab from "./(tabs)/AccessoriesTab";
 
 // Type definitions
 interface FieldInfo {
@@ -165,6 +166,8 @@ export default function DeviceInfoPage() {
         return <TrackingTab formData={formData} setFormData={setFormData} />;
       case "Bluetooth":
         return <BluetoothTab formData={formData} setFormData={setFormData} />;
+      case "Accessories":
+        return <AccessoriesTab formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }

@@ -12,9 +12,16 @@ interface SwitchFieldProps {
   };
   onChange: (id: string, value: string) => void;
   style?: React.CSSProperties;
+  customChecked?: boolean;
 }
 
-const SwitchField = ({ id, formData, onChange, style }: SwitchFieldProps) => {
+const SwitchField = ({
+  id,
+  formData,
+  onChange,
+  style,
+  customChecked,
+}: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
   if (!formData[id]) return null;
@@ -40,7 +47,11 @@ const SwitchField = ({ id, formData, onChange, style }: SwitchFieldProps) => {
       </Stack>
       <SwitchPrimary
         onChange={(e) => onChange(id, e.target.checked ? "01" : "00")}
-        checked={formData[id].realValue === "01"}
+        checked={
+          typeof customChecked === "boolean"
+            ? customChecked
+            : formData[id].realValue === "01"
+        }
       />
     </Stack>
   );
