@@ -13,7 +13,7 @@ import TrackingTab from "./(tabs)/TrackingTab";
 import BluetoothTab from "./(tabs)/BluetoothTab";
 import AccessoriesTab from "./(tabs)/AccessoriesTab";
 import RfTab from "app/(auth)/device-info/(tabs)/\bRfTab";
-
+import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 // Type definitions
 interface FieldInfo {
   tab_id: string;
@@ -155,6 +155,8 @@ export default function DeviceInfoPage() {
     setTab(tab);
   };
 
+  console.log("tab ", tab);
+
   const renderContent = () => {
     switch (tab) {
       case "Network":
@@ -171,6 +173,8 @@ export default function DeviceInfoPage() {
         return <AccessoriesTab formData={formData} setFormData={setFormData} />;
       case "RF":
         return <RfTab formData={formData} setFormData={setFormData} />;
+      case "Input/Output(I/O)":
+        return <InputOutputTab formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }

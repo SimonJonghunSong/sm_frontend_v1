@@ -1184,8 +1184,8 @@
       "mode_1,_mode_2,_mode_3,_mode_4,_mode_5,_mode_6": "Mode 1, Mode 2, Mode 3, Mode 4, Mode 5, Mode 6",
       "preset_time_(seconds)": "Preset Time (seconds)"
     },
-    "input/output(i/o)": {
-      "input/output(i/o)": "Input/Output(I/O)",
+    "input_output": {
+      "input_output": "Input/Output(I/O)",
       "input": "Input",
       "output": "Output",
       "chat": "Chat",
