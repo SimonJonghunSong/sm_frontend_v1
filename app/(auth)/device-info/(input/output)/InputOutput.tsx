@@ -1,0 +1,176 @@
+import { useRef, useState } from "react";
+import styled from "styled-components";
+import { useTranslations } from "next-intl";
+import { Button, Stack, Tab as MuiTab, Tabs } from "@mui/material";
+import InputBox from "@/components/inputbox/InputBox";
+import useLangStore from "@/utils/useLangStore";
+import { FormField } from "app/(auth)/device-info/page";
+import Input from "app/(auth)/device-info/(input/output)/Input";
+import Output from "app/(auth)/device-info/(input/output)/Output";
+
+// TODO: 세부 로직 추가 필요
+
+const title = {
+  en: "Input/Output(I/O)",
+  ps: "Entrada/Saída (I/O)",
+  es: "Entradas/Salidas (I/O)",
+} as const;
+
+interface Props {
+  formData: {
+    [key: string]: FormField;
+  };
+  onChange: (id: string, value: string) => void;
+}
+
+const error = {};
+
+const fieldsIds = ["17"];
+
+const InputOutput = ({ formData, onChange }: Props) => {
+  const t = useTranslations();
+  const lang = useLangStore((state) => state.lang);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [tab, setTab] = useState<"input" | "output">("input");
+
+  // if (!hasFormDataFields(formData, fieldsIds)) return null;
+
+  const validateForm = (): boolean => {
+    // formRef가 null이면 유효성 검사를 할 수 없음
+    if (!formRef.current) return true;
+
+    // 폼 내의 모든 input 요소 중 aria-invalid="true" 속성을 가진 요소 찾기
+    const invalidInputs = formRef.current.querySelectorAll(
+      '[aria-invalid="true"]'
+    );
+
+    console.log("invalidInputs :::", invalidInputs);
+
+    if (invalidInputs.length > 0) {
+      // 첫 번째 유효하지 않은 입력 필드로 스크롤
+      (invalidInputs[0] as HTMLElement).scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+
+      // 포커스 설정
+      (invalidInputs[0] as HTMLElement).focus();
+
+      return false;
+    }
+
+    return true;
+  };
+
+  return (
+    <Form
+      ref={formRef}
+      onSubmit={(e) => {
+        e.preventDefault();
+
+        // 폼 유효성 검사 실행
+        if (!validateForm()) {
+          return; // 유효하지 않은 필드가 있으면 제출을 중단
+        }
+
+        // 모든 필드 값을 포함한 객체 생성
+        const fieldValues = Object.keys(formData).reduce((acc, key) => {
+          // 네트워크 탭에 있는 필드만 포함
+          if (fieldsIds.includes(key)) {
+            acc[key] = {
+              id: key,
+              value: formData[key].value,
+              realValue: formData[key].realValue,
+            };
+          }
+          return acc;
+        }, {});
+
+        // 필드 값들을 사용하여 수행할 작업
+        console.log("Form values:", fieldValues);
+
+        // 여기에 데이터 제출 로직 추가
+      }}
+    >
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Stack direction="row" alignItems="center" gap={"4px"}>
+          <h1>{title[lang]}</h1>
+          <InputBox.Number>16</InputBox.Number>
+        </Stack>
+      </Stack>
+
+      <StyledTabs
+        value={tab}
+        onChange={(_, value) => setTab(value)}
+        variant="fullWidth"
+      >
+        <Tab
+          label={t("configuration.input_output.input")}
+          value="input"
+          sx={{ flex: 1 }}
+        />
+        <Tab
+          label={t("configuration.input_output.output")}
+          value="output"
+          sx={{ flex: 1 }}
+        />
+      </StyledTabs>
+
+      <TabContent>
+        {tab === "input" && <Input formData={formData} onChange={onChange} />}
+        {tab === "output" && <Output formData={formData} onChange={onChange} />}
+      </TabContent>
+
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
+      </Stack>
+    </Form>
+  );
+};
+
+export default InputOutput;
+
+const Tab = styled(MuiTab)`
+  font-weight: 600;
+  padding: 12px 16px;
+  min-height: 48px;
+  background-color: var(--grey1);
+  border-radius: 8px 8px 0 0;
+  margin-right: 2px;
+
+  &:not(.Mui-selected):hover {
+    background-color: #e0e0e0;
+  }
+`;
+
+const StyledTabs = styled(Tabs)`
+  border-radius: 8px 8px 0 0;
+
+  .MuiTabs-indicator {
+    height: 3px;
+  }
+`;
+
+const TabContent = styled.div`
+  background-color: #ffffff;
+  padding: 16px;
+  border-radius: 0 0 8px 8px;
+`;
+
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0px 1px 5px 0px #0000001a;
+  border-radius: 8px;
+  padding: 24px;
+  gap: 16px;
+
+  h1 {
+    padding: 16px 0;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 14px;
+  }
+`;

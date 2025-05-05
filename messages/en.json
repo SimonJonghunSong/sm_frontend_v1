@@ -1184,8 +1184,8 @@
       "mode_1,_mode_2,_mode_3,_mode_4,_mode_5,_mode_6": "Mode 1, Mode 2, Mode 3, Mode 4, Mode 5, Mode 6",
       "preset_time_(seconds)": "Preset Time (seconds)"
     },
-    "input/output(i/o)": {
-      "input/output(i/o)": "Input/Output(I/O)",
+    "input_output": {
+      "input_output": "Input/Output(I/O)",
       "input": "Input",
       "output": "Output",
       "chat": "Chat",
@@ -1417,6 +1417,10 @@
     },
     "rf": {
       "rf": "RF",
+      "erb_list": "ERB List",
+      "rf_device": "RF Device",
+      "presence_function": "Presence Function",
+      "presence_device": "Presence Device",
       "rf_channel": "RF Channel",
       "1,_2,_3,_4,_5,_6,_7,_8,_9,_10": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
       "status_of_battery": "Status of Battery",

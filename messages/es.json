@@ -259,7 +259,10 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -334,7 +337,10 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1441,7 +1447,11 @@
       "select,_always,_backup(when_wwan_is_not_available)": "Seleccionar, Siempre, Respaldo (Cuando WWAN no esté disponible)",
       "lorawan_backup_delay_(minutes)": "Retraso de Respaldo LoRaWAN (minutos)",
       "dropdown_default": "Predeterminado en Desplegable",
-      "read_spreading_factor_for_lora": "Leer Factor de Dispersión para LoRa"
+      "read_spreading_factor_for_lora": "Leer Factor de Dispersión para LoRa",
+      "erb_list": "Lista de ERB",
+      "presence_function": "Función de presencia",
+      "rf_device": "Dispositivo RF",
+      "presence_device": "Dispositivo de presencia"
     },
     "commands": {
       "network_commands": "Comandos de Red",
