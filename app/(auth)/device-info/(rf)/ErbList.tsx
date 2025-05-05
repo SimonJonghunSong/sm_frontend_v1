@@ -163,7 +163,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2511"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2511",
@@ -176,7 +175,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2512"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2513" formData={formData} onChange={handleChange} />
@@ -184,7 +182,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2514"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2514",
@@ -200,7 +197,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2516"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2516",
@@ -213,7 +209,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2517"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2518" formData={formData} onChange={handleChange} />
@@ -221,7 +216,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2519"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2519",
@@ -238,7 +232,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2521"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2521",
@@ -251,7 +244,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2522"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2523" formData={formData} onChange={handleChange} />
@@ -259,7 +251,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2524"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2524",
@@ -275,7 +266,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2526"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2526",
@@ -288,7 +278,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2527"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2528" formData={formData} onChange={handleChange} />
@@ -296,7 +285,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2529"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2529",
@@ -312,7 +300,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2531"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2531",
@@ -325,7 +312,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2532"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2533" formData={formData} onChange={handleChange} />
@@ -333,7 +319,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2534"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2534",
@@ -350,7 +335,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2536"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2536",
@@ -363,7 +347,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2537"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2538" formData={formData} onChange={handleChange} />
@@ -371,7 +354,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2539"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2539",
@@ -387,7 +369,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2541"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2541",
@@ -400,7 +381,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2542"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2543" formData={formData} onChange={handleChange} />
@@ -408,7 +388,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2544"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2544",
@@ -424,7 +403,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2546"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2546",
@@ -437,7 +415,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2547"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2548" formData={formData} onChange={handleChange} />
@@ -445,7 +422,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2549"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2549",
@@ -461,7 +437,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2551"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2551",
@@ -474,7 +449,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2552"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2553" formData={formData} onChange={handleChange} />
@@ -482,7 +456,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2554"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2554",
@@ -498,7 +471,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2556"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2556",
@@ -511,7 +483,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2557"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <SelectField id="2558" formData={formData} onChange={handleChange} />
@@ -519,7 +490,6 @@ const ErbList = ({ formData, onChange }: Props) => {
             id="2559"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
             {...getMinMaxLengthError({
               id: "2559",

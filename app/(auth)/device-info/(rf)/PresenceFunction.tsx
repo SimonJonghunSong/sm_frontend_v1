@@ -138,7 +138,6 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
                 id="2563"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 isSwitch
               />
               <SelectField
@@ -162,28 +161,24 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
                 id="2566"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 isSwitch
               />
               <NumericInputField
                 id="2567"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 isSwitch
               />
               <NumericInputField
                 id="2568"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 isSwitch
               />
               <NumericInputField
                 id="2569"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
               />
               <SwitchField
                 id="1642"
