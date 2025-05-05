@@ -12318,7 +12318,7 @@ export const FIELD_VALIDATIONS = {
       es: "El tiempo que el dispositivo permanece en modo de recepción para recibir comandos.\r\n• Rango( Activado): 0~65,535\r\n• Predeterminado: 12\r\n* Si se configura en Desactivado, el dispositivo no entra en modo de recepción.",
       pt: "O tempo que o dispositivo permanece no modo de recepção para receber comandos.\r\n• Intervalo(Ligado): 0~65.535\r\n• Padrão: 12\r\n* Se definido como Desligado, o dispositivo não entra no modo de recepção.",
     },
-    min: 12,
+    min: 0,
     max: 65535,
     list: null,
   },

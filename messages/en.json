@@ -1417,6 +1417,10 @@
     },
     "rf": {
       "rf": "RF",
+      "erb_list": "ERB List",
+      "rf_device": "RF Device",
+      "presence_function": "Presence Function",
+      "presence_device": "Presence Device",
       "rf_channel": "RF Channel",
       "1,_2,_3,_4,_5,_6,_7,_8,_9,_10": "1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
       "status_of_battery": "Status of Battery",
