@@ -2,10 +2,7 @@ import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
-import InputBox from "@/components/inputbox/InputBox";
-import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
-import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
@@ -20,12 +17,13 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldIds = ["1076", "1077"];
+
 const NTPServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const fieldIds = ["1076", "1077"];
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -88,6 +86,7 @@ const NTPServer = ({ formData, onChange }: Props) => {
       }}
     >
       <h1>NTP Server</h1>
+
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <TextInputField
           id="1076"
