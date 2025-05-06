@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
@@ -9,6 +9,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
+import hasFormDataFields from "../(utils)/hasFormDataFields";
 
 interface Props {
   formData: {
@@ -17,12 +18,14 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldsId = ["1013", "1054", "1027", "1016", "1060", "1070", "1071"];
+
 const Network = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -67,11 +70,7 @@ const Network = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (
-            ["1013", "1054", "1027", "1016", "1060", "1070", "1071"].includes(
-              key
-            )
-          ) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -89,62 +88,83 @@ const Network = ({ formData, onChange }: Props) => {
     >
       <h1>{t("model.add_model_pop_up.network_*")}</h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <SelectField id="1013" formData={formData} onChange={handleChange} />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="1013"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <SelectField id="1054" formData={formData} onChange={handleChange} />
+          <NumericInputField
+            id="1027"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="1027"
-          formData={formData}
-          onChange={handleChange}
-        />
+          <NumericInputField
+            id="1060"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
 
-        <SelectField id="1016" formData={formData} onChange={handleChange} />
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="1054"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="1060"
-          formData={formData}
-          onChange={handleChange}
-        />
+          <SelectField
+            id="1016"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        {formData["1070"] && (
-          <Stack width={"calc(50% - 8px)"} gap={"16px"}>
-            <Stack justifyContent="space-between" direction="row">
-              <Stack direction="row" gap="4px" alignItems="center">
-                <InputBox.Title>
-                  {FIELD_VALIDATIONS["1070"].title[lang]}
-                </InputBox.Title>
-                <InputBox.Info
-                  tooltipText={
-                    <span style={{ whiteSpace: "pre-wrap" }}>
-                      {FIELD_VALIDATIONS["1070"].tooltip[lang]}
-                    </span>
+          {formData["1070"] && (
+            <>
+              <Stack justifyContent="space-between" direction="row">
+                <Stack direction="row" gap="4px" alignItems="center">
+                  <InputBox.Title>
+                    {FIELD_VALIDATIONS["1070"].title[lang]}
+                  </InputBox.Title>
+                  <InputBox.Info
+                    tooltipText={
+                      <span style={{ whiteSpace: "pre-wrap" }}>
+                        {FIELD_VALIDATIONS["1070"].tooltip[lang]}
+                      </span>
+                    }
+                  />
+                  <InputBox.Number>1070</InputBox.Number>
+                </Stack>
+
+                <SwitchPrimary
+                  onChange={(e) =>
+                    handleChange("1070", e.target.checked ? "01" : "00")
                   }
-                />
-                <InputBox.Number>1070</InputBox.Number>
-              </Stack>
-
-              <SwitchPrimary
-                onChange={(e) =>
-                  handleChange("1070", e.target.checked ? "01" : "00")
-                }
-                checked={formData["1070"].realValue === "01"}
-              />
-            </Stack>
-
-            {formData["1070"].realValue === "01" && (
-              <Stack gap={"8px"}>
-                <NumericInputField
-                  id="1071"
-                  formData={formData}
-                  onChange={handleChange}
-                  style={{ width: "100%" }}
+                  checked={formData["1070"].realValue === "01"}
                 />
               </Stack>
-            )}
-          </Stack>
-        )}
+
+              {formData["1070"].realValue === "01" && (
+                <Stack gap={"8px"}>
+                  <NumericInputField
+                    id="1071"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
+                </Stack>
+              )}
+            </>
+          )}
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
