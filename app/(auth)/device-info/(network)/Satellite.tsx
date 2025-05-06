@@ -3,12 +3,12 @@ import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
 import { FormField } from "../page";
-import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { SwitchPrimary } from "@/components/switches";
 import DualCheckboxField from "../(components)/DualCheckboxField";
+import { hasFormDataFields } from "../(utils)/@index";
 
 interface Props {
   formData: {
@@ -16,6 +16,8 @@ interface Props {
   };
   onChange: (id: string, value: string) => void;
 }
+
+const fieldsId = ["1052", "1053"];
 
 const tooltipText = {
   en: "When the network status is 'No Network' (e.g., SIM PIN Locked, Cannot Attach Network, No SIM, or SIM Card Locked), the output will activate if this status persists for the set delay time.\nThe output will deactivate once the network status returns to normal.\n* Output control for the satellite modem can detect 'No Network' situations.\n• Default : Off",
@@ -29,7 +31,7 @@ const Satellite = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(false);
 
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -74,7 +76,7 @@ const Satellite = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["1052", "1053"].includes(key)) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
