@@ -769,9 +769,11 @@
       "by_id": "ID",
       "all": "All",
       "delete": "Delete",
+      "edit": "Edit",
       "add": "Add",
       "cancel": "Cancel",
-      "add_driver_id": "Add Driver ID"
+      "add_driver_id": "Add Driver ID",
+      "edit_driver_id": "Edit Driver ID"
     },
     "system": {
       "ignition": "Ignition",

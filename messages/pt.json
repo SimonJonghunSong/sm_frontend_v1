@@ -1599,7 +1599,9 @@
       "by_number": "Por número",
       "by_id": "EU IA",
       "search": "Procurar",
-      "all": "Todos"
+      "all": "Todos",
+      "edit": "Editar",
+      "edit_driver_id": "Editar Id Driver"
     }
   },
   "popup": {

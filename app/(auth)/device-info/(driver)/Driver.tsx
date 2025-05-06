@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import {
@@ -42,6 +42,11 @@ const Driver = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
 
   const [addModal, addModalToggle] = useModal();
+  const [editModal, editModalToggle] = useModal();
+  const [editRow, setEditRow] = useState<{
+    number: number;
+    driver_id: string;
+  } | null>(null);
 
   const formRef = useRef<HTMLFormElement>(null);
   const [filter, setFilter] = useState<"all" | "by_number" | "by_id">("all");
@@ -50,12 +55,12 @@ const Driver = ({ formData, onChange }: Props) => {
     "all" | "by_number" | "by_id"
   >("all");
   const [searchValue, setSearchValue] = useState<string>("");
-  const [selectedRowIdList, setSelectedRowIdList] = useState<string[]>();
+  const [selectedRowIdList, setSelectedRowIdList] = useState<number[]>([]);
 
   const columns: GridColDef[] = [
     {
       field: "col1",
-      headerName: "No.",
+      headerName: t("configuration.driver.no"),
       width: 100,
       headerAlign: "center",
       align: "center",
@@ -72,60 +77,60 @@ const Driver = ({ formData, onChange }: Props) => {
     },
     {
       field: "col2",
-      headerName: "Driver ID",
+      headerName: t("configuration.driver.driver_id"),
       headerAlign: "center",
       align: "center",
       flex: 1,
     },
     {
       field: "col3",
-      headerName: "Edit",
+      headerName: t("configuration.driver.edit"),
       width: 80,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
-        <IconButton sx={{ width: 24, height: 24 }}>
+      renderCell: ({ row }) => (
+        <IconButton
+          sx={{ width: 24, height: 24 }}
+          onClick={() => {
+            editModalToggle();
+            setEditRow({ number: row.col1, driver_id: row.col2 });
+          }}
+        >
           <EditOutlinedIcon sx={{ width: 22, height: 22 }} />
         </IconButton>
       ),
     },
     {
       field: "col4",
-      headerName: "Delete",
+      headerName: t("configuration.driver.delete"),
       width: 80,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
-        <IconButton sx={{ width: 24, height: 24 }}>
+      renderCell: ({ row }) => (
+        <IconButton
+          sx={{ width: 24, height: 24 }}
+          onClick={() => {
+            setRows((prev) => {
+              console.log("prev :::", prev);
+              console.log("row :::", row);
+
+              return prev.filter((item) => item.id !== row.id);
+            });
+          }}
+        >
           <DeleteForeverOutlinedIcon sx={{ width: 22, height: 22 }} />
         </IconButton>
       ),
     },
   ];
 
-  const rows = [
+  const [rows, setRows] = useState<
     {
-      id: 1,
-      col1: 1,
-      col2: "1234567890",
-    },
-    {
-      id: 2,
-      col1: 2,
-      col2: "1234567890",
-    },
-    {
-      id: 12,
-      col1: 12,
-      col2: "1234567890",
-    },
-
-    {
-      id: 101,
-      col1: 101,
-      col2: "1234567890",
-    },
-  ];
+      id: number;
+      col1: number;
+      col2: string;
+    }[]
+  >([]);
   // if (!hasFormDataFields(formData, fieldsIds)) return null;
 
   const handleSearch = () => {
@@ -133,14 +138,52 @@ const Driver = ({ formData, onChange }: Props) => {
     setSearchValue(filterValue);
   };
 
-  const handleAddDriverId = () => {
-    console.log("add driver id :::");
+  const handleEditDriverId = (values) => {
+    console.log("values :::", values);
+    if (!editRow) return;
+
+    setRows((prev) => {
+      const index = prev.findIndex((row) => row.col1 === values.number);
+
+      if (index !== -1) {
+        prev[index].col2 = values.driver_id;
+      }
+
+      return [
+        ...prev.filter((row) => row.id !== editRow.number),
+        {
+          id: values.number,
+          col1: values.number,
+          col2: values.driver_id,
+        },
+      ].sort((a, b) => a.col1 - b.col1);
+    });
+
+    setEditRow(null);
+  };
+
+  const handleAddDriverId = (values) => {
+    const { items } = values;
+
+    console.log("values :::", values);
+
+    const newRows = items.map((item) => ({
+      id: item.number,
+      col1: item.number,
+      col2: item.driver_id,
+    }));
+
+    setRows((prev) => [...prev, ...newRows].sort((a, b) => a.col1 - b.col1));
   };
 
   const handleDeleteDriverId = () => {
     if (!selectedRowIdList || !selectedRowIdList.length) return;
 
     console.log("delete driver ids :::", selectedRowIdList);
+
+    setRows((prev) =>
+      prev.filter((row) => !selectedRowIdList.includes(row.id))
+    );
   };
 
   const validateForm = (): boolean => {
@@ -167,6 +210,11 @@ const Driver = ({ formData, onChange }: Props) => {
 
     return true;
   };
+
+  useEffect(() => {
+    // TODO: 초기 데이터 세팅(formData 활용)
+    // setRows();
+  }, [formData]);
 
   return (
     <>
@@ -258,11 +306,23 @@ const Driver = ({ formData, onChange }: Props) => {
         </Stack>
 
         <DataTable
-          rows={rows}
+          rows={rows.filter((row) => {
+            switch (searchFilter) {
+              case "all":
+                return (
+                  row.col1.toString().includes(searchValue) ||
+                  row.col2.toString().includes(searchValue)
+                );
+              case "by_number":
+                return row.col1.toString().includes(searchValue);
+              case "by_id":
+                return row.col2.toString().includes(searchValue);
+            }
+          })}
           columns={columns}
           rowHeight={52}
           onRowSelectionModelChange={(list) => {
-            setSelectedRowIdList(list as string[]);
+            setSelectedRowIdList(list as number[]);
           }}
           footerButton={
             <Button
@@ -285,10 +345,21 @@ const Driver = ({ formData, onChange }: Props) => {
       </Form>
 
       {addModal && (
-        <AddAcountModal
+        <AddModal
           onClose={addModalToggle}
           openErrorPopup={() => {}}
           handleConfirm={handleAddDriverId}
+          filterNumbers={rows.map((row) => row.col1)}
+        />
+      )}
+
+      {editModal && (
+        <EditModal
+          onClose={editModalToggle}
+          openErrorPopup={() => {}}
+          handleConfirm={handleEditDriverId}
+          filterNumbers={rows.map((row) => row.col1)}
+          editRow={editRow}
         />
       )}
     </>
@@ -313,17 +384,21 @@ const Form = styled.form`
   }
 `;
 
-function AddAcountModal({
+function AddModal({
   onClose,
   openErrorPopup,
   handleConfirm,
+  filterNumbers,
 }: {
   onClose: () => void;
   openErrorPopup: (
     message: string,
     options?: { title: string; onErrorPopupOk?: () => void }
   ) => void;
-  handleConfirm: () => void;
+  handleConfirm: (values: {
+    items: { number: string; driver_id: string }[];
+  }) => void;
+  filterNumbers: number[];
 }) {
   const t = useTranslations();
 
@@ -340,10 +415,14 @@ function AddAcountModal({
   });
 
   const handleModalConfirm = () => {
-    console.log("fields :::", fields);
-    console.log("fields :::", form.getValues());
+    if (!form.formState.isValid) {
+      return;
+    }
 
-    handleConfirm();
+    console.log("::::", form.getValues());
+
+    handleConfirm(form.getValues());
+    onClose();
   };
 
   return (
@@ -351,15 +430,15 @@ function AddAcountModal({
       open
       toggleOpen={onClose}
       title={t("configuration.driver.add_driver_id")}
-      confirm={handleModalConfirm}
+      confirm={form.handleSubmit(handleModalConfirm)}
       confirmButtonText="Add"
       width="900px"
       disabled={!form.formState.isDirty || !form.formState.isValid}
       manualToggleOpenWhenConfirm
     >
       {fields.map((field, index) => (
-        <Stack direction="row" gap={"8px"}>
-          <InputBox key={index.toString()}>
+        <Stack key={field.id} direction="row" gap={"8px"}>
+          <InputBox>
             <InputBox.Head>
               <InputBox.Title>
                 {t("configuration.driver.no")}
@@ -371,7 +450,13 @@ function AddAcountModal({
                 <Controller
                   name={`items.${index}.number`}
                   control={form.control}
-                  render={({ field }) => (
+                  rules={{
+                    required: {
+                      value: true,
+                      message: "Number is required",
+                    },
+                  }}
+                  render={({ field, fieldState: { error } }) => (
                     <Select
                       autoFocus
                       style={{
@@ -382,16 +467,27 @@ function AddAcountModal({
                         field.onChange(e.target.value);
                       }}
                     >
-                      {Array.from({ length: 300 }, (_, i) => (
-                        <MenuItem value={i + 1}>{i + 1}</MenuItem>
-                      ))}
+                      {Array.from({ length: 300 }, (_, i) => i + 1)
+                        .filter(
+                          (value) =>
+                            !filterNumbers.includes(value) &&
+                            !fields.some(
+                              (fieldItem) =>
+                                Number(field.value) !==
+                                  Number(fieldItem.number) &&
+                                Number(fieldItem.number) === value
+                            )
+                        )
+                        .map((value) => (
+                          <MenuItem value={value}>{value}</MenuItem>
+                        ))}
                     </Select>
                   )}
                 />
               </FormControl>
             </InputBox.Body>
           </InputBox>
-          <InputBox style={{ flex: 1 }} key={index.toString()}>
+          <InputBox style={{ flex: 1 }}>
             <InputBox.Head>
               <InputBox.Title>
                 {t("configuration.driver.driver_id")}
@@ -404,6 +500,10 @@ function AddAcountModal({
                   name={`items.${index}.driver_id`}
                   control={form.control}
                   rules={{
+                    required: {
+                      value: true,
+                      message: "Driver ID is required",
+                    },
                     minLength: {
                       value: 16,
                       message: "Driver ID must be 16 characters",
@@ -435,6 +535,20 @@ function AddAcountModal({
               </FormControl>
             </InputBox.Body>
           </InputBox>
+          <InputBox>
+            <InputBox.Head>
+              <InputBox.Title>
+                {t("configuration.driver.delete")}
+              </InputBox.Title>
+            </InputBox.Head>
+            <IconButton
+              sx={{ width: 40, height: 40 }}
+              onClick={() => remove(index)}
+              disabled={fields.length === 1}
+            >
+              <DeleteForeverOutlinedIcon sx={{ width: 22, height: 22 }} />
+            </IconButton>
+          </InputBox>
         </Stack>
       ))}
       <Button
@@ -445,6 +559,156 @@ function AddAcountModal({
       >
         <AddOutlined />
       </Button>
+    </Modal>
+  );
+}
+
+function EditModal({
+  onClose,
+  openErrorPopup,
+  handleConfirm,
+  filterNumbers,
+  editRow,
+}: {
+  onClose: () => void;
+  openErrorPopup: (
+    message: string,
+    options?: { title: string; onErrorPopupOk?: () => void }
+  ) => void;
+  handleConfirm: (values: { number: number; driver_id: string }) => void;
+  filterNumbers: number[];
+  editRow: { number: number; driver_id: string };
+}) {
+  const t = useTranslations();
+
+  const form = useForm({
+    mode: "onTouched",
+    defaultValues: {
+      number: editRow.number,
+      driver_id: editRow.driver_id,
+    },
+  });
+
+  const handleModalConfirm = () => {
+    if (!form.formState.isValid) {
+      return;
+    }
+
+    const values = form.getValues();
+
+    handleConfirm({
+      number: values.number,
+      driver_id: values.driver_id,
+    });
+    onClose();
+  };
+
+  return (
+    <Modal
+      open
+      toggleOpen={onClose}
+      title={t("configuration.driver.edit_driver_id")}
+      confirm={form.handleSubmit(handleModalConfirm)}
+      confirmButtonText="Edit"
+      width="900px"
+      disabled={!form.formState.isDirty || !form.formState.isValid}
+      manualToggleOpenWhenConfirm
+    >
+      <Stack direction="row" gap={"8px"}>
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>
+              {t("configuration.driver.no")}
+              <i>*</i>
+            </InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <FormControl sx={{ width: "100%" }} size="small">
+              <Controller
+                name={"number"}
+                control={form.control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Number is required",
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <Select
+                    autoFocus
+                    style={{
+                      width: "140px",
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e.target.value);
+                    }}
+                  >
+                    {Array.from({ length: 300 }, (_, i) => i + 1)
+                      .filter(
+                        (value) =>
+                          !filterNumbers
+                            .filter((item) => item !== editRow.number)
+                            .includes(value)
+                      )
+                      .map((value) => (
+                        <MenuItem value={value}>{value}</MenuItem>
+                      ))}
+                  </Select>
+                )}
+              />
+            </FormControl>
+          </InputBox.Body>
+        </InputBox>
+        <InputBox style={{ flex: 1 }}>
+          <InputBox.Head>
+            <InputBox.Title>
+              {t("configuration.driver.driver_id")}
+              <i>*</i>
+            </InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <FormControl sx={{ width: "100%" }} size="small">
+              <Controller
+                name={"driver_id"}
+                control={form.control}
+                rules={{
+                  required: {
+                    value: true,
+                    message: "Driver ID is required",
+                  },
+                  minLength: {
+                    value: 16,
+                    message: "Driver ID must be 16 characters",
+                  },
+                  pattern: {
+                    value: /^[a-fA-F0-9]*$/,
+                    message: "Only hexadecimal characters are allowed",
+                  },
+                }}
+                render={({ field, fieldState: { error } }) => (
+                  <TextField
+                    fullWidth
+                    inputProps={{
+                      maxLength: 16,
+                    }}
+                    {...field}
+                    onChange={(e) => {
+                      let value = e.target.value;
+
+                      value = value.replace(/[^a-fA-F0-9]/g, "");
+
+                      field.onChange(value.toUpperCase());
+                    }}
+                    error={!!error}
+                    helperText={error?.message}
+                  />
+                )}
+              />
+            </FormControl>
+          </InputBox.Body>
+        </InputBox>
+      </Stack>
     </Modal>
   );
 }

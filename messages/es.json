@@ -1599,7 +1599,10 @@
       "by_number": "No",
       "by_id": "IDENTIFICACIÓN",
       "search": "Buscar",
-      "all": "Todo"
+      "all": "Todo",
+      "edit": "Editar",
+      "add_driver_id": "Agregar ID de controlador",
+      "edit_driver_id": "Editar ID de controlador"
     }
   },
   "popup": {
