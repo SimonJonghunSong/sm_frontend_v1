@@ -759,6 +759,20 @@
       "set_timeout_for_spy_phone_call_(seconds)": "Set Timeout for Spy Phone Call (seconds)",
       "request_spy_phone_call_info": "Request Spy Phone Call Info"
     },
+    "driver": {
+      "driver": "Driver",
+      "driver_id": "Driver ID",
+      "search": "Search",
+      "no": "No.",
+      "id": "ID.",
+      "by_number": "No",
+      "by_id": "ID",
+      "all": "All",
+      "delete": "Delete",
+      "add": "Add",
+      "cancel": "Cancel",
+      "add_driver_id": "Add Driver ID"
+    },
     "system": {
       "ignition": "Ignition",
       "ignition_line,_virtual_ignition_-_power,_virtual_ignition_-_motion": "Ignition Line, Virtual Ignition - Power, Virtual Ignition - Motion",

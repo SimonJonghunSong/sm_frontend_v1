@@ -1593,6 +1593,13 @@
       "success_upload_profile": "O perfil foi enviado com sucesso.",
       "failed_upload_profile": "O upload do perfil falhou.",
       "failed_download_profile": "O download do perfil falhou."
+    },
+    "driver": {
+      "driver": "Motorista",
+      "by_number": "Por número",
+      "by_id": "EU IA",
+      "search": "Procurar",
+      "all": "Todos"
     }
   },
   "popup": {

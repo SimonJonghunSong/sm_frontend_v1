@@ -1593,6 +1593,13 @@
       "success_upload_profile": "El perfil se ha cargado con éxito.",
       "failed_upload_profile": "La carga de perfil ha fallado.",
       "failed_download_profile": "La descarga del perfil ha fallado."
+    },
+    "driver": {
+      "driver": "Conductor",
+      "by_number": "No",
+      "by_id": "IDENTIFICACIÓN",
+      "search": "Buscar",
+      "all": "Todo"
     }
   },
   "popup": {

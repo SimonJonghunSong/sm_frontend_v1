@@ -14,6 +14,7 @@ import BluetoothTab from "./(tabs)/BluetoothTab";
 import AccessoriesTab from "./(tabs)/AccessoriesTab";
 import RfTab from "app/(auth)/device-info/(tabs)/\bRfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
+import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 // Type definitions
 interface FieldInfo {
   tab_id: string;
@@ -155,6 +156,8 @@ export default function DeviceInfoPage() {
     setTab(tab);
   };
 
+  console.log("formData", formData);
+
   // ! Driver 탭
   // 운전자 ID 설정 (파라미터 1800-1899, 3800-3899, 3900-3999)
   // 파라미터 범위: 1800번부터 1899번까지는 각각 운전자 ID 1번부터 100번까지를 저장하는 데 사용됩니다.
@@ -183,6 +186,8 @@ export default function DeviceInfoPage() {
         return <RfTab formData={formData} setFormData={setFormData} />;
       case "Input/Output(I/O)":
         return <InputOutputTab formData={formData} setFormData={setFormData} />;
+      case "Driver":
+        return <DriverTab formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }
