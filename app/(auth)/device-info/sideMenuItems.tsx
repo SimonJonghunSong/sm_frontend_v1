@@ -11,6 +11,7 @@ import Image from "next/image";
 import BluetoothOutlinedIcon from "@mui/icons-material/BluetoothOutlined";
 import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
 import KeyboardCommandKeyOutlinedIcon from "@mui/icons-material/KeyboardCommandKeyOutlined";
+import MonitorOutlinedIcon from "@mui/icons-material/MonitorOutlined";
 
 export const sideMenuItems = ({
   onClick,
@@ -100,5 +101,12 @@ export const sideMenuItems = ({
     isActive: tab === "Commands",
     icon: () => <KeyboardCommandKeyOutlinedIcon />,
     onClick: () => onClick("Commands"),
+  },
+  {
+    name: "CMD Tool",
+    href: "#",
+    isActive: tab === "CMD Tool",
+    icon: () => <MonitorOutlinedIcon />,
+    onClick: () => onClick("CMD Tool"),
   },
 ];

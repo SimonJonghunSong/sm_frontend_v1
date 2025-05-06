@@ -15,6 +15,7 @@ import AccessoriesTab from "./(tabs)/AccessoriesTab";
 import RfTab from "app/(auth)/device-info/(tabs)/RfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
+import useCmdStore from "@/src/stores/useCmdStore";
 // Type definitions
 interface FieldInfo {
   tab_id: string;
@@ -166,6 +167,7 @@ export default function DeviceInfoPage() {
   } = useSerial();
 
   const { getCurrentImei } = useSerialConfigurationStore();
+  const { toggleOpen } = useCmdStore();
   const imei = getCurrentImei();
 
   const originData = portList.find(({ port }) => port.imei === imei)
@@ -178,7 +180,11 @@ export default function DeviceInfoPage() {
   const [commandData, setCommandData] = useState<string[]>([]);
 
   const handleTabChange = (tab: string) => {
-    setTab(tab);
+    if (tab === "CMD Tool") {
+      toggleOpen();
+    } else {
+      setTab(tab);
+    }
   };
 
   console.log("formData", formData);
