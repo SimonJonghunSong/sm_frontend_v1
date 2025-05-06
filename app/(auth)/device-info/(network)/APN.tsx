@@ -1,16 +1,13 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, TextField } from "@mui/material";
-import InputBox from "@/components/inputbox/InputBox";
-import { SwitchPrimary } from "@/components/switches";
+import { Button, Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
-import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
-import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
+import { hasFormDataFields } from "../(utils)/@index";
 
 interface Props {
   formData: {
@@ -19,12 +16,14 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldsId = ["1000", "1002", "1001", "1003", "1004"];
+
 const Network = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -69,7 +68,7 @@ const Network = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["1000", "1002"].includes(key)) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -87,52 +86,65 @@ const Network = ({ formData, onChange }: Props) => {
     >
       <h1>APN</h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <SelectField id="1000" formData={formData} onChange={handleChange} />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="1000"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <TextInputField
-          id="1002"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-          error={!/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)}
-          helperText={
-            !/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)
-              ? FIELD_ERRORS["alphaNumericPattern"][lang]
-              : undefined
-          }
-        />
+          <TextInputField
+            id="1001"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+            error={!/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)}
+            helperText={
+              !/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)
+                ? FIELD_ERRORS["alphaNumericPattern"][lang]
+                : undefined
+            }
+          />
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
+          <TextInputField
+            id="1002"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+            error={!/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)}
+            helperText={
+              !/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)
+                ? FIELD_ERRORS["alphaNumericPattern"][lang]
+                : undefined
+            }
+          />
 
-        <TextInputField
-          id="1001"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-          error={!/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)}
-          helperText={
-            !/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)
-              ? FIELD_ERRORS["alphaNumericPattern"][lang]
-              : undefined
-          }
-        />
-        <TextInputField
-          id="1003"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-          error={!/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)}
-          helperText={
-            !/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)
-              ? FIELD_ERRORS["alphaNumericPattern"][lang]
-              : undefined
-          }
-        />
-        <TextInputField
-          id="1004"
-          formData={formData}
-          onChange={handleChange}
-          type="password"
-        />
+          <TextInputField
+            id="1003"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+            error={!/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)}
+            helperText={
+              !/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)
+                ? FIELD_ERRORS["alphaNumericPattern"][lang]
+                : undefined
+            }
+          />
+          <TextInputField
+            id="1004"
+            formData={formData}
+            onChange={handleChange}
+            type="password"
+            style={{ width: "100%" }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
