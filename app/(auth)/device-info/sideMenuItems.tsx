@@ -96,8 +96,9 @@ export const sideMenuItems = ({
   },
   {
     name: "Commands",
-    href: "/device-info/commands",
+    href: "#",
     isActive: tab === "Commands",
     icon: () => <KeyboardCommandKeyOutlinedIcon />,
+    onClick: () => onClick("Commands"),
   },
 ];

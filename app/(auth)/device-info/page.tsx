@@ -134,6 +134,30 @@ const transformOriginData = (originData: any[]): FormData => {
   }, {});
 };
 
+const extractCommandData = (originData: any[]) => {
+  try {
+    const cmdItem = originData?.find(
+      (item) => Object.values(item)[0][0]?.info?.[0]?.hdr === "CMD"
+    );
+
+    if (!cmdItem) return [];
+
+    const entries = Object.entries(cmdItem);
+    if (!entries.length) return [];
+
+    const commandData = entries[0][1][1]?.["Command"]?.[0]?.list?.[0];
+    if (!commandData) return [];
+
+    return Object.values(commandData)
+      .filter((item): item is string => typeof item === "string")
+      .map((item) => item.split(";")?.[4])
+      .filter(Boolean);
+  } catch (error) {
+    console.error("Error extracting command data:", error);
+    return [];
+  }
+};
+
 export default function DeviceInfoPage() {
   // data
   const {
@@ -151,6 +175,7 @@ export default function DeviceInfoPage() {
   const [formData, setFormData] = useState<{
     [key: string]: FormField | null;
   }>(null);
+  const [commandData, setCommandData] = useState<string[]>([]);
 
   const handleTabChange = (tab: string) => {
     setTab(tab);
@@ -188,6 +213,8 @@ export default function DeviceInfoPage() {
         return <InputOutputTab formData={formData} setFormData={setFormData} />;
       case "Driver":
         return <DriverTab formData={formData} setFormData={setFormData} />;
+      case "Commands":
+        return <DriverTab formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }
@@ -196,6 +223,7 @@ export default function DeviceInfoPage() {
   useEffect(() => {
     if (!formData && originData) {
       setFormData(transformOriginData(originData));
+      setCommandData(extractCommandData(originData));
     }
   }, [originData, formData]);
 
