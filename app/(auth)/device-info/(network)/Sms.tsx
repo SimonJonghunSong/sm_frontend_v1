@@ -5,6 +5,7 @@ import { Button, Stack } from "@mui/material";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
+import { hasFormDataFields } from "../(utils)/@index";
 
 interface Props {
   formData: {
@@ -13,11 +14,13 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldsId = ["1025", "1030", "1031", "1032", "1033", "1034"];
+
 const Sms = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -61,7 +64,7 @@ const Sms = ({ formData, onChange }: Props) => {
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
-          if (["1025", "1030", "1031", "1032", "1033", "1034"].includes(key)) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -79,41 +82,55 @@ const Sms = ({ formData, onChange }: Props) => {
     >
       <h1>SMS</h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <NumericInputField
-          id="1025"
-          formData={formData}
-          onChange={handleChange}
-        />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="1025"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
 
-        <SwitchField id="1030" formData={formData} onChange={handleChange} />
-        {formData["1030"]?.realValue === "01" && (
-          <>
-            <NumericInputField
-              id="1031"
-              formData={formData}
-              onChange={handleChange}
-            />
+        <Stack gap={"24px"} flex={1}>
+          <SwitchField
+            id="1030"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          {formData["1030"]?.realValue === "01" && (
+            <>
+              <NumericInputField
+                id="1031"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-            <NumericInputField
-              id="1032"
-              formData={formData}
-              onChange={handleChange}
-            />
+              <NumericInputField
+                id="1032"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-            <NumericInputField
-              id="1033"
-              formData={formData}
-              onChange={handleChange}
-            />
+              <NumericInputField
+                id="1033"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-            <NumericInputField
-              id="1034"
-              formData={formData}
-              onChange={handleChange}
-            />
-          </>
-        )}
+              <NumericInputField
+                id="1034"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+            </>
+          )}
+        </Stack>
       </Stack>
       <Stack direction="row" justifyContent="flex-end" alignItems="center">
         <Button color="secondary" variant="contained" type="submit">
