@@ -1,4 +1,3 @@
-import { ModelConfig } from "@/src/api/services/model/type";
 import { FormControlLabel, Checkbox } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -24,7 +23,6 @@ export default function CheckboxComp({
   hasAllCheckbox = true,
 }: Props) {
   const [allChecked, setAllChecked] = useState(false);
-
   /**
    * 체크박스 규칙
    *

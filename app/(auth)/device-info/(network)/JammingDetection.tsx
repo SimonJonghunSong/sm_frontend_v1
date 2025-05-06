@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
@@ -9,8 +9,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
-import { FIELD_ERRORS } from "constants/fieldErrorValidations";
-import TextInputField from "../(components)/TextInputField";
+import { hasFormDataFields } from "../(utils)/@index";
 
 interface Props {
   formData: {
@@ -19,13 +18,15 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldsId = ["1061", "1062", "1063", "1065", "1066", "1067", "1068"];
+
 const JammingDetection = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isJammingDetection, setIsJammingDetection] = useState(false);
 
-  if (!formData || !formData["1061"]) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -69,11 +70,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
-          if (
-            ["1061", "1065", "1062", "1066", "1063", "1067", "1068"].includes(
-              key
-            )
-          ) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -110,51 +107,65 @@ const JammingDetection = ({ formData, onChange }: Props) => {
 
       {isJammingDetection && (
         <>
-          <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-            <SelectField
-              id="1061"
-              formData={formData}
-              onChange={handleChange}
-            />
-            {formData["1061"]?.realValue !== "00" && (
-              <>
-                <NumericInputField
-                  id="1065"
-                  formData={formData}
-                  onChange={handleChange}
-                />
+          <Stack direction={"row"} gap={"24px"}>
+            <Stack gap={"24px"} flex={1}>
+              <SelectField
+                id="1061"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+              {formData["1061"]?.realValue !== "00" && (
+                <>
+                  <NumericInputField
+                    id="1062"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
 
-                <NumericInputField
-                  id="1062"
-                  formData={formData}
-                  onChange={handleChange}
-                />
+                  <NumericInputField
+                    id="1063"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
+                </>
+              )}
+            </Stack>
+            <Stack gap={"24px"} flex={1}>
+              {formData["1061"]?.realValue !== "00" && (
+                <>
+                  <NumericInputField
+                    id="1065"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
 
-                <NumericInputField
-                  id="1066"
-                  formData={formData}
-                  onChange={handleChange}
-                />
+                  <NumericInputField
+                    id="1066"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
 
-                <NumericInputField
-                  id="1063"
-                  formData={formData}
-                  onChange={handleChange}
-                />
+                  <NumericInputField
+                    id="1067"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
 
-                <NumericInputField
-                  id="1067"
-                  formData={formData}
-                  onChange={handleChange}
-                />
-
-                <NumericInputField
-                  id="1068"
-                  formData={formData}
-                  onChange={handleChange}
-                />
-              </>
-            )}
+                  <NumericInputField
+                    id="1068"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                  />
+                </>
+              )}
+            </Stack>
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end" alignItems="center">

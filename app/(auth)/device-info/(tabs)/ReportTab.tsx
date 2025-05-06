@@ -28,6 +28,7 @@ export default function ReportTab({ formData, setFormData }: Props) {
       ...prev,
       [name]: {
         value,
+        key: prev[name].key,
         realValue: value,
         list: prev[name].list,
         alert_id: alertId,

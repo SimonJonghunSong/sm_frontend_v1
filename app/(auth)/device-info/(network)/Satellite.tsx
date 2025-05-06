@@ -8,6 +8,7 @@ import NumericInputField from "../(components)/NumericInputField";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { SwitchPrimary } from "@/components/switches";
+import DualCheckboxField from "../(components)/DualCheckboxField";
 
 interface Props {
   formData: {
@@ -109,19 +110,35 @@ const Satellite = ({ formData, onChange }: Props) => {
 
       {isChecked && (
         <>
-          <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-            <SelectField
-              id="1052"
-              formData={formData}
-              onChange={handleChange}
-            />
-
-            <NumericInputField
-              id="1053"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+          <Stack direction={"row"} gap={"24px"}>
+            <Stack gap={"24px"} flex={1}>
+              <DualCheckboxField
+                id="1052"
+                formData={formData}
+                onChange={handleChange}
+                hasSwitch={false}
+                firstOptionLabel={{
+                  en: t("configuration.network.output1"),
+                  es: t("configuration.network.output1"),
+                  pt: t("configuration.network.output1"),
+                }}
+                secondOptionLabel={{
+                  en: t("configuration.network.output2"),
+                  es: t("configuration.network.output2"),
+                  pt: t("configuration.network.output2"),
+                }}
+                style={{ width: "100%" }}
+              />
+            </Stack>
+            <Stack gap={"24px"} flex={1}>
+              <NumericInputField
+                id="1053"
+                formData={formData}
+                onChange={handleChange}
+                isRequired
+                style={{ width: "100%" }}
+              />
+            </Stack>
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end" alignItems="center">

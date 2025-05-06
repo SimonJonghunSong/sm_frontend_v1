@@ -1,17 +1,30 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, TextField } from "@mui/material";
-import InputBox from "@/components/inputbox/InputBox";
-import { SwitchPrimary } from "@/components/switches";
+import { Button, Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
-import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
+import { hasFormDataFields } from "../(utils)/@index";
+import SwitchField from "../(components)/SwitchField";
+import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
+import InputBox from "@/components/inputbox/InputBox";
+import { FIELD_VALIDATIONS } from "constants/field";
+import { SwitchPrimary } from "@/components/switches";
 
+const optionsString =
+  "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b29, b30, b31";
+const labelsString = {
+  TEXT_EN_ITEM_CONTENT:
+    "Status, Alert, Travel, External Serial, OBDII Travel, OBDII, RFA, PID, OVD, CAM, BLE, TWS, TIC, TIS, TRQ, TPR, Sensor (ASNB), Sensor (ASNE), BSA, EMD, CID, JID",
+  TEXT_ES_ITEM_CONTENT:
+    "Estado, Alerta, Viaje, Serial Externo, Viaje OBDII, OBDII, RFA, PID, OVD, CAM, BLE, TWS, TIC, TIS, TRQ, TPR, Sensor (ASNB), Sensor (ASNE), BSA, EMD, CID, JID",
+  TEXT_PT_ITEM_CONTENT:
+    "Status, Alerta, Viagem, Serial Externo, Viagem OBDII, OBDII, RFA, PID, OVD, CAM, BLE, TWS, TIC, TIS, TRQ, TPR, Sensor (ASNB), Sensor (ASNE), BSA, EMD, CID, JID",
+};
 interface Props {
   formData: {
     [key: string]: FormField;
@@ -19,12 +32,23 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
+const fieldsId = [
+  "1005",
+  "1007",
+  "1006",
+  "1012",
+  "1017",
+  "1018",
+  "1019",
+  "1011",
+];
+
 const MainServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -69,18 +93,7 @@ const MainServer = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (
-            [
-              "1005",
-              "1007",
-              "1006",
-              "1012",
-              "1017",
-              "1018",
-              "1019",
-              "1011",
-            ].includes(key)
-          ) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -98,82 +111,95 @@ const MainServer = ({ formData, onChange }: Props) => {
     >
       <h1>Main Server</h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <TextInputField
-          id="1005"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-          error={!/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)}
-          helperText={
-            !/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)
-              ? FIELD_ERRORS["alphaNumericPattern"][lang]
-              : undefined
-          }
-        />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <TextInputField
+            id="1005"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+            error={!/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)}
+            helperText={
+              !/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)
+                ? FIELD_ERRORS["alphaNumericPattern"][lang]
+                : undefined
+            }
+          />
 
-        <SelectField
-          id="1007"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
-
-        <NumericInputField
-          id="1006"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
-
-        <Stack width={"calc(50% - 8px)"} gap={"16px"}>
-          <Stack justifyContent="space-between" direction="row">
-            <Stack direction="row" gap="4px" alignItems="center">
-              <InputBox.Title>
-                {FIELD_VALIDATIONS["1011"].title[lang]}
-              </InputBox.Title>
-              <InputBox.Info
-                tooltipText={
-                  <span style={{ whiteSpace: "pre-wrap" }}>
-                    {FIELD_VALIDATIONS["1011"].tooltip[lang]}
-                  </span>
-                }
-              />
-              <InputBox.Number>1011</InputBox.Number>
-            </Stack>
-
-            <SwitchPrimary
-              onChange={(e) =>
-                handleChange("1011", e.target.checked ? "01" : "00")
-              }
-              checked={formData["1011"]?.realValue === "01"}
-            />
-          </Stack>
+          <NumericInputField
+            id="1006"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+          />
         </Stack>
 
-        <NumericInputField
-          id="1012"
-          formData={formData}
-          onChange={handleChange}
-        />
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="1007"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="1017"
-          formData={formData}
-          onChange={handleChange}
-        />
+          <Stack gap={"16px"}>
+            <SwitchField
+              id="1011"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              customChecked={
+                formData["1011"]?.realValue !== "0" &&
+                formData["1011"]?.realValue !== "00"
+              }
+            />
 
-        <NumericInputField
-          id="1018"
-          formData={formData}
-          onChange={handleChange}
-        />
+            {formData["1011"]?.realValue !== "0" &&
+              formData["1011"]?.realValue !== "00" && (
+                <CheckboxComp
+                  value={formData["1011"]?.realValue}
+                  optionsString={optionsString}
+                  labelsString={labelsString}
+                  hasAllCheckbox={false}
+                  lang={lang}
+                  onChange={(newValue) => {
+                    handleChange("1011", newValue);
+                  }}
+                />
+              )}
+          </Stack>
 
-        <NumericInputField
-          id="1019"
-          formData={formData}
-          onChange={handleChange}
-        />
+          <NumericInputField
+            id="1012"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+
+          <NumericInputField
+            id="1017"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+
+          <NumericInputField
+            id="1018"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+
+          <NumericInputField
+            id="1019"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">

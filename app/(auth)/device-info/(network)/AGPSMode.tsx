@@ -1,14 +1,12 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
-import SelectField from "../(components)/SelectField";
-import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 

@@ -1,4 +1,3 @@
-import { useTranslations } from "next-intl";
 import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import { Checkbox, Stack, Typography } from "@mui/material";
@@ -25,6 +24,7 @@ interface DualCheckboxFieldProps {
     pt: string;
   };
   switchDisabled?: boolean;
+  hasSwitch?: boolean;
 }
 
 const DualCheckboxField = ({
@@ -35,11 +35,13 @@ const DualCheckboxField = ({
   firstOptionLabel,
   secondOptionLabel,
   switchDisabled,
+  hasSwitch = true,
 }: DualCheckboxFieldProps) => {
-  const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
-    formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
+    hasSwitch
+      ? formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
+      : true
   );
 
   if (!formData[id]) return null;
@@ -135,18 +137,20 @@ const DualCheckboxField = ({
         <InputBox.Number>{id}</InputBox.Number>
       </Stack>
 
-      <Stack sx={{ position: "absolute", right: 0, top: 0 }}>
-        <SwitchPrimary
-          disabled={switchDisabled}
-          checked={isChecked}
-          onChange={(e) => {
-            setIsChecked(e.target.checked);
-            if (!e.target.checked) {
-              onChange(id, "00");
-            }
-          }}
-        />
-      </Stack>
+      {hasSwitch && (
+        <Stack sx={{ position: "absolute", right: 0, top: 0 }}>
+          <SwitchPrimary
+            disabled={switchDisabled}
+            checked={isChecked}
+            onChange={(e) => {
+              setIsChecked(e.target.checked);
+              if (!e.target.checked) {
+                onChange(id, "00");
+              }
+            }}
+          />
+        </Stack>
+      )}
 
       {isChecked && (
         <Stack

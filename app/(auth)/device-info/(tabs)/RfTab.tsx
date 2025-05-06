@@ -21,19 +21,17 @@ interface Props {
 
 export default function RfTab({ formData, setFormData }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
-    console.log(name, value, alertId);
     setFormData((prev) => ({
       ...prev,
       [name]: {
         value,
+        key: prev[name].key,
         realValue: value,
         list: prev[name].list,
         alert_id: alertId,
       },
     }));
   };
-
-  console.log("formData ::", formData);
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>

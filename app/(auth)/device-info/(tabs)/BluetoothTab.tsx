@@ -15,10 +15,16 @@ interface Props {
 }
 
 export default function BluetoothTab({ formData, setFormData }: Props) {
-  const handleValueChange = (name, value) => {
+  const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: { value, realValue: value, list: prev[name].list },
+      [name]: {
+        value,
+        key: name,
+        realValue: value,
+        list: prev[name].list,
+        alert_id: alertId,
+      },
     }));
   };
 

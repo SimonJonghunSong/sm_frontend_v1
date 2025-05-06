@@ -12,7 +12,7 @@ import ReportTab from "./(tabs)/ReportTab";
 import TrackingTab from "./(tabs)/TrackingTab";
 import BluetoothTab from "./(tabs)/BluetoothTab";
 import AccessoriesTab from "./(tabs)/AccessoriesTab";
-import RfTab from "app/(auth)/device-info/(tabs)/\bRfTab";
+import RfTab from "app/(auth)/device-info/(tabs)/RfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 // Type definitions

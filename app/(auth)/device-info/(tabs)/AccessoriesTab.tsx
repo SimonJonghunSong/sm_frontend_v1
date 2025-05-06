@@ -20,10 +20,16 @@ interface Props {
 }
 
 export default function AccessoriesTab({ formData, setFormData }: Props) {
-  const handleValueChange = (name, value) => {
+  const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
-      [name]: { value, realValue: value, list: prev[name].list },
+      [name]: {
+        value,
+        key: prev[name].key,
+        realValue: value,
+        list: prev[name].list,
+        alert_id: alertId,
+      },
     }));
   };
 
