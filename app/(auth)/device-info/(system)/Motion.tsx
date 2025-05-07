@@ -8,6 +8,8 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
+import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
+import { FIELD_VALIDATIONS } from "constants/field";
 
 interface Props {
   formData: {
@@ -19,6 +21,12 @@ const tooltipText = {
   en: "• Default : On",
   ps: "• Padrão  : Ativado",
   es: "• Predeterminado: Activado",
+};
+
+const labelsString = {
+  TEXT_EN_ITEM_CONTENT: "Motion, Shock, Collision",
+  TEXT_ES_ITEM_CONTENT: "Movimiento, Choque, Colisión",
+  TEXT_PT_ITEM_CONTENT: "Movimento, Choque, Colisão",
 };
 
 const Motion = ({ formData, onChange }: Props) => {
@@ -122,79 +130,121 @@ const Motion = ({ formData, onChange }: Props) => {
 
       {isChecked && (
         <>
-          <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-            {/* TODO 1900 추가 필요 checkbox */}
-            {/* <SelectField
-              id="1900"
-              formData={formData}
-              onChange={handleChange}
-            /> */}
+          <Stack direction={"row"} gap={"24px"}>
+            <Stack gap={"24px"} flex={1}>
+              <Stack gap="4px">
+                <Stack direction="row" gap="4px" alignItems="center">
+                  <InputBox.Title>
+                    {FIELD_VALIDATIONS["1900"].title[lang]}
 
-            <NumericInputField
-              id="1902"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <NumericInputField
-              id="1903"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <SwitchField
-              id="1915"
-              formData={formData}
-              onChange={handleChange}
-            />
-
-            {formData["1915"]?.realValue === "01" && (
-              <>
-                <NumericInputField
-                  id="1916"
-                  formData={formData}
-                  onChange={handleChange}
-                  isRequired
+                    <span style={{ color: "#FF0000", paddingLeft: "4px" }}>
+                      *
+                    </span>
+                  </InputBox.Title>
+                  {FIELD_VALIDATIONS["1900"].tooltip?.[lang] && (
+                    <InputBox.Info
+                      tooltipText={
+                        <span style={{ whiteSpace: "pre-wrap" }}>
+                          {FIELD_VALIDATIONS["1900"].tooltip[lang]}
+                        </span>
+                      }
+                    />
+                  )}
+                  <InputBox.Number>1900</InputBox.Number>
+                </Stack>
+                <CheckboxComp
+                  value={formData["1900"]?.realValue}
+                  optionsString={"b0, b1, b2"}
+                  labelsString={labelsString}
+                  hasAllCheckbox={false}
+                  lang={lang}
+                  onChange={(newValue) => {
+                    handleChange("1900", newValue);
+                  }}
                 />
-                <NumericInputField
-                  id="1917"
-                  formData={formData}
-                  onChange={handleChange}
-                  isRequired
-                />
-              </>
-            )}
-
-            <NumericInputField
-              id="1918"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <SwitchField
-              id="1919"
-              formData={formData}
-              onChange={handleChange}
-            />
-
-            {formData["1919"]?.realValue === "01" && (
+              </Stack>
               <NumericInputField
-                id="1920"
+                id="1901"
                 formData={formData}
                 onChange={handleChange}
+                style={{ width: "100%" }}
                 isRequired
               />
-            )}
+              <NumericInputField
+                id="1903"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
+              <NumericInputField
+                id="1904"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
+            </Stack>
+            <Stack gap={"24px"} flex={1}>
+              <NumericInputField
+                id="1902"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1904"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+              <SwitchField
+                id="1915"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+
+              {formData["1915"]?.realValue === "01" && (
+                <>
+                  <NumericInputField
+                    id="1916"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                    isRequired
+                  />
+                  <NumericInputField
+                    id="1917"
+                    formData={formData}
+                    onChange={handleChange}
+                    style={{ width: "100%" }}
+                    isRequired
+                  />
+                </>
+              )}
+
+              <NumericInputField
+                id="1918"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
+
+              <SwitchField
+                id="1919"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+
+              {formData["1919"]?.realValue === "01" && (
+                <NumericInputField
+                  id="1920"
+                  formData={formData}
+                  onChange={handleChange}
+                  style={{ width: "100%" }}
+                  isRequired
+                />
+              )}
+            </Stack>
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end">

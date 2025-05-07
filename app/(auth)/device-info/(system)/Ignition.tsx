@@ -122,158 +122,173 @@ const Ignition = ({ formData, onChange }: Props) => {
 
       {isChecked && (
         <>
-          <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-            <SelectField
-              id="1700"
-              formData={formData}
-              onChange={handleChange}
-            />
+          <Stack direction={"row"} gap={"24px"}>
+            <Stack gap={"24px"} flex={1}>
+              <SelectField
+                id="1700"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+              <NumericInputField
+                id="1702"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
+              <NumericInputField
+                id="1701"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
+              <NumericInputField
+                id="1705"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+                isSwitch
+                switchDisabled={
+                  formData["1711"]?.realValue === "00" ||
+                  formData["1711"]?.realValue === "0" ||
+                  formData["1713"]?.realValue === "00" ||
+                  formData["1713"]?.realValue === "0"
+                }
+                customError={
+                  formData["1708"]?.realValue
+                    ? Number(formData["1708"]?.realValue) >
+                      Number(formData["1705"]?.realValue)
+                    : false
+                }
+                customErrorMessage={error[1705][lang]}
+              />
+              <NumericInputField
+                id="1708"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+                isSwitch
+                switchDisabled={
+                  formData["1711"]?.realValue === "00" ||
+                  formData["1711"]?.realValue === "0" ||
+                  formData["1713"]?.realValue === "00" ||
+                  formData["1713"]?.realValue === "0"
+                }
+                customError={
+                  formData["1705"]?.realValue
+                    ? Number(formData["1705"]?.realValue) <
+                      Number(formData["1708"]?.realValue)
+                    : false
+                }
+                customErrorMessage={error[1708][lang]}
+              />
 
-            <NumericInputField
-              id="1707"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+              <NumericInputField
+                id="1706"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1702"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+              <NumericInputField
+                id="1709"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
+            </Stack>
+            <Stack gap={"24px"} flex={1}>
+              <NumericInputField
+                id="1707"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1710"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+              <NumericInputField
+                id="1710"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1701"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+              <NumericInputField
+                id="1711"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+                isSwitch
+                switchDisabled={
+                  formData["1705"]?.realValue === "00" ||
+                  formData["1705"]?.realValue === "0" ||
+                  formData["1708"]?.realValue === "00" ||
+                  formData["1708"]?.realValue === "0"
+                }
+              />
 
-            <NumericInputField
-              id="1711"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-              isSwitch
-              switchDisabled={
-                formData["1705"]?.realValue === "00" ||
-                formData["1705"]?.realValue === "0" ||
-                formData["1708"]?.realValue === "00" ||
-                formData["1708"]?.realValue === "0"
-              }
-            />
+              <NumericInputField
+                id="1713"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+                isSwitch
+                switchDisabled={
+                  formData["1705"]?.realValue === "00" ||
+                  formData["1705"]?.realValue === "0" ||
+                  formData["1708"]?.realValue === "00" ||
+                  formData["1708"]?.realValue === "0"
+                }
+              />
 
-            <NumericInputField
-              id="1705"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-              isSwitch
-              switchDisabled={
-                formData["1711"]?.realValue === "00" ||
-                formData["1711"]?.realValue === "0" ||
-                formData["1713"]?.realValue === "00" ||
-                formData["1713"]?.realValue === "0"
-              }
-              customError={
-                formData["1708"]?.realValue
-                  ? Number(formData["1708"]?.realValue) >
-                    Number(formData["1705"]?.realValue)
-                  : false
-              }
-              customErrorMessage={error[1705][lang]}
-            />
+              <NumericInputField
+                id="1712"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1713"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-              isSwitch
-              switchDisabled={
-                formData["1705"]?.realValue === "00" ||
-                formData["1705"]?.realValue === "0" ||
-                formData["1708"]?.realValue === "00" ||
-                formData["1708"]?.realValue === "0"
-              }
-            />
+              <NumericInputField
+                id="1714"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1708"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-              isSwitch
-              switchDisabled={
-                formData["1711"]?.realValue === "00" ||
-                formData["1711"]?.realValue === "0" ||
-                formData["1713"]?.realValue === "00" ||
-                formData["1713"]?.realValue === "0"
-              }
-              customError={
-                formData["1705"]?.realValue
-                  ? Number(formData["1705"]?.realValue) <
-                    Number(formData["1708"]?.realValue)
-                  : false
-              }
-              customErrorMessage={error[1708][lang]}
-            />
+              <NumericInputField
+                id="1715"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1712"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
+              <NumericInputField
+                id="1716"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                isRequired
+              />
 
-            <NumericInputField
-              id="1706"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <NumericInputField
-              id="1714"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <NumericInputField
-              id="1709"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <NumericInputField
-              id="1715"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <NumericInputField
-              id="1716"
-              formData={formData}
-              onChange={handleChange}
-              isRequired
-            />
-
-            <SwitchField
-              id="1717"
-              formData={formData}
-              onChange={handleChange}
-            />
+              <SwitchField
+                id="1717"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+            </Stack>
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end">

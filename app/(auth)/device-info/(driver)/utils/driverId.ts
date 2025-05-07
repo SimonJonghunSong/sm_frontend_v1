@@ -20,7 +20,7 @@ function parseMultiLineResponse(input: string): ParsedResult[] {
   lines.forEach((line) => {
     // "RRE;0000000000;" 제거
     const prefixEndIndex = line.indexOf(";", line.indexOf(";") + 1);
-    console.log("prefixEndIndex :::", prefixEndIndex);
+
     if (prefixEndIndex === -1) {
       return;
     }
