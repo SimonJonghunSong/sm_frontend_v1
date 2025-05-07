@@ -16,6 +16,7 @@ import RfTab from "app/(auth)/device-info/(tabs)/RfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 import useCmdStore from "@/src/stores/useCmdStore";
+import { AT_REQ } from "@/src/hooks/useSerial/constant";
 // Type definitions
 interface FieldInfo {
   tab_id: string;
@@ -160,6 +161,7 @@ const extractCommandData = (originData: any[]) => {
 };
 
 export default function DeviceInfoPage() {
+  const [isReady, setIsReady] = useState(false);
   // data
   const {
     state: { portList },
@@ -169,6 +171,8 @@ export default function DeviceInfoPage() {
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
   const imei = getCurrentImei();
+
+  const port = portList.find(({ port }) => port.imei === imei);
 
   const originData = portList.find(({ port }) => port.imei === imei)
     .packageToJson.synctrak;
@@ -218,9 +222,30 @@ export default function DeviceInfoPage() {
       case "Input/Output(I/O)":
         return <InputOutputTab formData={formData} setFormData={setFormData} />;
       case "Driver":
-        return <DriverTab formData={formData} setFormData={setFormData} />;
+        return (
+          <DriverTab
+            formData={formData}
+            setFormData={setFormData}
+            isReady={isReady}
+            write={(command) =>
+              write({
+                data: `${AT_REQ}${imei};${command}`,
+                port: port.port,
+                writer: port.writer,
+              })
+            }
+            port={port.port}
+          />
+        );
       case "Commands":
-        return <DriverTab formData={formData} setFormData={setFormData} />;
+        return (
+          <DriverTab
+            formData={formData}
+            setFormData={setFormData}
+            isReady={isReady}
+            port={port.port}
+          />
+        );
       default:
         return null;
     }
@@ -232,6 +257,12 @@ export default function DeviceInfoPage() {
       setCommandData(extractCommandData(originData));
     }
   }, [originData, formData]);
+
+  useEffect(() => {
+    if (port.port.readable && port.port.writable) {
+      setIsReady(true);
+    }
+  }, [port.port.readable, port.port.writable]);
 
   return (
     <div className="pageWrap">

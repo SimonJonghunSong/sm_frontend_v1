@@ -12,9 +12,18 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
+  isReady: boolean;
+  write?: (command: string) => Promise<Boolean>;
+  port?: SerialPort;
 }
 
-export default function DriverTab({ formData, setFormData }: Props) {
+export default function DriverTab({
+  formData,
+  setFormData,
+  isReady,
+  write,
+  port,
+}: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -30,7 +39,13 @@ export default function DriverTab({ formData, setFormData }: Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Driver formData={formData} onChange={handleValueChange} />
+      <Driver
+        formData={formData}
+        onChange={handleValueChange}
+        isReady={isReady}
+        write={write}
+        port={port}
+      />
     </Stack>
   );
 }

@@ -4,15 +4,12 @@ import { useTranslations } from "next-intl";
 import {
   Button,
   Stack,
-  Tab as MuiTab,
-  Tabs,
   Select,
   MenuItem,
   TextField,
   IconButton,
   FormControl,
 } from "@mui/material";
-import useLangStore from "@/utils/useLangStore";
 import { FormField } from "app/(auth)/device-info/page";
 import DataTable from "@/components/dataTable";
 import { GridColDef } from "@mui/x-data-grid";
@@ -23,23 +20,41 @@ import InputBox from "@/components/inputbox/InputBox";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import Modal from "@/components/Modal";
 import { AddOutlined } from "@mui/icons-material";
+import { delayPromise } from "@/src/hooks/useSerial";
+import parseDriverIdResponseString from "./utils/driverId";
 
-// TODO: 세부 로직 추가 필요
+const commands = [
+  "18;00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19",
+  "18;20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39",
+  "18;40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59",
+  "18;60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79",
+  "18;80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99",
+  "38;00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19",
+  "38;20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39",
+  "38;40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59",
+  "38;60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79",
+  "38;80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99",
+  "39;00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19",
+  "39;20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39",
+  "39;40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59",
+  "39;60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79",
+  "39;80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99",
+];
 
 interface Props {
   formData: {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  isReady: boolean;
+  write?: (command: string) => Promise<Boolean>;
+  port?: SerialPort;
 }
-
-const error = {};
 
 const fieldsIds = [];
 
-const Driver = ({ formData, onChange }: Props) => {
+const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
   const t = useTranslations();
-  const lang = useLangStore((state) => state.lang);
 
   const [addModal, addModalToggle] = useModal();
   const [editModal, editModalToggle] = useModal();
@@ -131,7 +146,8 @@ const Driver = ({ formData, onChange }: Props) => {
       col2: string;
     }[]
   >([]);
-  // if (!hasFormDataFields(formData, fieldsIds)) return null;
+
+  const buffer = useRef<string>("");
 
   const handleSearch = () => {
     setSearchFilter(filter);
@@ -186,6 +202,10 @@ const Driver = ({ formData, onChange }: Props) => {
     );
   };
 
+  const handleFetchBufferValue = (bufferValue: string) => {
+    buffer.current += bufferValue;
+  };
+
   const validateForm = (): boolean => {
     // formRef가 null이면 유효성 검사를 할 수 없음
     if (!formRef.current) return true;
@@ -212,9 +232,32 @@ const Driver = ({ formData, onChange }: Props) => {
   };
 
   useEffect(() => {
-    // TODO: 초기 데이터 세팅(formData 활용)
-    // setRows();
-  }, [formData]);
+    (async () => {
+      if (isReady) {
+        port.onbuffervalue = handleFetchBufferValue;
+        buffer.current = "";
+        for (const command of commands) {
+          write(command);
+          await delayPromise(300);
+        }
+        await delayPromise(500);
+        port.onbuffervalue = null;
+      }
+      const parsedResult = parseDriverIdResponseString(buffer.current);
+      // [{
+      //   id: "001";
+      //   value: "NoData";
+      // },{
+      //   id: "002";
+      //   value: "NoData";
+      // },{
+      //   id: "003";
+      //   value: "NoData";
+      // }]
+      // parsedResult setRow 하면 됩니다.
+      // setRows();
+    })();
+  }, [isReady]);
 
   return (
     <>
