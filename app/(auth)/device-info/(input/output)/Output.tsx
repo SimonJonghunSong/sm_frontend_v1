@@ -1,14 +1,14 @@
 "use client";
-import DataTable from "@/components/dataTable";
-import { SwitchPrimary } from "@/components/switches";
+
+import React from "react";
 import useLangStore from "@/utils/useLangStore";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import { MenuItem, Select, Tooltip } from "@mui/material";
-import { Button, IconButton, Stack, TextField } from "@mui/material";
+import { MenuItem, Select, Stack, TextField, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
+import DataTable from "@/components/dataTable";
 import { FormField } from "app/(auth)/device-info/page";
 import { FIELD_VALIDATIONS } from "constants/field";
-import React from "react";
+import { SwitchPrimary } from "@/components/switches";
 
 const tooltips = {
   output: {
@@ -52,7 +52,7 @@ interface Props {
 
 const rows = [
   {
-    id: 1,
+    id: 1760,
     col1: false,
     col2: "Output 1",
     col3: { id: "1760" },
@@ -71,7 +71,6 @@ const rows = [
     col6: { id: "1781" },
     col7: { id: "1782" },
   },
-
   {
     id: 1764,
     col1: false,
@@ -81,16 +80,6 @@ const rows = [
     col5: { id: "1783" },
     col6: { id: "1784" },
     col7: { id: "1785" },
-  },
-  {
-    id: 1766,
-    col1: false,
-    col2: "Output 4",
-    col3: { id: "1766" },
-    col4: { id: "1767" },
-    col5: { id: "1786" },
-    col6: { id: "1787" },
-    col7: { id: "1788" },
   },
 ];
 
@@ -104,7 +93,16 @@ export default function Output({ formData, onChange }: Props) {
       width: 60,
       headerAlign: "center",
       align: "center",
-      renderCell: () => <SwitchPrimary />,
+      renderCell: ({ id }) => {
+        return (
+          <SwitchPrimary
+            checked={formData[id]?.realValue !== "19"}
+            onChange={(e) =>
+              onChange(id.toString(), e.target.checked ? "00" : "19")
+            }
+          />
+        );
+      },
     },
     {
       field: "col2",
@@ -233,7 +231,7 @@ export default function Output({ formData, onChange }: Props) {
       width: 180,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
+      renderCell: ({ value, row }) => (
         <Stack
           justifyContent="center"
           alignItems="center"
@@ -243,6 +241,7 @@ export default function Output({ formData, onChange }: Props) {
             sx={{ width: "100%" }}
             value={formData?.[value.id]?.realValue}
             onChange={(e) => onChange(value.id, e.target.value as string)}
+            disabled={formData?.[row.id]?.realValue === "19"}
           >
             {FIELD_VALIDATIONS?.[value.id]?.list?.map((item) => (
               <MenuItem value={item.value}>{item.label[lang]}</MenuItem>
@@ -287,24 +286,27 @@ export default function Output({ formData, onChange }: Props) {
       flex: 1,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
-        <Stack
-          justifyContent="center"
-          alignItems="center"
-          sx={{ height: "100%" }}
-        >
-          <TextField
-            type="number"
-            sx={{ width: 80 }}
-            value={formData?.[value.id]?.realValue}
-            onChange={(e) => onChange(value.id, e.target.value as string)}
-            inputProps={{
-              min: FIELD_VALIDATIONS?.[value.id]?.min || 0,
-              max: FIELD_VALIDATIONS?.[value.id]?.max || 9999,
-            }}
-          />
-        </Stack>
-      ),
+      renderCell: ({ value, row }) => {
+        return (
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            sx={{ height: "100%" }}
+          >
+            <TextField
+              type="number"
+              sx={{ width: 80 }}
+              value={formData?.[value.id]?.realValue}
+              onChange={(e) => onChange(value.id, e.target.value as string)}
+              disabled={formData?.[row.id]?.realValue === "19"}
+              inputProps={{
+                min: FIELD_VALIDATIONS?.[value.id]?.min || 0,
+                max: FIELD_VALIDATIONS?.[value.id]?.max || 9999,
+              }}
+            />
+          </Stack>
+        );
+      },
     },
     {
       field: "col6",
@@ -342,7 +344,7 @@ export default function Output({ formData, onChange }: Props) {
       flex: 1,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
+      renderCell: ({ value, row }) => (
         <Stack
           justifyContent="center"
           alignItems="center"
@@ -353,6 +355,7 @@ export default function Output({ formData, onChange }: Props) {
             sx={{ width: 80 }}
             value={formData?.[value.id]?.realValue}
             onChange={(e) => onChange(value.id, e.target.value as string)}
+            disabled={formData?.[row.id]?.realValue === "19"}
             inputProps={{
               min: FIELD_VALIDATIONS?.[value.id]?.min || 0,
               max: FIELD_VALIDATIONS?.[value.id]?.max || 9999,
@@ -397,7 +400,7 @@ export default function Output({ formData, onChange }: Props) {
       flex: 1,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
+      renderCell: ({ value, row }) => (
         <Stack
           justifyContent="center"
           alignItems="center"
@@ -408,6 +411,7 @@ export default function Output({ formData, onChange }: Props) {
             sx={{ width: 80 }}
             value={formData?.[value.id]?.realValue}
             onChange={(e) => onChange(value.id, e.target.value as string)}
+            disabled={formData?.[row.id]?.realValue === "19"}
             inputProps={{
               min: FIELD_VALIDATIONS?.[value.id]?.min || 0,
               max: FIELD_VALIDATIONS?.[value.id]?.max || 9999,
@@ -420,6 +424,7 @@ export default function Output({ formData, onChange }: Props) {
 
   return (
     <DataTable
+      minHeight={"none"}
       checkbox={false}
       rowHeight={52}
       rows={rows}

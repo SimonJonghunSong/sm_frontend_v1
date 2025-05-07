@@ -6717,26 +6717,6 @@ export const FIELD_VALIDATIONS = {
           pt: "Borda do Reboque",
         },
       },
-      {
-        value: "20",
-        label: {},
-      },
-      {
-        value: "21",
-        label: {},
-      },
-      {
-        value: "22",
-        label: {},
-      },
-      {
-        value: "23",
-        label: {},
-      },
-      {
-        value: "24",
-        label: {},
-      },
     ],
   },
   "1721": {
@@ -6879,26 +6859,6 @@ export const FIELD_VALIDATIONS = {
           es: "Borde del Remolque",
           pt: "Borda do Reboque",
         },
-      },
-      {
-        value: "20",
-        label: {},
-      },
-      {
-        value: "21",
-        label: {},
-      },
-      {
-        value: "22",
-        label: {},
-      },
-      {
-        value: "23",
-        label: {},
-      },
-      {
-        value: "24",
-        label: {},
       },
     ],
   },
@@ -7043,26 +7003,6 @@ export const FIELD_VALIDATIONS = {
           pt: "Borda do Reboque",
         },
       },
-      {
-        value: "20",
-        label: {},
-      },
-      {
-        value: "21",
-        label: {},
-      },
-      {
-        value: "22",
-        label: {},
-      },
-      {
-        value: "23",
-        label: {},
-      },
-      {
-        value: "24",
-        label: {},
-      },
     ],
   },
   "1725": {
@@ -7205,26 +7145,6 @@ export const FIELD_VALIDATIONS = {
           es: "Borde del Remolque",
           pt: "Borda do Reboque",
         },
-      },
-      {
-        value: "20",
-        label: {},
-      },
-      {
-        value: "21",
-        label: {},
-      },
-      {
-        value: "22",
-        label: {},
-      },
-      {
-        value: "23",
-        label: {},
-      },
-      {
-        value: "24",
-        label: {},
       },
     ],
   },
@@ -7369,26 +7289,6 @@ export const FIELD_VALIDATIONS = {
           pt: "Borda do Reboque",
         },
       },
-      {
-        value: "20",
-        label: {},
-      },
-      {
-        value: "21",
-        label: {},
-      },
-      {
-        value: "22",
-        label: {},
-      },
-      {
-        value: "23",
-        label: {},
-      },
-      {
-        value: "24",
-        label: {},
-      },
     ],
   },
   "1729": {
@@ -7469,7 +7369,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "16",
+        value: "17",
         label: {
           en: "Horn Pulse",
           es: "Pulso de Bocina",
@@ -7477,7 +7377,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "17",
+        value: "18",
         label: {
           en: "Buzzer Pulse",
           es: "Pulso de Zumbador",
@@ -7485,16 +7385,12 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "18",
+        value: "19",
         label: {
           en: "Disabled",
           es: "Desactivado",
           pt: "Desativado",
         },
-      },
-      {
-        value: "19",
-        label: {},
       },
     ],
   },
@@ -7593,7 +7489,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "16",
+        value: "17",
         label: {
           en: "Horn Pulse",
           es: "Pulso de Bocina",
@@ -7601,7 +7497,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "17",
+        value: "18",
         label: {
           en: "Buzzer Pulse",
           es: "Pulso de Zumbador",
@@ -7609,16 +7505,12 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "18",
+        value: "19",
         label: {
           en: "Disabled",
           es: "Desactivado",
           pt: "Desativado",
         },
-      },
-      {
-        value: "19",
-        label: {},
       },
     ],
   },
@@ -7717,7 +7609,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "16",
+        value: "17",
         label: {
           en: "Horn Pulse",
           es: "Pulso de Bocina",
@@ -7725,7 +7617,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "17",
+        value: "18",
         label: {
           en: "Buzzer Pulse",
           es: "Pulso de Zumbador",
@@ -7733,16 +7625,12 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "18",
+        value: "19",
         label: {
           en: "Disabled",
           es: "Desactivado",
           pt: "Desativado",
         },
-      },
-      {
-        value: "19",
-        label: {},
       },
     ],
   },
@@ -7841,7 +7729,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "16",
+        value: "17",
         label: {
           en: "Horn Pulse",
           es: "Pulso de Bocina",
@@ -7849,7 +7737,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "17",
+        value: "18",
         label: {
           en: "Buzzer Pulse",
           es: "Pulso de Zumbador",
@@ -7857,16 +7745,12 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "18",
+        value: "19",
         label: {
           en: "Disabled",
           es: "Desactivado",
           pt: "Desativado",
         },
-      },
-      {
-        value: "19",
-        label: {},
       },
     ],
   },

@@ -1,15 +1,14 @@
 "use client";
-import DataTable from "@/components/dataTable";
-import { SwitchPrimary } from "@/components/switches";
-import useLangStore, { Lang } from "@/utils/useLangStore";
-import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
-import { Button, MenuItem, Select, Tooltip } from "@mui/material";
-import { Stack, TextField } from "@mui/material";
+
+import React from "react";
+import { useTranslations } from "next-intl";
 import { GridColDef } from "@mui/x-data-grid";
+import { MenuItem, Select, Stack, TextField, Tooltip } from "@mui/material";
+import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import DataTable from "@/components/dataTable";
+import useLangStore from "@/utils/useLangStore";
 import { FormField } from "app/(auth)/device-info/page";
 import { FIELD_VALIDATIONS } from "constants/field";
-import { on } from "events";
-import React from "react";
 
 const tooltips = {
   input: {},
@@ -61,33 +60,27 @@ const rows = [
     col3: { id: "1726" },
     col4: { id: "1727" },
   },
-  {
-    id: 1728,
-    col1: false,
-    col2: "Input 5",
-    col3: { id: "1728" },
-    col4: { id: "1729" },
-  },
 ];
 
 export default function Input({ formData, onChange }: Props) {
   const lang = useLangStore((state) => state.lang);
+  const t = useTranslations();
 
   const columns: GridColDef[] = [
-    {
-      field: "col1",
-      headerName: "",
-      width: 60,
-      headerAlign: "center",
-      align: "center",
-      renderCell: ({ value }) => <SwitchPrimary checked={value} />,
-    },
+    // {
+    //   field: "col1",
+    //   headerName: "",
+    //   width: 60,
+    //   headerAlign: "center",
+    //   align: "center",
+    //   renderCell: ({ value }) => <SwitchPrimary checked={value} />,
+    // },
     {
       field: "col2",
       headerName: "",
       renderHeader: () => (
         <Stack direction="row" gap="8px">
-          <span>Input</span>
+          <span>{t("configuration.input_output.input")}</span>
           <Tooltip
             title={tooltips.input[lang]}
             placement="top"
@@ -124,7 +117,7 @@ export default function Input({ formData, onChange }: Props) {
       headerName: "",
       renderHeader: () => (
         <Stack direction="row" gap="8px">
-          <span>Type</span>
+          <span>{t("configuration.input_output.type")}</span>
           <Tooltip
             title={tooltips.type[lang]}
             placement="top"
@@ -203,31 +196,45 @@ export default function Input({ formData, onChange }: Props) {
       flex: 1,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ value }) => (
-        <Stack
-          justifyContent="center"
-          alignItems="center"
-          sx={{ height: "100%" }}
-        >
-          <TextField
-            type="number"
-            sx={{ width: 80 }}
-            value={formData?.[value.id]?.realValue}
-            onChange={(e) => onChange(value.id, e.target.value as string)}
-            inputProps={{
-              min: FIELD_VALIDATIONS?.[value.id]?.min || 0,
-              max: FIELD_VALIDATIONS?.[value.id]?.max || 9999,
-            }}
-          />
-        </Stack>
-      ),
+      renderCell: ({ value, id }) => {
+        const isSpeakerVolume = formData?.[id]?.realValue === "16";
+
+        return (
+          <Stack
+            justifyContent="center"
+            alignItems="center"
+            sx={{ height: "100%" }}
+          >
+            <TextField
+              type="number"
+              sx={{ width: 80 }}
+              value={formData?.[value.id]?.realValue}
+              onChange={(e) => onChange(value.id, e.target.value as string)}
+              inputProps={{
+                min: isSpeakerVolume
+                  ? 0
+                  : FIELD_VALIDATIONS?.[value.id]?.min || 0,
+                max: isSpeakerVolume
+                  ? 6
+                  : FIELD_VALIDATIONS?.[value.id]?.max || 9999,
+              }}
+              error={
+                isSpeakerVolume
+                  ? Number(formData?.[value.id]?.realValue) > 6 ||
+                    Number(formData?.[value.id]?.realValue) < 0
+                  : Number(formData?.[value.id]?.realValue) > 9999 ||
+                    Number(formData?.[value.id]?.realValue) < 0
+              }
+            />
+          </Stack>
+        );
+      },
     },
   ];
 
-  console.log("formData :::", formData);
-
   return (
     <DataTable
+      minHeight={"none"}
       checkbox={false}
       rowHeight={52}
       rows={rows}
