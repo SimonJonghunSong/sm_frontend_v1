@@ -13,6 +13,9 @@ import DualCheckboxField from "app/(auth)/device-info/(components)/DualCheckboxF
 import TextInputField from "app/(auth)/device-info/(components)/TextInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.LoRaWAN.en];
 
 interface Props {
   formData: {
@@ -28,34 +31,13 @@ const tooltipText = {
 
 const error = {};
 
-const fieldsIds = [
-  "2581",
-  "2582",
-  "2583",
-  "2584",
-  "2585",
-  "2586",
-  "2587",
-  "2588",
-  "2589",
-  "2590",
-  "2591",
-  "2592",
-  "2593",
-  "2594",
-  "2570",
-  "2595",
-  "2596",
-  "2597",
-];
-
 const LoRaWAN = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   // LoRa Device EUI
   const is2582Error = !/^[0-9A-Fa-f]{16}$/.test(formData["2582"]?.value);
@@ -109,7 +91,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -127,7 +109,9 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" gap={"4px"}>
-          <h1>{t("configuration.rf.lorawan")}</h1>
+          <h1 data-section-id={SECTIONS.LoRaWAN.en}>
+            {SECTIONS.LoRaWAN[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

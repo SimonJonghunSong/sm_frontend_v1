@@ -9,6 +9,9 @@ import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import getMinMaxLengthError from "app/(auth)/device-info/(utils)/getMinMaxLengthError";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.ErbList.en];
 
 interface Props {
   formData: {
@@ -24,65 +27,12 @@ const tooltipText = {
 
 const error = {};
 
-const fieldsIds = [
-  "2511",
-  "2512",
-  "2513",
-  "2514",
-  "2515",
-  "2516",
-  "2517",
-  "2518",
-  "2519",
-  "2520",
-  "2521",
-  "2522",
-  "2523",
-  "2524",
-  "2525",
-  "2526",
-  "2527",
-  "2528",
-  "2529",
-  "2530",
-  "2531",
-  "2532",
-  "2533",
-  "2534",
-  "2535",
-  "2536",
-  "2537",
-  "2538",
-  "2539",
-  "2540",
-  "2541",
-  "2542",
-  "2543",
-  "2544",
-  "2545",
-  "2546",
-  "2547",
-  "2548",
-  "2549",
-  "2550",
-  "2551",
-  "2552",
-  "2553",
-  "2554",
-  "2555",
-  "2556",
-  "2557",
-  "2558",
-  "2559",
-  "2560",
-];
-
 const ErbList = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -127,7 +77,7 @@ const ErbList = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -145,7 +95,9 @@ const ErbList = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.rf.erb_list")}</h1>
+          <h1 data-section-id={SECTIONS.ErbList.en}>
+            {SECTIONS.ErbList[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

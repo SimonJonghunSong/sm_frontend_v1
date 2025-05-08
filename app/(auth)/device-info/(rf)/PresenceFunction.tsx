@@ -11,6 +11,9 @@ import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import DualCheckboxField from "app/(auth)/device-info/(components)/DualCheckboxField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.PresenceFunction.en];
 
 interface Props {
   formData: {
@@ -26,26 +29,13 @@ const tooltipText = {
 
 const error = {};
 
-const fieldsIds = [
-  "2561",
-  "2563",
-  "2562",
-  "2564",
-  "2565",
-  "2566",
-  "2567",
-  "2568",
-  "2569",
-  "1642",
-];
-
 const PresenceFunction = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -90,7 +80,7 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -108,7 +98,9 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" gap={"4px"}>
-          <h1>{t("configuration.rf.presence_function")}</h1>
+          <h1 data-section-id={SECTIONS.PresenceFunction.en}>
+            {SECTIONS.PresenceFunction[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

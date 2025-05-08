@@ -7,6 +7,9 @@ import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import TextInputField from "app/(auth)/device-info/(components)/TextInputField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.PresenceDevice.en];
 
 // Invalid serial number. 에러 추가 필요(어떤 정규식을 사용해야하는지 알아봐야함)
 interface Props {
@@ -23,25 +26,12 @@ const tooltipText = {
 
 const error = {};
 
-const fieldsIds = [
-  "2571",
-  "2572",
-  "2573",
-  "2574",
-  "2575",
-  "2576",
-  "2577",
-  "2578",
-  "2579",
-  "2580",
-];
-
 const PresenceDevice = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -86,7 +76,7 @@ const PresenceDevice = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -104,7 +94,9 @@ const PresenceDevice = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.rf.presence_device")}</h1>
+          <h1 data-section-id={SECTIONS.PresenceDevice.en}>
+            {SECTIONS.PresenceDevice[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

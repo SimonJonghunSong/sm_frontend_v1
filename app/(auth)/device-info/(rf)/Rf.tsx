@@ -13,6 +13,9 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "app/(auth)/device-info/(components)/TextInputField";
 import getMinMaxLengthError from "app/(auth)/device-info/(utils)/getMinMaxLengthError";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Rf.en];
 
 interface Props {
   formData: {
@@ -39,35 +42,12 @@ const error = {
   },
 };
 
-const fieldsIds = [
-  "2500",
-  "2501",
-  "2502",
-  "2505",
-  "2503",
-  "2504",
-  "2800",
-  "2801",
-  "2802",
-  "2803",
-  "2804",
-  "2805",
-  "2806",
-  "2808",
-  "2809",
-  "2810",
-  "2506",
-  "2507",
-  "2508",
-  "2510",
-];
-
 const Rf = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const is2810Error = !/^[A-Za-z0-9]{32}$/.test(formData["2810"]?.value);
 
@@ -114,7 +94,7 @@ const Rf = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -132,7 +112,7 @@ const Rf = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" gap={"4px"}>
-          <h1>{t("configuration.rf.rf")}</h1>
+          <h1 data-section-id={SECTIONS.Rf.en}>{SECTIONS.Rf[lang]}</h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
