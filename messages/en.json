@@ -1235,6 +1235,8 @@
     "geofence": {
       "geofence": "Geofence",
       "all,_circular,_polygon": "All, Circular, Polygon",
+      "circular": "Circular",
+      "polygon": "Polygon",
       "add": "Add",
       "no": {
         "": "No."
@@ -1244,9 +1246,7 @@
       "group": "Group",
       "edit": "Edit",
       "delete": "Delete",
-      "no_registered_geofence": {
-        "": "No registered geofence."
-      },
+      "no_registered_geofence": "No registered geofence.",
       "geofence_config": "Geofence Config",
       "polygon_speed_limit": "Polygon Speed Limit",
       "circular_output_active": "Circular Output Active",

@@ -259,10 +259,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -337,10 +334,7 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1208,6 +1202,8 @@
     "geofence": {
       "geofence": "Cerca Eletrônica",
       "all,_circular,_polygon": "Todos, Circular, Polígono",
+      "circular": "Circular",
+      "polygon": "Polígono",
       "add": "Adicionar",
       "no": {
         "": "Nº"
@@ -1217,9 +1213,7 @@
       "group": "Grupo",
       "edit": "Editar",
       "delete": "Excluir",
-      "no_registered_geofence": {
-        "": "Nenhuma cerca eletrônica registrada."
-      },
+      "no_registered_geofence": "Nenhuma cerca eletrônica registrada.",
       "geofence_config": "Configuração da Cerca Eletrônica",
       "polygon_speed_limit": "Limite de Velocidade do Polígono",
       "circular_output_active": "Saída Circular Ativa",

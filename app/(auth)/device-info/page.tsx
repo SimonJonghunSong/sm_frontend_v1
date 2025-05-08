@@ -178,6 +178,7 @@ const extractCommandData = (originData: any[]) => {
 
 export default function DeviceInfoPage() {
   const [isReady, setIsReady] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
     [key: string]: SearchField;
@@ -193,7 +194,7 @@ export default function DeviceInfoPage() {
 
   const { lang } = useLangStore();
 
-  const port = portList.find(({ port }) => port.imei === imei);
+  const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const originData = portList.find(({ port }) => port.imei === imei)
     .packageToJson.synctrak;
@@ -216,18 +217,6 @@ export default function DeviceInfoPage() {
 
   const searchModal = isOpen;
   const toggleSearchModal = isOpen ? onClose : onOpen;
-
-  console.log("formData", formData);
-
-  // ! Driver 탭
-  // 운전자 ID 설정 (파라미터 1800-1899, 3800-3899, 3900-3999)
-  // 파라미터 범위: 1800번부터 1899번까지는 각각 운전자 ID 1번부터 100번까지를 저장하는 데 사용됩니다.
-  // 기능 활성화: 1-Wire 라인에 대한 운전자 ID 기능이 활성화되면, 장치는 ID가 스캔될 때마다 이 파라미터들에 저장된 목록과 대조하여 등록된 ID인지 확인합니다.
-  // 저장 용량: 장치에는 총 100개 또는 300개의 운전자 ID를 로컬에 저장할 수 있습니다.
-  // 데이터 없음 응답: 요청 시 해당 파라미터에 저장된 운전자 ID가 없으면 장치는 "NoData"로 응답합니다.
-  // ID 삭제: 기존에 저장된 운전자 ID를 지우려면 해당 파라미터 값을 "0000000000000000" (16개의 0)으로 설정합니다.
-  // ID 형식: 운전자 ID는 16진수(HEX) 값이며, CRC + ID 번호 + 패밀리 코드 순서로 구성됩니다.
-  // 예시: [CRC] [ID Number] [Family Code] -> [FE] [000012B9FB8B] [01] -> 입력 값: FE000012B9FB8B01
 
   const renderContent = () => {
     switch (tab) {
@@ -256,11 +245,11 @@ export default function DeviceInfoPage() {
             write={(command) =>
               write({
                 data: `${AT_REQ}${imei};${command}`,
-                port: port.port,
-                writer: port.writer,
+                port: currentPort.port,
+                writer: currentPort.writer,
               })
             }
-            port={port.port}
+            port={currentPort.port}
           />
         );
       case "Commands":
@@ -269,11 +258,26 @@ export default function DeviceInfoPage() {
             formData={formData}
             setFormData={setFormData}
             isReady={isReady}
-            port={port.port}
+            port={currentPort.port}
           />
         );
       case "Geofence":
-        return <GeofenceTab formData={formData} setFormData={setFormData} />;
+        return (
+          <GeofenceTab
+            originData={originData}
+            formData={formData}
+            setFormData={setFormData}
+            isReady={isReady}
+            port={currentPort}
+            write={({ data, port, writer }) =>
+              write({
+                data,
+                port: currentPort.port,
+                writer: currentPort.writer,
+              })
+            }
+          />
+        );
       default:
         return null;
     }
@@ -290,13 +294,11 @@ export default function DeviceInfoPage() {
   }, [originData]);
 
   useEffect(() => {
-    if (port.port.readable && port.port.writable) {
+    if (currentPort.port.readable && currentPort.port.writable) {
       setIsReady(true);
     }
-  }, [port.port.readable, port.port.writable]);
+  }, [currentPort.port.readable, currentPort.port.writable]);
 
-  const [isLoading, setIsLoading] = useState(false);
-  const currentPort = portList.find(({ port }) => port.imei === imei);
   const { setPackageFetchingStart } = useSerialStore();
 
   const handleRefreshJsonPacket = async () => {

@@ -211,6 +211,11 @@ export const SECTIONS = {
     es: "Configuración de Geocerca",
     pt: "Configuração de Geofence",
   },
+  Geofence: {
+    en: "Geofence",
+    es: "Geocerca",
+    pt: "Geofence",
+  },
 
   // Tracking
   DisconnectMode: {
