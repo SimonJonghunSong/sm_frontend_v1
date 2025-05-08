@@ -9,6 +9,7 @@ import {
   ObdPid,
   ReportSchdule,
 } from "../(report)/@index";
+import ReportMapping from "app/(auth)/device-info/(report)/ReportMapping";
 
 interface Props {
   formData: {
@@ -41,6 +42,8 @@ export default function ReportTab({ formData, setFormData }: Props) {
       <Report formData={formData} onChange={handleValueChange} />
 
       <AntiTheft formData={formData} onChange={handleValueChange} />
+
+      <ReportMapping formData={formData} onChange={handleValueChange} />
 
       <AlertConfig formData={formData} onChange={handleValueChange} />
 

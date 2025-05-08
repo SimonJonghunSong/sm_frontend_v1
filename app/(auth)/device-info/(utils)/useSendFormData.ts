@@ -43,8 +43,6 @@ export default function useSendFormData() {
         const hex = Number(alertId).toString(16);
 
         realValue = `0${Number(realValue)}${hex.length < 2 ? `0${hex}` : hex}`;
-
-        console.log("realValue ::::", realValue);
       }
 
       const prefix = id.slice(0, 2);
