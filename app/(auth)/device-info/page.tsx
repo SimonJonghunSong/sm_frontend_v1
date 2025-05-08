@@ -26,6 +26,7 @@ import {
   SearchField,
 } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
+import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -207,7 +208,11 @@ export default function DeviceInfoPage() {
     }
   };
 
-  const [searchModal, toggleSearchModal] = useModal();
+  const { isOpen, onOpen, onClose } = useDeviceSearchModalStore();
+
+  const searchModal = isOpen;
+  const toggleSearchModal = isOpen ? onClose : onOpen;
+
   console.log("formData", formData);
 
   // ! Driver 탭
@@ -290,7 +295,6 @@ export default function DeviceInfoPage() {
         <SideMenu
           sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}
         />
-        <Button onClick={toggleSearchModal}>Search Test</Button>
         {renderContent()}
       </div>
 

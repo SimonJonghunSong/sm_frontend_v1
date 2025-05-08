@@ -34,48 +34,9 @@ export default function SearchModal({ sectionData, onClose }: Props) {
   const [searchSectionResults, setSearchSectionResults] = useState<
     SearchResult[]
   >([]);
-  const [searchParamResults, setSearchParamResults] = useState<SearchResult[]>([
-    {
-      key: "Network",
-      searchText: "Network > Network",
-      tab: "Network",
-    },
-    {
-      key: "APN",
-      searchText: "Network > APN",
-      tab: "Network",
-    },
-    {
-      key: "Main Server",
-      searchText: "Network > Main Server",
-      tab: "Network",
-    },
-    {
-      key: "Backup Server",
-      searchText: "Network > Backup Server",
-      tab: "Network",
-    },
-    {
-      key: "AGPS Mode",
-      searchText: "Network > AGPS Mode",
-      tab: "Network",
-    },
-    {
-      key: "AGPS Server",
-      searchText: "Network > AGPS Server",
-      tab: "Network",
-    },
-    {
-      key: "Maintenance Server",
-      searchText: "Network > Maintenance Server",
-      tab: "Network",
-    },
-    {
-      key: "NTP Server",
-      searchText: "Network > NTP Server",
-      tab: "Network",
-    },
-  ]);
+  const [searchParamResults, setSearchParamResults] = useState<SearchResult[]>(
+    []
+  );
   const renderSearchResults = () => {
     if (searchSectionResults.length === 0 && searchParamResults.length === 0)
       return <EmptyResults />;
@@ -92,27 +53,41 @@ export default function SearchModal({ sectionData, onClose }: Props) {
     return (
       <Stack direction="column" gap="20px">
         {searchSectionResults.length !== 0 && (
-          <div>
-            <div className={styles.title}>Sections</div>
-            <ul className={styles.list}>
-              {displayedSectionResults.map((result, index) => (
-                <SearchResultItem
-                  key={index}
-                  result={result}
-                  onSelect={(result) => {
-                    onClose({
-                      key: result.key,
-                      tab: result.tab,
-                      type: "section",
-                    });
-                  }}
-                />
-              ))}
-            </ul>
-          </div>
+          <Stack direction="column" gap="8px">
+            <div>
+              <div className={styles.title}>Sections</div>
+              <ul className={styles.list}>
+                {displayedSectionResults.map((result, index) => (
+                  <SearchResultItem
+                    key={index}
+                    result={result}
+                    onSelect={(result) => {
+                      onClose({
+                        key: result.key,
+                        tab: result.tab,
+                        type: "section",
+                      });
+                    }}
+                  />
+                ))}
+              </ul>
+            </div>
+
+            {searchSectionResults.length > 3 && (
+              <Button
+                color="secondary"
+                sx={{ textDecoration: "underline", alignSelf: "flex-end" }}
+                onClick={() => setShowAllSectionResult(!showAllSectionResult)}
+              >
+                {showAllSectionResult
+                  ? t("configuration.search_bar.show_less")
+                  : t("configuration.search_bar.show_all_result")}
+              </Button>
+            )}
+          </Stack>
         )}
         {searchParamResults.length !== 0 && (
-          <div>
+          <Stack direction="column" gap="8px">
             <div className={styles.title}>Parameters</div>
             <ul className={styles.list}>
               {displayedParamResults.map((result, index) => (
@@ -140,7 +115,7 @@ export default function SearchModal({ sectionData, onClose }: Props) {
                   : t("configuration.search_bar.show_all_result")}
               </Button>
             )}
-          </div>
+          </Stack>
         )}
       </Stack>
     );

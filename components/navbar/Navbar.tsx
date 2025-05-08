@@ -36,6 +36,7 @@ import SearchConfigurationModal from "./SearchConfigurationModal";
 import SearchModelInfoModal from "./SearchModelInfoModal";
 import SearchDeviceConfigurationModal from "./SearchDeviceConfigurationModal";
 import useCmdStore from "@/src/stores/useCmdStore";
+import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -122,6 +123,9 @@ export default function Navbar() {
   const router = useRouter();
   const [isCmdModalWide, setIsCmdModalWide] = useState(false);
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
+
+  // searchbar(device-info)
+  const { onOpen: deviceSearchModalOpen } = useDeviceSearchModalStore();
 
   const { isOpen: cmdModal, toggleOpen: cmdModalToggle } = useCmdStore();
   const [networkModal, networkModalToggle] = useModal();
@@ -418,6 +422,37 @@ export default function Navbar() {
               </li>
             )}
           </ul>
+
+          {userRole !== "ROOT" && (
+            <>
+              {pathname.includes("device-info") && (
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  placeholder={`${t("gnb.pw_set.search")}`}
+                  id="search"
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      paddingRight: 0,
+                      color: "var(--grey5)",
+                    },
+                    backgroundColor: "var(--black)",
+                  }}
+                  InputProps={{
+                    endAdornment: (
+                      <IconButton type="submit">
+                        <SearchOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                      </IconButton>
+                    ),
+                  }}
+                  onClick={() => {
+                    deviceSearchModalOpen();
+                  }}
+                  inputProps={{ readOnly: true }}
+                />
+              )}
+            </>
+          )}
 
           {userRole !== "ROOT" && (
             <>
