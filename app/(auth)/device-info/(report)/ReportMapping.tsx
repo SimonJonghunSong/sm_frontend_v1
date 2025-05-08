@@ -71,6 +71,18 @@ const checkboxOptions = {
         "Mapa de reporte OTR, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID del Vehículo, Contador de DTC, Indicador MIL, Tiempo con MIL Activado, Distancia con MIL Activado, Distancia del Viaje, Tiempo de Funcionamiento del Motor, Tiempo de Funcionamiento, Velocidad Máxima, Velocidad Promedio, RPM Máximo, RPM Promedio, Contador de Excesos de RPM, Temperatura Máxima del Aceite del Motor, Temperatura Promedio del Refrigerante, Nivel de Combustible (%), Cambio en el Nivel de Combustible (%), Economía de Combustible (km/L), Uso de Combustible en Modo de Inactividad (%)",
     },
   },
+  "1091": {
+    optionString:
+      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19",
+    labelString: {
+      TEXT_EN_ITEM_CONTENT:
+        "OBD Report Map, Model, Software Version, Message Type, Date, Time, Vehicle ID, OBD Type, DTC Count, MIL Indicator, MIL On Time, MIL On Distance, Odometer, Engine Run Time, Fuel Type, Fuel Level (%), PIDs Bitmask (0x01–0x20), PIDs Bitmask (0x21–0x40), PIDs Bitmask (0x41–0x60), PIDs Bitmask (0x61–0x80)",
+      TEXT_ES_ITEM_CONTENT:
+        "Mapa de Relatório OBD, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID do Veículo, Tipo OBD, Contagem de DTC, Indicador MIL, Tempo com MIL Ligado, Distância com MIL Ligado, Odômetro, Tempo de Funcionamento do Motor, Tipo de Combustível, Nível de Combustível (%), Máscara de PIDs (0x01–0x20), Máscara de PIDs (0x21–0x40), Máscara de PIDs (0x41–0x60), Máscara de PIDs (0x61–0x80)",
+      TEXT_PT_ITEM_CONTENT:
+        "Mapa de Informe OBD, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID del Vehículo, Tipo OBD, Contador de DTC, Indicador MIL, Tiempo con MIL Activado, Distancia con MIL Activado, Odómetro, Tiempo de Funcionamiento del Motor, Tipo de Combustible, Nivel de Combustible (%), Máscara de PIDs (0x01–0x20), Máscara de PIDs (0x21–0x40), Máscara de PIDs (0x41–0x60), Máscara de PIDs (0x61–0x80)",
+    },
+  },
   "1092": {
     optionString:
       "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22",
@@ -81,6 +93,28 @@ const checkboxOptions = {
         "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Número do Pacote, Tamanho Total do Pacote, Tamanho do Pacote, Dados do Pacote",
       TEXT_PT_ITEM_CONTENT:
         "Mapa de reportes, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de fix GPS, Estados de Entrada, Estados de Salida, Número de Paquete, Tamaño Total del Paquete, Tamaño del Paquete, Datos del Paquete",
+    },
+  },
+  "1094": {
+    optionString: "b0, b1, b2, b3, b4, b5, b6, b7, b8",
+    labelString: {
+      TEXT_EN_ITEM_CONTENT:
+        "PID Report Map, Model, Software Version, Message Type, Date, Time, PID_DATA Length, PID_DATA, 8-bit PID_DATA Checksum",
+      TEXT_ES_ITEM_CONTENT:
+        "Mapa de Relatório PID, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Comprimento dos DADOS_PID, DADOS_PID, Checksum de DADOS_PID de 8 bits",
+      TEXT_PT_ITEM_CONTENT:
+        "Mapa de reporte PID, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Longitud de PID_DATA, PID_DATA, Checksum de PID_DATA de 8 bits",
+    },
+  },
+  "1096": {
+    optionString: "b0, b1, b2, b3, b4, b5, b6, b7, b8",
+    labelString: {
+      TEXT_EN_ITEM_CONTENT:
+        "OVD Report Map, Model, Software Version, Message Type, Date, Time, OVD_DATA Length, OVD_DATA, 8-bit OVD_DATA Checksum",
+      TEXT_ES_ITEM_CONTENT:
+        "Mapa do Relatório OVD, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Comprimento do Dado OVD, Dado OVD, Checksum de 8 bits do Dado OVD",
+      TEXT_PT_ITEM_CONTENT:
+        "Mapa de reporte OVD, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Longitud de OVD_DATA, OVD_DATA, Checksum de OVD_DATA de 8 bits",
     },
   },
 };
@@ -241,6 +275,16 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               onChange={handleChange}
             />
           )}
+          {!!formData["1091"] && Number(formData["1090"].realValue) !== 0 && (
+            <CheckboxField
+              id="1091"
+              formData={formData}
+              onChange={handleChange}
+              optionString={checkboxOptions["1091"].optionString}
+              labelString={checkboxOptions["1091"].labelString}
+              hasAllCheckbox
+            />
+          )}
           {!!formData["1092"] && (
             <CheckboxField
               id="1092"
@@ -259,11 +303,32 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               onChange={handleChange}
             />
           )}
+
+          {!!formData["1094"] && Number(formData["1093"].realValue) !== 0 && (
+            <CheckboxField
+              id="1094"
+              formData={formData}
+              onChange={handleChange}
+              optionString={checkboxOptions["1094"].optionString}
+              labelString={checkboxOptions["1094"].labelString}
+              hasAllCheckbox
+            />
+          )}
           {!!formData["1095"] && (
             <SwitchField
               id="1095"
               formData={formData}
               onChange={handleChange}
+            />
+          )}
+          {!!formData["1096"] && Number(formData["1095"].realValue) !== 0 && (
+            <CheckboxField
+              id="1096"
+              formData={formData}
+              onChange={handleChange}
+              optionString={checkboxOptions["1096"].optionString}
+              labelString={checkboxOptions["1096"].labelString}
+              hasAllCheckbox
             />
           )}
         </Stack>
