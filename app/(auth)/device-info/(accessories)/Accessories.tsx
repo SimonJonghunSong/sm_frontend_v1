@@ -8,6 +8,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
 import DualCheckboxField from "../(components)/DualCheckboxField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Accessories.en];
 
 interface Props {
   formData: {
@@ -16,38 +19,12 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsIds = [
-  "0610",
-  "2300",
-  "2301",
-  "2302",
-  "2303",
-  "2304",
-  "2305",
-  "2306",
-  "2307",
-  "2308",
-  "2309",
-  "2310",
-  "2311",
-  "2312",
-  "2313",
-  "2314",
-  "2315",
-  "2316",
-  "2330",
-  "2331",
-  "2332",
-  "2333",
-  "2334",
-  "2336",
-];
-
 const Accessories = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
+  const lang = useLangStore((state) => state.lang);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -92,7 +69,7 @@ const Accessories = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -108,7 +85,9 @@ const Accessories = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.accessories.accessories")}</h1>
+      <h1 data-section-id={SECTIONS.Accessories.en}>
+        {SECTIONS.Accessories[lang]}
+      </h1>
 
       <Stack direction="row" gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

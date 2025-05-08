@@ -170,6 +170,28 @@ export const SECTIONS = {
     es: "Programación de Reporte",
     pt: "Programação de Relatório",
   },
+
+  // Accessories
+  Accessories: {
+    en: "Accessories",
+    es: "Accesorios",
+    pt: "Acessórios",
+  },
+  MDSM7: {
+    en: "MDSM-7",
+    es: "MDSM-7",
+    pt: "MDSM-7",
+  },
+  SerialRs232: {
+    en: "Serial RS232",
+    es: "RS232",
+    pt: "RS232",
+  },
+  WireSettings: {
+    en: "Wire Settings",
+    es: "Configuración de Cable",
+    pt: "Configuração de Cabo",
+  },
 };
 
 const alertConfig1Fields = [
@@ -523,6 +545,88 @@ export const INCLUDE_FIELDS = {
     "1653",
     "1655", // TODO
     "1656",
+  ],
+
+  // Accessories
+  [SECTIONS.Accessories.en]: [
+    "0610",
+    "2300",
+    "2301",
+    "2302",
+    "2303",
+    "2304",
+    "2305",
+    "2306",
+    "2307",
+    "2308",
+    "2309",
+    "2310",
+    "2311",
+    "2312",
+    "2313",
+    "2314",
+    "2315",
+    "2316",
+    "2330",
+    "2331",
+    "2332",
+    "2333",
+    "2334",
+    "2336",
+  ],
+  [SECTIONS.MDSM7.en]: [
+    "2350",
+    "2351",
+    "2352",
+    "2353",
+    "2355",
+    "2354",
+    "2356",
+    "2357",
+    "2359",
+    "2358",
+    "2360",
+    "2361",
+    "2363",
+    "2362",
+    "2364",
+    "2365",
+    "2367",
+    "2366",
+    "2368",
+    "2371",
+    "2370",
+    "2372",
+  ],
+  [SECTIONS.SerialRs232.en]: ["1950", "1951", "1956", "1957", "1958"],
+  [SECTIONS.WireSettings.en]: [
+    "1970",
+    "1971",
+    "1972",
+    "1973",
+    "1974",
+    "1975",
+    "1999",
+    "1981",
+    "1982",
+    "1983",
+    "1984",
+    "1985",
+    "1986",
+    "1987",
+    "1988",
+    "1989",
+    "1990",
+    "1991",
+    "1992",
+    "1993",
+    "1994",
+    "1995",
+    "1996",
+    "1997",
+    "1998",
+    "2313",
+    "2350",
   ],
 };
 
@@ -1040,6 +1144,87 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.Accessories.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Accessories.en],
+      searchText: `${MENUS.Accessories.en} > ${SECTIONS.Accessories.en}`,
+      tab: "Accessories",
+      key: SECTIONS.Accessories.en,
+    },
+    [SECTIONS.MDSM7.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.MDSM7.en],
+      searchText: `${MENUS.Accessories.en} > ${SECTIONS.MDSM7.en}`,
+      tab: "Accessories",
+      key: SECTIONS.MDSM7.en,
+    },
+    [SECTIONS.SerialRs232.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.SerialRs232.en],
+      searchText: `${MENUS.Accessories.en} > ${SECTIONS.SerialRs232.en}`,
+      tab: "Accessories",
+      key: SECTIONS.SerialRs232.en,
+    },
+    [SECTIONS.WireSettings.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.WireSettings.en],
+      searchText: `${MENUS.Accessories.en} > ${SECTIONS.WireSettings.en}`,
+      tab: "Accessories",
+      key: SECTIONS.WireSettings.en,
+    },
+  },
+  es: {
+    [SECTIONS.Accessories.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Accessories.en],
+      searchText: `${MENUS.Accessories.es} > ${SECTIONS.Accessories.es}`,
+      tab: "Accessories",
+      key: SECTIONS.Accessories.en,
+    },
+    [SECTIONS.MDSM7.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.MDSM7.en],
+      searchText: `${MENUS.Accessories.es} > ${SECTIONS.MDSM7.es}`,
+      tab: "Accessories",
+      key: SECTIONS.MDSM7.en,
+    },
+    [SECTIONS.SerialRs232.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.SerialRs232.en],
+      searchText: `${MENUS.Accessories.es} > ${SECTIONS.SerialRs232.es}`,
+      tab: "Accessories",
+      key: SECTIONS.SerialRs232.en,
+    },
+    [SECTIONS.WireSettings.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.WireSettings.en],
+      searchText: `${MENUS.Accessories.es} > ${SECTIONS.WireSettings.es}`,
+      tab: "Accessories",
+      key: SECTIONS.WireSettings.en,
+    },
+  },
+  pt: {
+    [SECTIONS.Accessories.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Accessories.en],
+      searchText: `${MENUS.Accessories.pt} > ${SECTIONS.Accessories.pt}`,
+      tab: "Accessories",
+      key: SECTIONS.Accessories.en,
+    },
+    [SECTIONS.MDSM7.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.MDSM7.en],
+      searchText: `${MENUS.Accessories.pt} > ${SECTIONS.MDSM7.pt}`,
+      tab: "Accessories",
+      key: SECTIONS.MDSM7.en,
+    },
+    [SECTIONS.SerialRs232.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.SerialRs232.en],
+      searchText: `${MENUS.Accessories.pt} > ${SECTIONS.SerialRs232.pt}`,
+      tab: "Accessories",
+      key: SECTIONS.SerialRs232.en,
+    },
+    [SECTIONS.WireSettings.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.WireSettings.en],
+      searchText: `${MENUS.Accessories.pt} > ${SECTIONS.WireSettings.pt}`,
+      tab: "Accessories",
+      key: SECTIONS.WireSettings.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -1052,16 +1237,19 @@ export const SEARCH_SECTION = {
     ...NETWORK_SECTION.en,
     ...SYSTEM_SECTION.en,
     ...REPORT_SECTION.en,
+    ...ACCESSORIES_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
     ...SYSTEM_SECTION.es,
     ...REPORT_SECTION.es,
+    ...ACCESSORIES_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
     ...SYSTEM_SECTION.pt,
     ...REPORT_SECTION.pt,
+    ...ACCESSORIES_SECTION.pt,
   },
 };
 

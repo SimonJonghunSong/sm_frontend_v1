@@ -7,6 +7,10 @@ import SwitchField from "../(components)/SwitchField";
 import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.SerialRs232.en];
 
 interface Props {
   formData: {
@@ -15,13 +19,11 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsIds = ["1950", "1951", "1956", "1957", "1958"];
-
 const SerialRs232 = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
-
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  const lang = useLangStore((state) => state.lang);
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -66,7 +68,7 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -82,7 +84,9 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.accessories.serial_rs232")}</h1>
+      <h1 data-section-id={SECTIONS.SerialRs232.en}>
+        {SECTIONS.SerialRs232[lang]}
+      </h1>
 
       <Stack direction="row" gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

@@ -10,6 +10,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import RangeThresholdField from "../(components)/RangeThresholdField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import DualCheckboxField from "../(components)/DualCheckboxField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.WireSettings.en];
 
 interface Props {
   formData: {
@@ -30,42 +33,12 @@ const errorMessages = {
   },
 };
 
-const fieldsIds = [
-  "1970",
-  "1971",
-  "1972",
-  "1973",
-  "1974",
-  "1975",
-  "1999",
-  "1981",
-  "1982",
-  "1983",
-  "1984",
-  "1985",
-  "1986",
-  "1987",
-  "1988",
-  "1989",
-  "1990",
-  "1991",
-  "1992",
-  "1993",
-  "1994",
-  "1995",
-  "1996",
-  "1997",
-  "1998",
-  "2313",
-  "2350",
-];
-
 const WireSettings = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -110,7 +83,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -126,7 +99,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.accessories.1-wire_settings")}</h1>
+      <h1 data-section-id={SECTIONS.WireSettings.en}>
+        {SECTIONS.WireSettings[lang]}
+      </h1>
 
       <Stack direction="row" gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

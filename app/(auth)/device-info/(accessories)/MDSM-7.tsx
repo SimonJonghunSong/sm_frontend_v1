@@ -9,6 +9,9 @@ import SelectField from "../(components)/SelectField";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import SpecialRangeNumericField from "../(components)/SpecialRangeNumericField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.MDSM7.en];
 
 interface Props {
   formData: {
@@ -23,37 +26,12 @@ const tooltips = {
   es: "Configuraciones de MDSM-7.\n* Cuando la línea de Activado de MDSM-7 está conectada, se apagará automáticamente durante el estacionamiento y se encenderá al iniciar la conducción.\n* Al arrancar, MDSM-7 envía todos los parámetros al dispositivo conectado.\n* Si MDSM-7 se desconecta o el dispositivo no recibe todos los parámetros al arrancar, los parámetros se almacenan en el dispositivo y se aplicarán en el siguiente arranque de MDSM-7.\n* Si se conecta un MDSM-7 diferente, el dispositivo cambiará los parámetros del nuevo MDSM-7.\n* Si el dispositivo está configurado como sin afectar, no cambiará las configuraciones de MDSM-7.",
 };
 
-const fieldsIds = [
-  "2350",
-  "2351",
-  "2352",
-  "2353",
-  "2355",
-  "2354",
-  "2356",
-  "2357",
-  "2359",
-  "2358",
-  "2360",
-  "2361",
-  "2363",
-  "2362",
-  "2364",
-  "2365",
-  "2367",
-  "2366",
-  "2368",
-  "2371",
-  "2370",
-  "2372",
-];
-
 const MDSM7 = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -98,7 +76,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -115,7 +93,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
       }}
     >
       <Stack direction="row" alignItems="center" gap={"4px"}>
-        <h1>{t("configuration.accessories.mdsm-7")}</h1>
+        <h1 data-section-id={SECTIONS.MDSM7.en}>{SECTIONS.MDSM7[lang]}</h1>
 
         <InputBox.Info
           tooltipText={
