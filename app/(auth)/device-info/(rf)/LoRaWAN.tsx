@@ -14,6 +14,7 @@ import TextInputField from "app/(auth)/device-info/(components)/TextInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "../(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.LoRaWAN.en];
 
@@ -36,6 +37,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -102,7 +104,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}
