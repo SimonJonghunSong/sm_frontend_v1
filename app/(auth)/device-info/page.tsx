@@ -30,6 +30,7 @@ import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
 import Controller from "app/(auth)/configuration/components/Controller";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
+import GeofenceTab from "./(tabs)/GeofenceTab";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -271,6 +272,8 @@ export default function DeviceInfoPage() {
             port={port.port}
           />
         );
+      case "Geofence":
+        return <GeofenceTab formData={formData} setFormData={setFormData} />;
       default:
         return null;
     }

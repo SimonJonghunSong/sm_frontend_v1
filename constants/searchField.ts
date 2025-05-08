@@ -205,6 +205,13 @@ export const SECTIONS = {
     pt: "Entrada/Saída",
   },
 
+  // Geofence
+  GeofenceConfig: {
+    en: "Geofence Config",
+    es: "Configuración de Geocerca",
+    pt: "Configuração de Geofence",
+  },
+
   // Tracking
   DisconnectMode: {
     en: "Disconnect Mode",
@@ -820,6 +827,9 @@ export const INCLUDE_FIELDS = {
     "1784", // Pulse 3 On
     "1785", // Pulse 3 Off
   ],
+
+  // Geofence
+  [SECTIONS.GeofenceConfig.en]: ["9000", "9001", "9002"],
 
   // Tracking
   [SECTIONS.DisconnectMode.en]: ["1641"],
