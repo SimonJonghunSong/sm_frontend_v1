@@ -22,6 +22,10 @@ import Modal from "@/components/Modal";
 import { AddOutlined } from "@mui/icons-material";
 import { delayPromise } from "@/src/hooks/useSerial";
 import parseDriverIdResponseString from "./utils/driverId";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Driver.en];
 
 const commands = [
   "18;00,01,02,03,04,05,06,07,08,09,10,11,12,13,14,15,16,17,18,19",
@@ -51,11 +55,9 @@ interface Props {
   port?: SerialPort;
 }
 
-const fieldsIds = [];
-
 const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
   const t = useTranslations();
-
+  const lang = useLangStore((state) => state.lang);
   const [addModal, addModalToggle] = useModal();
   const [editModal, editModalToggle] = useModal();
   const [editRow, setEditRow] = useState<{
@@ -274,7 +276,7 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
           // 모든 필드 값을 포함한 객체 생성
           const fieldValues = Object.keys(formData).reduce((acc, key) => {
             // 네트워크 탭에 있는 필드만 포함
-            if (fieldsIds.includes(key)) {
+            if (fieldIds.includes(key)) {
               acc[key] = {
                 id: key,
                 value: formData[key].value,
@@ -296,7 +298,9 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
           alignItems="center"
         >
           <Stack direction="row" alignItems="center" gap={"4px"}>
-            <h1>{t("configuration.driver.driver_id")}</h1>
+            <h1 data-section-id={SECTIONS.Driver.en}>
+              {SECTIONS.Driver[lang]}
+            </h1>
           </Stack>
         </Stack>
 

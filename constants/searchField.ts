@@ -251,6 +251,13 @@ export const SECTIONS = {
     es: "Modo de Remolque",
     pt: "Modo de Remolque",
   },
+
+  // Driver
+  Driver: {
+    en: "Driver",
+    es: "Conductor",
+    pt: "Motorista",
+  },
 };
 
 const alertConfig1Fields = [
@@ -777,6 +784,9 @@ export const INCLUDE_FIELDS = {
   [SECTIONS.ParkMode.en]: ["1605", "1606"],
   [SECTIONS.SpeedingMode.en]: ["1620", "1621", "1622", "1623", "1624", "1625"],
   [SECTIONS.TowingMode.en]: ["1636"],
+
+  // Driver
+  [SECTIONS.Driver.en]: [],
 };
 
 export type SearchField = {
@@ -1563,6 +1573,33 @@ export const TRACKING_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+export const DRIVER_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.Driver.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Driver.en],
+      searchText: `${MENUS.Driver.en} > ${SECTIONS.Driver.en}`,
+      tab: "Driver",
+      key: SECTIONS.Driver.en,
+    },
+  },
+  es: {
+    [SECTIONS.Driver.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Driver.en],
+      searchText: `${MENUS.Driver.es} > ${SECTIONS.Driver.es}`,
+      tab: "Driver",
+      key: SECTIONS.Driver.en,
+    },
+  },
+  pt: {
+    [SECTIONS.Driver.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Driver.en],
+      searchText: `${MENUS.Driver.pt} > ${SECTIONS.Driver.pt}`,
+      tab: "Driver",
+      key: SECTIONS.Driver.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -1577,6 +1614,7 @@ export const SEARCH_SECTION = {
     ...REPORT_SECTION.en,
     ...ACCESSORIES_SECTION.en,
     ...TRACKING_SECTION.en,
+    ...DRIVER_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
@@ -1584,6 +1622,7 @@ export const SEARCH_SECTION = {
     ...REPORT_SECTION.es,
     ...ACCESSORIES_SECTION.es,
     ...TRACKING_SECTION.es,
+    ...DRIVER_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
@@ -1591,6 +1630,7 @@ export const SEARCH_SECTION = {
     ...REPORT_SECTION.pt,
     ...ACCESSORIES_SECTION.pt,
     ...TRACKING_SECTION.pt,
+    ...DRIVER_SECTION.pt,
   },
 };
 
