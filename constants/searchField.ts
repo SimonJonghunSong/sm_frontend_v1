@@ -319,6 +319,13 @@ export const SECTIONS = {
     es: "RF",
     pt: "RF",
   },
+
+  // NetworkCommands
+  NetworkCommands: {
+    en: "Network Commands",
+    es: "Comandos de Red",
+    pt: "Comandos de Rede",
+  },
 };
 
 const alertConfig1Fields = [
@@ -1019,6 +1026,9 @@ export const INCLUDE_FIELDS = {
     "2508",
     "2510",
   ],
+
+  // NetworkCommands
+  [SECTIONS.NetworkCommands.en]: ["ALL_SEARCH"],
 };
 
 export type SearchField = {
@@ -2024,6 +2034,33 @@ export const RF_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+const COMMAND_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.NetworkCommands.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.NetworkCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.NetworkCommands.en,
+    },
+  },
+  es: {
+    [SECTIONS.NetworkCommands.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.NetworkCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.NetworkCommands.en,
+    },
+  },
+  pt: {
+    [SECTIONS.NetworkCommands.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.NetworkCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.NetworkCommands.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -2041,6 +2078,7 @@ export const SEARCH_SECTION = {
     ...DRIVER_SECTION.en,
     ...BLUETOOTH_SECTION.en,
     ...RF_SECTION.en,
+    ...COMMAND_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
@@ -2051,6 +2089,7 @@ export const SEARCH_SECTION = {
     ...DRIVER_SECTION.es,
     ...BLUETOOTH_SECTION.es,
     ...RF_SECTION.es,
+    ...COMMAND_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
@@ -2061,6 +2100,7 @@ export const SEARCH_SECTION = {
     ...DRIVER_SECTION.pt,
     ...BLUETOOTH_SECTION.pt,
     ...RF_SECTION.pt,
+    ...COMMAND_SECTION.pt,
   },
 };
 
@@ -2077,7 +2117,9 @@ export const formDataToSearchSectionData = (
     const valueKey = value.key;
 
     acc[key] = {
-      fields: fields.filter((f) => Object.keys(formData).includes(f)),
+      fields: fields.filter(
+        (f) => Object.keys(formData).includes(f) || f === "ALL_SEARCH"
+      ),
       searchText,
       tab,
       key: valueKey,

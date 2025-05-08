@@ -125,7 +125,10 @@ export default function SearchModal({ sectionData, onClose }: Props) {
     if (searchTerm) {
       const sectionResultsEntries = Object.entries(sectionData).filter(
         ([key, value]) => {
+          console.log("value :::");
+
           return (
+            value.fields.includes("ALL_SEARCH") ||
             value.searchText.toLowerCase().includes(searchTerm.toLowerCase()) ||
             key.toLowerCase().includes(searchTerm.toLowerCase())
           );

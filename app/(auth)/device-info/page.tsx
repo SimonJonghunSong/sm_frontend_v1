@@ -31,6 +31,7 @@ import Controller from "app/(auth)/configuration/components/Controller";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
+import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -264,14 +265,7 @@ export default function DeviceInfoPage() {
           />
         );
       case "Commands":
-        return (
-          <DriverTab
-            formData={formData}
-            setFormData={setFormData}
-            isReady={isReady}
-            port={port.port}
-          />
-        );
+        return <CommandTab imei={imei} />;
       case "Geofence":
         return <GeofenceTab formData={formData} setFormData={setFormData} />;
       default:
