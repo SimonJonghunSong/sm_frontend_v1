@@ -170,6 +170,11 @@ export const SECTIONS = {
     es: "Mapa de Reporte",
     pt: "Mapa de Relatório",
   },
+  ReportMapping2: {
+    en: "Report Mapping2",
+    es: "Mapa de Reporte2",
+    pt: "Mapa de Relatório2",
+  },
   ReportSchdule: {
     en: "Report Schedule",
     es: "Programación de Reporte",
@@ -692,6 +697,7 @@ export const INCLUDE_FIELDS = {
     "1095",
     "1096",
   ],
+  [SECTIONS.ReportMapping2.en]: ["3100", "3101", "3103", "2598"],
   [SECTIONS.ReportSchdule.en]: [
     "1637",
     "1638", // TODO
@@ -1422,6 +1428,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping.en,
     },
+    [SECTIONS.ReportMapping2.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportMapping2.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.ReportMapping2.en}`,
+      tab: "Report",
+      key: SECTIONS.ReportMapping2.en,
+    },
     [SECTIONS.ReportSchdule.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
       searchText: `${MENUS.Report.en} > ${SECTIONS.ReportSchdule.en}`,
@@ -1465,6 +1477,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       searchText: `${MENUS.Report.es} > ${SECTIONS.ReportMapping.es}`,
       tab: "Report",
       key: SECTIONS.ReportMapping.en,
+    },
+    [SECTIONS.ReportMapping2.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportMapping2.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.ReportMapping2.es}`,
+      tab: "Report",
+      key: SECTIONS.ReportMapping2.en,
     },
     [SECTIONS.ReportSchdule.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
@@ -1521,6 +1539,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportMapping.pt}`,
       tab: "Report",
       key: SECTIONS.ReportMapping.en,
+    },
+    [SECTIONS.ReportMapping2.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportMapping2.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportMapping2.pt}`,
+      tab: "Report",
+      key: SECTIONS.ReportMapping2.en,
     },
     [SECTIONS.ReportSchdule.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],

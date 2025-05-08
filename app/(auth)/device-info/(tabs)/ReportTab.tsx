@@ -10,6 +10,7 @@ import {
   ReportSchdule,
 } from "../(report)/@index";
 import ReportMapping from "app/(auth)/device-info/(report)/ReportMapping";
+import ReportMapping2 from "app/(auth)/device-info/(report)/ReportMapping2";
 
 interface Props {
   formData: {
@@ -44,6 +45,8 @@ export default function ReportTab({ formData, setFormData }: Props) {
       <AntiTheft formData={formData} onChange={handleValueChange} />
 
       <ReportMapping formData={formData} onChange={handleValueChange} />
+
+      <ReportMapping2 formData={formData} onChange={handleValueChange} />
 
       <AlertConfig formData={formData} onChange={handleValueChange} />
 
