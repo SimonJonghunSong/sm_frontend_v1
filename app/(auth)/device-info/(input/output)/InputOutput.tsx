@@ -7,6 +7,10 @@ import { FormField } from "app/(auth)/device-info/page";
 import Input from "app/(auth)/device-info/(input/output)/Input";
 import Output from "app/(auth)/device-info/(input/output)/Output";
 import { hasFormDataFields } from "../../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.InputOutput.en];
 
 interface Props {
   formData: {
@@ -15,44 +19,14 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsIds = [
-  "1720", // Input 1 Type
-  "1721", // Input 1 Chat
-  "1722", // Input 2 Type
-  "1723", // Input 2 Chat
-  "1724", // Input 3 Type
-  "1725", // Input 3 Chat
-  "1726", // Input 4 Type
-  "1727", // Input 4 Chat
-
-  "1760", // Output 1 Type
-  "1761", // Output 1 Active
-  "1762", // Output 2 Type
-  "1763", // Output 2 Active
-  "1764", // Output 3 Type
-  "1765", // Output 3 Active
-  "1766", // Output 4 Type
-  "1767", // Output 4 Active
-
-  "1775", // Pulse 1 Number
-  "1776", // Pulse 1 On
-  "1777", // Pulse 1 Off
-
-  "1780", // Pulse 2 Number
-  "1781", // Pulse 2 On
-  "1782", // Pulse 2 Off
-
-  "1783", // Pulse 3 Number
-  "1784", // Pulse 3 On
-  "1785", // Pulse 3 Off
-];
-
 const InputOutput = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
+  const lang = useLangStore((state) => state.lang);
+
   const [tab, setTab] = useState<"input" | "output">("input");
 
-  if (!hasFormDataFields(formData, fieldsIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const validateForm = (): boolean => {
     // formRef가 null이면 유효성 검사를 할 수 없음
@@ -93,7 +67,7 @@ const InputOutput = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (fieldsIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -111,7 +85,9 @@ const InputOutput = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" gap={"4px"}>
-          <h1>{t("configuration.side_bar.input/output(i/o)")}</h1>
+          <h1 data-section-id={SECTIONS.InputOutput.en}>
+            {SECTIONS.InputOutput[lang]}
+          </h1>
           <InputBox.Number>16</InputBox.Number>
         </Stack>
       </Stack>

@@ -192,6 +192,13 @@ export const SECTIONS = {
     es: "Configuración de Cable",
     pt: "Configuração de Cabo",
   },
+
+  // Input/Output
+  InputOutput: {
+    en: "Input/Output",
+    es: "Entrada/Salida",
+    pt: "Entrada/Saída",
+  },
 };
 
 const alertConfig1Fields = [
@@ -627,6 +634,39 @@ export const INCLUDE_FIELDS = {
     "1998",
     "2313",
     "2350",
+  ],
+
+  // Input/Output
+  [SECTIONS.InputOutput.en]: [
+    "1720", // Input 1 Type
+    "1721", // Input 1 Chat
+    "1722", // Input 2 Type
+    "1723", // Input 2 Chat
+    "1724", // Input 3 Type
+    "1725", // Input 3 Chat
+    "1726", // Input 4 Type
+    "1727", // Input 4 Chat
+
+    "1760", // Output 1 Type
+    "1761", // Output 1 Active
+    "1762", // Output 2 Type
+    "1763", // Output 2 Active
+    "1764", // Output 3 Type
+    "1765", // Output 3 Active
+    "1766", // Output 4 Type
+    "1767", // Output 4 Active
+
+    "1775", // Pulse 1 Number
+    "1776", // Pulse 1 On
+    "1777", // Pulse 1 Off
+
+    "1780", // Pulse 2 Number
+    "1781", // Pulse 2 On
+    "1782", // Pulse 2 Off
+
+    "1783", // Pulse 3 Number
+    "1784", // Pulse 3 On
+    "1785", // Pulse 3 Off
   ],
 };
 
