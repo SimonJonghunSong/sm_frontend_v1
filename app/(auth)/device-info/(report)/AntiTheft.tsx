@@ -8,6 +8,7 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import { hasFormDataFields } from "../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.AntiTheft.en];
 
@@ -28,6 +29,7 @@ const Report = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -85,7 +87,7 @@ const Report = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

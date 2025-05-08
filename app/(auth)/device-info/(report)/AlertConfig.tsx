@@ -8,6 +8,7 @@ import { ALERT_CONFIG_1 } from "./AlertConfig1";
 import { ALERT_CONFIG_2 } from "./AlertConfig2";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 interface Props {
   formData: {
@@ -56,6 +57,7 @@ const AlertConfig = ({ formData, onChange }: Props) => {
   const [tab, setTab] = useState<"alert_config_1" | "alert_config_2">(
     "alert_config_1"
   );
+  const { sendFormData } = useSendFormData();
 
   return (
     <Form
@@ -87,7 +89,7 @@ const AlertConfig = ({ formData, onChange }: Props) => {
         }, {});
 
         // 변환 작업된 values
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
       }}
     >
       <h1 data-section-id={SECTIONS.AlertConfig.en}>

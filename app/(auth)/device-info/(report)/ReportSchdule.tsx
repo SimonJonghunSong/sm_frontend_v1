@@ -11,6 +11,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchdule.en];
 
@@ -48,7 +49,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-
+  const { sendFormData } = useSendFormData();
   // const fieldIds = [
   //   "1637",
   //   "1638", // TODO
@@ -135,7 +136,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

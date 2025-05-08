@@ -1985,12 +1985,6 @@ export const formDataToSearchSectionData = (
     const tab = value.tab;
     const valueKey = value.key;
 
-    console.log("value :::", value);
-    console.log("lang :::", lang);
-    console.log("fields :::", fields);
-    console.log("SEARCH_SECTION[lang] :::", SEARCH_SECTION[lang]);
-    console.log("formData :::", formData);
-
     acc[key] = {
       fields: fields.filter((f) => Object.keys(formData).includes(f)),
       searchText,

@@ -35,7 +35,17 @@ export default function useSendFormData() {
     let lastPrefix = null;
     for (let i = 0; i < entries.length; i++) {
       const [id, value] = entries[i];
-      const realValue = (value as FormField).realValue;
+      let realValue = (value as FormField).realValue;
+      const isAlert = !!(value as FormField).alert_id;
+
+      if (isAlert) {
+        const alertId = (value as FormField).alert_id;
+        const hex = Number(alertId).toString(16);
+
+        realValue = `0${Number(realValue)}${hex.length < 2 ? `0${hex}` : hex}`;
+
+        console.log("realValue ::::", realValue);
+      }
 
       const prefix = id.slice(0, 2);
       if (
