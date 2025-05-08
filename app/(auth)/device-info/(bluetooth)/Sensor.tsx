@@ -13,6 +13,7 @@ import useLangStore from "@/utils/useLangStore";
 import SelectField from "../(components)/SelectField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "../(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Sensor.en];
 
@@ -27,7 +28,7 @@ const Sensor = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-
+  const { sendFormData } = useSendFormData();
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
