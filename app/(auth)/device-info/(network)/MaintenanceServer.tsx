@@ -13,6 +13,7 @@ import TextInputField from "../(components)/TextInputField";
 import TimeHMA from "../(components)/TimeHMA";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 interface Props {
   formData: {
@@ -33,6 +34,7 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -92,7 +94,7 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
         // 1023 => Access time disable이면 00:00 으로 보낼 것
         // 1023 => Access time enable이면 hh:mm 형식으로 보낼 것
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

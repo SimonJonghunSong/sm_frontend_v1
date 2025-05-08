@@ -10,6 +10,7 @@ import { SwitchPrimary } from "@/components/switches";
 import DualCheckboxField from "../(components)/DualCheckboxField";
 import { hasFormDataFields } from "../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 interface Props {
   formData: {
@@ -31,6 +32,7 @@ const Satellite = ({ formData, onChange }: Props) => {
   const lang = useLangStore();
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(false);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -88,7 +90,7 @@ const Satellite = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

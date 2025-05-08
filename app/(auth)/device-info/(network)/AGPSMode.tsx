@@ -11,6 +11,7 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 interface Props {
   formData: {
@@ -25,6 +26,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
+  const { sendFormData } = useSendFormData();
 
   const allowedChars = /^[A-Za-z0-9\-./:]*$/;
   const urlPattern = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
@@ -85,7 +87,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

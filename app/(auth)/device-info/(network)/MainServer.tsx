@@ -10,11 +10,12 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import { hasFormDataFields } from "../(utils)/@index";
 import SwitchField from "../(components)/SwitchField";
-import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import CheckboxComp from "app/(auth)/device-info/(components)/CheckboxComp";
 
 const optionsString =
   "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b29, b30, b31";
@@ -39,6 +40,7 @@ const MainServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -96,7 +98,7 @@ const MainServer = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

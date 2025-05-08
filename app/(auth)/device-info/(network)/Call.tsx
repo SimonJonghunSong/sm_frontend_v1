@@ -9,6 +9,7 @@ import { hasFormDataFields } from "../(utils)/@index";
 import TextInputField from "../(components)/TextInputField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 interface Props {
   formData: {
@@ -23,6 +24,7 @@ const Call = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -79,7 +81,7 @@ const Call = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}
