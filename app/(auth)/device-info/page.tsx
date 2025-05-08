@@ -2,7 +2,7 @@
 
 import SideMenu from "@/components/sidemenu/SideMenu";
 import { sideMenuItems } from "./sideMenuItems";
-import useSerial from "@/src/hooks/useSerial";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 // import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { useEffect, useState } from "react";
@@ -16,7 +16,7 @@ import RfTab from "app/(auth)/device-info/(tabs)/RfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 import useCmdStore from "@/src/stores/useCmdStore";
-import { AT_REQ } from "@/src/hooks/useSerial/constant";
+import { AT_GET_JSON, AT_REQ } from "@/src/hooks/useSerial/constant";
 import useModal from "@/utils/useModal";
 import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
 import { Button } from "@mui/material";
@@ -27,6 +27,9 @@ import {
 } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
+import Controller from "app/(auth)/configuration/components/Controller";
+import useSerialStore from "@/src/stores/useSerialStore";
+import FullLoading from "@/components/FullLoading";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -274,14 +277,14 @@ export default function DeviceInfoPage() {
   };
 
   useEffect(() => {
-    if (!formData && originData) {
+    if (originData) {
       const formDataValues = transformOriginData(originData);
 
       setFormData(formDataValues);
       setSearchSectionData(formDataToSearchSectionData(formDataValues, lang));
       setCommandData(extractCommandData(originData));
     }
-  }, [originData, formData]);
+  }, [originData]);
 
   useEffect(() => {
     if (port.port.readable && port.port.writable) {
@@ -289,8 +292,44 @@ export default function DeviceInfoPage() {
     }
   }, [port.port.readable, port.port.writable]);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const currentPort = portList.find(({ port }) => port.imei === imei);
+  const { setPackageFetchingStart } = useSerialStore();
+
+  const handleRefreshJsonPacket = async () => {
+    setIsLoading(true);
+    currentPort.port.grpNo = currentPort.jsonPackageCount;
+    setPackageFetchingStart({ imei: currentPort.port.imei });
+
+    const commands = Array.from(
+      { length: currentPort.jsonPackageCount },
+      (_, i) => `${AT_GET_JSON}${i + 1}`
+    );
+    currentPort.port.isjsonpackagefetching = true;
+    for (const command of commands) {
+      await delayPromise(100); // 100ms 지연
+
+      write({
+        data: command,
+        port: currentPort.port,
+        writer: currentPort.writer,
+      });
+    }
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    if (isReady) {
+      console.log("Test ::::");
+      handleRefreshJsonPacket();
+    }
+  }, [isReady]);
+
   return (
     <>
+      {isLoading && <FullLoading />}
       <div className="pageWrap">
         <SideMenu
           sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}

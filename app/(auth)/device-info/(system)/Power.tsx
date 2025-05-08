@@ -7,6 +7,7 @@ import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Power.en];
 
@@ -21,6 +22,7 @@ const Power = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
+  const { sendFormData } = useSendFormData();
 
   // TODO 렌더링 조건 추가 유틸로 만들어서 한번에 처리
   if (!formData) return null;
@@ -78,7 +80,7 @@ const Power = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

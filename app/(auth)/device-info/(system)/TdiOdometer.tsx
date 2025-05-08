@@ -11,6 +11,7 @@ import hasFormDataFields from "../(utils)/hasFormDataFields";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.TdiOdometer.en];
 
@@ -25,6 +26,7 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -82,7 +84,7 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        console.log("Form values:", fieldValues);
+        sendFormData(fieldValues);
 
         // 여기에 데이터 제출 로직 추가
       }}

@@ -35,7 +35,7 @@ const NumericInputField = ({
 }: InputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
-    formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
+    Number(formData[id]?.realValue) !== 0
   );
 
   if (!formData[id]) return null;
@@ -117,6 +117,7 @@ const NumericInputField = ({
                     min: FIELD_VALIDATIONS[realId].min,
                     max: FIELD_VALIDATIONS[realId].max,
                     inputMode: "numeric",
+                    step: "any",
                   }
                 : undefined
             }
