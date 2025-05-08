@@ -8,10 +8,10 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
-import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import CheckboxComp from "app/(auth)/device-info/(components)/CheckboxComp";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Motion.en];
 
