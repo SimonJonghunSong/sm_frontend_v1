@@ -404,6 +404,15 @@ const useSerial = () => {
                 altDataBufferRef.current = "";
                 port.isAltDataFetching = false;
               }
+            } else if (value.includes("RES")) {
+              await updateIndexedDB(
+                port.imei,
+                value,
+                indexeddbRef,
+                broadcastChannel
+              );
+              port.oneditsuccess?.();
+              port.oneditsuccess = null;
             } else if (value.includes("RPR")) {
               await updateIndexedDB(
                 port.imei,

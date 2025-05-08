@@ -17,9 +17,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Mode, Status Report Type, Message Number, Reserved, Assign Map",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Comprimento dos Dados, Dados, Checksum",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Comprimento dos Dados, Dados, Checksum",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reportes de alerta, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de fix GPS, Estado de Entradas, Estados de Salida, Longitud de los Datos, Datos, Checksum",
     },
   },
@@ -29,9 +29,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Mode, Status Report Type, Message Number, Reserved, Assign Map",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Modo, Tipo de Relatório de Status, Número da Mensagem, Reservado, Atribuir Mapa",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Modo, Tipo de Relatório de Status, Número da Mensagem, Reservado, Atribuir Mapa",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de Informe, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de Fijación del GPS, Estados de Entrada, Estados de Salida, Modo, Tipo de Informe de Estado, Número de Mensaje, Reservado, Asignar Mapa",
     },
   },
@@ -41,9 +41,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Length of Data, Data, Checksum",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Comprimento dos Dados, Dados, Checksum",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Comprimento dos Dados, Dados, Checksum",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reportes de alerta, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de fix GPS, Estado de Entradas, Estados de Salida, Longitud de los Datos, Datos, Checksum",
     },
   },
@@ -53,9 +53,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "Report Map, Model, Software Version, Message Type, Date, Time, Travel Start Latitude, Travel Start Longitude, Travel End Latitude, Travel End Longitude, Driver ID, Travel Distance, Driving Time, Time in Idle Mode, Idle events, Time in Speed Mode, Speed Mode, Maximum Speed, Average Speed, Odometer, Speed Histogram, Reserved, Reserved, Time Eco Up, Time Eco Down, Time Eco INSIDE, Time Over RPM, Time Dead Center",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Latitude de Início da Viagem, Longitude de Início da Viagem, Latitude de Fim da Viagem, Longitude de Fim da Viagem, ID do Motorista, Distância de Viagem, Tempo de Condução, Tempo em Modo de Inatividade, Eventos de Inatividade, Tempo em Modo de Velocidade, Modo de Velocidade, Velocidade Máxima, Velocidade Média, Odômetro, Histograma de Velocidade, Reserved, Reserved, Tempo Eco Subida, Tempo Eco Descida, Tempo Eco Dentro, Tempo Acima do RPM, Tempo Ponto Morto",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Latitude de Início da Viagem, Longitude de Início da Viagem, Latitude de Fim da Viagem, Longitude de Fim da Viagem, ID do Motorista, Distância de Viagem, Tempo de Condução, Tempo em Modo de Inatividade, Eventos de Inatividade, Tempo em Modo de Velocidade, Modo de Velocidade, Velocidade Máxima, Velocidade Média, Odômetro, Histograma de Velocidade, Reserved, Reserved, Tempo Eco Subida, Tempo Eco Descida, Tempo Eco Dentro, Tempo Acima do RPM, Tempo Ponto Morto",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reportes, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Latitud de Inicio de Viaje, Longitud de Inicio de Viaje, Latitud de Fin de Viaje, Longitud de Fin de Viaje, ID del Conductor, Distancia del Viaje, Tiempo de Conducción, Tiempo en Modo de Inactividad, Eventos de Inactividad, Tiempo en Modo de Velocidad, Modo de Velocidad, Velocidad Máxima, Velocidad Promedio, Odómetro, Histograma de Velocidad, Reserved, Reserved, Tiempo Eco Subida, Tiempo Eco Bajada, Tiempo Eco Dentro, Tiempo Sobre RPM, Tiempo Punto Muerto",
     },
   },
@@ -65,9 +65,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "OTR Report Map, Model, Software Version, Message Type, Date, Time, Vehicle ID, DTC Count, MIL Indicator, MIL On Time, MIL On Distance, Trip Distance, Engine Run Time, Run Time, Max Speed, Avg Speed, Max RPM, Avg RPM, RPM Exceeds Count, Max Engine Oil Temp, Avg Coolant Temp, Fuel Level (%), Fuel Level Change (%), Fuel Economy (km/L), Fuel Usage in Idle Mode (%)",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório OTR, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID do Veículo, Contagem de DTC, Indicador MIL, Tempo com MIL Ligado, Distância com MIL Ligado, Distância da Viagem, Tempo de Funcionamento do Motor, Tempo de Funcionamento, Velocidade Máxima, Velocidade Média, RPM Máxima, RPM Média, Contagem de Excedentes de RPM, Temperatura Máxima do Óleo do Motor, Temperatura Média do Líquido de Arrefecimento, Nível de Combustível (%), Mudança no Nível de Combustível (%), Economia de Combustível (km/L), Uso de Combustível no Modo Inativo (%)",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório OTR, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID do Veículo, Contagem de DTC, Indicador MIL, Tempo com MIL Ligado, Distância com MIL Ligado, Distância da Viagem, Tempo de Funcionamento do Motor, Tempo de Funcionamento, Velocidade Máxima, Velocidade Média, RPM Máxima, RPM Média, Contagem de Excedentes de RPM, Temperatura Máxima do Óleo do Motor, Temperatura Média do Líquido de Arrefecimento, Nível de Combustível (%), Mudança no Nível de Combustível (%), Economia de Combustível (km/L), Uso de Combustível no Modo Inativo (%)",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reporte OTR, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID del Vehículo, Contador de DTC, Indicador MIL, Tiempo con MIL Activado, Distancia con MIL Activado, Distancia del Viaje, Tiempo de Funcionamiento del Motor, Tiempo de Funcionamiento, Velocidad Máxima, Velocidad Promedio, RPM Máximo, RPM Promedio, Contador de Excesos de RPM, Temperatura Máxima del Aceite del Motor, Temperatura Promedio del Refrigerante, Nivel de Combustible (%), Cambio en el Nivel de Combustible (%), Economía de Combustible (km/L), Uso de Combustible en Modo de Inactividad (%)",
     },
   },
@@ -77,9 +77,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "OBD Report Map, Model, Software Version, Message Type, Date, Time, Vehicle ID, OBD Type, DTC Count, MIL Indicator, MIL On Time, MIL On Distance, Odometer, Engine Run Time, Fuel Type, Fuel Level (%), PIDs Bitmask (0x01–0x20), PIDs Bitmask (0x21–0x40), PIDs Bitmask (0x41–0x60), PIDs Bitmask (0x61–0x80)",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório OBD, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID do Veículo, Tipo OBD, Contagem de DTC, Indicador MIL, Tempo com MIL Ligado, Distância com MIL Ligado, Odômetro, Tempo de Funcionamento do Motor, Tipo de Combustível, Nível de Combustível (%), Máscara de PIDs (0x01–0x20), Máscara de PIDs (0x21–0x40), Máscara de PIDs (0x41–0x60), Máscara de PIDs (0x61–0x80)",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório OBD, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID do Veículo, Tipo OBD, Contagem de DTC, Indicador MIL, Tempo com MIL Ligado, Distância com MIL Ligado, Odômetro, Tempo de Funcionamento do Motor, Tipo de Combustível, Nível de Combustível (%), Máscara de PIDs (0x01–0x20), Máscara de PIDs (0x21–0x40), Máscara de PIDs (0x41–0x60), Máscara de PIDs (0x61–0x80)",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de Informe OBD, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID del Vehículo, Tipo OBD, Contador de DTC, Indicador MIL, Tiempo con MIL Activado, Distancia con MIL Activado, Odómetro, Tiempo de Funcionamiento del Motor, Tipo de Combustible, Nivel de Combustible (%), Máscara de PIDs (0x01–0x20), Máscara de PIDs (0x21–0x40), Máscara de PIDs (0x41–0x60), Máscara de PIDs (0x61–0x80)",
     },
   },
@@ -89,9 +89,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Pack Number, Total Packet Size, Packet Size, Packet Data",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Número do Pacote, Tamanho Total do Pacote, Tamanho do Pacote, Dados do Pacote",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Número do Pacote, Tamanho Total do Pacote, Tamanho do Pacote, Dados do Pacote",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reportes, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de fix GPS, Estados de Entrada, Estados de Salida, Número de Paquete, Tamaño Total del Paquete, Tamaño del Paquete, Datos del Paquete",
     },
   },
@@ -100,9 +100,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "PID Report Map, Model, Software Version, Message Type, Date, Time, PID_DATA Length, PID_DATA, 8-bit PID_DATA Checksum",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa de Relatório PID, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Comprimento dos DADOS_PID, DADOS_PID, Checksum de DADOS_PID de 8 bits",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa de Relatório PID, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Comprimento dos DADOS_PID, DADOS_PID, Checksum de DADOS_PID de 8 bits",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reporte PID, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Longitud de PID_DATA, PID_DATA, Checksum de PID_DATA de 8 bits",
     },
   },
@@ -111,9 +111,9 @@ const checkboxOptions = {
     labelString: {
       TEXT_EN_ITEM_CONTENT:
         "OVD Report Map, Model, Software Version, Message Type, Date, Time, OVD_DATA Length, OVD_DATA, 8-bit OVD_DATA Checksum",
-      TEXT_ES_ITEM_CONTENT:
-        "Mapa do Relatório OVD, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Comprimento do Dado OVD, Dado OVD, Checksum de 8 bits do Dado OVD",
       TEXT_PT_ITEM_CONTENT:
+        "Mapa do Relatório OVD, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Comprimento do Dado OVD, Dado OVD, Checksum de 8 bits do Dado OVD",
+      TEXT_ES_ITEM_CONTENT:
         "Mapa de reporte OVD, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Longitud de OVD_DATA, OVD_DATA, Checksum de OVD_DATA de 8 bits",
     },
   },

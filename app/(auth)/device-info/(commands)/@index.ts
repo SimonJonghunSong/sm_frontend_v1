@@ -23,7 +23,7 @@ type CommandsUIType =
   | "LTE-Band"
   | "Detection-Control-Speed";
 
-const commands: Record<
+export const commands: Record<
   CommandsSection,
   { id: string; uiType: CommandsUIType }[]
 > = {

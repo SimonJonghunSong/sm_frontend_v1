@@ -10,6 +10,9 @@ import {
   ReportSchdule,
 } from "../(report)/@index";
 import ReportMapping from "app/(auth)/device-info/(report)/ReportMapping";
+import ReportMapping2 from "app/(auth)/device-info/(report)/ReportMapping2";
+import AssignHeader from "app/(auth)/device-info/(report)/AssignHeader";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 interface Props {
   formData: {
@@ -36,6 +39,9 @@ export default function ReportTab({ formData, setFormData }: Props) {
       },
     }));
   };
+  const { getCurrentImei } = useSerialConfigurationStore();
+
+  const imei = getCurrentImei();
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
@@ -44,6 +50,10 @@ export default function ReportTab({ formData, setFormData }: Props) {
       <AntiTheft formData={formData} onChange={handleValueChange} />
 
       <ReportMapping formData={formData} onChange={handleValueChange} />
+
+      <ReportMapping2 formData={formData} onChange={handleValueChange} />
+
+      <AssignHeader formData={formData} imei={imei} />
 
       <AlertConfig formData={formData} onChange={handleValueChange} />
 

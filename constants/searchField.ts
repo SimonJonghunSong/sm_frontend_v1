@@ -130,6 +130,11 @@ export const SECTIONS = {
   },
 
   // Report
+  AssignHeader: {
+    en: "Assign Header",
+    es: "Encabezado de Asignación",
+    pt: "Cabeçalho de Atribuição",
+  },
   AlertConfig: {
     en: "Alert Config",
     es: "Configuración de Alertas",
@@ -169,6 +174,11 @@ export const SECTIONS = {
     en: "Report Mapping",
     es: "Mapa de Reporte",
     pt: "Mapa de Relatório",
+  },
+  ReportMapping2: {
+    en: "Report Mapping2",
+    es: "Mapa de Reporte2",
+    pt: "Mapa de Relatório2",
   },
   ReportSchdule: {
     en: "Report Schedule",
@@ -313,6 +323,13 @@ export const SECTIONS = {
     en: "RF",
     es: "RF",
     pt: "RF",
+  },
+
+  // NetworkCommands
+  NetworkCommands: {
+    en: "Network Commands",
+    es: "Comandos de Red",
+    pt: "Comandos de Rede",
   },
 };
 
@@ -608,6 +625,7 @@ export const INCLUDE_FIELDS = {
   ],
 
   // Report
+  [SECTIONS.AssignHeader.en]: ["1100", "1075"],
   [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
   [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
@@ -704,6 +722,7 @@ export const INCLUDE_FIELDS = {
     "1095",
     "1096",
   ],
+  [SECTIONS.ReportMapping2.en]: ["3100", "3101", "3103", "2598"],
   [SECTIONS.ReportSchdule.en]: [
     "1637",
     "1638", // TODO
@@ -1012,6 +1031,9 @@ export const INCLUDE_FIELDS = {
     "2508",
     "2510",
   ],
+
+  // NetworkCommands
+  [SECTIONS.NetworkCommands.en]: ["ALL_SEARCH"],
 };
 
 export type SearchField = {
@@ -1401,6 +1423,12 @@ export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
 
 export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
   en: {
+    [SECTIONS.AssignHeader.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.AssignHeader.en}`,
+      tab: "Report",
+      key: SECTIONS.AssignHeader.en,
+    },
     [SECTIONS.AlertConfig.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
       searchText: `${MENUS.Report.en} > ${SECTIONS.AlertConfig.en}`,
@@ -1437,6 +1465,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping.en,
     },
+    [SECTIONS.ReportMapping2.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportMapping2.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.ReportMapping2.en}`,
+      tab: "Report",
+      key: SECTIONS.ReportMapping2.en,
+    },
     [SECTIONS.ReportSchdule.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
       searchText: `${MENUS.Report.en} > ${SECTIONS.ReportSchdule.en}`,
@@ -1445,6 +1479,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
     },
   },
   es: {
+    [SECTIONS.AssignHeader.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.AssignHeader.es}`,
+      tab: "Report",
+      key: SECTIONS.AssignHeader.en,
+    },
     [SECTIONS.AlertConfig.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
       searchText: `${MENUS.Report.es} > ${SECTIONS.AlertConfig.es}`,
@@ -1481,6 +1521,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping.en,
     },
+    [SECTIONS.ReportMapping2.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportMapping2.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.ReportMapping2.es}`,
+      tab: "Report",
+      key: SECTIONS.ReportMapping2.en,
+    },
     [SECTIONS.ReportSchdule.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
       searchText: `${MENUS.Report.es} > ${SECTIONS.ReportSchdule.es}`,
@@ -1489,11 +1535,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
     },
   },
   pt: {
-    [SECTIONS.AlertConfig.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig.pt}`,
+    [SECTIONS.AssignHeader.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.AssignHeader.pt}`,
       tab: "Report",
-      key: SECTIONS.AlertConfig.en,
+      key: SECTIONS.AssignHeader.en,
     },
     [SECTIONS.AlertConfig1.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.AlertConfig1.en],
@@ -1536,6 +1582,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportMapping.pt}`,
       tab: "Report",
       key: SECTIONS.ReportMapping.en,
+    },
+    [SECTIONS.ReportMapping2.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportMapping2.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportMapping2.pt}`,
+      tab: "Report",
+      key: SECTIONS.ReportMapping2.en,
     },
     [SECTIONS.ReportSchdule.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
@@ -1987,6 +2039,33 @@ export const RF_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+const COMMAND_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.NetworkCommands.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.NetworkCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.NetworkCommands.en,
+    },
+  },
+  es: {
+    [SECTIONS.NetworkCommands.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.NetworkCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.NetworkCommands.en,
+    },
+  },
+  pt: {
+    [SECTIONS.NetworkCommands.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.NetworkCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.NetworkCommands.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -2004,6 +2083,7 @@ export const SEARCH_SECTION = {
     ...DRIVER_SECTION.en,
     ...BLUETOOTH_SECTION.en,
     ...RF_SECTION.en,
+    ...COMMAND_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
@@ -2014,6 +2094,7 @@ export const SEARCH_SECTION = {
     ...DRIVER_SECTION.es,
     ...BLUETOOTH_SECTION.es,
     ...RF_SECTION.es,
+    ...COMMAND_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
@@ -2024,6 +2105,7 @@ export const SEARCH_SECTION = {
     ...DRIVER_SECTION.pt,
     ...BLUETOOTH_SECTION.pt,
     ...RF_SECTION.pt,
+    ...COMMAND_SECTION.pt,
   },
 };
 
@@ -2040,7 +2122,9 @@ export const formDataToSearchSectionData = (
     const valueKey = value.key;
 
     acc[key] = {
-      fields: fields.filter((f) => Object.keys(formData).includes(f)),
+      fields: fields.filter(
+        (f) => Object.keys(formData).includes(f) || f === "ALL_SEARCH"
+      ),
       searchText,
       tab,
       key: valueKey,
