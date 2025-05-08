@@ -258,6 +258,18 @@ export const SECTIONS = {
     es: "Conductor",
     pt: "Motorista",
   },
+
+  // Bluetooth
+  Ble: {
+    en: "Bluetooth",
+    es: "Bluetooth",
+    pt: "Bluetooth",
+  },
+  Sensor: {
+    en: "Sensor",
+    es: "Sensor",
+    pt: "Sensor",
+  },
 };
 
 const alertConfig1Fields = [
@@ -787,6 +799,36 @@ export const INCLUDE_FIELDS = {
 
   // Driver
   [SECTIONS.Driver.en]: [],
+
+  // Bluetooth
+  [SECTIONS.Ble.en]: [
+    "4020",
+    "4021",
+    "4000",
+    "4028",
+    "4025",
+    "4010",
+    "4011",
+    "4012",
+    "4013",
+    "4014",
+    "4026",
+    "4027",
+  ],
+  [SECTIONS.Sensor.en]: [
+    "2610",
+    "2611",
+    "2612",
+    "2613",
+    "2614",
+    "2615",
+    "2616",
+    "2617",
+    "2618",
+    "2619",
+    "2620",
+    "2621",
+  ],
 };
 
 export type SearchField = {
@@ -1600,6 +1642,51 @@ export const DRIVER_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.Ble.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
+      searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.Ble.en}`,
+      tab: "Bluetooth",
+      key: SECTIONS.Ble.en,
+    },
+    [SECTIONS.Sensor.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
+      searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.Sensor.en}`,
+      tab: "Bluetooth",
+      key: SECTIONS.Sensor.en,
+    },
+  },
+  es: {
+    [SECTIONS.Ble.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
+      searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.Ble.es}`,
+      tab: "Bluetooth",
+      key: SECTIONS.Ble.en,
+    },
+    [SECTIONS.Sensor.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
+      searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.Sensor.es}`,
+      tab: "Bluetooth",
+      key: SECTIONS.Sensor.en,
+    },
+  },
+  pt: {
+    [SECTIONS.Ble.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
+      searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.Ble.pt}`,
+      tab: "Bluetooth",
+      key: SECTIONS.Ble.en,
+    },
+    [SECTIONS.Sensor.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
+      searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.Sensor.pt}`,
+      tab: "Bluetooth",
+      key: SECTIONS.Sensor.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -1615,6 +1702,7 @@ export const SEARCH_SECTION = {
     ...ACCESSORIES_SECTION.en,
     ...TRACKING_SECTION.en,
     ...DRIVER_SECTION.en,
+    ...BLUETOOTH_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
@@ -1623,6 +1711,7 @@ export const SEARCH_SECTION = {
     ...ACCESSORIES_SECTION.es,
     ...TRACKING_SECTION.es,
     ...DRIVER_SECTION.es,
+    ...BLUETOOTH_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
@@ -1631,6 +1720,7 @@ export const SEARCH_SECTION = {
     ...ACCESSORIES_SECTION.pt,
     ...TRACKING_SECTION.pt,
     ...DRIVER_SECTION.pt,
+    ...BLUETOOTH_SECTION.pt,
   },
 };
 

@@ -10,6 +10,9 @@ import { SwitchPrimary } from "@/components/switches";
 import { FIELD_VALIDATIONS } from "constants/field";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Ble.en];
 
 interface Props {
   formData: {
@@ -17,21 +20,6 @@ interface Props {
   };
   onChange: (id: string, value: string) => void;
 }
-
-const fieldIds = [
-  "4020",
-  "4021",
-  "4000",
-  "4028",
-  "4025",
-  "4010",
-  "4011",
-  "4012",
-  "4013",
-  "4014",
-  "4026",
-  "4027",
-];
 
 const Ble = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -99,7 +87,7 @@ const Ble = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap="16px">
-          <h1>{t("configuration.ble.ble")}</h1>
+          <h1 data-section-id={SECTIONS.Ble.en}>{SECTIONS.Ble[lang]}</h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

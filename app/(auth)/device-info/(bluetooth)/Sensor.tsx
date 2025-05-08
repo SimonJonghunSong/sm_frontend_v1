@@ -12,6 +12,9 @@ import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import SelectField from "../(components)/SelectField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Sensor.en];
 
 interface Props {
   formData: {
@@ -19,21 +22,6 @@ interface Props {
   };
   onChange: (id: string, value: string) => void;
 }
-
-const fieldIds = [
-  "2610",
-  "2611",
-  "2612",
-  "2613",
-  "2614",
-  "2615",
-  "2616",
-  "2617",
-  "2618",
-  "2619",
-  "2620",
-  "2621",
-];
 
 const Sensor = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -100,7 +88,7 @@ const Sensor = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.ble.sensor")}</h1>
+      <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
 
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <SelectField
