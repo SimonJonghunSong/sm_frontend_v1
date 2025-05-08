@@ -8,6 +8,7 @@ import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 // TODO 진행중
 interface Props {
@@ -17,7 +18,7 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldIds = ["1076", "1077"];
+const fieldIds = INCLUDE_FIELDS[SECTIONS.NTPServer.en];
 
 const NTPServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -85,7 +86,9 @@ const NTPServer = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>NTP Server</h1>
+      <h1 data-section-id={SECTIONS.NTPServer.en}>
+        {SECTIONS.NTPServer[lang]}
+      </h1>
 
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <TextInputField

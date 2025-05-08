@@ -6,6 +6,8 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
 
 interface Props {
   formData: {
@@ -14,11 +16,12 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsId = ["1025", "1030", "1031", "1032", "1033", "1034"];
+const fieldsId = INCLUDE_FIELDS[SECTIONS.SMS.en];
 
 const Sms = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
+  const lang = useLangStore((state) => state.lang);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -80,7 +83,7 @@ const Sms = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>SMS</h1>
+      <h1 data-section-id={SECTIONS.SMS.en}>{SECTIONS.SMS[lang]}</h1>
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

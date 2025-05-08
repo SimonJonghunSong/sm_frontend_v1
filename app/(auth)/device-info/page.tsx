@@ -17,6 +17,17 @@ import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 import useCmdStore from "@/src/stores/useCmdStore";
 import { AT_REQ } from "@/src/hooks/useSerial/constant";
+import useModal from "@/utils/useModal";
+import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
+import { Button } from "@mui/material";
+import Modal from "@/components/Modal";
+import {
+  formDataToSearchSectionData,
+  SearchField,
+} from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+const SCROLL_TOP_OFFSET = 140;
+
 // Type definitions
 interface FieldInfo {
   tab_id: string;
@@ -163,6 +174,9 @@ const extractCommandData = (originData: any[]) => {
 export default function DeviceInfoPage() {
   const [isReady, setIsReady] = useState(false);
   // data
+  const [searchSectionData, setSearchSectionData] = useState<{
+    [key: string]: SearchField;
+  }>(null);
   const {
     state: { portList },
     func: { write },
@@ -171,6 +185,8 @@ export default function DeviceInfoPage() {
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
   const imei = getCurrentImei();
+
+  const { lang } = useLangStore();
 
   const port = portList.find(({ port }) => port.imei === imei);
 
@@ -191,6 +207,7 @@ export default function DeviceInfoPage() {
     }
   };
 
+  const [searchModal, toggleSearchModal] = useModal();
   console.log("formData", formData);
 
   // ! Driver 탭
@@ -253,7 +270,10 @@ export default function DeviceInfoPage() {
 
   useEffect(() => {
     if (!formData && originData) {
-      setFormData(transformOriginData(originData));
+      const formDataValues = transformOriginData(originData);
+
+      setFormData(formDataValues);
+      setSearchSectionData(formDataToSearchSectionData(formDataValues, lang));
       setCommandData(extractCommandData(originData));
     }
   }, [originData, formData]);
@@ -265,11 +285,55 @@ export default function DeviceInfoPage() {
   }, [port.port.readable, port.port.writable]);
 
   return (
-    <div className="pageWrap">
-      <SideMenu
-        sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}
-      />
-      {renderContent()}
-    </div>
+    <>
+      <div className="pageWrap">
+        <SideMenu
+          sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}
+        />
+        <Button onClick={toggleSearchModal}>Search Test</Button>
+        {renderContent()}
+      </div>
+
+      {searchModal && (
+        <Modal
+          closeButton
+          open
+          toggleOpen={toggleSearchModal}
+          confirm={() => {}}
+          confirmButtonText="Add"
+          width="720px"
+          hasFooter={false}
+        >
+          <SearchModal
+            sectionData={searchSectionData}
+            onClose={({ key, tab, type }) => {
+              toggleSearchModal();
+              setTab(tab);
+              setTimeout(() => {
+                let targetElement = document.querySelector(
+                  `[data-section-id="${key}"]`
+                );
+
+                if (type === "param") {
+                  targetElement = document.querySelector(
+                    `[data-param-id="${key}"]`
+                  );
+                }
+
+                if (targetElement) {
+                  const rect = targetElement.getBoundingClientRect();
+                  const scrollTop = document.documentElement.scrollTop;
+                  window.scrollTo({
+                    top: rect.top + scrollTop - SCROLL_TOP_OFFSET, // 100px offset
+                    behavior: "smooth",
+                  });
+                  console.log("targetElement ::::", targetElement);
+                }
+              }, 100);
+            }}
+          />
+        </Modal>
+      )}
+    </>
   );
 }

@@ -8,6 +8,7 @@ import SelectField from "../(components)/SelectField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 interface Props {
   formData: {
@@ -16,7 +17,7 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsId = ["1000", "1002", "1001", "1003", "1004"];
+const fieldsId = INCLUDE_FIELDS[SECTIONS.APN.en];
 
 const Network = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -84,7 +85,7 @@ const Network = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>APN</h1>
+      <h1 data-section-id={SECTIONS.APN.en}>{SECTIONS.APN[lang]}</h1>
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

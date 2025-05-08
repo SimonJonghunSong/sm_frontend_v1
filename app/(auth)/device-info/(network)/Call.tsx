@@ -7,6 +7,8 @@ import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { hasFormDataFields } from "../(utils)/@index";
 import TextInputField from "../(components)/TextInputField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
 
 interface Props {
   formData: {
@@ -15,20 +17,11 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldIds = [
-  "1035",
-  "1036",
-  "1037",
-  "1038",
-  "1039",
-  "1040",
-  "1041",
-  "1042",
-  "1043",
-];
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Call.en];
 
 const Call = ({ formData, onChange }: Props) => {
   const t = useTranslations();
+  const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
@@ -91,7 +84,7 @@ const Call = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.network.call")}</h1>
+      <h1 data-section-id={SECTIONS.Call.en}>{SECTIONS.Call[lang]}</h1>
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <SwitchField id="1035" formData={formData} onChange={handleChange} />
 

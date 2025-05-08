@@ -9,6 +9,8 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 
 interface Props {
   formData: {
@@ -16,6 +18,8 @@ interface Props {
   };
   onChange: (id: string, value: string) => void;
 }
+
+const fieldsId = INCLUDE_FIELDS[SECTIONS.AGPSMode.en];
 
 const AGPSMode = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -25,7 +29,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
   const allowedChars = /^[A-Za-z0-9\-./:]*$/;
   const urlPattern = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
 
-  if (!formData || (!formData["1014"] && !formData["1015"])) return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -70,7 +74,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["1014", "1015"].includes(key)) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -88,7 +92,9 @@ const AGPSMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>{t("configuration.network.agps_mode")}</h1>
+          <h1 data-section-id={SECTIONS.AGPSMode.en}>
+            {SECTIONS.AGPSMode[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

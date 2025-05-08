@@ -11,6 +11,8 @@ import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import TimeHMA from "../(components)/TimeHMA";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 
 interface Props {
   formData: {
@@ -25,19 +27,14 @@ const tooltipText = {
   es: "El servidor SCUTI (servidor de mantenimiento) en STSUNLAB opera de forma independiente para el cliente. STSUNLAB proporciona comandos para cambiar la configuración del servidor (por ejemplo, IP, puerto, intervalo). Estos comandos solo deben ser utilizados por clientes que operan el servidor de mantenimiento de forma independiente.",
 };
 
+const fieldsId = INCLUDE_FIELDS[SECTIONS.MaintenanceServer.en];
+
 const MaintenanceServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  if (
-    !formData ||
-    (!formData["1020"] &&
-      !formData["1022"] &&
-      !formData["1021"] &&
-      !formData["1023"])
-  )
-    return null;
+  if (!hasFormDataFields(formData, fieldsId)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -82,7 +79,7 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["1020", "1022", "1021", "1023"].includes(key)) {
+          if (fieldsId.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -101,7 +98,9 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
       }}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <h1>Maintenance Server</h1>
+        <h1 data-section-id={SECTIONS.MaintenanceServer.en}>
+          {SECTIONS.MaintenanceServer[lang]}
+        </h1>
         <InputBox.Info tooltipText={tooltipText[lang]} />
       </Stack>
 

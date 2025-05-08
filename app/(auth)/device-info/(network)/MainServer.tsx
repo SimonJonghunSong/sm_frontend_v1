@@ -14,6 +14,7 @@ import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 const optionsString =
   "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b29, b30, b31";
@@ -32,16 +33,7 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsId = [
-  "1005",
-  "1007",
-  "1006",
-  "1012",
-  "1017",
-  "1018",
-  "1019",
-  "1011",
-];
+const fieldsId = INCLUDE_FIELDS[SECTIONS.MainServer.en];
 
 const MainServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -109,7 +101,9 @@ const MainServer = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>Main Server</h1>
+      <h1 data-section-id={SECTIONS.MainServer.en}>
+        {SECTIONS.MainServer[lang]}
+      </h1>
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

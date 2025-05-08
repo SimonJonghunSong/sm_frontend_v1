@@ -9,6 +9,7 @@ import useLangStore from "@/utils/useLangStore";
 import { SwitchPrimary } from "@/components/switches";
 import DualCheckboxField from "../(components)/DualCheckboxField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 interface Props {
   formData: {
@@ -17,7 +18,7 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsId = ["1052", "1053"];
+const fieldsId = INCLUDE_FIELDS[SECTIONS.Satellite.en];
 
 const tooltipText = {
   en: "When the network status is 'No Network' (e.g., SIM PIN Locked, Cannot Attach Network, No SIM, or SIM Card Locked), the output will activate if this status persists for the set delay time.\nThe output will deactivate once the network status returns to normal.\n* Output control for the satellite modem can detect 'No Network' situations.\n• Default : Off",
@@ -94,7 +95,9 @@ const Satellite = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>Satellite</h1>
+          <h1 data-section-id={SECTIONS.Satellite.en}>
+            {SECTIONS.Satellite[lang.lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

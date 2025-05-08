@@ -10,6 +10,7 @@ import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 interface Props {
   formData: {
@@ -18,7 +19,7 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsId = ["1013", "1054", "1027", "1016", "1060", "1070", "1071"];
+const fieldsId = INCLUDE_FIELDS[SECTIONS.Network.en];
 
 const Network = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -86,7 +87,7 @@ const Network = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("model.add_model_pop_up.network_*")}</h1>
+      <h1 data-section-id={SECTIONS.Network.en}>{SECTIONS.Network[lang]}</h1>
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

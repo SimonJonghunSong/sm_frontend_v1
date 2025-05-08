@@ -10,6 +10,7 @@ import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 interface Props {
   formData: {
@@ -18,7 +19,7 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-const fieldsId = ["1061", "1062", "1063", "1065", "1066", "1067", "1068"];
+const fieldsId = INCLUDE_FIELDS[SECTIONS.JammingDetection.en];
 
 const JammingDetection = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -88,7 +89,9 @@ const JammingDetection = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>Jamming Detection</h1>
+          <h1 data-section-id={SECTIONS.JammingDetection.en}>
+            {SECTIONS.JammingDetection[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
