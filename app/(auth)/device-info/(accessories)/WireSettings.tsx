@@ -11,6 +11,7 @@ import RangeThresholdField from "../(components)/RangeThresholdField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import DualCheckboxField from "../(components)/DualCheckboxField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.WireSettings.en];
 
@@ -37,7 +38,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-
+  const { sendFormData } = useSendFormData();
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
