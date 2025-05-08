@@ -9,6 +9,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import { SwitchPrimary } from "@/components/switches";
 import { FIELD_VALIDATIONS } from "constants/field";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.FineTracking.en];
 
 interface Props {
   formData: {
@@ -22,7 +25,6 @@ const FineTracking = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const fieldIds = ["3010", "3011", "3012"];
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -86,7 +88,9 @@ const FineTracking = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"} alignItems="center">
-          <h1>{FIELD_VALIDATIONS["3010"].title[lang]}</h1>
+          <h1 data-section-id={SECTIONS.FineTracking.en}>
+            {SECTIONS.FineTracking[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

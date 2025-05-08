@@ -9,6 +9,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.SpeedingMode.en];
 
 interface Props {
   formData: {
@@ -28,8 +31,6 @@ const SpeedingMode = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-
-  const fieldIds = ["1620", "1621", "1622", "1623", "1624", "1625"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -93,7 +94,9 @@ const SpeedingMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.tracking.speeding_mode")}</h1>
+          <h1 data-section-id={SECTIONS.SpeedingMode.en}>
+            {SECTIONS.SpeedingMode[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

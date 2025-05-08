@@ -5,6 +5,13 @@ import { Button, Divider, Stack } from "@mui/material";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
+import {
+  INCLUDE_FIELDS,
+  modeSettingsFieldsWithoutUnderbar,
+  modeSettingsFieldsWithUnderbar,
+  SECTIONS,
+} from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
 
 interface Props {
   formData: {
@@ -16,42 +23,12 @@ interface Props {
 const ModeSettings = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
+  const lang = useLangStore((state) => state.lang);
 
   const isUnderbar = !formData["1670"].key.includes("Time[1]");
   const fieldIds = isUnderbar
-    ? [
-        "1670",
-        "1673",
-        "1676",
-        "1679",
-        "1685",
-        "1688",
-        "1682",
-        "1697",
-        "1681",
-        "1684",
-      ]
-    : [
-        "1670",
-        "1671",
-        "1672",
-        "1673",
-        "1674",
-        "1675",
-        "1676",
-        "1677",
-        "1678",
-        "1679",
-        "1680",
-        "1681",
-        "1682",
-        "1683",
-        "1684",
-        "1685",
-        "1686",
-        "1687",
-        "1078",
-      ];
+    ? modeSettingsFieldsWithUnderbar
+    : modeSettingsFieldsWithoutUnderbar;
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -113,7 +90,9 @@ const ModeSettings = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.tracking.mode_settings")}</h1>
+      <h1 data-section-id={SECTIONS.ModeSettings.en}>
+        {SECTIONS.ModeSettings[lang]}
+      </h1>
 
       <>
         <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>

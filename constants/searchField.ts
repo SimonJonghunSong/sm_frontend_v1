@@ -199,6 +199,58 @@ export const SECTIONS = {
     es: "Entrada/Salida",
     pt: "Entrada/Saída",
   },
+
+  // Tracking
+  DisconnectMode: {
+    en: "Disconnect Mode",
+    es: "Modo de Desconexión",
+    pt: "Modo de Desconexão",
+  },
+  DriveMode: {
+    en: "Drive Mode",
+    es: "Modo de Conducción",
+    pt: "Modo de Condução",
+  },
+  FineTracking: {
+    en: "Fine Tracking",
+    es: "Rastreo Fino",
+    pt: "Rastreamento Fino",
+  },
+  IdleMode: {
+    en: "Idle Mode",
+    es: "Modo de Inactividad",
+    pt: "Modo de Inatividade",
+  },
+  InstallMode: {
+    en: "Install Mode",
+    es: "Modo de Instalación",
+    pt: "Modo de Instalação",
+  },
+  ModeSettings: {
+    en: "Mode Settings",
+    es: "Configuración de Modo",
+    pt: "Configuração de Modo",
+  },
+  OperationMode: {
+    en: "Operation Mode",
+    es: "Modo de Operación",
+    pt: "Modo de Operação",
+  },
+  ParkMode: {
+    en: "Park Mode",
+    es: "Modo de Estacionamiento",
+    pt: "Modo de Estacionamento",
+  },
+  SpeedingMode: {
+    en: "Speeding Mode",
+    es: "Modo de Velocidad",
+    pt: "Modo de Velocidade",
+  },
+  TowingMode: {
+    en: "Towing Mode",
+    es: "Modo de Remolque",
+    pt: "Modo de Remolque",
+  },
 };
 
 const alertConfig1Fields = [
@@ -313,6 +365,39 @@ const alertConfig2Fields = [
   "1477",
   "1478",
   "1481",
+];
+export const modeSettingsFieldsWithUnderbar = [
+  "1670",
+  "1673",
+  "1676",
+  "1679",
+  "1685",
+  "1688",
+  "1682",
+  "1697",
+  "1681",
+  "1684",
+];
+export const modeSettingsFieldsWithoutUnderbar = [
+  "1670",
+  "1671",
+  "1672",
+  "1673",
+  "1674",
+  "1675",
+  "1676",
+  "1677",
+  "1678",
+  "1679",
+  "1680",
+  "1681",
+  "1682",
+  "1683",
+  "1684",
+  "1685",
+  "1686",
+  "1687",
+  "1078",
 ];
 
 export const INCLUDE_FIELDS = {
@@ -668,6 +753,30 @@ export const INCLUDE_FIELDS = {
     "1784", // Pulse 3 On
     "1785", // Pulse 3 Off
   ],
+
+  // Tracking
+  [SECTIONS.DisconnectMode.en]: ["1641"],
+  [SECTIONS.DriveMode.en]: ["1600", "1601"],
+  [SECTIONS.FineTracking.en]: ["3010", "3011", "3012"],
+  [SECTIONS.IdleMode.en]: [
+    "1610",
+    "1611",
+    "1612",
+    "1613",
+    "1614",
+    "1615",
+    "1616",
+    "1617",
+  ],
+  [SECTIONS.InstallMode.en]: ["1602", "1603"],
+  [SECTIONS.ModeSettings.en]: [
+    ...modeSettingsFieldsWithUnderbar,
+    ...modeSettingsFieldsWithoutUnderbar,
+  ],
+  [SECTIONS.OperationMode.en]: ["1698"],
+  [SECTIONS.ParkMode.en]: ["1605", "1606"],
+  [SECTIONS.SpeedingMode.en]: ["1620", "1621", "1622", "1623", "1624", "1625"],
+  [SECTIONS.TowingMode.en]: ["1636"],
 };
 
 export type SearchField = {
@@ -1265,6 +1374,195 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+export const TRACKING_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.DisconnectMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DisconnectMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.DisconnectMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.DisconnectMode.en,
+    },
+    [SECTIONS.DriveMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DriveMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.DriveMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.DriveMode.en,
+    },
+    [SECTIONS.FineTracking.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.FineTracking.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.FineTracking.en}`,
+      tab: "Tracking",
+      key: SECTIONS.FineTracking.en,
+    },
+    [SECTIONS.IdleMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.IdleMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.IdleMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.IdleMode.en,
+    },
+    [SECTIONS.InstallMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.InstallMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.InstallMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.InstallMode.en,
+    },
+    [SECTIONS.ModeSettings.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ModeSettings.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.ModeSettings.en}`,
+      tab: "Tracking",
+      key: SECTIONS.ModeSettings.en,
+    },
+    [SECTIONS.OperationMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OperationMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.OperationMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.OperationMode.en,
+    },
+    [SECTIONS.ParkMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ParkMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.ParkMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.ParkMode.en,
+    },
+    [SECTIONS.SpeedingMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.SpeedingMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.SpeedingMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.SpeedingMode.en,
+    },
+    [SECTIONS.TowingMode.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.TowingMode.en],
+      searchText: `${MENUS.Tracking.en} > ${SECTIONS.TowingMode.en}`,
+      tab: "Tracking",
+      key: SECTIONS.TowingMode.en,
+    },
+  },
+  es: {
+    [SECTIONS.DisconnectMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DisconnectMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.DisconnectMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.DisconnectMode.en,
+    },
+    [SECTIONS.DriveMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DriveMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.DriveMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.DriveMode.en,
+    },
+    [SECTIONS.FineTracking.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.FineTracking.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.FineTracking.es}`,
+      tab: "Tracking",
+      key: SECTIONS.FineTracking.en,
+    },
+    [SECTIONS.IdleMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.IdleMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.IdleMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.IdleMode.en,
+    },
+    [SECTIONS.InstallMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.InstallMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.InstallMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.InstallMode.en,
+    },
+    [SECTIONS.ModeSettings.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ModeSettings.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.ModeSettings.es}`,
+      tab: "Tracking",
+      key: SECTIONS.ModeSettings.en,
+    },
+    [SECTIONS.OperationMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OperationMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.OperationMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.OperationMode.en,
+    },
+    [SECTIONS.ParkMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ParkMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.ParkMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.ParkMode.en,
+    },
+    [SECTIONS.SpeedingMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.SpeedingMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.SpeedingMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.SpeedingMode.en,
+    },
+    [SECTIONS.TowingMode.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.TowingMode.en],
+      searchText: `${MENUS.Tracking.es} > ${SECTIONS.TowingMode.es}`,
+      tab: "Tracking",
+      key: SECTIONS.TowingMode.en,
+    },
+  },
+  pt: {
+    [SECTIONS.DisconnectMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DisconnectMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.DisconnectMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.DisconnectMode.en,
+    },
+    [SECTIONS.DriveMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DriveMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.DriveMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.DriveMode.en,
+    },
+    [SECTIONS.FineTracking.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.FineTracking.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.FineTracking.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.FineTracking.en,
+    },
+    [SECTIONS.IdleMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.IdleMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.IdleMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.IdleMode.en,
+    },
+    [SECTIONS.InstallMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.InstallMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.InstallMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.InstallMode.en,
+    },
+    [SECTIONS.ModeSettings.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ModeSettings.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.ModeSettings.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.ModeSettings.en,
+    },
+    [SECTIONS.OperationMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OperationMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.OperationMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.OperationMode.en,
+    },
+    [SECTIONS.ParkMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ParkMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.ParkMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.ParkMode.en,
+    },
+    [SECTIONS.SpeedingMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.SpeedingMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.SpeedingMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.SpeedingMode.en,
+    },
+    [SECTIONS.TowingMode.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.TowingMode.en],
+      searchText: `${MENUS.Tracking.pt} > ${SECTIONS.TowingMode.pt}`,
+      tab: "Tracking",
+      key: SECTIONS.TowingMode.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -1278,18 +1576,21 @@ export const SEARCH_SECTION = {
     ...SYSTEM_SECTION.en,
     ...REPORT_SECTION.en,
     ...ACCESSORIES_SECTION.en,
+    ...TRACKING_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
     ...SYSTEM_SECTION.es,
     ...REPORT_SECTION.es,
     ...ACCESSORIES_SECTION.es,
+    ...TRACKING_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
     ...SYSTEM_SECTION.pt,
     ...REPORT_SECTION.pt,
     ...ACCESSORIES_SECTION.pt,
+    ...TRACKING_SECTION.pt,
   },
 };
 

@@ -10,6 +10,9 @@ import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.DriveMode.en];
 
 interface Props {
   formData: {
@@ -29,8 +32,6 @@ const DriveMode = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-
-  const fieldIds = ["1600", "1601"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -94,7 +95,9 @@ const DriveMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.tracking.drive_mode")}</h1>
+          <h1 data-section-id={SECTIONS.DriveMode.en}>
+            {SECTIONS.DriveMode[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

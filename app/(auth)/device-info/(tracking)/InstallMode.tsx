@@ -10,6 +10,9 @@ import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.InstallMode.en];
 
 interface Props {
   formData: {
@@ -29,8 +32,6 @@ const InstallMode = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-
-  const fieldIds = ["1602", "1603"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -94,7 +95,9 @@ const InstallMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.tracking.install_mode")}</h1>
+          <h1 data-section-id={SECTIONS.InstallMode.en}>
+            {SECTIONS.InstallMode[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

@@ -9,6 +9,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.IdleMode.en];
 
 interface Props {
   formData: {
@@ -28,17 +31,6 @@ const IdleMode = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-
-  const fieldIds = [
-    "1610",
-    "1611",
-    "1612",
-    "1613",
-    "1614",
-    "1615",
-    "1616",
-    "1617",
-  ];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -102,7 +94,9 @@ const IdleMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.tracking.idle_mode")}</h1>
+          <h1 data-section-id={SECTIONS.IdleMode.en}>
+            {SECTIONS.IdleMode[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

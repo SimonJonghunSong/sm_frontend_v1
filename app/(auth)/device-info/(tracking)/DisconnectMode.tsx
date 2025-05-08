@@ -8,6 +8,9 @@ import { FormField } from "../page";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.DisconnectMode.en];
 
 interface Props {
   formData: {
@@ -27,8 +30,6 @@ const DisconnectMode = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-
-  const fieldIds = ["1641"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -92,7 +93,9 @@ const DisconnectMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.tracking.disconnect_mode")}</h1>
+          <h1 data-section-id={SECTIONS.DisconnectMode.en}>
+            {SECTIONS.DisconnectMode[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

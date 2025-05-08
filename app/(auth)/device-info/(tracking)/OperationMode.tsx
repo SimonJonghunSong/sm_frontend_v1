@@ -9,6 +9,9 @@ import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.OperationMode.en];
 
 interface Props {
   formData: {
@@ -22,8 +25,6 @@ const OperationMode = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-
-  const fieldIds = ["1698"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -87,7 +88,9 @@ const OperationMode = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{FIELD_VALIDATIONS["1698"].title[lang]}</h1>
+          <h1 data-section-id={SECTIONS.OperationMode.en}>
+            {SECTIONS.OperationMode[lang]}
+          </h1>
         </Stack>
 
         <SwitchPrimary
