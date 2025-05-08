@@ -11,6 +11,10 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import { hasFormDataFields } from "app/(auth)/device-info/(utils)/@index";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Password.en];
 
 interface Props {
   formData: {
@@ -26,11 +30,7 @@ const Password = ({ formData, onChange }: Props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
 
-  if (
-    !formData ||
-    (!formData["3000"] && !formData["3001"] && !formData["3002"])
-  )
-    return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -77,7 +77,7 @@ const Password = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["3000", "3001", "3002"].includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -95,7 +95,9 @@ const Password = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>{FIELD_VALIDATIONS["3000"].title[lang]}</h1>
+          <h1 data-section-id={SECTIONS.Password.en}>
+            {SECTIONS.Password[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

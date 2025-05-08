@@ -60,6 +60,7 @@ export const MENUS = {
 };
 
 export const SECTIONS = {
+  // Network
   Network: { en: "Network", es: "Red", pt: "Rede" },
   APN: { en: "APN", es: "APN", pt: "APN" },
   MainServer: {
@@ -87,9 +88,49 @@ export const SECTIONS = {
   },
   Call: { en: "Call", es: "Llamada", pt: "Chamada" },
   SMS: { en: "SMS", es: "SMS", pt: "SMS" },
+
+  // System
+  Ignition: { en: "Ignition", es: "Ignición", pt: "Ignição" },
+  BackupBattery: {
+    en: "Backup Battery",
+    es: "Batería de Respaldo",
+    pt: "Bateria de Backup",
+  },
+  Device: { en: "Device", es: "Dispositivo", pt: "Dispositivo" },
+  DriverPattern: {
+    en: "Driver Pattern",
+    es: "Patrón de Conductor",
+    pt: "Padrão de Motorista",
+  },
+  McuUpdate: {
+    en: "MCU Update",
+    es: "Actualización de MCU",
+    pt: "Atualização de MCU",
+  },
+  Motion: {
+    en: "Motion",
+    es: "Movimiento",
+    pt: "Movimento",
+  },
+  Password: {
+    en: "Password",
+    es: "Contraseña",
+    pt: "Senha",
+  },
+  Power: {
+    en: "Power",
+    es: "Potencia",
+    pt: "Potência",
+  },
+  TdiOdometer: {
+    en: "Tdi Odometer",
+    es: "Odómetro TDI",
+    pt: "Odômetro TDI",
+  },
 };
 
 export const INCLUDE_FIELDS = {
+  // Network
   [SECTIONS.Network.en]: [
     "1013",
     "1054",
@@ -144,6 +185,92 @@ export const INCLUDE_FIELDS = {
     "1041",
     "1042",
     "1043",
+  ],
+
+  // System
+  [SECTIONS.Ignition.en]: [
+    "1700",
+    "1701",
+    "1702",
+    "1705",
+    "1706",
+    "1707",
+    "1708",
+    "1709",
+    "1710",
+    "1711",
+    "1712",
+    "1713",
+    "1714",
+    "1715",
+    "1716",
+    "1717",
+  ],
+  [SECTIONS.BackupBattery.en]: [
+    "1932",
+    "1936",
+    "1937",
+    "1938",
+    "1939",
+    "1947",
+    "1948",
+    "1973",
+    "1974",
+  ],
+  [SECTIONS.Device.en]: ["2704", "2705", "2706", "2707", "2708", "2709"],
+  [SECTIONS.DriverPattern.en]: [
+    "1910",
+    "1911",
+    "1912",
+    "1913",
+    "1914",
+    "1921",
+    "1922",
+    "1923",
+    "1924",
+    "1925",
+  ],
+  [SECTIONS.McuUpdate.en]: ["9900"],
+  [SECTIONS.Motion.en]: [
+    "1900",
+    "1901",
+    "1902",
+    "1903",
+    "1904",
+    "1915",
+    "1916",
+    "1917",
+    "1918",
+    "1919",
+    "1920",
+  ],
+  [SECTIONS.Password.en]: ["3000", "3001", "3002"],
+  [SECTIONS.Power.en]: [
+    "1930",
+    "1931",
+    "1933",
+    "1934",
+    "1935",
+    "1939",
+    "1940",
+    "1941",
+    "1942",
+    "1943",
+    "1944",
+    "1949",
+    "1952",
+    "1953",
+    "1954",
+    "1959",
+  ],
+  [SECTIONS.TdiOdometer.en]: [
+    "4200",
+    "4201",
+    "4202",
+    "4203",
+    "4204",
+    "4205",
+    "4206",
   ],
 };
 
@@ -361,6 +488,177 @@ export const NETWORK_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
+export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
+  en: {
+    [SECTIONS.Ignition.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Ignition.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.Ignition.en}`,
+      tab: "System",
+      key: SECTIONS.Ignition.en,
+    },
+    [SECTIONS.BackupBattery.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BackupBattery.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.BackupBattery.en}`,
+      tab: "System",
+      key: SECTIONS.BackupBattery.en,
+    },
+    [SECTIONS.Device.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Device.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.Device.en}`,
+      tab: "System",
+      key: SECTIONS.Device.en,
+    },
+    [SECTIONS.DriverPattern.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DriverPattern.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.DriverPattern.en}`,
+      tab: "System",
+      key: SECTIONS.DriverPattern.en,
+    },
+    [SECTIONS.McuUpdate.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.McuUpdate.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.McuUpdate.en}`,
+      tab: "System",
+      key: SECTIONS.McuUpdate.en,
+    },
+    [SECTIONS.Motion.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Motion.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.Motion.en}`,
+      tab: "System",
+      key: SECTIONS.Motion.en,
+    },
+    [SECTIONS.Password.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Password.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.Password.en}`,
+      tab: "System",
+      key: SECTIONS.Password.en,
+    },
+    [SECTIONS.Power.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Power.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.Power.en}`,
+      tab: "System",
+      key: SECTIONS.Power.en,
+    },
+    [SECTIONS.TdiOdometer.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.TdiOdometer.en],
+      searchText: `${MENUS.System.en} > ${SECTIONS.TdiOdometer.en}`,
+      tab: "System",
+      key: SECTIONS.TdiOdometer.en,
+    },
+  },
+  es: {
+    [SECTIONS.Ignition.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Ignition.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.Ignition.es}`,
+      tab: "System",
+      key: SECTIONS.Ignition.en,
+    },
+    [SECTIONS.BackupBattery.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BackupBattery.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.BackupBattery.es}`,
+      tab: "System",
+      key: SECTIONS.BackupBattery.en,
+    },
+    [SECTIONS.Device.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Device.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.Device.es}`,
+      tab: "System",
+      key: SECTIONS.Device.en,
+    },
+    [SECTIONS.DriverPattern.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DriverPattern.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.DriverPattern.es}`,
+      tab: "System",
+      key: SECTIONS.DriverPattern.en,
+    },
+    [SECTIONS.McuUpdate.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.McuUpdate.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.McuUpdate.es}`,
+      tab: "System",
+      key: SECTIONS.McuUpdate.en,
+    },
+    [SECTIONS.Motion.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Motion.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.Motion.es}`,
+      tab: "System",
+      key: SECTIONS.Motion.en,
+    },
+    [SECTIONS.Password.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Password.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.Password.es}`,
+      tab: "System",
+      key: SECTIONS.Password.en,
+    },
+    [SECTIONS.Power.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Power.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.Power.es}`,
+      tab: "System",
+      key: SECTIONS.Power.en,
+    },
+    [SECTIONS.TdiOdometer.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.TdiOdometer.en],
+      searchText: `${MENUS.System.es} > ${SECTIONS.TdiOdometer.es}`,
+      tab: "System",
+      key: SECTIONS.TdiOdometer.en,
+    },
+  },
+  pt: {
+    [SECTIONS.Ignition.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Ignition.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.Ignition.pt}`,
+      tab: "System",
+      key: SECTIONS.Ignition.en,
+    },
+    [SECTIONS.BackupBattery.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BackupBattery.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.BackupBattery.pt}`,
+      tab: "System",
+      key: SECTIONS.BackupBattery.en,
+    },
+    [SECTIONS.Device.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Device.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.Device.pt}`,
+      tab: "System",
+      key: SECTIONS.Device.en,
+    },
+    [SECTIONS.DriverPattern.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.DriverPattern.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.DriverPattern.pt}`,
+      tab: "System",
+      key: SECTIONS.DriverPattern.en,
+    },
+    [SECTIONS.McuUpdate.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.McuUpdate.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.McuUpdate.pt}`,
+      tab: "System",
+      key: SECTIONS.McuUpdate.en,
+    },
+    [SECTIONS.Motion.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Motion.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.Motion.pt}`,
+      tab: "System",
+      key: SECTIONS.Motion.en,
+    },
+    [SECTIONS.Password.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Password.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.Password.pt}`,
+      tab: "System",
+      key: SECTIONS.Password.en,
+    },
+    [SECTIONS.Power.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.Power.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.Power.pt}`,
+      tab: "System",
+      key: SECTIONS.Power.en,
+    },
+    [SECTIONS.TdiOdometer.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.TdiOdometer.en],
+      searchText: `${MENUS.System.pt} > ${SECTIONS.TdiOdometer.pt}`,
+      tab: "System",
+      key: SECTIONS.TdiOdometer.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -371,12 +669,15 @@ export const NETWORK_SECTION: Record<Lang, Record<string, SearchField>> = {
 export const SEARCH_SECTION = {
   en: {
     ...NETWORK_SECTION.en,
+    ...SYSTEM_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
+    ...SYSTEM_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
+    ...SYSTEM_SECTION.pt,
   },
 };
 

@@ -10,6 +10,9 @@ import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import CheckboxComp from "app/(auth)/model-info/CheckboxComp";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Motion.en];
 
 interface Props {
   formData: {
@@ -80,21 +83,7 @@ const Motion = ({ formData, onChange }: Props) => {
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
-          if (
-            [
-              "1900",
-              "1901",
-              "1902",
-              "1903",
-              "1904",
-              "1915",
-              "1916",
-              "1917",
-              "1918",
-              "1919",
-              "1920",
-            ].includes(key)
-          ) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -112,7 +101,7 @@ const Motion = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.system.motion")}</h1>
+          <h1 data-section-id={SECTIONS.Motion.en}>{SECTIONS.Motion[lang]}</h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

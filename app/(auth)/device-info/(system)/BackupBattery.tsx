@@ -10,7 +10,9 @@ import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import { FIELD_VALIDATIONS } from "constants/field";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
+const fieldIds = INCLUDE_FIELDS[SECTIONS.BackupBattery.en];
 interface Props {
   formData: {
     [key: string]: FormField;
@@ -68,19 +70,7 @@ const BackupBattery = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (
-            [
-              "1932",
-              "1936",
-              "1937",
-              "1938",
-              "1939",
-              "1947",
-              "1948",
-              "1973",
-              "1974",
-            ].includes(key)
-          ) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -96,7 +86,9 @@ const BackupBattery = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("model.add_model_pop_up.features-item.backup-battery")}</h1>
+      <h1 data-section-id={SECTIONS.BackupBattery.en}>
+        {SECTIONS.BackupBattery[lang]}
+      </h1>
 
       <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
         <SwitchField id="1932" formData={formData} onChange={handleChange} />

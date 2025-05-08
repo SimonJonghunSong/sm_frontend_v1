@@ -11,6 +11,9 @@ import hasFormDataFields from "../(utils)/hasFormDataFields";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import SelectField from "../(components)/SelectField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.McuUpdate.en];
 
 interface Props {
   formData: {
@@ -23,8 +26,6 @@ const McuUpdate = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-
-  const fieldIds = ["9900"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -87,7 +88,9 @@ const McuUpdate = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{FIELD_VALIDATIONS["9900"].title[lang]}</h1>
+      <h1 data-section-id={SECTIONS.McuUpdate.en}>
+        {SECTIONS.McuUpdate[lang]}
+      </h1>
 
       {/* // TODO Select Placeholder 지원 */}
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>

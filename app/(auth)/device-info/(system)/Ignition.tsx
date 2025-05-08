@@ -9,6 +9,7 @@ import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 interface Props {
   formData: {
@@ -34,6 +35,8 @@ const error = {
     ps: "Não pode ser maior que o valor de 1705",
   },
 };
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Ignition.en];
 
 const Ignition = ({ formData, onChange }: Props) => {
   const t = useTranslations();
@@ -86,7 +89,7 @@ const Ignition = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (["1700"].includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -104,7 +107,9 @@ const Ignition = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
-          <h1>{t("configuration.system.ignition")}</h1>
+          <h1 data-section-id={SECTIONS.Ignition.en}>
+            {SECTIONS.Ignition[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

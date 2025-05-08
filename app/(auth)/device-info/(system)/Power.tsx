@@ -5,6 +5,10 @@ import { Button, Stack } from "@mui/material";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Power.en];
 
 interface Props {
   formData: {
@@ -16,6 +20,7 @@ interface Props {
 const Power = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
+  const lang = useLangStore((state) => state.lang);
 
   // TODO 렌더링 조건 추가 유틸로 만들어서 한번에 처리
   if (!formData) return null;
@@ -62,26 +67,7 @@ const Power = ({ formData, onChange }: Props) => {
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
-          if (
-            [
-              "1930",
-              "1931",
-              "1933",
-              "1934",
-              "1935",
-              "1939",
-              "1940",
-              "1941",
-              "1942",
-              "1943",
-              "1944",
-              "1949",
-              "1952",
-              "1953",
-              "1954",
-              "1959",
-            ].includes(key)
-          ) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -97,7 +83,7 @@ const Power = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.system.power")}</h1>
+      <h1 data-section-id={SECTIONS.Power.en}>{SECTIONS.Power[lang]}</h1>
 
       <>
         <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>

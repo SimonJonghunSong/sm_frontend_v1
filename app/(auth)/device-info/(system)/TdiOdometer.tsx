@@ -10,6 +10,9 @@ import { FormField } from "../page";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.TdiOdometer.en];
 
 interface Props {
   formData: {
@@ -23,28 +26,7 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const tdiOdometerFieldIds = [
-    "4200",
-    "4201",
-    "4202",
-    "4203",
-    "4204",
-    "4205",
-    "4206",
-  ];
-
-  if (
-    !hasFormDataFields(formData, [
-      "4200",
-      "4201",
-      "4202",
-      "4203",
-      "4204",
-      "4205",
-      "4206",
-    ])
-  )
-    return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -89,7 +71,7 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (tdiOdometerFieldIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -107,7 +89,9 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>{FIELD_VALIDATIONS["4200"].title[lang]}</h1>
+          <h1 data-section-id={SECTIONS.TdiOdometer.en}>
+            {SECTIONS.TdiOdometer[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

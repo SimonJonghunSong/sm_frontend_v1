@@ -7,6 +7,10 @@ import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import SelectField from "../(components)/SelectField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Device.en];
 
 interface Props {
   formData: {
@@ -18,10 +22,9 @@ interface Props {
 const Device = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
+  const lang = useLangStore((state) => state.lang);
 
-  const deviceFieldIds = ["2704", "2705", "2706", "2707", "2708", "2709"];
-
-  if (!hasFormDataFields(formData, deviceFieldIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -66,7 +69,7 @@ const Device = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (deviceFieldIds.includes(key)) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -83,7 +86,7 @@ const Device = ({ formData, onChange }: Props) => {
       }}
     >
       <Stack>
-        <h1>{t("gnb.pw_set.device")}</h1>
+        <h1 data-section-id={SECTIONS.Device.en}>{SECTIONS.Device[lang]}</h1>
       </Stack>
 
       <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>

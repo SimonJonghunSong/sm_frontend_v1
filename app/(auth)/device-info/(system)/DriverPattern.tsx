@@ -10,6 +10,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.DriverPattern.en];
 
 interface Props {
   formData: {
@@ -69,20 +72,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           // 네트워크 탭에 있는 필드만 포함
-          if (
-            [
-              "1910",
-              "1911",
-              "1912",
-              "1913",
-              "1914",
-              "1921",
-              "1922",
-              "1923",
-              "1924",
-              "1925",
-            ].includes(key)
-          ) {
+          if (fieldIds.includes(key)) {
             acc[key] = {
               id: key,
               value: formData[key].value,
@@ -100,7 +90,9 @@ const DriverPattern = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"} alignItems="center">
-          <h1>{FIELD_VALIDATIONS["1910"].title[lang]}</h1>
+          <h1 data-section-id={SECTIONS.DriverPattern.en}>
+            {SECTIONS.DriverPattern[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
