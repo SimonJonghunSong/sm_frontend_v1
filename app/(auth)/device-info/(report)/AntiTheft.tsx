@@ -7,6 +7,9 @@ import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import { hasFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.AntiTheft.en];
 
 interface Props {
   formData: {
@@ -25,8 +28,6 @@ const Report = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-
-  const fieldIds = ["1050", "1051"];
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -90,7 +91,9 @@ const Report = ({ formData, onChange }: Props) => {
       }}
     >
       <Stack direction={"row"} alignItems={"center"} gap={"4px"}>
-        <h1>{t("configuration.report.anti-theft")}</h1>
+        <h1 data-section-id={SECTIONS.AntiTheft.en}>
+          {SECTIONS.AntiTheft[lang]}
+        </h1>
         <InputBox.Info
           tooltipText={
             <span style={{ whiteSpace: "pre-wrap" }}>{tooltipText[lang]}</span>

@@ -10,6 +10,9 @@ import SwitchField from "../(components)/SwitchField";
 import TextInputField from "../(components)/TextInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.Report.en];
 
 interface Props {
   formData: {
@@ -23,19 +26,6 @@ const Report = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
 
-  const fieldIds = [
-    "1055",
-    "1058",
-    "1064",
-    "1069",
-    "1072",
-    "1073",
-    "1074",
-    "1075",
-    "1079",
-    "1097",
-    "1099",
-  ];
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const is1072Error = !/^[A-Za-z0-9]{32}$/.test(formData["1073"]?.value);
@@ -99,7 +89,7 @@ const Report = ({ formData, onChange }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1>{t("configuration.report.report")}</h1>
+      <h1 data-section-id={SECTIONS.Report.en}>{SECTIONS.Report[lang]}</h1>
 
       <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
         <SelectField id="1055" formData={formData} onChange={handleChange} />

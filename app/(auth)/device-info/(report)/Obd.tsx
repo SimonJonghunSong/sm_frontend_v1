@@ -9,6 +9,9 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import { hasFormDataFields } from "../(utils)/@index";
 import NumericInputField from "../(components)/NumericInputField";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldsIds = INCLUDE_FIELDS[SECTIONS.OBD.en];
 
 interface Props {
   formData: {
@@ -21,8 +24,6 @@ const OBD = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-
-  const fieldsIds = ["2000", "2002"];
 
   if (!hasFormDataFields(formData, fieldsIds)) return null;
 
@@ -86,7 +87,7 @@ const OBD = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" gap="4px" alignItems="center">
-          <h1>{FIELD_VALIDATIONS["2000"].title[lang]}</h1>
+          <h1 data-section-id={SECTIONS.OBD.en}>{SECTIONS.OBD[lang]}</h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

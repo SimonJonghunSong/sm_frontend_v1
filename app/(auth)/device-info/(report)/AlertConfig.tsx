@@ -6,6 +6,8 @@ import { useRef, useState } from "react";
 import { AlertConfig1, AlertConfig2 } from "./@index";
 import { ALERT_CONFIG_1 } from "./AlertConfig1";
 import { ALERT_CONFIG_2 } from "./AlertConfig2";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import useLangStore from "@/utils/useLangStore";
 
 interface Props {
   formData: {
@@ -50,6 +52,7 @@ const StyledTabs = styled(Tabs)`
 const AlertConfig = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations();
+  const lang = useLangStore((state) => state.lang);
   const [tab, setTab] = useState<"alert_config_1" | "alert_config_2">(
     "alert_config_1"
   );
@@ -87,7 +90,9 @@ const AlertConfig = ({ formData, onChange }: Props) => {
         console.log("Form values:", fieldValues);
       }}
     >
-      <h1>{t("configuration.report.alert_config")}</h1>
+      <h1 data-section-id={SECTIONS.AlertConfig.en}>
+        {SECTIONS.AlertConfig[lang]}
+      </h1>
 
       <StyledTabs
         value={tab}

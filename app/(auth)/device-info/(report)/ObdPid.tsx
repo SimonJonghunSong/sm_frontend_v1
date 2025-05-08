@@ -8,14 +8,9 @@ import hasFormDataFields, {
   filterFormDataFields,
 } from "../(utils)/hasFormDataFields";
 import InputBox from "@/components/inputbox/InputBox";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
-export const OBD_PID = [
-  2100, 2101, 2102, 2103, 2104, 2105, 2106, 2107, 2108, 2109, 2110, 2111, 2112,
-  2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120, 2121, 2122, 2123, 2124, 2125,
-  2126, 2127, 2128, 2129, 2130, 2131, 2132, 2133, 2134, 2135, 2136, 2137, 2138,
-  2139, 2140, 2141, 2142, 2143, 2144, 2145, 2146, 2147, 2148, 2149, 2150, 2151,
-  2152, 2153, 2154, 2155, 2156, 2157, 2158, 2159,
-];
+export const OBD_PID = INCLUDE_FIELDS[SECTIONS.ObdPid.en];
 
 const tooltip = {
   en: `Enter PIDs to check vehicle diagnostic data. (Up to 60 PIDs can be added.)\r\n* PIDs are 2 characters (e.g., 01, 1F).\r\n* Supported PIDs : Refer to "B-2. OBDII PIDs table - Universal Reporting Guide OBD" document\r\n* Valid PIDs not supported by the device will show as “FFFFFFFF” in Status Report or Alert Report.\r\n(Invalid PID characters will show as "Error.")`,
@@ -99,7 +94,7 @@ const ObdPid = ({ formData, onChange }: Props) => {
       }}
     >
       <Stack direction="row" alignItems="center" gap="8px">
-        <h1>OBD PIDs</h1>
+        <h1 data-section-id={SECTIONS.ObdPid.en}>{SECTIONS.ObdPid[lang]}</h1>
         <InputBox.Info
           tooltipText={
             <span style={{ whiteSpace: "pre-wrap" }}>{tooltip[lang]}</span>

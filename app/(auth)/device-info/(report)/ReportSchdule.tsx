@@ -10,6 +10,9 @@ import hasFormDataFields from "../(utils)/hasFormDataFields";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+
+const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchdule.en];
 
 interface Props {
   formData: {
@@ -46,19 +49,19 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
 
-  const fieldIds = [
-    "1637",
-    "1638", // TODO
-    "1639", // TODO
-    "1640",
-    "1649", // TODO
-    "1650", // TODO
-    "1651", // TODO
-    "1652", // TODO
-    "1653",
-    "1655", // TODO
-    "1656",
-  ];
+  // const fieldIds = [
+  //   "1637",
+  //   "1638", // TODO
+  //   "1639", // TODO
+  //   "1640",
+  //   "1649", // TODO
+  //   "1650", // TODO
+  //   "1651", // TODO
+  //   "1652", // TODO
+  //   "1653",
+  //   "1655", // TODO
+  //   "1656",
+  // ];
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -139,7 +142,9 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap="8px">
-          <h1>{t("configuration.tracking.report_schedule")}</h1>
+          <h1 data-section-id={SECTIONS.ReportSchdule.en}>
+            {SECTIONS.ReportSchdule[lang]}
+          </h1>
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>

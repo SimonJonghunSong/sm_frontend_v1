@@ -6,6 +6,7 @@ import { FormField } from "../page";
 import { FIELD_VALIDATIONS } from "constants/field";
 import useLangStore from "@/utils/useLangStore";
 import { filterFormDataFields } from "../(utils)/@index";
+import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 
 interface Props {
   formData: {
@@ -14,12 +15,7 @@ interface Props {
   onChange: (id: string, value: string, alertId?: string) => void;
 }
 
-export const ALERT_CONFIG_1 = [
-  1300, 1301, 1302, 1304, 1306, 1308, 1311, 1313, 1314, 1321, 1325, 1326, 1328,
-  1329, 1330, 1331, 1332, 1333, 1334, 1335, 1336, 1337, 1338, 1339, 1340, 1340,
-  1341, 1342, 1350, 1351, 1352, 1354, 1355, 1356, 1357, 1360, 1365, 1366, 1367,
-  1368, 1371, 1372, 1373, 1377,
-];
+export const ALERT_CONFIG_1 = INCLUDE_FIELDS[SECTIONS.AlertConfig1.en];
 
 export default function AlertConfig1({ formData, onChange }: Props) {
   const { lang } = useLangStore();
