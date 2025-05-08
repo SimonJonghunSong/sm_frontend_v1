@@ -63,9 +63,10 @@ export const sideMenuItems = ({
   },
   {
     name: "Geofence",
-    href: "/device-info/geofence",
+    href: "#",
     isActive: tab === "Geofence",
     icon: () => <HexagonOutlinedIcon />,
+    onClick: () => onClick("Geofence"),
   },
   {
     name: "Tracking",
