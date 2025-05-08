@@ -130,6 +130,11 @@ export const SECTIONS = {
   },
 
   // Report
+  AssignHeader: {
+    en: "Assign Header",
+    es: "Encabezado de Asignación",
+    pt: "Cabeçalho de Atribuição",
+  },
   AlertConfig: {
     en: "Alert Config",
     es: "Configuración de Alertas",
@@ -601,6 +606,7 @@ export const INCLUDE_FIELDS = {
   ],
 
   // Report
+  [SECTIONS.AssignHeader.en]: ["1100", "1075"],
   [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
   [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
@@ -1392,6 +1398,12 @@ export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
 
 export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
   en: {
+    [SECTIONS.AssignHeader.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.AssignHeader.en}`,
+      tab: "Report",
+      key: SECTIONS.AssignHeader.en,
+    },
     [SECTIONS.AlertConfig.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
       searchText: `${MENUS.Report.en} > ${SECTIONS.AlertConfig.en}`,
@@ -1442,6 +1454,12 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
     },
   },
   es: {
+    [SECTIONS.AssignHeader.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.AssignHeader.es}`,
+      tab: "Report",
+      key: SECTIONS.AssignHeader.en,
+    },
     [SECTIONS.AlertConfig.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
       searchText: `${MENUS.Report.es} > ${SECTIONS.AlertConfig.es}`,
@@ -1492,11 +1510,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
     },
   },
   pt: {
-    [SECTIONS.AlertConfig.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig.pt}`,
+    [SECTIONS.AssignHeader.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.AssignHeader.pt}`,
       tab: "Report",
-      key: SECTIONS.AlertConfig.en,
+      key: SECTIONS.AssignHeader.en,
     },
     [SECTIONS.AlertConfig1.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.AlertConfig1.en],
