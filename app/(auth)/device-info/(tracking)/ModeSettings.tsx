@@ -158,7 +158,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     onChange={handleChange}
                     isRequired
                     isSwitch
-                    isUnderbarId
                     style={{ width: "100%" }}
                   />
 
@@ -177,7 +176,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     onChange={handleChange}
                     isRequired
                     isSwitch
-                    isUnderbarId
                     style={{ width: "100%" }}
                   />
                   <NumericInputField

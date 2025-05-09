@@ -9,11 +9,9 @@ import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
-import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import SwitchField from "../(components)/SwitchField";
-import TextInputField from "../(components)/TextInputField";
 import TimeHMA from "../(components)/TimeHMA";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchdule.en];
@@ -24,29 +22,6 @@ interface Props {
   };
   onChange: (id: string, value: string) => void;
 }
-
-/**
- * 
- * 1638: Start Hour for Working(24H)
-This parameter sets the start time of the report.
-(Only supported by USA)
-Range: 0 ~ 23
-Units: Hour
-Default: 0
-
-1639: End Hour for Working(24H)
-This parameter sets the end time of the report.
-(Only supported by USA)
-Range: 1 ~ 24
-Units: Hour
-Default: 24
-
-1649: Heart Beat 1 UTC time
-This parameter is used to wake up the device and report to the user platform and receiving command.
-Format: HHMM
-Range: 0000 ~ 2359 or empty
-Leave it empty if you want to disable Heart Beat 1 report [스위치로 disable 하면 빈 값으로 보내고, 체크하면 필수값으로 변경]
- */
 
 const ReportSchdule = ({ formData, onChange }: Props) => {
   const t = useTranslations();

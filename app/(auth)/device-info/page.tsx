@@ -319,7 +319,6 @@ export default function DeviceInfoPage() {
   };
 
   useEffect(() => {
-    setIsLoading(true);
     if (isReady) {
       console.log("Test ::::");
       handleRefreshJsonPacket();
