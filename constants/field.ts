@@ -17286,7 +17286,7 @@ export const FIELD_VALIDATIONS = {
       pt: "Configurações do tempo de varredura BLE para Relatórios de Sensor.\r\n- 4000\r\n• Intervalo(Ligado): 20~120(ST4000), 20~540(ST4950)\r\n• Padrão: 60(ST4000), 540(ST4950)\r\n* A varredura termina quando 4010 é atingido, mesmo que o tempo de varredura definido não seja concluído.\r\n* Para modelos que não suportam 4010, o valor padrão é 50.",
     },
     min: 20,
-    max: 120,
+    max: 540,
     list: null,
   },
   "4012": {

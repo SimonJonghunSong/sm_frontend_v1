@@ -14,6 +14,7 @@ import SelectField from "../(components)/SelectField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import RangeThresholdField from "../(components)/RangeThresholdField";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Sensor.en];
 
@@ -91,104 +92,95 @@ const Sensor = ({ formData, onChange }: Props) => {
     >
       <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <SelectField
-          id="2610"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-          isSwitch
-        />
-
-        <SwitchField id="2611" formData={formData} onChange={handleChange} />
-
-        <SwitchField id="2612" formData={formData} onChange={handleChange} />
-
-        {formData["2621"]?.realValue === "01" &&
-          formData["2613"] &&
-          formData["2614"] && (
-            <Stack width={"calc(50% - 8px)"} gap={"8px"}>
-              <Stack direction="column" gap="8px">
-                <Stack direction="row" gap="4px" alignItems="center">
-                  <InputBox.Title>
-                    {FIELD_VALIDATIONS["2613"].title[lang]}
-                    <span style={{ color: "#FF0000", paddingLeft: "4px" }}>
-                      *
-                    </span>
-                  </InputBox.Title>
-                  {FIELD_VALIDATIONS["2613"].tooltip?.[lang] && (
-                    <InputBox.Info
-                      tooltipText={
-                        <span style={{ whiteSpace: "pre-wrap" }}>
-                          {FIELD_VALIDATIONS["2613"].tooltip[lang]}
-                        </span>
-                      }
-                    />
-                  )}
-                  <InputBox.Number>2613~4</InputBox.Number>
-                </Stack>
-
-                <Stack direction="row" gap="4px" alignItems="center">
-                  <TextField
-                    style={{ flex: 1 }}
-                    type="number"
-                    inputProps={{ min: -55 }}
-                    error={
-                      Number(formData["2613"]?.realValue) <
-                        FIELD_VALIDATIONS["2613"].min ||
-                      Number(formData["2613"]?.realValue) >
-                        Number(formData["2614"]?.realValue)
-                    }
-                  />
-                  ~
-                  <TextField
-                    style={{ flex: 1 }}
-                    type="number"
-                    inputProps={{ max: 125 }}
-                    error={
-                      Number(formData["2614"]?.realValue) >
-                        FIELD_VALIDATIONS["2614"].max ||
-                      Number(formData["2614"]?.realValue) <
-                        Number(formData["2613"]?.realValue)
-                    }
-                    helperText={
-                      Number(formData["2614"]?.realValue) >
-                        FIELD_VALIDATIONS["2614"].max ||
-                      Number(formData["2614"]?.realValue) <
-                        Number(formData["2613"]?.realValue)
-                        ? FIELD_ERRORS["2614"][lang]
-                        : ""
-                    }
-                  />
-                </Stack>
-              </Stack>
-            </Stack>
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="2610"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+            isSwitch
+          />
+          <SwitchField
+            id="2611"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="2612"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          {formData["2612"]?.realValue === "01" && (
+            <>
+              <RangeThresholdField
+                id={["2613", "2614"]}
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                titleId="2613~4"
+                isRequired
+              />
+              <RangeThresholdField
+                id={["2615", "2616"]}
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+                titleId="2615~6"
+                isRequired
+                helperText={
+                  lang === "en"
+                    ? "High humidity must be higher than low humidity."
+                    : lang === "es"
+                    ? "La humedad alta debe ser mayor que la humedad baja."
+                    : "A umidade alta deve ser maior que a umidade baixa."
+                }
+              />
+            </>
           )}
 
-        <SwitchField id="2617" formData={formData} onChange={handleChange} />
-        <SwitchField id="2617" formData={formData} onChange={handleChange} />
+          <SwitchField
+            id="2617"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
 
-        <NumericInputField
-          id="2618"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
-        <NumericInputField
-          id="2619"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="2618"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+          />
+          <NumericInputField
+            id="2619"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="2620"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <NumericInputField
+            id="2620"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            style={{ width: "100%" }}
+          />
 
-        <SwitchField id="2621" formData={formData} onChange={handleChange} />
+          <SwitchField
+            id="2621"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end" alignItems="center">
