@@ -91,47 +91,75 @@ const BackupBattery = ({ formData, onChange }: Props) => {
         {SECTIONS.BackupBattery[lang]}
       </h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-        <SwitchField id="1932" formData={formData} onChange={handleChange} />
-        <SwitchField id="1936" formData={formData} onChange={handleChange} />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SwitchField
+            id="1932"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="1936"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="1937"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <NumericInputField
+            id="1937"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
 
-        <NumericInputField
-          id="1938"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <NumericInputField
+            id="1938"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
 
-        <NumericInputField
-          id="1939"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <NumericInputField
+            id="1939"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="1947"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
 
-        <NumericInputField
-          id="1947"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <SelectField
+            id="1948"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
 
-        <SelectField
-          id="1948"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
-
-        <SwitchField id="1973" formData={formData} onChange={handleChange} />
-        <SwitchField id="1974" formData={formData} onChange={handleChange} />
+          <SwitchField
+            id="1973"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="1974"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">

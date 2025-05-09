@@ -87,7 +87,6 @@ const Sensor = ({ formData, onChange }: Props) => {
         console.log("Form values:", fieldValues);
 
         sendFormData(fieldValues);
-        // 여기에 데이터 제출 로직 추가
       }}
     >
       <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>

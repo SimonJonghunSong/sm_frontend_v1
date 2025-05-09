@@ -110,9 +110,15 @@ const RangeThresholdField = ({
 
     if (errorType === "MIN_GREATER_THAN_MAX") {
       return {
-        en: "High temperature must be a higher than low temperature.",
-        es: "La temperatura alta debe ser mayor que la temperatura baja.",
-        pt: "A temperatura alta deve ser maior que a temperatura baixa.",
+        en:
+          helperText ||
+          "High temperature must be a higher than low temperature.",
+        es:
+          helperText ||
+          "La temperatura alta debe ser mayor que la temperatura baja.",
+        pt:
+          helperText ||
+          "A temperatura alta deve ser maior que a temperatura baixa.",
       }[lang];
     }
 

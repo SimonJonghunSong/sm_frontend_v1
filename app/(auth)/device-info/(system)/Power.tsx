@@ -8,6 +8,7 @@ import SwitchField from "../(components)/SwitchField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import { hasFormDataFields } from "../(utils)/@index";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Power.en];
 
@@ -24,8 +25,7 @@ const Power = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const { sendFormData } = useSendFormData();
 
-  // TODO 렌더링 조건 추가 유틸로 만들어서 한번에 처리
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -87,15 +87,25 @@ const Power = ({ formData, onChange }: Props) => {
     >
       <h1 data-section-id={SECTIONS.Power.en}>{SECTIONS.Power[lang]}</h1>
 
-      <>
-        <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-          <SwitchField id="1930" formData={formData} onChange={handleChange} />
-          <SwitchField id="1931" formData={formData} onChange={handleChange} />
-
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SwitchField
+            id="1930"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="1931"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
           <NumericInputField
             id="1933"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
@@ -103,6 +113,7 @@ const Power = ({ formData, onChange }: Props) => {
             id="1934"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
@@ -110,13 +121,16 @@ const Power = ({ formData, onChange }: Props) => {
             id="1935"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
-
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
           <NumericInputField
             id="1939"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
@@ -124,6 +138,7 @@ const Power = ({ formData, onChange }: Props) => {
             id="1940"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
@@ -131,6 +146,7 @@ const Power = ({ formData, onChange }: Props) => {
             id="1941"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
@@ -138,6 +154,7 @@ const Power = ({ formData, onChange }: Props) => {
             id="1942"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
@@ -145,11 +162,12 @@ const Power = ({ formData, onChange }: Props) => {
             id="1943"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
             isRequired
           />
 
           {!!formData["1944"] && (
-            <Stack gap={"16px"} style={{ width: "calc(50% - 8px)" }}>
+            <Stack gap={"16px"} style={{ width: "100%" }}>
               <SwitchField
                 id="1944"
                 formData={formData}
@@ -179,11 +197,12 @@ const Power = ({ formData, onChange }: Props) => {
           )}
 
           {!!formData["1949"] && (
-            <Stack gap={"16px"} style={{ width: "calc(50% - 8px)" }}>
+            <Stack gap={"16px"} style={{ width: "100%" }}>
               <SwitchField
                 id="1949"
                 formData={formData}
                 onChange={handleChange}
+                style={{ width: "100%" }}
               />
 
               {formData["1949"]?.realValue === "01" && (
@@ -203,7 +222,7 @@ const Power = ({ formData, onChange }: Props) => {
           )}
 
           {!!formData["1952"] && (
-            <Stack gap={"32px"} style={{ width: "calc(50% - 8px)" }}>
+            <Stack gap={"32px"} style={{ width: "100%" }}>
               <SwitchField
                 id="1952"
                 formData={formData}
@@ -234,23 +253,22 @@ const Power = ({ formData, onChange }: Props) => {
             </Stack>
           )}
 
-          <SwitchField id="1919" formData={formData} onChange={handleChange} />
-
           <NumericInputField
             id="1959"
             formData={formData}
             onChange={handleChange}
             isRequired
+            style={{ width: "100%" }}
             isSwitch
           />
         </Stack>
+      </Stack>
 
-        <Stack direction="row" justifyContent="flex-end">
-          <Button color="secondary" variant="contained" type="submit">
-            {t("notify.send")}
-          </Button>
-        </Stack>
-      </>
+      <Stack direction="row" justifyContent="flex-end">
+        <Button color="secondary" variant="contained" type="submit">
+          {t("notify.send")}
+        </Button>
+      </Stack>
     </Form>
   );
 };
