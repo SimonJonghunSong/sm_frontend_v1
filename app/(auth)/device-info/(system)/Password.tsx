@@ -30,7 +30,7 @@ const Password = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -188,7 +188,12 @@ const Password = ({ formData, onChange }: Props) => {
       )}
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

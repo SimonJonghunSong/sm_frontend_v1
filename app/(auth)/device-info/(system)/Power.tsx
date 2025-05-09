@@ -22,7 +22,7 @@ const Power = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   // TODO 렌더링 조건 추가 유틸로 만들어서 한번에 처리
   if (!formData) return null;
@@ -246,7 +246,12 @@ const Power = ({ formData, onChange }: Props) => {
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
-          <Button color="secondary" variant="contained" type="submit">
+          <Button
+            color="secondary"
+            variant="contained"
+            type="submit"
+            disabled={isLoading}
+          >
             {t("notify.send")}
           </Button>
         </Stack>

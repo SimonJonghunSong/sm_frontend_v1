@@ -26,7 +26,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   const allowedChars = /^[A-Za-z0-9\-./:]*$/;
   const urlPattern = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
@@ -136,7 +136,12 @@ const AGPSMode = ({ formData, onChange }: Props) => {
       )}
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

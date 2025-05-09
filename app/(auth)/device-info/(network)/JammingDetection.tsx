@@ -26,7 +26,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
   const [isJammingDetection, setIsJammingDetection] = useState(false);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
@@ -174,7 +174,12 @@ const JammingDetection = ({ formData, onChange }: Props) => {
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end" alignItems="center">
-            <Button color="secondary" variant="contained" type="submit">
+            <Button
+              color="secondary"
+              variant="contained"
+              type="submit"
+              disabled={isLoading}
+            >
               {t("notify.send")}
             </Button>
           </Stack>

@@ -37,7 +37,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -258,7 +258,12 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end">
-            <Button color="secondary" variant="contained" type="submit">
+            <Button
+              color="secondary"
+              variant="contained"
+              type="submit"
+              disabled={isLoading}
+            >
               {t("notify.send")}
             </Button>
           </Stack>
