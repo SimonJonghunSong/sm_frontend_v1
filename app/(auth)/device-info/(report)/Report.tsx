@@ -12,6 +12,7 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import DualCheckboxField from "../(components)/DualCheckboxField";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Report.en];
 
@@ -93,55 +94,105 @@ const Report = ({ formData, onChange }: Props) => {
     >
       <h1 data-section-id={SECTIONS.Report.en}>{SECTIONS.Report[lang]}</h1>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-        <SelectField id="1055" formData={formData} onChange={handleChange} />
-        <SelectField id="1058" formData={formData} onChange={handleChange} />
-        <SwitchField id="1064" formData={formData} onChange={handleChange} />
-        <SwitchField id="1069" formData={formData} onChange={handleChange} />
-
-        {!!formData["1072"] && (
-          <Stack gap={"16px"} style={{ width: "calc(50% - 16px)" }}>
-            <SwitchField
-              id="1072"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-            />
-            {formData["1072"]?.realValue === "01" && (
-              <TextInputField
-                isRequired
-                id="1073"
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="1055"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <DualCheckboxField
+            id="1058"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            firstOptionLabel={{
+              en: t("configuration.report.server"),
+              es: t("configuration.report.server"),
+              pt: t("configuration.report.server"),
+            }}
+            secondOptionLabel={{
+              en: t("configuration.report.sms"),
+              es: t("configuration.report.sms"),
+              pt: t("configuration.report.sms"),
+            }}
+          />
+          <SwitchField
+            id="1064"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="1069"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
+          {!!formData["1072"] && (
+            <Stack gap={"16px"} style={{ width: "100%" }}>
+              <SwitchField
+                id="1072"
                 formData={formData}
-                error={is1072Error && formData["1073"]?.value !== ""}
-                helperText={
-                  is1072Error && formData["1073"]?.value !== ""
-                    ? FIELD_ERRORS["1073"][lang]
-                    : undefined
-                }
                 onChange={handleChange}
                 style={{ width: "100%" }}
               />
-            )}
-          </Stack>
-        )}
+              {formData["1072"]?.realValue === "01" && (
+                <TextInputField
+                  isRequired
+                  id="1073"
+                  formData={formData}
+                  error={is1072Error && formData["1073"]?.value !== ""}
+                  helperText={
+                    is1072Error && formData["1073"]?.value !== ""
+                      ? FIELD_ERRORS["1073"][lang]
+                      : undefined
+                  }
+                  onChange={handleChange}
+                  style={{ width: "100%" }}
+                />
+              )}
+            </Stack>
+          )}
 
-        <NumericInputField
-          id="1074"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <NumericInputField
+            id="1074"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
 
-        <SelectField
-          id="1075"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
+          <SelectField
+            id="1075"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isRequired
+          />
 
-        <SwitchField id="1079" formData={formData} onChange={handleChange} />
-        <SwitchField id="1097" formData={formData} onChange={handleChange} />
-        <SwitchField id="1099" formData={formData} onChange={handleChange} />
+          <SwitchField
+            id="1079"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="1097"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="1099"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
