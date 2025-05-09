@@ -12,6 +12,9 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import SwitchField from "../(components)/SwitchField";
+import TextInputField from "../(components)/TextInputField";
+import TimeHMA from "../(components)/TimeHMA";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchdule.en];
 
@@ -50,19 +53,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
-  // const fieldIds = [
-  //   "1637",
-  //   "1638", // TODO
-  //   "1639", // TODO
-  //   "1640",
-  //   "1649", // TODO
-  //   "1650", // TODO
-  //   "1651", // TODO
-  //   "1652", // TODO
-  //   "1653",
-  //   "1655", // TODO
-  //   "1656",
-  // ];
+  console.log(formData);
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -153,17 +144,15 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
               </span>
             }
           />
-          <InputBox.Number>1637</InputBox.Number>
         </Stack>
-        <SwitchPrimary
-          checked={formData["1637"]?.realValue === "01"}
-          onChange={(e) => handleChange("1637", e.target.checked ? "01" : "00")}
-        />
       </Stack>
-      {formData["1637"]?.realValue === "01" && (
-        <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
+
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SwitchField id="1637" formData={formData} onChange={handleChange} />
+
           {!!formData["1640"]?.realValue && (
-            <Stack width={"calc(50% - 8px)"} gap={"8px"}>
+            <Stack width={"100%"} gap={"8px"}>
               <Stack direction="row" gap="4px" alignItems="center">
                 <InputBox.Title>
                   {FIELD_VALIDATIONS["1640"].title[lang]}
@@ -226,8 +215,43 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             id="1656"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
           />
+        </Stack>
 
+        <Stack gap={"24px"} flex={1}>
+          <TimeHMA
+            id="1649"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1649"]?.realValue}
+            onChange={handleChange}
+          />
+          <TimeHMA
+            id="1650"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1650"]?.realValue}
+            onChange={handleChange}
+          />
+          <TimeHMA
+            id="1651"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1651"]?.realValue}
+            onChange={handleChange}
+          />
+          <TimeHMA
+            id="1652"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1652"]?.realValue}
+            onChange={handleChange}
+          />
           <NumericInputField
             id="1653"
             formData={formData}
@@ -235,8 +259,16 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isRequired
             isSwitch
           />
+          <TimeHMA
+            id="1655"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1655"]?.realValue}
+            onChange={handleChange}
+          />
         </Stack>
-      )}
+      </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
         <Button
