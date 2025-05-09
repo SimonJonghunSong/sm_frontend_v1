@@ -20,6 +20,7 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  isAlertSend?: boolean;
   onbuffervalue(value: string): unknown;
   circleoutputactivehandler(value: string): unknown;
   iscircleoutputactivefetching: boolean;

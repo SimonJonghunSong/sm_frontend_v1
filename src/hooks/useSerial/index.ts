@@ -56,6 +56,7 @@ const useSerial = () => {
   const callbackRef = useRef(new Map());
   const csvBufferRef = useRef(new Map());
   const indexeddbRef = useRef(new Map());
+  const alertBroadcastRef = useRef(new BroadcastChannel("err_alert"));
   const [connectingPortCount, setConnectingPortCount] = useState(0);
   const broadcastChannel = new BroadcastChannel("command_log");
   const {
@@ -197,6 +198,13 @@ const useSerial = () => {
         console.log(
           "---------------- 기기에서 넘어오는 value end ----------------"
         );
+
+        if (port.isAlertSend) {
+          if (value.includes("ERR")) {
+            port.isAlertSend = false;
+            alertBroadcastRef.current.postMessage(value);
+          }
+        }
 
         if (value) {
           if (port?.onbuffervalue) {
