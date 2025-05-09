@@ -138,9 +138,7 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
             isSwitch
             value={
               formData["1023"]?.realValue
-                ? `${formData["1023"]?.realValue.slice(0, 2)}:${formData[
-                    "1023"
-                  ]?.realValue.slice(2)}`
+                ? formData["1023"]?.realValue.replaceAll(":", "")
                 : ""
             }
             onChange={(id, value) => {
