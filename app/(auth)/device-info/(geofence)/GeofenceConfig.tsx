@@ -8,6 +8,7 @@ import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import InputBox from "@/components/inputbox/InputBox";
+import useSendFormData from "../(utils)/useSendFormData";
 
 interface Props {
   formData: {
@@ -28,6 +29,7 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
+  const { sendFormData } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -88,6 +90,7 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
         console.log("Form values:", fieldValues);
 
         // 여기에 데이터 제출 로직 추가
+        sendFormData(fieldValues);
       }}
     >
       <Stack direction="row" gap={"4px"} alignItems="center">
