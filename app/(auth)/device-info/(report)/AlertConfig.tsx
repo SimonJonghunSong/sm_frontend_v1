@@ -57,7 +57,7 @@ const AlertConfig = ({ formData, onChange }: Props) => {
   const [tab, setTab] = useState<"alert_config_1" | "alert_config_2">(
     "alert_config_1"
   );
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   return (
     <Form
@@ -123,7 +123,12 @@ const AlertConfig = ({ formData, onChange }: Props) => {
       </TabContent>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

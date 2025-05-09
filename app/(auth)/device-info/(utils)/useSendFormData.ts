@@ -1,7 +1,9 @@
-import useSerial from "@/src/hooks/useSerial";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { FormField } from "app/(auth)/device-info/page";
+import { useRef, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function useSendFormData() {
   const {
@@ -10,10 +12,13 @@ export default function useSendFormData() {
   } = useSerial();
   const { getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
+  const alertBroadcastRef = useRef(new BroadcastChannel("err_alert"));
+  const [isLoading, setIsLoading] = useState(false);
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
-  const sendFormData = (formData: { [key: string]: FormField }) => {
+  const sendFormData = async (formData: { [key: string]: FormField }) => {
+    setIsLoading(true);
     console.log("Form values:", formData);
     const sortedFormData = Object.entries(formData)
       .sort((a, b) => {
@@ -79,14 +84,37 @@ export default function useSendFormData() {
 
     console.log("writable :::", currentPort.port.writable);
 
-    sendMessages.forEach((message) => {
+    for (const message of sendMessages) {
+      const handleAlert = (event: MessageEvent) => {
+        console.log("event :::", event);
+        const { data } = event;
+
+        const startIndex = data.indexOf("ERR");
+
+        toast.error(data.slice(startIndex));
+
+        alertBroadcastRef.current.removeEventListener("message", handleAlert);
+      };
+
+      alertBroadcastRef.current.addEventListener("message", handleAlert);
+      currentPort.port.isAlertSend = true;
+
+      await delayPromise(100);
+
       write({
         data: `${AT_EDIT_PREFIX}${imei};${message}`,
         port: currentPort.port,
         writer: currentPort.writer,
       });
-    });
+
+      setTimeout(() => {
+        alertBroadcastRef.current.removeEventListener("message", handleAlert);
+        currentPort.port.isAlertSend = false;
+      }, 100);
+    }
+
+    setIsLoading(false);
   };
 
-  return { sendFormData };
+  return { sendFormData, isLoading };
 }

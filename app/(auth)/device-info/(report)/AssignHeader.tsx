@@ -131,7 +131,7 @@ export default function AssignHeader({ imei, formData: formDataProps }: Props) {
       currentPort.port.onEndCsvDataFetched = () => {
         currentPort.port.isSttDataFetching = true;
         currentPort.port.onEndCurrentSttDataFetched = (data) => {
-          const currentCsvData = data.split("RES;0000000000;05;07;")[1];
+          const currentCsvData = data.split(`RES;${imei};05;07;`)[1];
           const currentCsvValuesArray = currentCsvData
             .replaceAll("\r", "")
             .split(";");
@@ -171,7 +171,7 @@ export default function AssignHeader({ imei, formData: formDataProps }: Props) {
 
           currentPort.port.isAltDataFetching = true;
           currentPort.port.onEndCurrentAltDataFetched = (data) => {
-            const currentCsvData = data.split("RES;0000000000;05;08;")[1];
+            const currentCsvData = data.split(`RES;${imei};05;08;`)[1];
             const currentCsvValuesArray = currentCsvData
               .replaceAll("\r", "")
               .split(";");

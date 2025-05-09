@@ -40,7 +40,7 @@ const error = {
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Ignition.en];
 
 const Ignition = ({ formData, onChange }: Props) => {
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -300,7 +300,12 @@ const Ignition = ({ formData, onChange }: Props) => {
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end">
-            <Button color="secondary" variant="contained" type="submit">
+            <Button
+              color="secondary"
+              variant="contained"
+              type="submit"
+              disabled={isLoading}
+            >
               {t("notify.send")}
             </Button>
           </Stack>

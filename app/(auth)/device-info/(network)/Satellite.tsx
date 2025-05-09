@@ -32,7 +32,7 @@ const Satellite = ({ formData, onChange }: Props) => {
   const lang = useLangStore();
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(false);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -149,7 +149,12 @@ const Satellite = ({ formData, onChange }: Props) => {
           </Stack>
 
           <Stack direction="row" justifyContent="flex-end" alignItems="center">
-            <Button color="secondary" variant="contained" type="submit">
+            <Button
+              color="secondary"
+              variant="contained"
+              type="submit"
+              disabled={isLoading}
+            >
               {t("notify.send")}
             </Button>
           </Stack>
