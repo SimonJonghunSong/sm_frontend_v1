@@ -224,33 +224,7 @@ export default function DeviceList() {
                   setImei(params.value.port.port.imei);
                   resetTab();
 
-                  // Get the current device's model name and firmware version
-                  const currentModelName =
-                    params.value.port.modelVersion?.split("_")[0];
-                  console.log(currentModelName, "currentModelName");
-                  // Check if there are any devices in IndexedDB with the same model name
-                  getJsonDataFromIDB(currentModelName)
-                    .then((deviceData: any) => {
-                      if (
-                        deviceData &&
-                        Array.isArray(deviceData) &&
-                        deviceData.length > 0
-                      ) {
-                        // Found matching device data
-                        router.push(`/device-configuration`);
-                      } else {
-                        // No matching devices, proceed with navigation
-                        router.push(`/configuration/device-status`);
-                      }
-                    })
-                    .catch((error) => {
-                      console.error(
-                        "Error checking for matching devices:",
-                        error
-                      );
-                      // Continue with navigation even if there's an error
-                      router.push(`/configuration/device-status`);
-                    });
+                  router.push(`/device-info`);
                 }}
               >
                 {t("device.device_list.configure")}
