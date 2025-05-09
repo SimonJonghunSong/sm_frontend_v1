@@ -103,7 +103,7 @@ const Report = ({ formData, onChange }: Props) => {
         />
       </Stack>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
+      <Stack flexWrap="wrap" direction={"row"} gap={"24px"}>
         <NumericInputField
           id="1050"
           formData={formData}
