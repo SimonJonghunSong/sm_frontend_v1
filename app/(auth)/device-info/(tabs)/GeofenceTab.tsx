@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FormField } from "../page";
 import { Stack } from "@mui/material";
-import { Geofence, GeofenceConfig } from "../(geofence)/@index";
+import { AddGeofence, Geofence, GeofenceConfig } from "../(geofence)/@index";
 import { SerialPortState } from "@/src/stores/useSerialStore";
 
 interface Props {
@@ -89,7 +89,16 @@ export default function GeofenceTab({
     if (type === "add") {
       return (
         <>
-          <GeofenceConfig formData={formData} onChange={handleValueChange} />
+          {/* 작업 중 */}
+          {/* <AddGeofence
+            onAdd={() => setType("list")}
+            currentPort={port}
+            isReady={isReady}
+            write={write}
+            polygonGeofenceMax={polygonGeofenceMax}
+            circularGeofenceMax={circularGeofenceMax}
+            onAfterFetch={() => setMustFetch(false)}
+          /> */}
         </>
       );
     }

@@ -1218,7 +1218,7 @@
       "polygon_speed_limit": "Límite de Velocidad del Polígono",
       "circular_output_active": "Salida Circular Activa",
       "circular_buzzer_speed_limit": "Límite de Velocidad del Zumbador Circular",
-      "add_geofence_(circular)": "Agregar Geocerca (Circular)",
+      "add_geofence_(circular)": "Agregar Geocerca",
       "geofence_(n)": "Geocerca (N)",
       "type_*": "Tipo *",
       "select,_circular,_polygon": "Seleccionar, Circular, Polígono",
@@ -1237,7 +1237,7 @@
       "cancel": "Cancelar",
       "add_geofence_(polygon)": "Agregar Geocerca (Polígono)",
       "add_point": "Agregar Punto",
-      "edit_geofence_(circular)": "Editar Geocerca (Circular)",
+      "edit_geofence_(circular)": "Editar Geocerca",
       "save": "Guardar",
       "edit_geofence_(polygon)": "Editar Geocerca (Polígono)"
     },

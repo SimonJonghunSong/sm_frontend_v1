@@ -1218,7 +1218,7 @@
       "polygon_speed_limit": "Limite de Velocidade do Polígono",
       "circular_output_active": "Saída Circular Ativa",
       "circular_buzzer_speed_limit": "Limite de Velocidade do Buzzer Circular",
-      "add_geofence_(circular)": "Adicionar Cerca Eletrônica (Circular)",
+      "add_geofence_(circular)": "Adicionar Cerca Eletrônica",
       "geofence_(n)": "Cerca Eletrônica (N)",
       "type_*": "Tipo *",
       "select,_circular,_polygon": "Selecionar, Circular, Polígono",
@@ -1237,7 +1237,7 @@
       "cancel": "Cancelar",
       "add_geofence_(polygon)": "Adicionar Cerca Eletrônica (Polígono)",
       "add_point": "Adicionar Ponto",
-      "edit_geofence_(circular)": "Editar Cerca Eletrônica (Circular)",
+      "edit_geofence_(circular)": "Editar Cerca Eletrônica",
       "save": "Salvar",
       "edit_geofence_(polygon)": "Editar Cerca Eletrônica (Polígono)"
     },
