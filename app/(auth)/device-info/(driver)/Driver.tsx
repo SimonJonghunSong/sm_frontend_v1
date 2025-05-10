@@ -157,7 +157,6 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
   };
 
   const handleEditDriverId = (values) => {
-    console.log("values :::", values);
     if (!editRow) return;
 
     setRows((prev) => {
@@ -182,8 +181,6 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
 
   const handleAddDriverId = (values) => {
     const { items } = values;
-
-    console.log("values :::", values);
 
     const newRows = items.map((item) => ({
       id: item.number,

@@ -75,8 +75,6 @@ export default function CheckboxComp({
     return result;
   }, [value]);
 
-  console.log("values :::", values);
-
   const handleAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     let changeValues = [];
 

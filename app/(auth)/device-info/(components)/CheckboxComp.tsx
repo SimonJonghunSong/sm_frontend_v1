@@ -67,8 +67,6 @@ export default function CheckboxComp({
     return binaryString.split("");
   }, [value, filteredOptionsString.length]);
 
-  console.log("values :::", values);
-
   const handleAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const changeValues = new Array(filteredOptionsString.length).fill(
       e.target.checked ? "1" : "0"
