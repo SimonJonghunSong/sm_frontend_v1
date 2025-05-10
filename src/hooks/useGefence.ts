@@ -34,13 +34,15 @@ const useGefence = ({
   imei,
   onAfterFetch,
 }: UseGefenceProps) => {
+  const [isFetching, setIsFetching] = useState(false);
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
   const port = propsPort.port;
-
+  console.log(isFetching);
   useEffect(() => {
     if (!port?.readable || !port?.writable || !isReady) return;
 
     if (!polygonGeofenceMax) {
+      setIsFetching(true);
       return setIsCircularFetchReady(true);
     }
 
@@ -52,6 +54,8 @@ const useGefence = ({
       setIsCircularFetchReady(true);
       port.polygongeofence = "";
     };
+
+    setIsFetching(true);
 
     (async () => {
       for (const command of AT_GET_POLYGON_GEOFENCE_LIST(imei)) {
@@ -67,14 +71,16 @@ const useGefence = ({
   }, [port.readable, port.writable]);
 
   useEffect(() => {
-    if (!circularGeofenceMax || !isCircularFetchReady) return;
+    if (!circularGeofenceMax || !isCircularFetchReady) {
+      return;
+    }
 
     port.circularfetchcount = 0;
     port.iscircularfetching = true;
     port.circlemax = Number(circularGeofenceMax);
     port.onaftercirculargeofence = () => {
       port.iscircularfetching = false;
-      //   setIsFullLoading(false);
+      setIsFetching(false);
       setIsCircularFetchReady(false);
       port.circulargeofence = "";
       onAfterFetch?.();
@@ -94,6 +100,8 @@ const useGefence = ({
       }
     })();
   }, [isReady, port?.readable, port?.writable, isCircularFetchReady]);
+
+  return { isFetching };
 };
 
 export default useGefence;

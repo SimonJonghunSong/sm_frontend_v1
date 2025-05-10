@@ -62,6 +62,15 @@ export default function GeofenceTab({
   const polygonGeofenceMax =
     infoFields.find((shit) => shit?.tab_id === "53")?.max * 1 || 0;
 
+  const circularGeofenceObj = originData.find(
+    (item) => item["Circular Geofence"]
+  );
+  const circularGeofenceArray = circularGeofenceObj?.["Circular Geofence"];
+
+  const circularGeofenceKeys: string[] = circularGeofenceArray.map(
+    (item) => Object.keys(item)[0]
+  );
+
   const renderGeofence = () => {
     if (type === "list") {
       return (
@@ -88,18 +97,16 @@ export default function GeofenceTab({
 
     if (type === "add") {
       return (
-        <>
-          {/* 작업 중 */}
-          {/* <AddGeofence
-            onAdd={() => setType("list")}
-            currentPort={port}
-            isReady={isReady}
-            write={write}
-            polygonGeofenceMax={polygonGeofenceMax}
-            circularGeofenceMax={circularGeofenceMax}
-            onAfterFetch={() => setMustFetch(false)}
-          /> */}
-        </>
+        <AddGeofence
+          formData={formData}
+          currentPort={port}
+          write={write}
+          polygonGeofenceMax={polygonGeofenceMax}
+          circularGeofenceMax={circularGeofenceMax}
+          onSuccess={() => setMustFetch(true)}
+          circularGeofenceKeys={circularGeofenceKeys}
+          onCancel={() => setType("list")}
+        />
       );
     }
 

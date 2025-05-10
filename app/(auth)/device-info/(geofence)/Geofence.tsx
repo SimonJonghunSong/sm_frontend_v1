@@ -32,6 +32,7 @@ import {
 } from "app/(auth)/configuration/geofence/utils";
 import { CircleType, PolygonType } from "@/components/Map/type";
 import { useTranslations } from "next-intl";
+import FullLoading from "@/components/FullLoading";
 
 interface Props {
   currentPort: SerialPortState;
@@ -143,7 +144,7 @@ const Geofence = ({
   const polygonPointRef = useRef("");
   const circlePointRef = useRef("");
 
-  useGefence({
+  const { isFetching } = useGefence({
     port: currentPort,
     isReady,
     write,
@@ -338,6 +339,7 @@ const Geofence = ({
         e.preventDefault();
       }}
     >
+      {isFetching && <FullLoading />}
       <Stack direction="row" gap={"4px"} alignItems="center">
         <h1 data-section-id={SECTIONS.GeofenceConfig.en}>
           {t("configuration.geofence.geofence")}
