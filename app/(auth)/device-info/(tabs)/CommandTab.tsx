@@ -3,49 +3,91 @@ import NetworkCommands from "app/(auth)/device-info/(commands)/NetworkCommands";
 import { useEffect, useRef, useState } from "react";
 import styles from "../../_cmd-tool/styles.module.scss";
 import { clearLogsByIMEI, getLogsByIMEI } from "@/utils/idbLogUtil";
+import useSerial from "@/src/hooks/useSerial";
+import { delayPromise } from "@/src/hooks/useSerial";
+import { Command } from "app/(auth)/device-info/(commands)/@index";
+import DefaultCommandField from "app/(auth)/device-info/(commands)/DefaultCommandField";
+import { useTranslations } from "next-intl";
 
 interface Props {
   imei: string;
 }
 
 export default function CommandTab({ imei }: Props) {
+  const t = useTranslations();
+
   const [logs, setLogs] = useState<any[]>([]);
   const logContainerRef = useRef<HTMLDivElement>(null);
   const broadcastChannel = useRef<BroadcastChannel>(
-    new BroadcastChannel("command_log")
+    new BroadcastChannel("device_command_log")
   );
+  const [isLoading, setIsLoading] = useState(false);
 
-  const loadLogs = async () => {
-    if (imei) {
-      const logData = await getLogsByIMEI(imei);
-      setLogs(logData);
+  const {
+    state: { portList },
+    func: { write },
+  } = useSerial();
+  const currentPort = portList[0];
 
-      // 로그가 업데이트되면 스크롤을 아래로 내립니다
-      setTimeout(() => {
-        if (logContainerRef.current) {
-          logContainerRef.current.scrollTop =
-            logContainerRef.current.scrollHeight;
-        }
-      }, 100);
+  const handleCommandLogScroll = () => {
+    // 로그가 업데이트되면 스크롤을 아래로 내립니다
+    setTimeout(() => {
+      if (logContainerRef.current) {
+        logContainerRef.current.scrollTop =
+          logContainerRef.current.scrollHeight;
+      }
+      setIsLoading(false);
+    }, 100);
+  };
+
+  const handleSendCommand = async (message: string) => {
+    if (isLoading) return;
+
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    await delayPromise(100);
+
+    setLogs((prev) => [
+      ...prev,
+      {
+        timestamp: new Date().toISOString(),
+        value: message,
+        type: "REQUEST",
+      },
+    ]);
+
+    handleCommandLogScroll();
+
+    currentPort.port.isDeviceCommandSend = true;
+    write({
+      data: message,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
+
+  const renderCommand = (command: Command) => {
+    switch (command.uiType) {
+      default:
+        return (
+          <DefaultCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
     }
   };
 
   useEffect(() => {
-    // 페이지 진입 시 해당 IMEI의 로그를 초기화합니다
-    const initLogs = async () => {
-      if (imei) {
-        await clearLogsByIMEI(imei);
-        setLogs([]);
-      }
-    };
-
-    initLogs();
-
-    // 로그 업데이트를 수신하는 이벤트 리스너 설정
     broadcastChannel.current.onmessage = ({ data }) => {
-      if (data.status === "updated" && data.imei === imei) {
-        loadLogs();
-      }
+      setLogs((prev) => [...prev, data]);
+
+      handleCommandLogScroll();
     };
 
     return () => {
@@ -129,14 +171,14 @@ export default function CommandTab({ imei }: Props) {
                     index < logs.length - 1 ? "1px dashed #e0e0e0" : "none",
                 }}
               >
-                {logItem.write && (
+                {logItem.type === "REQUEST" && (
                   <div
                     className={styles.logReq}
                     style={{
                       backgroundColor: "#e3f2fd",
                       padding: "8px 12px",
                       borderRadius: "4px",
-                      marginBottom: logItem.read ? "8px" : "0",
+                      marginBottom: logItem.type === "RESPONSE" ? "8px" : "0",
                       fontFamily: "monospace",
                       fontSize: "13px",
                     }}
@@ -148,15 +190,15 @@ export default function CommandTab({ imei }: Props) {
                         marginBottom: "4px",
                       }}
                     >
-                      {new Date(logItem.write.timestamp).toLocaleTimeString()}
+                      {new Date(logItem.timestamp).toLocaleTimeString()}
                     </div>
                     <div>
                       <span style={{ color: "#0d47a1" }}>&gt;</span>{" "}
-                      {logItem.write.data}
+                      {logItem.value}
                     </div>
                   </div>
                 )}
-                {logItem.read && (
+                {logItem.type === "RESPONSE" && (
                   <div
                     className={styles.logRes}
                     style={{
@@ -174,9 +216,9 @@ export default function CommandTab({ imei }: Props) {
                         marginBottom: "4px",
                       }}
                     >
-                      {new Date(logItem.read.timestamp).toLocaleTimeString()}
+                      {new Date(logItem.timestamp).toLocaleTimeString()}
                     </div>
-                    <div>{logItem.read.data}</div>
+                    <div>{logItem.value}</div>
                   </div>
                 )}
               </div>
@@ -185,7 +227,7 @@ export default function CommandTab({ imei }: Props) {
         </div>
       </div>
       <div style={{ padding: "20px" }}>
-        <NetworkCommands imei={imei} />
+        <NetworkCommands renderCommand={renderCommand} />
       </div>
     </Stack>
   );

@@ -1,37 +1,18 @@
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
-import { commands } from "app/(auth)/device-info/(commands)/@index";
-import DefaultCommandField from "app/(auth)/device-info/(commands)/DefaultCommandField";
+import { Command, commands } from "app/(auth)/device-info/(commands)/@index";
 import { FIELD_VALIDATIONS } from "constants/field";
-import useSerial from "@/src/hooks/useSerial";
 
 interface Props {
-  imei: string;
+  renderCommand: (command: Command) => React.ReactNode;
 }
 
-const NetworkCommands = ({ imei }: Props) => {
+const NetworkCommands = ({ renderCommand }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
-
-  const {
-    state: { portList },
-    func: { write },
-  } = useSerial();
-  const currentPort = portList[0];
-
-  const handleSendCommand = (message: string) => {
-    write({
-      data: message,
-      port: currentPort.port,
-      writer: currentPort.writer,
-      callback: () => {
-        console.log("callback :::");
-      },
-    });
-  };
 
   return (
     <Container>
@@ -48,28 +29,14 @@ const NetworkCommands = ({ imei }: Props) => {
           {commands.networkCommands
             .slice(0, 17)
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? (
-                <DefaultCommandField
-                  id={item.id}
-                  imei={imei}
-                  handleSendCommand={handleSendCommand}
-                  buttonText={t("configuration.commands.send")}
-                />
-              ) : null
+              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
         <Stack direction="column" gap={"16px"} flex={1}>
           {commands.networkCommands
             .slice(17)
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? (
-                <DefaultCommandField
-                  id={item.id}
-                  imei={imei}
-                  handleSendCommand={handleSendCommand}
-                  buttonText={t("configuration.commands.send")}
-                />
-              ) : null
+              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
       </Stack>

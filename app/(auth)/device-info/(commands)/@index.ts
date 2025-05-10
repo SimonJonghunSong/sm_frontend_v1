@@ -23,10 +23,12 @@ type CommandsUIType =
   | "LTE-Band"
   | "Detection-Control-Speed";
 
-export const commands: Record<
-  CommandsSection,
-  { id: string; uiType: CommandsUIType }[]
-> = {
+export type Command = {
+  id: string;
+  uiType: CommandsUIType;
+};
+
+export const commands: Record<CommandsSection, Command[]> = {
   networkCommands: [
     {
       id: "0101",

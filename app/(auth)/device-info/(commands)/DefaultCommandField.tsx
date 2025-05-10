@@ -1,5 +1,5 @@
 import useLangStore from "@/utils/useLangStore";
-import { Button, Tooltip } from "@mui/material";
+import { Button, CircularProgress, Tooltip } from "@mui/material";
 import { FIELD_VALIDATIONS } from "constants/field";
 import styled from "styled-components";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
@@ -10,6 +10,7 @@ interface Props {
   imei: string;
   handleSendCommand: (command: string) => void;
   buttonText: string;
+  isLoading: boolean;
 }
 
 export default function DefaultCommandField({
@@ -17,6 +18,7 @@ export default function DefaultCommandField({
   imei,
   handleSendCommand,
   buttonText,
+  isLoading,
 }: Props) {
   const { lang } = useLangStore();
 
@@ -55,8 +57,12 @@ export default function DefaultCommandField({
 
           handleSendCommand(`AT^CMD;${imei};${tabId};${fieldId}`);
         }}
+        disabled={isLoading}
+        style={{
+          minWidth: "84px",
+        }}
       >
-        {buttonText}
+        {isLoading ? <CircularProgress size={20} /> : buttonText}
       </Button>
     </Container>
   );

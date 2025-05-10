@@ -59,6 +59,10 @@ const useSerial = () => {
   const alertBroadcastRef = useRef(new BroadcastChannel("err_alert"));
   const [connectingPortCount, setConnectingPortCount] = useState(0);
   const broadcastChannel = new BroadcastChannel("command_log");
+  const deviceCommandBroadcastChannel = new BroadcastChannel(
+    "device_command_log"
+  );
+  const deviceCommandLogRef = useRef<string | null>(null);
   const {
     portList,
     getPortList,
@@ -198,6 +202,20 @@ const useSerial = () => {
         console.log(
           "---------------- 기기에서 넘어오는 value end ----------------"
         );
+
+        if (port.isDeviceCommandSend) {
+          deviceCommandLogRef.current = value;
+
+          if (isEndOfMessage(value)) {
+            deviceCommandBroadcastChannel.postMessage({
+              type: "RESPONSE",
+              timestamp: new Date().toISOString(),
+              value: deviceCommandLogRef.current,
+            });
+            deviceCommandLogRef.current = null;
+            port.isDeviceCommandSend = false;
+          }
+        }
 
         if (port.isAlertSend) {
           if (value.includes("ERR")) {
