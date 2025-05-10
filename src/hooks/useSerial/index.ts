@@ -58,6 +58,7 @@ const useSerial = () => {
   const csvBufferRef = useRef(new Map());
   const indexeddbRef = useRef(new Map());
   const alertBroadcastRef = useRef(new BroadcastChannel("err_alert"));
+  const alertCommandRef = useRef<string | null>("");
   const [connectingPortCount, setConnectingPortCount] = useState(0);
   const broadcastChannel = new BroadcastChannel("command_log");
   const deviceCommandBroadcastChannel = new BroadcastChannel(
@@ -219,9 +220,12 @@ const useSerial = () => {
         }
 
         if (port.isAlertSend) {
+          alertCommandRef.current += value;
+
           if (value.includes("ERR")) {
             port.isAlertSend = false;
-            alertBroadcastRef.current.postMessage(value);
+            alertBroadcastRef.current.postMessage(alertCommandRef.current);
+            alertCommandRef.current = null;
           }
         }
 

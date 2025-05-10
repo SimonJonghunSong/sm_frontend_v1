@@ -89,9 +89,7 @@ export default function useSendFormData() {
         console.log("event :::", event);
         const { data } = event;
 
-        const startIndex = data.indexOf("ERR");
-
-        toast.error(data.slice(startIndex));
+        toast.error(data);
 
         alertBroadcastRef.current.removeEventListener("message", handleAlert);
       };
