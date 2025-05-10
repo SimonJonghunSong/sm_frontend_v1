@@ -1,5 +1,4 @@
 import { Lang } from "@/utils/useLangStore";
-import AlertConfig1 from "app/(auth)/device-info/(report)/AlertConfig1";
 import { FormField } from "app/(auth)/device-info/page";
 
 export const MENUS = {
@@ -160,7 +159,7 @@ export const SECTIONS = {
     es: "OBD",
     pt: "OBD",
   },
-  ObdPid: {
+  OBDPID: {
     en: "OBD PID",
     es: "PID OBD",
     pt: "PID OBD",
@@ -180,7 +179,7 @@ export const SECTIONS = {
     es: "Mapa de Reporte2",
     pt: "Mapa de Relatório2",
   },
-  ReportSchdule: {
+  ReportSchedule: {
     en: "Report Schedule",
     es: "Programación de Reporte",
     pt: "Programação de Relatório",
@@ -209,7 +208,7 @@ export const SECTIONS = {
   },
 
   // Input/Output
-  InputOutput: {
+  "Input/Output": {
     en: "Input/Output",
     es: "Entrada/Salida",
     pt: "Entrada/Saída",
@@ -626,12 +625,12 @@ export const INCLUDE_FIELDS = {
 
   // Report
   [SECTIONS.AssignHeader.en]: ["1100", "1075"],
-  [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
   [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
+  [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AntiTheft.en]: ["1050", "1051"],
   [SECTIONS.OBD.en]: ["2000", "2002"],
-  [SECTIONS.ObdPid.en]: [
+  [SECTIONS.OBDPID.en]: [
     "2100",
     "2101",
     "2102",
@@ -723,7 +722,7 @@ export const INCLUDE_FIELDS = {
     "1096",
   ],
   [SECTIONS.ReportMapping2.en]: ["3100", "3101", "3103", "2598"],
-  [SECTIONS.ReportSchdule.en]: [
+  [SECTIONS.ReportSchedule.en]: [
     "1637",
     "1638", // TODO
     "1639", // TODO
@@ -821,7 +820,7 @@ export const INCLUDE_FIELDS = {
   ],
 
   // Input/Output
-  [SECTIONS.InputOutput.en]: [
+  [SECTIONS["Input/Output"].en]: [
     "1720", // Input 1 Type
     "1721", // Input 1 Chat
     "1722", // Input 2 Type
@@ -1037,14 +1036,20 @@ export const INCLUDE_FIELDS = {
   [SECTIONS.NetworkCommands.en]: ["ALL_SEARCH"],
 };
 
-export type SearchField = {
+export type SearchFields = {
   fields: (typeof INCLUDE_FIELDS)[keyof typeof INCLUDE_FIELDS];
   searchText: string;
   tab: string;
   key: string;
 };
+export type SearchField = {
+  field: string;
+  searchText: string;
+  tab: string;
+  key: string;
+};
 
-export const NETWORK_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const NETWORK_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Network.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Network.en],
@@ -1251,7 +1256,7 @@ export const NETWORK_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const SYSTEM_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Ignition.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Ignition.en],
@@ -1422,7 +1427,7 @@ export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const REPORT_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.AssignHeader.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
@@ -1448,11 +1453,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.OBD.en,
     },
-    [SECTIONS.ObdPid.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ObdPid.en],
-      searchText: `${MENUS.Report.en} > ${SECTIONS.ObdPid.en}`,
+    [SECTIONS.OBDPID.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OBDPID.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.OBDPID.en}`,
       tab: "Report",
-      key: SECTIONS.ObdPid.en,
+      key: SECTIONS.OBDPID.en,
     },
     [SECTIONS.Report.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Report.en],
@@ -1472,11 +1477,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping2.en,
     },
-    [SECTIONS.ReportSchdule.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
-      searchText: `${MENUS.Report.en} > ${SECTIONS.ReportSchdule.en}`,
+    [SECTIONS.ReportSchedule.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportSchedule.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.ReportSchedule.en}`,
       tab: "Report",
-      key: SECTIONS.ReportSchdule.en,
+      key: SECTIONS.ReportSchedule.en,
     },
   },
   es: {
@@ -1504,11 +1509,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.OBD.en,
     },
-    [SECTIONS.ObdPid.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ObdPid.en],
-      searchText: `${MENUS.Report.es} > ${SECTIONS.ObdPid.es}`,
+    [SECTIONS.OBDPID.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OBDPID.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.OBDPID.es}`,
       tab: "Report",
-      key: SECTIONS.ObdPid.en,
+      key: SECTIONS.OBDPID.en,
     },
     [SECTIONS.Report.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.Report.en],
@@ -1528,11 +1533,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping2.en,
     },
-    [SECTIONS.ReportSchdule.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
-      searchText: `${MENUS.Report.es} > ${SECTIONS.ReportSchdule.es}`,
+    [SECTIONS.ReportSchedule.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportSchedule.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.ReportSchedule.es}`,
       tab: "Report",
-      key: SECTIONS.ReportSchdule.en,
+      key: SECTIONS.ReportSchedule.en,
     },
   },
   pt: {
@@ -1542,17 +1547,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.AssignHeader.en,
     },
-    [SECTIONS.AlertConfig1.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig1.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig1.pt}`,
+    [SECTIONS.AlertConfig.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig.pt}`,
       tab: "Report",
-      key: SECTIONS.AlertConfig1.en,
-    },
-    [SECTIONS.AlertConfig2.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig2.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig2.pt}`,
-      tab: "Report",
-      key: SECTIONS.AlertConfig2.en,
+      key: SECTIONS.AlertConfig.en,
     },
     [SECTIONS.AntiTheft.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.AntiTheft.en],
@@ -1566,11 +1565,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.OBD.en,
     },
-    [SECTIONS.ObdPid.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ObdPid.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.ObdPid.pt}`,
+    [SECTIONS.OBDPID.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OBDPID.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.OBDPID.pt}`,
       tab: "Report",
-      key: SECTIONS.ObdPid.en,
+      key: SECTIONS.OBDPID.en,
     },
     [SECTIONS.Report.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.Report.en],
@@ -1590,16 +1589,16 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping2.en,
     },
-    [SECTIONS.ReportSchdule.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportSchdule.pt}`,
+    [SECTIONS.ReportSchedule.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportSchedule.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportSchedule.pt}`,
       tab: "Report",
-      key: SECTIONS.ReportSchdule.en,
+      key: SECTIONS.ReportSchedule.en,
     },
   },
 };
 
-export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Accessories.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Accessories.en],
@@ -1680,7 +1679,7 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const TRACKING_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const TRACKING_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.DisconnectMode.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.DisconnectMode.en],
@@ -1869,7 +1868,7 @@ export const TRACKING_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const DRIVER_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const DRIVER_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Driver.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Driver.en],
@@ -1896,7 +1895,7 @@ export const DRIVER_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Ble.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
@@ -1941,7 +1940,7 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const RF_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const RF_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.ErbList.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.ErbList.en],
@@ -2040,7 +2039,7 @@ export const RF_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-const COMMAND_SECTION: Record<Lang, Record<string, SearchField>> = {
+const COMMAND_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.NetworkCommands.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],

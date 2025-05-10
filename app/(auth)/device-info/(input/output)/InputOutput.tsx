@@ -11,7 +11,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
-const fieldIds = INCLUDE_FIELDS[SECTIONS.InputOutput.en];
+const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
 interface Props {
   formData: {
@@ -87,8 +87,8 @@ const InputOutput = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" alignItems="center" gap={"4px"}>
-          <h1 data-section-id={SECTIONS.InputOutput.en}>
-            {SECTIONS.InputOutput[lang]}
+          <h1 data-section-id={SECTIONS["Input/Output"].en}>
+            {SECTIONS["Input/Output"][lang]}
           </h1>
           <InputBox.Number>16</InputBox.Number>
         </Stack>

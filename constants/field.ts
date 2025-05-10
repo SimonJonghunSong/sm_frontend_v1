@@ -1,3 +1,5 @@
+import { SECTIONS } from "constants/searchField";
+
 export const FIELD_VALIDATIONS = {
   "1000": {
     title: {

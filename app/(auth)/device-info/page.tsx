@@ -24,6 +24,7 @@ import Modal from "@/components/Modal";
 import {
   formDataToSearchSectionData,
   SearchField,
+  SearchFields,
 } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
@@ -32,6 +33,7 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
 import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
+import { getSearchParamsData } from "@/src/utils/\bsearchParams";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -182,6 +184,9 @@ export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
+    [key: string]: SearchFields;
+  }>(null);
+  const [searchParamData, setSearchParamData] = useState<{
     [key: string]: SearchField;
   }>(null);
   const {
@@ -283,6 +288,7 @@ export default function DeviceInfoPage() {
 
       setFormData(formDataValues);
       setSearchSectionData(formDataToSearchSectionData(formDataValues, lang));
+      setSearchParamData(getSearchParamsData(formDataValues, lang));
       setCommandData(extractCommandData(originData));
     }
   }, [originData]);
@@ -347,7 +353,10 @@ export default function DeviceInfoPage() {
         >
           <SearchModal
             sectionData={searchSectionData}
+            paramData={searchParamData}
             onClose={({ key, tab, type }) => {
+              console.log("key :::", key);
+
               toggleSearchModal();
               setTab(tab);
               setTimeout(() => {
@@ -356,8 +365,9 @@ export default function DeviceInfoPage() {
                 );
 
                 if (type === "param") {
-                  targetElement = document.querySelector(
-                    `[data-param-id="${key}"]`
+                  const allDivs = document.querySelectorAll(".pageWrap div");
+                  targetElement = Array.from(allDivs).find(
+                    (div) => div.textContent === key
                   );
                 }
 

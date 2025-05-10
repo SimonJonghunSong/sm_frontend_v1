@@ -14,7 +14,7 @@ import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import SwitchField from "../(components)/SwitchField";
 import TimeHMA from "../(components)/TimeHMA";
 
-const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchdule.en];
+const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchedule.en];
 
 interface Props {
   formData: {
@@ -109,8 +109,8 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap="8px">
-          <h1 data-section-id={SECTIONS.ReportSchdule.en}>
-            {SECTIONS.ReportSchdule[lang]}
+          <h1 data-section-id={SECTIONS.ReportSchedule.en}>
+            {SECTIONS.ReportSchedule[lang]}
           </h1>
           <InputBox.Info
             tooltipText={
