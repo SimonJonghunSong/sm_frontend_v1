@@ -8,6 +8,7 @@ import {
   AT_GET_MODEL_INFO,
   EXCLUDE_STRING,
   CR,
+  ETX,
 } from "./constant";
 import useSerialStore from "../../stores/useSerialStore";
 import { fileDownload } from "@/utils/fileDownload";
@@ -204,7 +205,7 @@ const useSerial = () => {
         );
 
         if (port.isDeviceCommandSend) {
-          deviceCommandLogRef.current = value;
+          deviceCommandLogRef.current += value;
 
           if (isEndOfMessage(value)) {
             deviceCommandBroadcastChannel.postMessage({
