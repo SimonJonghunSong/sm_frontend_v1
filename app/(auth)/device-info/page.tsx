@@ -17,6 +17,7 @@ import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 import useCmdStore from "@/src/stores/useCmdStore";
 import {
+  AT_CMD,
   AT_EDIT_PREFIX,
   AT_GET_JSON,
   AT_REQ,
@@ -38,6 +39,8 @@ import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
 import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
 import { getSearchParamsData } from "@/src/utils/\bsearchParams";
+import DeviceStatusTab from "app/(auth)/device-info/(tabs)/DeviceStatusTab";
+import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -197,6 +200,7 @@ export default function DeviceInfoPage() {
     state: { portList },
     func: { write },
   } = useSerial();
+  const [isFechedPackage, setIsFechedPackage] = useState(false);
 
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -208,6 +212,13 @@ export default function DeviceInfoPage() {
 
   const originData = portList.find(({ port }) => port.imei === imei)
     .packageToJson.synctrak;
+
+  const { deviceVersionsObject, isLoading: deviceInfoLoading } =
+    useDeviceVersions({
+      isFechedPackage,
+      currentPort,
+      write,
+    });
 
   const [tab, setTab] = useState("Network");
   const [formData, setFormData] = useState<{
@@ -228,8 +239,25 @@ export default function DeviceInfoPage() {
   const searchModal = isOpen;
   const toggleSearchModal = isOpen ? onClose : onOpen;
 
+  const handleReboot = () => {
+    write({
+      data: `${AT_CMD}${imei};03;03`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
+
   const renderContent = () => {
     switch (tab) {
+      case "DeviceStatus":
+        return (
+          <DeviceStatusTab
+            originData={originData}
+            formData={formData}
+            deviceVersionsObject={deviceVersionsObject}
+            handleReboot={handleReboot}
+          />
+        );
       case "Network":
         return <NetworkTab formData={formData} setFormData={setFormData} />;
       case "System":
@@ -333,6 +361,7 @@ export default function DeviceInfoPage() {
     }
 
     setIsLoading(false);
+    setIsFechedPackage(true);
   };
 
   useEffect(() => {
@@ -344,7 +373,7 @@ export default function DeviceInfoPage() {
 
   return (
     <>
-      {isLoading && <FullLoading />}
+      {(isLoading || deviceInfoLoading) && <FullLoading />}
       <div className="pageWrap">
         <SideMenu
           sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}

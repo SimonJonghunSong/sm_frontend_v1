@@ -330,6 +330,23 @@ export const SECTIONS = {
     es: "Comandos de Red",
     pt: "Comandos de Rede",
   },
+
+  // DeviceStatus
+  DeviceInformation: {
+    en: "Device Information",
+    es: "Información del Dispositivo",
+    pt: "Informações do Dispositivo",
+  },
+  GNSSInformation: {
+    en: "GNSS Information",
+    es: "Información de GNSS",
+    pt: "Informações de GNSS",
+  },
+  CellularInformation: {
+    en: "Cellular Information",
+    es: "Información de Celular",
+    pt: "Informações de Celular",
+  },
 };
 
 const alertConfig1Fields = [
@@ -2066,6 +2083,69 @@ const COMMAND_SECTION: Record<Lang, Record<string, SearchFields>> = {
   },
 };
 
+const DEVICE_STATUS_SECTION: Record<Lang, Record<string, SearchFields>> = {
+  en: {
+    [SECTIONS.DeviceInformation.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.en} > ${SECTIONS.DeviceInformation.en}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.DeviceInformation.en,
+    },
+    [SECTIONS.GNSSInformation.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.en} > ${SECTIONS.GNSSInformation.en}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.GNSSInformation.en,
+    },
+    [SECTIONS.CellularInformation.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.en} > ${SECTIONS.CellularInformation.en}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.CellularInformation.en,
+    },
+  },
+  es: {
+    [SECTIONS.DeviceInformation.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.es} > ${SECTIONS.DeviceInformation.es}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.DeviceInformation.en,
+    },
+    [SECTIONS.GNSSInformation.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.es} > ${SECTIONS.GNSSInformation.es}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.GNSSInformation.en,
+    },
+    [SECTIONS.CellularInformation.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.es} > ${SECTIONS.CellularInformation.es}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.CellularInformation.en,
+    },
+  },
+  pt: {
+    [SECTIONS.DeviceInformation.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.pt} > ${SECTIONS.DeviceInformation.pt}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.DeviceInformation.en,
+    },
+    [SECTIONS.GNSSInformation.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.pt} > ${SECTIONS.GNSSInformation.pt}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.GNSSInformation.en,
+    },
+    [SECTIONS.CellularInformation.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.pt} > ${SECTIONS.CellularInformation.pt}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.CellularInformation.en,
+    },
+  },
+};
+
 /**
  * 검색어 입력시(섹션 검색)
  *
@@ -2084,6 +2164,7 @@ export const SEARCH_SECTION = {
     ...BLUETOOTH_SECTION.en,
     ...RF_SECTION.en,
     ...COMMAND_SECTION.en,
+    ...DEVICE_STATUS_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
@@ -2095,6 +2176,7 @@ export const SEARCH_SECTION = {
     ...BLUETOOTH_SECTION.es,
     ...RF_SECTION.es,
     ...COMMAND_SECTION.es,
+    ...DEVICE_STATUS_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
@@ -2106,6 +2188,7 @@ export const SEARCH_SECTION = {
     ...BLUETOOTH_SECTION.pt,
     ...RF_SECTION.pt,
     ...COMMAND_SECTION.pt,
+    ...DEVICE_STATUS_SECTION.pt,
   },
 };
 

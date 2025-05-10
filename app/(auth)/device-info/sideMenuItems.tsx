@@ -22,9 +22,10 @@ export const sideMenuItems = ({
 }) => [
   {
     name: "Device Status",
-    href: "/device-info/device-status",
-    isActive: tab === "Device Status",
+    href: "#",
+    isActive: tab === "DeviceStatus",
     icon: () => <StackedBarChartOutlinedIcon />,
+    onClick: () => onClick("DeviceStatus"),
   },
   {
     name: "Network",
