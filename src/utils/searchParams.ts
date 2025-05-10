@@ -26,7 +26,6 @@ export const getSearchParamsData = (
     .filter(([key]) => !!formData?.[key])
     .reduce((acc, [key, value]) => {
       const section = fieldIdToSection?.[key]?.[lang] || "";
-      console.log("value :::", value);
 
       const searchSection = SEARCH_SECTION?.[lang]?.[section];
 

@@ -16,7 +16,11 @@ import RfTab from "app/(auth)/device-info/(tabs)/RfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 import useCmdStore from "@/src/stores/useCmdStore";
-import { AT_GET_JSON, AT_REQ } from "@/src/hooks/useSerial/constant";
+import {
+  AT_EDIT_PREFIX,
+  AT_GET_JSON,
+  AT_REQ,
+} from "@/src/hooks/useSerial/constant";
 import useModal from "@/utils/useModal";
 import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
 import { Button } from "@mui/material";
@@ -251,6 +255,13 @@ export default function DeviceInfoPage() {
             write={(command) =>
               write({
                 data: `${AT_REQ}${imei};${command}`,
+                port: currentPort.port,
+                writer: currentPort.writer,
+              })
+            }
+            editWrite={(command) =>
+              write({
+                data: `${AT_EDIT_PREFIX}${imei};${command}`,
                 port: currentPort.port,
                 writer: currentPort.writer,
               })
