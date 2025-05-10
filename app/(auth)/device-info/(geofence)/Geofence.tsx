@@ -7,7 +7,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import Maps from "@/components/Map";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import DataTable from "@/components/dataTable";
 import {
@@ -32,8 +32,13 @@ import {
 } from "app/(auth)/configuration/geofence/utils";
 import { CircleType, PolygonType } from "@/components/Map/type";
 import { useTranslations } from "next-intl";
+import FullLoading from "@/components/FullLoading";
+import { FormField } from "../page";
 
 interface Props {
+  formData: {
+    [key: string]: FormField;
+  };
   currentPort: SerialPortState;
   isReady: boolean;
   write: ({
@@ -130,6 +135,7 @@ const Geofence = ({
   const [typeFilter, setTypeFilter] = useState<"All" | "Polygon" | "Circular">(
     "All"
   );
+  const [isFullLoading, setIsFullLoading] = useState(true);
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const mapRef = useRef<google.maps.Map>(null);
@@ -140,10 +146,13 @@ const Geofence = ({
     (state) => state
   );
 
+  const isConnectedHardware =
+    !!currentPort.port.writable && !!currentPort.port.readable;
+
   const polygonPointRef = useRef("");
   const circlePointRef = useRef("");
 
-  useGefence({
+  const { isFetching } = useGefence({
     port: currentPort,
     isReady,
     write,
@@ -159,6 +168,13 @@ const Geofence = ({
   const polygonData = getPolygonGeofenceData(polygonList);
   const circularData = getCircularGeofenceData(circularList);
 
+  const syncGeofenceConfig = () => {
+    const submitButton = document.getElementById("geofence-config-submit");
+    if (submitButton) {
+      submitButton.click();
+    }
+  };
+
   const rows = [
     ...(typeFilter === "Circular" ? [] : polygonData),
     ...(typeFilter === "Polygon" ? [] : circularData),
@@ -171,12 +187,14 @@ const Geofence = ({
       edit: {
         id: groupId,
         onEdit: () => {
+          if (!isConnectedHardware) return;
+
+          syncGeofenceConfig();
+
           if (type === "polygon") {
-            // setGrpId(groupId);
-            // router.push(`/configuration/geofence/edit/polygon`);
+            onEdit(groupId, "polygon");
           } else {
-            // setGrpId(groupId);
-            // router.push(`/configuration/geofence/edit/circular`);
+            onEdit(groupId, "circular");
           }
         },
       },
@@ -213,21 +231,43 @@ const Geofence = ({
             });
           } else {
             const circleIndex = findCircleIndexByNumber(groupId - 1);
-            const [id, circleInfo] = circularList[groupId - 1].split("#");
-            const removedCircleInfo =
-              circleInfo.slice(0, 20) + "0000" + circleInfo.slice(24);
 
-            currentPort.port.oneditsuccess = () => {
-              setCircularGeofence({
-                imei,
-                payload: circularList.map((value, index) =>
-                  index === groupId - 1 ? `${id}#NoData` : value
-                ),
-              });
+            currentPort.port.iscircularpointfetching = true;
+            currentPort.port.circlehandler = (value) => {
+              circlePointRef.current += value;
+              if (value.includes(CR)) {
+                currentPort.port.iscircularpointfetching = false;
+
+                const [id, circleInfo] = circlePointRef.current.split("#");
+
+                const removedCircleInfo =
+                  circleInfo.slice(0, 20) + "0000" + circleInfo.slice(24);
+
+                currentPort.port.oneditsuccess = () => {
+                  setCircularGeofence({
+                    imei,
+                    payload: circularList.map((value, index) =>
+                      index === groupId - 1 ? `${id}#NoData` : value
+                    ),
+                  });
+                };
+
+                circlePointRef.current = "";
+
+                write({
+                  data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${removedCircleInfo}`,
+                  port: currentPort,
+                  writer: currentPort.writer,
+                });
+              }
+            };
+            currentPort.port.onprev = () => {
+              currentPort.port.circlehandler = null;
+              currentPort.port.iscircularpointfetching = false;
             };
 
             write({
-              data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${removedCircleInfo}`,
+              data: `AT^REQ;${imei};${circleIndex}`,
               port: currentPort,
               writer: currentPort.writer,
             });
@@ -332,12 +372,19 @@ const Geofence = ({
     }
   };
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsFullLoading(false);
+    }, 15000);
+  }, []);
+
   return (
     <Form
       onSubmit={(e) => {
         e.preventDefault();
       }}
     >
+      {isFetching && isFullLoading && <FullLoading />}
       <Stack direction="row" gap={"4px"} alignItems="center">
         <h1 data-section-id={SECTIONS.GeofenceConfig.en}>
           {t("configuration.geofence.geofence")}
@@ -369,7 +416,10 @@ const Geofence = ({
             <Button
               variant="contained"
               color="secondary"
+              disabled={!isConnectedHardware}
               onClick={() => {
+                if (!isConnectedHardware) return;
+                syncGeofenceConfig();
                 onAdd?.();
               }}
             >
@@ -380,7 +430,7 @@ const Geofence = ({
           <DataTable
             noDataMessage={t("configuration.geofence.no_registered_geofence")}
             onRowClick={handleRowClick}
-            disableRowClick={false}
+            disableRowClick={!isConnectedHardware}
             rows={rows}
             columns={columns}
           />

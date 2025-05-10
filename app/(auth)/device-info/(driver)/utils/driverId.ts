@@ -33,8 +33,10 @@ function parseMultiLineResponse(input: string): ParsedResult[] {
 
     const group = parseInt(groupStr, 10);
     const baseNumber = groupBaseNumber[group];
+
     if (baseNumber === undefined) {
-      throw new Error(`Unknown group number: ${group}`);
+      // throw new Error(`Unknown group number: ${group}`);
+      return;
     }
 
     pairs.forEach((pair) => {

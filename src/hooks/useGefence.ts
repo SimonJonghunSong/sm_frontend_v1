@@ -34,13 +34,14 @@ const useGefence = ({
   imei,
   onAfterFetch,
 }: UseGefenceProps) => {
+  const [isFetching, setIsFetching] = useState(false);
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
   const port = propsPort.port;
-
   useEffect(() => {
     if (!port?.readable || !port?.writable || !isReady) return;
 
     if (!polygonGeofenceMax) {
+      setIsFetching(true);
       return setIsCircularFetchReady(true);
     }
 
@@ -53,6 +54,8 @@ const useGefence = ({
       port.polygongeofence = "";
     };
 
+    setIsFetching(true);
+
     (async () => {
       for (const command of AT_GET_POLYGON_GEOFENCE_LIST(imei)) {
         await delayPromise(60); // 60ms 지연
@@ -64,17 +67,19 @@ const useGefence = ({
         });
       }
     })();
-  }, [port.readable, port.writable]);
+  }, [port.readable, port.writable, isReady]);
 
   useEffect(() => {
-    if (!circularGeofenceMax || !isCircularFetchReady) return;
+    if (!circularGeofenceMax || !isCircularFetchReady) {
+      return;
+    }
 
     port.circularfetchcount = 0;
     port.iscircularfetching = true;
     port.circlemax = Number(circularGeofenceMax);
     port.onaftercirculargeofence = () => {
       port.iscircularfetching = false;
-      //   setIsFullLoading(false);
+      setIsFetching(false);
       setIsCircularFetchReady(false);
       port.circulargeofence = "";
       onAfterFetch?.();
@@ -84,7 +89,7 @@ const useGefence = ({
       for (const command of circularGeofenceMax === 255
         ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
         : AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)) {
-        await delayPromise(100); // 100ms 지연
+        await delayPromise(circularGeofenceMax === 255 ? 60 : 100); // 100ms 지연
 
         write({
           data: command,
@@ -94,6 +99,8 @@ const useGefence = ({
       }
     })();
   }, [isReady, port?.readable, port?.writable, isCircularFetchReady]);
+
+  return { isFetching };
 };
 
 export default useGefence;

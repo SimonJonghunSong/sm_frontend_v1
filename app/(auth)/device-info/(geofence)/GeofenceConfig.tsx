@@ -128,6 +128,7 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
 
       <Stack direction="row" justifyContent="flex-end">
         <Button
+          id="geofence-config-submit"
           color="secondary"
           variant="contained"
           type="submit"
