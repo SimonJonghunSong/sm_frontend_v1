@@ -188,8 +188,6 @@ const AddGeofence = ({
   const lang = useLangStore((state) => state.lang);
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
-  const polygonList = currentPort.polygonGeofenceData;
-  const polygonData = getPolygonGeofenceData(polygonList);
 
   /** Circular Geofence */
   const handleAddCirGeo = () => {
@@ -272,7 +270,12 @@ const AddGeofence = ({
     };
 
     const getAntiJammingHexString = () => {
-      if (!circularGeofenceKeys.includes("ANTI_JAM")) return "";
+      if (
+        !circularGeofenceKeys.includes("ANTI_JAM") ||
+        !formData["9002"] ||
+        formData["9002"].realValue === "00"
+      )
+        return "";
       return circleState.antiJamming ? "01" : "00";
     };
 
@@ -506,7 +509,12 @@ const AddGeofence = ({
   };
 
   const renderAntiJamming = () => {
-    if (!circularGeofenceKeys.includes("ANTI_JAM")) return null;
+    if (
+      !circularGeofenceKeys.includes("ANTI_JAM") ||
+      !formData["9002"] ||
+      formData["9002"].realValue === "00"
+    )
+      return null;
 
     return (
       <Stack
@@ -773,8 +781,8 @@ const AddGeofence = ({
     currentPort.port.oneditsuccess = async () => {
       await delayPromise(100);
 
-      const enterAlertHexString = circleState.enterAlert ? "01" : "00";
-      const exitAlertHexString = circleState.exitAlert ? "01" : "00";
+      const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
+      const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
       const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
 
       const isPolygonSpeedLimitDisabled =

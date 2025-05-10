@@ -37,7 +37,6 @@ const useGefence = ({
   const [isFetching, setIsFetching] = useState(false);
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
   const port = propsPort.port;
-  console.log(isFetching);
   useEffect(() => {
     if (!port?.readable || !port?.writable || !isReady) return;
 
@@ -68,7 +67,7 @@ const useGefence = ({
         });
       }
     })();
-  }, [port.readable, port.writable]);
+  }, [port.readable, port.writable, isReady]);
 
   useEffect(() => {
     if (!circularGeofenceMax || !isCircularFetchReady) {
@@ -90,7 +89,7 @@ const useGefence = ({
       for (const command of circularGeofenceMax === 255
         ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
         : AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)) {
-        await delayPromise(100); // 100ms 지연
+        await delayPromise(circularGeofenceMax === 255 ? 60 : 100); // 100ms 지연
 
         write({
           data: command,

@@ -24,7 +24,6 @@ export const AT_GET_POLYGON_INFO = (imei: string, groupId: number) =>
   `${AT_REQ}${imei};53;${groupId.toString().padStart(2, "0")}`;
 
 export const parsePolygonInfo = (response: string) => {
-  console.log(response, ":::::::response");
   // For 6-character response like "050101"
   if (response.length === 6) {
     return {
@@ -32,8 +31,8 @@ export const parsePolygonInfo = (response: string) => {
       exitAlert: response.substring(4, 6) === "01",
     };
   }
-  // For 18-character response like "05 01 01 001e8480 06db"
-  else if (response.length === 18) {
+  // For 14-character response like "05 01 01 001e8480"
+  else if (response.length === 14) {
     const speedLimitHex = response.substring(7, 15);
     // Convert hex to decimal and divide by 1000000 to get speed in km/h
     const speedLimit = parseInt(speedLimitHex, 16) / 1000000;

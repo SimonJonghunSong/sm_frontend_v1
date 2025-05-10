@@ -62,13 +62,18 @@ export const parseResponseToPolygonData = (
   };
 };
 
-export const parseLatLngRadius = (hexString: string): CircleType => {
+export const parseLatLngRadius = (
+  hexString: string
+): CircleType & { enterAlert: boolean; exitAlert: boolean } => {
   // 문자열에서 16진수 값만 추출
   const hexValue = hexString.split("#")[1];
 
   // 첫 8자리 (lat)와 그 다음 8자리 (lng)를 추출
   const latHex = hexValue.slice(0, 8);
   const lngHex = hexValue.slice(8, 16);
+
+  const enterAlertHex = hexValue.slice(20, 22);
+  const exitAlertHex = hexValue.slice(22, 24);
 
   // lat과 lng의 첫 자리가 '8'인지 여부를 상수로 관리
   const isLatNegative = latHex[0] === "8";
@@ -97,5 +102,7 @@ export const parseLatLngRadius = (hexString: string): CircleType => {
       lng: centerLng,
     },
     radius,
+    enterAlert: enterAlertHex === "01",
+    exitAlert: exitAlertHex === "01",
   };
 };

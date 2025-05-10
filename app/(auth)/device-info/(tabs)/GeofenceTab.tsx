@@ -1,8 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FormField } from "../page";
 import { Stack } from "@mui/material";
-import { AddGeofence, Geofence, GeofenceConfig } from "../(geofence)/@index";
+import {
+  AddGeofence,
+  EditCircularGeofence,
+  Geofence,
+  GeofenceConfig,
+} from "../(geofence)/@index";
 import { SerialPortState } from "@/src/stores/useSerialStore";
+import EditPolygonGeofence from "../(geofence)/EditPolygonGefence";
 
 interface Props {
   formData: {
@@ -78,6 +84,7 @@ export default function GeofenceTab({
           <GeofenceConfig formData={formData} onChange={handleValueChange} />
 
           <Geofence
+            formData={formData}
             currentPort={port}
             isReady={isReady && mustFetch}
             write={write}
@@ -113,16 +120,29 @@ export default function GeofenceTab({
     if (type === "edit") {
       if (editType === "polygon") {
         return (
-          <>
-            <GeofenceConfig formData={formData} onChange={handleValueChange} />
-          </>
+          <EditPolygonGeofence
+            id={editId}
+            formData={formData}
+            currentPort={port}
+            write={write}
+            onSuccess={() => setMustFetch(true)}
+            onCancel={() => setType("list")}
+          />
         );
       }
 
       if (editType === "circular") {
         return (
           <>
-            <GeofenceConfig formData={formData} onChange={handleValueChange} />
+            <EditCircularGeofence
+              id={editId}
+              formData={formData}
+              currentPort={port}
+              write={write}
+              circularGeofenceKeys={circularGeofenceKeys}
+              onSuccess={() => setMustFetch(true)}
+              onCancel={() => setType("list")}
+            />
           </>
         );
       }
