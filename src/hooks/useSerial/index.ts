@@ -206,7 +206,11 @@ const useSerial = () => {
         );
 
         if (port.isDeviceCommandSend) {
-          deviceCommandLogRef.current += value;
+          if (deviceCommandLogRef.current) {
+            deviceCommandLogRef.current += value;
+          } else {
+            deviceCommandLogRef.current = value;
+          }
 
           if (isEndOfMessage(value)) {
             deviceCommandBroadcastChannel.postMessage({
@@ -220,7 +224,11 @@ const useSerial = () => {
         }
 
         if (port.isAlertSend) {
-          alertCommandRef.current += value;
+          if (alertCommandRef.current) {
+            alertCommandRef.current += value;
+          } else {
+            alertCommandRef.current = value;
+          }
 
           if (value.includes("ERR")) {
             port.isAlertSend = false;

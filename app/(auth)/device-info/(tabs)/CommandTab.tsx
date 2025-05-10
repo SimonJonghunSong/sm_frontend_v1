@@ -70,7 +70,7 @@ export default function CommandTab({ imei }: Props) {
 
   const renderCommand = (command: Command) => {
     switch (command.uiType) {
-      default:
+      case "normal":
         return (
           <DefaultCommandField
             id={command.id}
@@ -80,6 +80,8 @@ export default function CommandTab({ imei }: Props) {
             isLoading={isLoading}
           />
         );
+      default:
+        return null;
     }
   };
 
