@@ -88,6 +88,8 @@ const Driver = ({
     driver_id: string;
   } | null>(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const formRef = useRef<HTMLFormElement>(null);
   const [filter, setFilter] = useState<"all" | "by_number" | "by_id">("all");
   const [filterValue, setFilterValue] = useState<string>("");
@@ -266,12 +268,14 @@ const Driver = ({
       if (isReady) {
         port.onbuffervalue = handleFetchBufferValue;
         buffer.current = "";
+        setIsLoading(true);
         for (const command of commands) {
           write(command);
           await delayPromise(300);
         }
         await delayPromise(500);
         port.onbuffervalue = null;
+        setIsLoading(false);
       }
       const parsedResult = parseDriverIdResponseString(buffer.current);
 
@@ -392,6 +396,7 @@ const Driver = ({
                 return row.col2.toString().includes(searchValue);
             }
           })}
+          loading={isLoading}
           columns={columns}
           rowHeight={52}
           onRowSelectionModelChange={(list) => {
