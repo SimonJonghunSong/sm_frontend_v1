@@ -291,6 +291,11 @@ export const SECTIONS = {
     es: "Bluetooth",
     pt: "Bluetooth",
   },
+  BleRegistration: {
+    en: "Bluetooth Registration",
+    es: "Registro de Bluetooth",
+    pt: "Registro de Bluetooth",
+  },
   Sensor: {
     en: "Sensor",
     es: "Sensor",
@@ -914,6 +919,7 @@ export const INCLUDE_FIELDS = {
     "4026",
     "4027",
   ],
+  [SECTIONS.BleRegistration.en]: [],
   [SECTIONS.Sensor.en]: [
     "2610",
     "2611",
@@ -1920,6 +1926,12 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Bluetooth",
       key: SECTIONS.Ble.en,
     },
+    [SECTIONS.BleRegistration.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
+      searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.BleRegistration.en}`,
+      tab: "Bluetooth",
+      key: SECTIONS.BleRegistration.en,
+    },
     [SECTIONS.Sensor.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
       searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.Sensor.en}`,
@@ -1934,6 +1946,12 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Bluetooth",
       key: SECTIONS.Ble.en,
     },
+    [SECTIONS.BleRegistration.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
+      searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.BleRegistration.es}`,
+      tab: "Bluetooth",
+      key: SECTIONS.BleRegistration.en,
+    },
     [SECTIONS.Sensor.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
       searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.Sensor.es}`,
@@ -1947,6 +1965,12 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
       searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.Ble.pt}`,
       tab: "Bluetooth",
       key: SECTIONS.Ble.en,
+    },
+    [SECTIONS.BleRegistration.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
+      searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.BleRegistration.pt}`,
+      tab: "Bluetooth",
+      key: SECTIONS.BleRegistration.en,
     },
     [SECTIONS.Sensor.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],

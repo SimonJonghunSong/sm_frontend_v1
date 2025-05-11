@@ -259,7 +259,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -334,7 +337,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1314,7 +1320,10 @@
       "sensor_report_interval_(minutes)": "Intervalo de Relatório do Sensor (minutos)",
       "sensor_scan_interval_in_driving_(minutes)": "Intervalo de Escaneamento do Sensor em Direção (minutos)",
       "sensor_scan_interval_in_parking_(minutes)": "Intervalo de Escaneamento do Sensor em Estacionamento (minutos)",
-      "sensor_scan_power_saving": "Economia de Energia do Escaneamento do Sensor"
+      "sensor_scan_power_saving": "Economia de Energia do Escaneamento do Sensor",
+      "select": "Selecione",
+      "enter_alert": "Digite alerta",
+      "exit_alert": "Alerta de saída"
     },
     "accessories": {
       "1-wire_settings": "Configurações 1-Wire",

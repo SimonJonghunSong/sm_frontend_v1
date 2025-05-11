@@ -1,4 +1,32 @@
 export const FIELD_ERRORS = {
+  minMax: (min, max) => {
+    return {
+      en: `Input only between ${min} ~ ${max}`,
+      es: `Ingrese solo entre ${min} y ${max}`,
+      pt: `Entrada somente entre ${min} ~ ${max}`,
+    };
+  },
+
+  required: (field) => {
+    return {
+      en: `${field} is required`,
+      es: `${field} es requerido`,
+      pt: `${field} é requerido`,
+    };
+  },
+
+  temperatureRange: {
+    en: "High temperature must be higher than low temperature.",
+    es: "La temperatura máxima debe ser mayor que la temperatura mínima.",
+    pt: "A temperatura máxima deve ser maior que a temperatura mínima.",
+  },
+
+  humidityRange: {
+    en: "High humidity must be higher than low humidity.",
+    es: "La humedad máxima debe ser mayor que la humedad mínima.",
+    pt: "A umidade máxima deve ser maior que a umidade mínima.",
+  },
+
   alphaNumericPattern: {
     en: "Characters A-Z, a-z, 0-9 are allowed.",
     es: "Se permiten caracteres A-Z, a-z, 0-9.",

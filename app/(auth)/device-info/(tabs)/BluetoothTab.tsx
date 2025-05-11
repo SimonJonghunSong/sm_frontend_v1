@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { FormField } from "../page";
 import { Stack } from "@mui/material";
 import { Ble, Sensor } from "../(bluetooth)/@index";
+import BleRegistration from "app/(auth)/device-info/(bluetooth)/BleRegistration";
 
 interface Props {
   formData: {
@@ -33,6 +34,7 @@ export default function BluetoothTab({ formData, setFormData }: Props) {
       <Ble formData={formData} onChange={handleValueChange} />
 
       {/* TODO BLE Registration 추가 */}
+      <BleRegistration formData={formData} onChange={handleValueChange} />
 
       <Sensor formData={formData} onChange={handleValueChange} />
     </Stack>
