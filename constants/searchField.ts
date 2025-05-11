@@ -335,6 +335,51 @@ export const SECTIONS = {
     es: "Comandos de Red",
     pt: "Comandos de Rede",
   },
+  SystemCommands: {
+    en: "System Commands",
+    es: "Comandos del Sistema",
+    pt: "Comandos do Sistema",
+  },
+  JammingDetectionCommands: {
+    en: "Jamming Detection Commands",
+    es: "Comandos de Detección de Interferencia",
+    pt: "Comandos de Detecção de Interferência",
+  },
+  ReportCommands: {
+    en: "Report Commands",
+    es: "Comandos de Reporte",
+    pt: "Comandos de Relatório",
+  },
+  TrackingCommands: {
+    en: "Tracking Commands",
+    es: "Comandos de Rastreo",
+    pt: "Comandos de Rastreamento",
+  },
+  "I/OCommands": {
+    en: "I/O Commands",
+    es: "Comandos de Entrada/Salida",
+    pt: "Comandos de Entrada/Saída",
+  },
+  GeofenceCommands: {
+    en: "Geofence Commands",
+    es: "Comandos de Geocerca",
+    pt: "Comandos de Geofence",
+  },
+  BleCommands: {
+    en: "BLE Commands",
+    es: "Comandos de Bluetooth",
+    pt: "Comandos de Bluetooth",
+  },
+  AccessoryCommands: {
+    en: "Accessory Commands",
+    es: "Comandos de Accesorios",
+    pt: "Comandos de Acessórios",
+  },
+  RfCommands: {
+    en: "RF Commands",
+    es: "Comandos de RF",
+    pt: "Comandos de RF",
+  },
 
   // DeviceStatus
   DeviceInformation: {
@@ -1056,7 +1101,15 @@ export const INCLUDE_FIELDS = {
   ],
 
   // NetworkCommands
-  [SECTIONS.NetworkCommands.en]: ["ALL_SEARCH"],
+  [SECTIONS.NetworkCommands.en]: [],
+  [SECTIONS.SystemCommands.en]: [],
+  [SECTIONS.JammingDetectionCommands.en]: [],
+  [SECTIONS.ReportCommands.en]: [],
+  [SECTIONS.TrackingCommands.en]: [],
+  [SECTIONS["I/OCommands"].en]: [],
+  [SECTIONS.GeofenceCommands.en]: [],
+  [SECTIONS.BleCommands.en]: [],
+  [SECTIONS.AccessoryCommands.en]: [],
 };
 
 export type SearchFields = {
@@ -2083,10 +2136,64 @@ export const RF_SECTION: Record<Lang, Record<string, SearchFields>> = {
 const COMMAND_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.NetworkCommands.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      fields: ["ALL_SEARCH"],
       searchText: `${MENUS.Commands.en} > ${SECTIONS.NetworkCommands.en}`,
       tab: "Commands",
       key: SECTIONS.NetworkCommands.en,
+    },
+    [SECTIONS.SystemCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.SystemCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.SystemCommands.en,
+    },
+    [SECTIONS.JammingDetectionCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.JammingDetectionCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.JammingDetectionCommands.en,
+    },
+    [SECTIONS.ReportCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.ReportCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.ReportCommands.en,
+    },
+    [SECTIONS.TrackingCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.TrackingCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.TrackingCommands.en,
+    },
+    [SECTIONS["I/OCommands"].en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS["I/OCommands"].en}`,
+      tab: "Commands",
+      key: SECTIONS["I/OCommands"].en,
+    },
+    [SECTIONS.GeofenceCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.GeofenceCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.GeofenceCommands.en,
+    },
+    [SECTIONS.BleCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.BleCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.BleCommands.en,
+    },
+    [SECTIONS.AccessoryCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.AccessoryCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.AccessoryCommands.en,
+    },
+    [SECTIONS.RfCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.RfCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.RfCommands.en,
     },
   },
   es: {
@@ -2096,6 +2203,60 @@ const COMMAND_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Commands",
       key: SECTIONS.NetworkCommands.en,
     },
+    [SECTIONS.SystemCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.SystemCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.SystemCommands.en,
+    },
+    [SECTIONS.JammingDetectionCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.JammingDetectionCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.JammingDetectionCommands.en,
+    },
+    [SECTIONS.ReportCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.ReportCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.ReportCommands.en,
+    },
+    [SECTIONS.TrackingCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.TrackingCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.TrackingCommands.en,
+    },
+    [SECTIONS["I/OCommands"].es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS["I/OCommands"].es}`,
+      tab: "Commands",
+      key: SECTIONS["I/OCommands"].en,
+    },
+    [SECTIONS.GeofenceCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.GeofenceCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.GeofenceCommands.en,
+    },
+    [SECTIONS.BleCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.BleCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.BleCommands.en,
+    },
+    [SECTIONS.AccessoryCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.AccessoryCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.AccessoryCommands.en,
+    },
+    [SECTIONS.RfCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.RfCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.RfCommands.en,
+    },
   },
   pt: {
     [SECTIONS.NetworkCommands.pt]: {
@@ -2103,6 +2264,60 @@ const COMMAND_SECTION: Record<Lang, Record<string, SearchFields>> = {
       searchText: `${MENUS.Commands.pt} > ${SECTIONS.NetworkCommands.pt}`,
       tab: "Commands",
       key: SECTIONS.NetworkCommands.en,
+    },
+    [SECTIONS.SystemCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.SystemCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.SystemCommands.en,
+    },
+    [SECTIONS.JammingDetectionCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.JammingDetectionCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.JammingDetectionCommands.en,
+    },
+    [SECTIONS.ReportCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.ReportCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.ReportCommands.en,
+    },
+    [SECTIONS.TrackingCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.TrackingCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.TrackingCommands.en,
+    },
+    [SECTIONS["I/OCommands"].pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS["I/OCommands"].pt}`,
+      tab: "Commands",
+      key: SECTIONS["I/OCommands"].en,
+    },
+    [SECTIONS.GeofenceCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.GeofenceCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.GeofenceCommands.en,
+    },
+    [SECTIONS.BleCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.BleCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.BleCommands.en,
+    },
+    [SECTIONS.AccessoryCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.AccessoryCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.AccessoryCommands.en,
+    },
+    [SECTIONS.RfCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.RfCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.RfCommands.en,
     },
   },
 };

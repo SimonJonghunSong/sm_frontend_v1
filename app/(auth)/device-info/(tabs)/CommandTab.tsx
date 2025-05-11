@@ -8,6 +8,19 @@ import { delayPromise } from "@/src/hooks/useSerial";
 import { Command } from "app/(auth)/device-info/(commands)/@index";
 import DefaultCommandField from "app/(auth)/device-info/(commands)/DefaultCommandField";
 import { useTranslations } from "next-intl";
+import SelectCommandField from "app/(auth)/device-info/(commands)/SelectCommandField";
+import TextCommandField from "app/(auth)/device-info/(commands)/TextCommandField";
+import NumberCommandField from "app/(auth)/device-info/(commands)/NumberCommandField";
+import SystemCommands from "app/(auth)/device-info/(commands)/SystemCommands";
+import TimeRangeCommandField from "app/(auth)/device-info/(commands)/TimeRangeCommandField";
+import TrackingCommands from "app/(auth)/device-info/(commands)/TrackingCommands";
+import InputOutputCommands from "app/(auth)/device-info/(commands)/InputOuputCommands";
+import BleCommands from "app/(auth)/device-info/(commands)/BleCommands";
+import AccessoryCommands from "app/(auth)/device-info/(commands)/AccessoryCommands";
+import RfCommands from "app/(auth)/device-info/(commands)/RfCommands";
+import GeofenceCommands from "app/(auth)/device-info/(commands)/GeofenceCommands";
+import JammingDetectionCommands from "app/(auth)/device-info/(commands)/JammingDetectionCommands";
+import ReportCommands from "app/(auth)/device-info/(commands)/ReportCommands";
 
 interface Props {
   imei: string;
@@ -73,6 +86,48 @@ export default function CommandTab({ imei }: Props) {
       case "normal":
         return (
           <DefaultCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "select":
+        return (
+          <SelectCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "text-input":
+        return (
+          <TextCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+            regex={command.regex}
+            helperText={command.helperText}
+          />
+        );
+      case "number-input":
+        return (
+          <NumberCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "time-range":
+        return (
+          <TimeRangeCommandField
             id={command.id}
             imei={imei}
             handleSendCommand={handleSendCommand}
@@ -228,8 +283,24 @@ export default function CommandTab({ imei }: Props) {
           )}
         </div>
       </div>
-      <div style={{ padding: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "24px",
+          flexDirection: "column",
+          padding: "20px",
+        }}
+      >
         <NetworkCommands renderCommand={renderCommand} />
+        <SystemCommands renderCommand={renderCommand} />
+        <JammingDetectionCommands renderCommand={renderCommand} />
+        <ReportCommands renderCommand={renderCommand} />
+        <TrackingCommands renderCommand={renderCommand} />
+        <InputOutputCommands renderCommand={renderCommand} />
+        <GeofenceCommands renderCommand={renderCommand} />
+        <BleCommands renderCommand={renderCommand} />
+        <AccessoryCommands renderCommand={renderCommand} />
+        <RfCommands renderCommand={renderCommand} />
       </div>
     </Stack>
   );

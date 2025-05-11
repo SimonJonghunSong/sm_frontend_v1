@@ -18169,8 +18169,8 @@ export const FIELD_VALIDATIONS = {
       es: "El servidor envía un comando de desbloqueo del APN al dispositivo.",
       pt: "O servidor envia um comando de desbloqueio de APN para o dispositivo.",
     },
-    min: null,
-    max: null,
+    min: 0,
+    max: 255,
     list: null,
   },
   "0117": {
@@ -18214,8 +18214,8 @@ export const FIELD_VALIDATIONS = {
       es: "Configurar el temporizador de RAT de alta prioridad.\r\n• Rango: 10~300\r\n• Predeterminado: 10",
       pt: "Defina o temporizador de RAT de alta prioridade.\r\n• Intervalo: 10~300\r\n• Padrão: 10",
     },
-    min: null,
-    max: null,
+    min: 10,
+    max: 300,
     list: null,
   },
   "0120": {

@@ -24,15 +24,15 @@ const NetworkCommands = ({ renderCommand }: Props) => {
         </Stack>
       </Stack>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-        <Stack direction="column" gap={"16px"} flex={1}>
+      <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
+        <Stack direction="column" gap={"24px"} flex={1}>
           {commands.networkCommands
             .slice(0, 17)
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
-        <Stack direction="column" gap={"16px"} flex={1}>
+        <Stack direction="column" gap={"24px"} flex={1}>
           {commands.networkCommands
             .slice(17)
             .map((item) =>
@@ -66,6 +66,5 @@ const Container = styled.div`
     font-size: 15px;
     line-height: 14px;
     color: #6f6f6f;
-    width: calc(50% - 8px);
   }
 `;

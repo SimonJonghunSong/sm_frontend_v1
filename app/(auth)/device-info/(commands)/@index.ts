@@ -1,3 +1,5 @@
+import { FIELD_ERRORS } from "constants/fieldErrorValidations";
+
 type CommandsSection =
   | "networkCommands"
   | "systemCommands"
@@ -11,10 +13,10 @@ type CommandsSection =
   | "rfCommands";
 
 type CommandsUIType =
-  | "normal"
-  | "select"
-  | "text-input"
-  | "number-input"
+  | "normal" // 0
+  | "select" // 0
+  | "text-input" // 0
+  | "number-input" // 0
   | "time-range"
   | "Automati-APN-List"
   | "PIN-Lock"
@@ -26,6 +28,12 @@ type CommandsUIType =
 export type Command = {
   id: string;
   uiType: CommandsUIType;
+  regex?: RegExp;
+  helperText?: {
+    en: string;
+    es: string;
+    pt: string;
+  };
 };
 
 export const commands: Record<CommandsSection, Command[]> = {
@@ -89,6 +97,8 @@ export const commands: Record<CommandsSection, Command[]> = {
     {
       id: "0202",
       uiType: "text-input",
+      regex: /^[A-Za-z0-9\-\.\/]+$/,
+      helperText: FIELD_ERRORS["0202"],
     },
     {
       id: "0203",
