@@ -220,7 +220,7 @@ export default function DeviceInfoPage() {
       write,
     });
 
-  const [tab, setTab] = useState("Network");
+  const [tab, setTab] = useState("DeviceStatus");
   const [formData, setFormData] = useState<{
     [key: string]: FormField | null;
   }>(null);

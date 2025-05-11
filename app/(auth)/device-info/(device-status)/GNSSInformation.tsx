@@ -29,8 +29,8 @@ export default function GNSSInformation({ lat, lng }: Props) {
           <Maps
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
             center={{
-              lat,
-              lng,
+              lat: Number(lat),
+              lng: Number(lng),
             }}
             disableDrawing
             zoom={15}
