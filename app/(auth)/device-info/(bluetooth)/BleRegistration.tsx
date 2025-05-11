@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import {
@@ -26,24 +26,38 @@ import { Controller, useController, useForm } from "react-hook-form";
 import Modal from "@/components/Modal";
 import { SwitchPrimary } from "@/components/switches";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
+import { hasFormDataFields } from "../(utils)/@index";
+import { SerialPortState } from "@/src/stores/useSerialStore";
+import { AT_EDIT_PREFIX, AT_REQ, CR } from "@/src/hooks/useSerial/constant";
+import { delayPromise } from "@/src/hooks/useSerial";
 
-const fieldIds = [];
+const fieldIds = ["4100"];
 
 interface Props {
   formData: {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  write: any;
+  port: SerialPortState;
+  isReady: boolean;
 }
 
-const BleRegistration = ({ formData, onChange }: Props) => {
+const BleRegistration = ({
+  formData,
+  onChange,
+  write,
+  port,
+  isReady,
+}: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
-  const { sendFormData, isLoading } = useSendFormData();
+  const bleRegistrationRef = useRef<string>("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [detailModal, detailModalToggle] = useModal();
   const [editRow, setEditRow] = useState<{
-    point: string;
+    point: number;
     active: boolean;
     type: string;
     id: string;
@@ -70,22 +84,7 @@ const BleRegistration = ({ formData, onChange }: Props) => {
       col9: string;
       col10: string;
     }[]
-  >([
-    {
-      id: 1,
-      type: "1",
-      col1: 1,
-      col2: "On",
-      col3: "ELA PUCK RHT",
-      col4: "abcde",
-      col5: "On",
-      col6: "Off",
-      col7: "-55",
-      col8: "125",
-      col9: "30",
-      col10: "70",
-    },
-  ]);
+  >([]);
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -107,6 +106,13 @@ const BleRegistration = ({ formData, onChange }: Props) => {
       flex: 2,
       headerAlign: "center",
       align: "center",
+      renderCell: ({ row }) => {
+        return row.col3 === "00"
+          ? "-"
+          : row.col3 === "01"
+          ? "ELA PUCK RHT"
+          : "ELA COIN T";
+      },
     },
     {
       field: "col4",
@@ -136,7 +142,8 @@ const BleRegistration = ({ formData, onChange }: Props) => {
       flex: 2,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ row }) => `${row.col7}/${row.col8}`,
+      renderCell: ({ row }) =>
+        `${parseInt(row.col7, 16)}°C / ${parseInt(row.col8, 16)}°C`,
     },
     {
       field: "col8",
@@ -145,7 +152,8 @@ const BleRegistration = ({ formData, onChange }: Props) => {
       flex: 2,
       headerAlign: "center",
       align: "center",
-      renderCell: ({ row }) => `${row.col9}/${row.col10}`,
+      renderCell: ({ row }) =>
+        `${parseInt(row.col9, 16) / 10}% / ${parseInt(row.col10, 16) / 10}%`,
     },
     {
       field: "col12",
@@ -186,44 +194,113 @@ const BleRegistration = ({ formData, onChange }: Props) => {
       headerAlign: "center",
       align: "center",
       renderCell: ({ row }) => (
-        <IconButton sx={{ width: 24, height: 24 }} onClick={() => {}}>
+        <IconButton
+          sx={{ width: 24, height: 24 }}
+          onClick={() => handleDeleteItem(row.id)}
+        >
           <DeleteForeverOutlinedIcon sx={{ width: 22, height: 22 }} />
         </IconButton>
       ),
     },
   ];
 
-  // if (!hasFormDataFields(formData, fieldIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleAddItem = () => {};
-  const handleEditItem = () => {};
-
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleAddItem = (addData: string) => {
+    setIsLoading(true);
+    write({
+      data: `${AT_EDIT_PREFIX}${port.imei};${addData}`,
+      port: port.port,
+      writer: port.writer,
+    });
+    delayPromise(100).then(() => {
+      fetch();
+    });
   };
+
+  const handleDeleteItem = (id: number) => {
+    setIsLoading(true);
+    write({
+      data: `${AT_EDIT_PREFIX}${port.imei};41;${(id - 1)
+        .toString()
+        .padStart(2, "0")}#000000000000000000000000000000000000`,
+      port: port.port,
+      writer: port.writer,
+    });
+    delayPromise(100).then(() => {
+      fetch();
+    });
+  };
+
+  const fetch = () => {
+    port.port.onbuffervalue = (data) => {
+      bleRegistrationRef.current += data;
+
+      if (data.includes(CR)) {
+        const bleRegistrationData = bleRegistrationRef.current;
+
+        const parts = bleRegistrationData.split(";");
+        const dataParts = parts.slice(3);
+        // 추출할 키 목록
+        const targetKeys = ["00", "01", "02", "03", "04"];
+
+        // 결과 생성
+        const result = {};
+
+        for (const item of dataParts) {
+          const [key, value] = item.split("#");
+          if (targetKeys.includes(key)) {
+            result[key] = value.trim();
+          }
+        }
+
+        const bleData = Object.values(result).reduce(
+          (acc, ble: string, idx) => {
+            if (ble === "NoData") return acc;
+
+            (acc as Array<any>).push({
+              id: idx + 1,
+              type: "1",
+              col1: idx + 1,
+              col2: ble.slice(2, 4) === "01" ? "On" : "Off",
+              col3: ble.slice(0, 2),
+              col4: ble.slice(4, 16),
+              col5: ble.slice(16, 18) === "01" ? "On" : "Off",
+              col6: ble.slice(18, 20) === "01" ? "On" : "Off",
+              col7: ble.slice(24, 28),
+              col8: ble.slice(20, 24),
+              col9: ble.slice(32, 36),
+              col10: ble.slice(28, 32),
+            });
+            return acc;
+          },
+          []
+        );
+
+        bleRegistrationRef.current = "";
+        console.log("bleData :::", bleData);
+        setRows(bleData as any);
+        setIsLoading(false);
+        port.port.onbuffervalue = null;
+      }
+    };
+
+    write({
+      data: `${AT_REQ}${port.imei};41;00,01,02,03,04`,
+      port: port.port,
+      writer: port.writer,
+    });
+  };
+
+  useEffect(() => {
+    fetch();
+  }, [isReady]);
 
   return (
     <>
       <Container
         onSubmit={(e) => {
           e.preventDefault();
-
-          // 모든 필드 값을 포함한 객체 생성
-          const fieldValues = Object.keys(formData).reduce((acc, key) => {
-            if (fieldIds.includes(key)) {
-              acc[key] = {
-                id: key,
-                value: formData[key].value,
-                realValue: formData[key].realValue,
-              };
-            }
-            return acc;
-          }, {});
-          console.log("fieldValues :::", fieldValues);
-          // 필드 값들을 사용하여 수행할 작업
-          sendFormData(fieldValues);
-
-          // 여기에 데이터 제출 로직 추가
         }}
       >
         <Stack
@@ -251,22 +328,13 @@ const BleRegistration = ({ formData, onChange }: Props) => {
           </Button>
         </Stack>
         <DataTable
+          noDataMessage={t("configuration.ble.no_registered_ble")}
+          loading={isLoading}
           rows={rows}
           columns={columns}
           rowHeight={52}
           onRowSelectionModelChange={() => {}}
         />
-
-        <Stack direction="row" justifyContent="flex-end" alignItems="center">
-          <Button
-            color="secondary"
-            variant="contained"
-            type="submit"
-            disabled={isLoading}
-          >
-            {t("notify.send")}
-          </Button>
-        </Stack>
       </Container>
 
       {detailModal && (
@@ -315,21 +383,10 @@ function DetailModal({
     message: string,
     options?: { title: string; onErrorPopupOk?: () => void }
   ) => void;
-  handleConfirm: (values: {
-    point: string;
-    active: boolean;
-    type: string;
-    id: string;
-    enterAlert: boolean;
-    exitAlert: boolean;
-    temperatureMin: string;
-    temperatureMax: string;
-    humidityMin: string;
-    humidityMax: string;
-  }) => void;
+  handleConfirm: (values: string) => void;
   filterNumbers: number[];
   defaultValues?: {
-    point: string;
+    point: number;
     active: boolean;
     type: string;
     id: string;
@@ -341,24 +398,35 @@ function DetailModal({
     humidityMax: string;
   };
 }) {
-  console.log("defaultValues :::", defaultValues);
-
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const form = useForm({
     mode: "onSubmit",
-    defaultValues: defaultValues || {
-      point: "",
-      active: false,
-      type: "",
-      id: "",
-      enterAlert: false,
-      exitAlert: false,
-      temperatureMin: "",
-      temperatureMax: "",
-      humidityMin: "",
-      humidityMax: "",
-    },
+    defaultValues: defaultValues
+      ? {
+          point: (defaultValues.point - 1).toString().padStart(2, "0"),
+          active: defaultValues.active,
+          type: defaultValues.type.padStart(2, "0"),
+          id: defaultValues.id,
+          enterAlert: defaultValues.enterAlert,
+          exitAlert: defaultValues.exitAlert,
+          temperatureMin: parseInt(defaultValues.temperatureMin, 16),
+          temperatureMax: parseInt(defaultValues.temperatureMax, 16),
+          humidityMin: parseInt(defaultValues.humidityMin, 16) / 10,
+          humidityMax: parseInt(defaultValues.humidityMax, 16) / 10,
+        }
+      : {
+          point: "00",
+          active: false,
+          type: "00",
+          id: "",
+          enterAlert: false,
+          exitAlert: false,
+          temperatureMin: "",
+          temperatureMax: "",
+          humidityMin: "",
+          humidityMax: "",
+        },
   });
 
   const temperatureMinControl = useController({
@@ -416,10 +484,34 @@ function DetailModal({
   };
 
   const handleModalConfirm = () => {
-    const vlaues = form.getValues();
-    handleConfirm(vlaues);
-    console.log("submit vlaues :::", vlaues);
+    const values = form.getValues();
 
+    const point = values.point;
+    const active = values.active ? "01" : "00";
+    const type = values.type;
+    const id = values.id.padEnd(12, "0");
+    const enterAlert = values.enterAlert ? "01" : "00";
+    const exitAlert = values.exitAlert ? "01" : "00";
+    const highTemperature = Number(values.temperatureMax)
+      .toString(16)
+      .padStart(4, "0")
+      .toUpperCase();
+    const lowTemperature = Number(values.temperatureMin)
+      .toString(16)
+      .padStart(4, "0")
+      .toUpperCase();
+    const highHumidity = (Number(values.humidityMax) * 10)
+      .toString(16)
+      .padStart(4, "0")
+      .toUpperCase();
+    const lowHumidity = (Number(values.humidityMin) * 10)
+      .toString(16)
+      .padStart(4, "0")
+      .toUpperCase();
+
+    const data = `41;${point}#${type}${active}${id}${enterAlert}${exitAlert}${highTemperature}${lowTemperature}${highHumidity}${lowHumidity}`;
+
+    handleConfirm(data);
     onClose();
   };
 
@@ -466,9 +558,11 @@ function DetailModal({
                       error={!!error}
                       helperText={error?.message}
                     >
-                      <MenuItem value={1}>1</MenuItem>
-                      <MenuItem value={2}>2</MenuItem>
-                      <MenuItem value={3}>3</MenuItem>
+                      <MenuItem value={"00"}>1</MenuItem>
+                      <MenuItem value={"01"}>2</MenuItem>
+                      <MenuItem value={"02"}>3</MenuItem>
+                      <MenuItem value={"03"}>4</MenuItem>
+                      <MenuItem value={"04"}>5</MenuItem>
                     </TextField>
                   )}
                 />
@@ -530,13 +624,14 @@ function DetailModal({
                     <TextField
                       {...field}
                       select
-                      placeholder={t("configuration.ble.select")}
                       error={!!error}
                       helperText={error?.message}
                     >
-                      <MenuItem value={"1"}>1</MenuItem>
-                      <MenuItem value={2}>2</MenuItem>
-                      <MenuItem value={3}>3</MenuItem>
+                      <MenuItem value={"00"}>
+                        {t("configuration.ble.select")}
+                      </MenuItem>
+                      <MenuItem value={"01"}>ELA PUCK RHT</MenuItem>
+                      <MenuItem value={"02"}>ELA COIN T</MenuItem>
                     </TextField>
                   )}
                 />
@@ -561,6 +656,10 @@ function DetailModal({
                       message: FIELD_ERRORS.required(t("configuration.ble.id"))[
                         lang
                       ],
+                    },
+                    maxLength: {
+                      value: 12,
+                      message: "Max: 12 Characters",
                     },
                     pattern: {
                       value: /^[A-Za-z0-9]+$/,

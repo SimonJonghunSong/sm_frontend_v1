@@ -93,12 +93,12 @@ export default function useDeviceVersions({
   currentPort: any;
   write: any;
 }) {
+  const [isFetched, setIsFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const deviceVersionsObjectRef = useRef<Record<string, string>>({});
   const [deviceVersionsObject, setDeviceVersionsObject] = useState<
     Record<string, string>
   >({});
-  const [isFechedDeviceVersions, setIsFechedDeviceVersions] = useState(false);
 
   useEffect(() => {
     console.log("isFechedPackage :::::", isFechedPackage);
@@ -112,7 +112,10 @@ export default function useDeviceVersions({
         setIsLoading(true);
         setTimeout(() => {
           setIsLoading(false);
-        }, 500);
+        }, 1000); // ??? ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+        setTimeout(() => {
+          setIsFetched(true);
+        }, 4000); // ??? 소닉 메롱
         console.log("ready~~!!!");
         const DELAY_MS = 100;
 
@@ -134,6 +137,10 @@ export default function useDeviceVersions({
             currentPort.port.onEndDeviceVersionsFetched = (data) => {
               const { key, value } = getDeviceVersionsForString(data);
               deviceVersionsObjectRef.current[key] = value;
+
+              if (Object.keys(deviceVersionsObjectRef.current).length === 10) {
+                setIsFetched(true);
+              }
 
               console.log(
                 "deviceVersionsObjectRef.current :::",
@@ -161,5 +168,5 @@ export default function useDeviceVersions({
     setDeviceVersionsObject(deviceVersionsObjectRef.current);
   }, [isLoading]);
 
-  return { deviceVersionsObject, isLoading };
+  return { deviceVersionsObject, isLoading, isFetched };
 }

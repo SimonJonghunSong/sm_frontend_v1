@@ -3,6 +3,7 @@ import { FormField } from "../page";
 import { Stack } from "@mui/material";
 import { Ble, Sensor } from "../(bluetooth)/@index";
 import BleRegistration from "app/(auth)/device-info/(bluetooth)/BleRegistration";
+import { SerialPortState } from "@/src/stores/useSerialStore";
 
 interface Props {
   formData: {
@@ -13,9 +14,18 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
+  isReady: boolean;
+  write: any;
+  port: SerialPortState;
 }
 
-export default function BluetoothTab({ formData, setFormData }: Props) {
+export default function BluetoothTab({
+  formData,
+  setFormData,
+  isReady,
+  write,
+  port,
+}: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -33,8 +43,13 @@ export default function BluetoothTab({ formData, setFormData }: Props) {
     <Stack className="contentWrap" direction="column" gap={"20px"}>
       <Ble formData={formData} onChange={handleValueChange} />
 
-      {/* TODO BLE Registration 추가 */}
-      <BleRegistration formData={formData} onChange={handleValueChange} />
+      <BleRegistration
+        formData={formData}
+        onChange={handleValueChange}
+        isReady={isReady}
+        write={write}
+        port={port}
+      />
 
       <Sensor formData={formData} onChange={handleValueChange} />
     </Stack>

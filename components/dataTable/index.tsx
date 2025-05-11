@@ -31,6 +31,7 @@ type DataTableProps = {
   ) => void;
   minHeight?: number | string;
   isRowSelectable?: (params: GridRowParams<any>) => boolean;
+  loading?: boolean;
 };
 export default function DataTable({
   disableResize = false,
@@ -47,6 +48,7 @@ export default function DataTable({
   getRowClassName,
   minHeight,
   isRowSelectable,
+  loading,
 }: DataTableProps) {
   const apiRef = useRef<GridApiCommunity>();
   const [page, setPage] = useState(0);
@@ -76,6 +78,7 @@ export default function DataTable({
         disableRowSelectionOnClick={!checkbox || disableRowClick}
         getRowClassName={getRowClassName}
         rowHeight={rowHeight}
+        loading={loading}
         autoHeight
         isRowSelectable={isRowSelectable}
         disableColumnSorting

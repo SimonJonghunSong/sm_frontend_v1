@@ -1317,9 +1317,7 @@
       "humidity_(%)": "Humidity (%)",
       "edit": "Edit",
       "delete": "Delete",
-      "no_registered_ble": {
-        "": "No registered BLE."
-      },
+      "no_registered_ble": "No registered BLE.",
       "add_ble": "Add BLE",
       "select,_1,_2,_3,_4,_5": "Select, 1, 2, 3, 4, 5",
       "type": "Type",

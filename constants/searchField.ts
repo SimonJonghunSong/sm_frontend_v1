@@ -292,9 +292,9 @@ export const SECTIONS = {
     pt: "Bluetooth",
   },
   BleRegistration: {
-    en: "Bluetooth Registration",
-    es: "Registro de Bluetooth",
-    pt: "Registro de Bluetooth",
+    en: "BLE Registration",
+    es: "Registro BLE",
+    pt: "Registro BLE",
   },
   Sensor: {
     en: "Sensor",

@@ -259,10 +259,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -337,10 +334,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -1287,9 +1281,7 @@
       "humidity_(%)": "Humedad (%)",
       "edit": "Editar",
       "delete": "Eliminar",
-      "no_registered_ble": {
-        "": "No hay BLE registrado."
-      },
+      "no_registered_ble": "No hay BLE registrado.",
       "add_ble": "Agregar BLE",
       "select,_1,_2,_3,_4,_5": "Seleccionar, 1, 2, 3, 4, 5",
       "type": "Tipo",

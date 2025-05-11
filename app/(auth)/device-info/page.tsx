@@ -41,6 +41,7 @@ import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
 import { getSearchParamsData } from "@/src/utils/\bsearchParams";
 import DeviceStatusTab from "app/(auth)/device-info/(tabs)/DeviceStatusTab";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
+import { ConstructionOutlined } from "@mui/icons-material";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -213,12 +214,15 @@ export default function DeviceInfoPage() {
   const originData = portList.find(({ port }) => port.imei === imei)
     .packageToJson.synctrak;
 
-  const { deviceVersionsObject, isLoading: deviceInfoLoading } =
-    useDeviceVersions({
-      isFechedPackage,
-      currentPort,
-      write,
-    });
+  const {
+    deviceVersionsObject,
+    isLoading: deviceInfoLoading,
+    isFetched: isDeviceInfoFetched,
+  } = useDeviceVersions({
+    isFechedPackage,
+    currentPort,
+    write,
+  });
 
   const [tab, setTab] = useState("DeviceStatus");
   const [formData, setFormData] = useState<{
@@ -267,7 +271,16 @@ export default function DeviceInfoPage() {
       case "Tracking":
         return <TrackingTab formData={formData} setFormData={setFormData} />;
       case "Bluetooth":
-        return <BluetoothTab formData={formData} setFormData={setFormData} />;
+        return (
+          <BluetoothTab
+            formData={formData}
+            setFormData={setFormData}
+            isReady={isReady && isFechedPackage && isDeviceInfoFetched}
+            write={write}
+            port={currentPort}
+          />
+        );
+
       case "Accessories":
         return <AccessoriesTab formData={formData} setFormData={setFormData} />;
       case "RF":

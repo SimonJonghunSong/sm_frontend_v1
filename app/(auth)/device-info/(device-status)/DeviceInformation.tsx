@@ -91,7 +91,7 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>GNSS Version</FieldLabel>
-            <FieldValue>-</FieldValue>
+            <FieldValue>{renderVersion("GNSS")}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>Backup Battery Level</FieldLabel>
