@@ -53,7 +53,7 @@ export default function ReportTab({ formData, setFormData }: Props) {
 
       <ReportMapping2 formData={formData} onChange={handleValueChange} />
 
-      {/* <AssignHeader formData={formData} imei={imei} /> */}
+      <AssignHeader formData={formData} imei={imei} />
 
       <AlertConfig formData={formData} onChange={handleValueChange} />
 
