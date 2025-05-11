@@ -25,7 +25,7 @@ const ModeSettings = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   const isUnderbar = !formData["1670"].key.includes("Time[1]");
   const fieldIds = isUnderbar
@@ -158,7 +158,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     onChange={handleChange}
                     isRequired
                     isSwitch
-                    isUnderbarId
                     style={{ width: "100%" }}
                   />
 
@@ -177,7 +176,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     onChange={handleChange}
                     isRequired
                     isSwitch
-                    isUnderbarId
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
@@ -405,7 +403,12 @@ const ModeSettings = ({ formData, onChange }: Props) => {
         </Stack>
 
         <Stack direction="row" justifyContent="flex-end">
-          <Button color="secondary" variant="contained" type="submit">
+          <Button
+            color="secondary"
+            variant="contained"
+            type="submit"
+            disabled={isLoading}
+          >
             {t("notify.send")}
           </Button>
         </Stack>

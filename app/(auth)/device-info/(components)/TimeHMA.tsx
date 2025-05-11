@@ -1,260 +1,225 @@
-import { MenuItem, Select } from "@mui/material";
-import dayjs from "dayjs";
+import { MenuItem, Select, Stack } from "@mui/material";
+import { FormField } from "../page";
+import InputBox from "@/components/inputbox/InputBox";
+import { FIELD_VALIDATIONS } from "constants/field";
+import useLangStore from "@/utils/useLangStore";
+import { SwitchPrimary } from "@/components/switches";
+import { useState } from "react";
 
+// Constants
 const DEFAULT_HOUR_VALUE = "01";
 const DEFAULT_MIN_VALUE = "00";
+const HOURS_12 = [
+  "01",
+  "02",
+  "03",
+  "04",
+  "05",
+  "06",
+  "07",
+  "08",
+  "09",
+  "10",
+  "11",
+  "12",
+];
+const HOURS_24 = [
+  ...HOURS_12,
+  "13",
+  "14",
+  "15",
+  "16",
+  "17",
+  "18",
+  "19",
+  "20",
+  "21",
+  "22",
+  "23",
+  "24",
+];
+const MINUTES_1 = Array.from({ length: 60 }, (_, i) =>
+  i.toString().padStart(2, "0")
+);
+const MINUTES_10 = ["00", "10", "20", "30", "40", "50"];
+const MINUTES_30 = ["00", "30"];
 
-interface Props {
+// Types
+interface TimeHMAProps {
+  id: string;
+  formData: {
+    [key: string]: FormField;
+  };
+  isRequired?: boolean;
   style?: React.CSSProperties;
-  value?: string; // hh:mm
-  onChange: (value: string) => void;
+  value?: string; // hhmm
+  onChange: (id: string, value: string) => void;
   unit?: 1 | 10 | 30;
   hourType?: 12 | 24;
-  isAm?: boolean;
+  isSwitch?: boolean;
 }
 
+// Utility functions
+const formatHour = (hour: number, hourType: number): string => {
+  if (hourType === 12) {
+    const displayHour = hour > 12 ? hour - 12 : hour;
+    return displayHour.toString().padStart(2, "0");
+  }
+  return hour.toString().padStart(2, "0");
+};
+
+const getMinutesByUnit = (unit: 1 | 10 | 30): string[] => {
+  switch (unit) {
+    case 1:
+      return MINUTES_1;
+    case 10:
+      return MINUTES_10;
+    case 30:
+      return MINUTES_30;
+  }
+};
+
+// Sub-components
+const TimeSelect = ({
+  value,
+  options,
+  onChange,
+  placeholder,
+  style,
+}: {
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+  placeholder: string;
+  style?: React.CSSProperties;
+}) => (
+  <Select
+    style={style}
+    value={value}
+    onChange={(e) => onChange(e.target.value)}
+    displayEmpty
+    renderValue={(v) =>
+      v?.length ? v : <span className="text-grey-5">{placeholder}</span>
+    }
+  >
+    {options.map((item) => (
+      <MenuItem key={item} value={item}>
+        {item}
+      </MenuItem>
+    ))}
+  </Select>
+);
+
 export default function TimeHMA({
+  id,
+  formData,
+  isRequired,
   style,
   value,
   onChange,
   unit = 1,
   hourType = 12,
-  isAm,
-}: Props) {
-  const renderHour = () => {
-    if (hourType === 12) {
-      return [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05",
-        "06",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-      ];
-    } else {
-      return [
-        "01",
-        "02",
-        "03",
-        "04",
-        "05",
-        "06",
-        "07",
-        "08",
-        "09",
-        "10",
-        "11",
-        "12",
-        "13",
-        "14",
-        "15",
-        "16",
-        "17",
-        "18",
-        "19",
-        "20",
-        "21",
-        "22",
-        "23",
-        "24",
-      ];
+  isSwitch = false,
+}: TimeHMAProps) {
+  const lang = useLangStore((state) => state.lang);
+  const [isChecked, setIsChecked] = useState(!!formData[id]?.realValue);
+
+  if (!formData[id]) return null;
+
+  const hour = value?.slice(0, 2) || DEFAULT_HOUR_VALUE;
+  const min = value?.slice(2, 4) || DEFAULT_MIN_VALUE;
+  const isAm = Number(hour) < 12;
+
+  const handleHourChange = (newHour: string) => {
+    let hourNum = Number(newHour);
+    if (hourType === 12 && !isAm) {
+      hourNum += 12;
     }
+    const timeString = `${hourNum.toString().padStart(2, "0")}${min}`;
+    onChange(id, timeString);
   };
 
-  const renderMin = () => {
-    switch (unit) {
-      case 1:
-        return [
-          "00",
-          "01",
-          "02",
-          "03",
-          "04",
-          "05",
-          "06",
-          "07",
-          "08",
-          "09",
-          "10",
-          "11",
-          "12",
-          "13",
-          "14",
-          "15",
-          "16",
-          "17",
-          "18",
-          "19",
-          "20",
-          "21",
-          "22",
-          "23",
-          "24",
-          "25",
-          "26",
-          "27",
-          "28",
-          "29",
-          "30",
-          "31",
-          "32",
-          "33",
-          "34",
-          "35",
-          "36",
-          "37",
-          "38",
-          "39",
-          "40",
-          "41",
-          "42",
-          "43",
-          "44",
-          "45",
-          "46",
-          "47",
-          "48",
-          "49",
-          "50",
-          "51",
-          "52",
-          "53",
-          "54",
-          "55",
-          "56",
-          "57",
-          "58",
-          "59",
-        ];
-      case 10:
-        return ["00", "10", "20", "30", "40", "50"];
-      case 30:
-        return ["00", "30"];
-    }
+  const handleMinuteChange = (newMin: string) => {
+    const timeString = `${hour}${newMin}`;
+    onChange(id, timeString);
+  };
+
+  const handleAmPmChange = (newAmPm: string) => {
+    const isAM = newAmPm === "AM";
+    const hourNum = Number(hour);
+    const newHour = isAM ? hourNum - 12 : hourNum + 12;
+    const timeString = `${newHour.toString().padStart(2, "0")}${min}`;
+    onChange(id, timeString);
   };
 
   return (
-    <div
+    <Stack
+      gap={"8px"}
       style={{
         width: "100%",
-        alignItems: "center",
-        display: "flex",
-        gap: "4px",
+        ...(isSwitch && { position: "relative" }),
         ...style,
       }}
     >
-      <Select
-        style={{ flex: 1.7 }}
-        value={
-          value
-            ? isAm
-              ? value.split(":")[0]
-              : Number(value.split(":")[0]) - 12 < 10
-              ? "0" + (Number(value.split(":")[0]) - 12).toString()
-              : (Number(value.split(":")[0]) - 12).toString()
-            : ""
-        }
-        onChange={(e) => {
-          const min = value?.split(":")[1] || DEFAULT_MIN_VALUE;
-          let hour = Number(e.target.value);
-
-          if (hourType === 12) {
-            if (!isAm) {
-              hour = hour + 12;
+      <Stack direction="row" gap="4px" alignItems="center">
+        <InputBox.Title>
+          {FIELD_VALIDATIONS[id].title[lang]}
+          {isRequired && (
+            <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
+          )}
+        </InputBox.Title>
+        {FIELD_VALIDATIONS[id].tooltip?.[lang] && (
+          <InputBox.Info
+            tooltipText={
+              <span style={{ whiteSpace: "pre-wrap" }}>
+                {FIELD_VALIDATIONS[id].tooltip[lang]}
+              </span>
             }
-          }
+          />
+        )}
+        <InputBox.Number>{id}</InputBox.Number>
+      </Stack>
 
-          if (!value) {
-            hour = Number(DEFAULT_HOUR_VALUE);
-          }
-
-          const timeString = `${hour}:${min}`;
-          onChange(timeString);
-        }}
-        displayEmpty
-        renderValue={(v) =>
-          v?.length ? (
-            // 선택된 값이 있을 때 표시할 내용
-            v
-          ) : (
-            // placeholder 텍스트
-            <span className="text-grey-5">hh</span>
-          )
-        }
-      >
-        {renderHour().map((item) => (
-          <MenuItem key={item} value={item}>
-            {item}
-          </MenuItem>
-        ))}
-      </Select>
-      <div>:</div>
-      <Select
-        style={{ flex: 1.7 }}
-        value={value ? value.split(":")[1] : ""}
-        onChange={(e) => {
-          const min = e.target.value;
-          const hour = value?.split(":")[0] || DEFAULT_HOUR_VALUE;
-
-          const timeString = `${hour}:${min}`;
-          onChange(timeString);
-        }}
-        displayEmpty
-        renderValue={(v) =>
-          v?.length ? (
-            // 선택된 값이 있을 때 표시할 내용
-            v
-          ) : (
-            // placeholder 텍스트
-            <span className="text-grey-5">mm</span>
-          )
-        }
-      >
-        {renderMin().map((item) => (
-          <MenuItem key={item} value={item}>
-            {item}
-          </MenuItem>
-        ))}
-      </Select>
-      {hourType === 12 && (
-        <Select
-          style={{ flex: 1, marginLeft: "8px" }}
-          value={value ? (isAm ? "AM" : "PM") : ""}
-          onChange={(e) => {
-            const min = value?.split(":")[1] || DEFAULT_MIN_VALUE;
-            const hour =
-              e.target.value === "AM"
-                ? Number(value?.split(":")[0]) - 12 < 10
-                  ? "0" + (Number(value?.split(":")[0]) - 12).toString()
-                  : (Number(value?.split(":")[0]) - 12).toString()
-                : Number(value?.split(":")[0]) + 12 < 10
-                ? "0" + (Number(value?.split(":")[0]) + 12).toString()
-                : (Number(value?.split(":")[0]) + 12).toString();
-
-            const timeString = `${hour}:${min}`;
-            onChange(timeString);
-          }}
-          displayEmpty
-          renderValue={(v) =>
-            v?.length ? (
-              // 선택된 값이 있을 때 표시할 내용
-              v
-            ) : (
-              // placeholder 텍스트
-              <span className="text-grey-5">AM/PM</span>
-            )
-          }
-        >
-          <MenuItem value="AM">AM</MenuItem>
-          <MenuItem value="PM">PM</MenuItem>
-        </Select>
+      {isSwitch && (
+        <Stack sx={{ position: "absolute", right: 0, top: 0 }}>
+          <SwitchPrimary
+            checked={isChecked}
+            onChange={(e) => {
+              setIsChecked(e.target.checked);
+              onChange(id, e.target.checked ? "0100" : "");
+            }}
+          />
+        </Stack>
       )}
-    </div>
+
+      {(!isSwitch || (isSwitch && isChecked)) && (
+        <Stack direction="row" gap="4px" alignItems="center">
+          <TimeSelect
+            value={value ? formatHour(Number(hour), hourType) : ""}
+            options={hourType === 12 ? HOURS_12 : HOURS_24}
+            onChange={handleHourChange}
+            placeholder="HH"
+            style={{ flex: 1.7 }}
+          />
+          <div>:</div>
+          <TimeSelect
+            value={value ? min : ""}
+            options={getMinutesByUnit(unit)}
+            onChange={handleMinuteChange}
+            placeholder="MM"
+            style={{ flex: 1.7 }}
+          />
+          {hourType === 12 && (
+            <TimeSelect
+              value={value ? (isAm ? "AM" : "PM") : ""}
+              options={["AM", "PM"]}
+              onChange={handleAmPmChange}
+              placeholder="AM / PM"
+              style={{ flex: 1, marginLeft: "8px" }}
+            />
+          )}
+        </Stack>
+      )}
+    </Stack>
   );
 }

@@ -1230,6 +1230,11 @@
       "output_alert": "Alerta de Saída",
       "output_active": "Saída Ativa",
       "select,_output_1,_output_2,_output_3,_output_4,_all_outputs": "Selecionar, Saída 1, Saída 2, Saída 3, Saída 4, Todas as Saídas",
+      "output_1": "Saída 1",
+      "output_2": "Saída 2",
+      "output_3": "Saída 3",
+      "output_4": "Saída 4",
+      "all_outputs": "Todas as Saídas",
       "output_keep_active": "Manter Saída Ativa",
       "output_active_delay": "Atraso na Ativação da Saída",
       "buzzer_speed_limit": "Limite de Velocidade do Buzzer",
@@ -1276,9 +1281,7 @@
       "humidity_(%)": "Umidade (%)",
       "edit": "Editar",
       "delete": "Excluir",
-      "no_registered_ble": {
-        "": "Nenhum BLE registrado."
-      },
+      "no_registered_ble": "Nenhum BLE registrado.",
       "add_ble": "Adicionar BLE",
       "select,_1,_2,_3,_4,_5": "Selecionar, 1, 2, 3, 4, 5",
       "type": "Tipo",
@@ -1309,7 +1312,10 @@
       "sensor_report_interval_(minutes)": "Intervalo de Relatório do Sensor (minutos)",
       "sensor_scan_interval_in_driving_(minutes)": "Intervalo de Escaneamento do Sensor em Direção (minutos)",
       "sensor_scan_interval_in_parking_(minutes)": "Intervalo de Escaneamento do Sensor em Estacionamento (minutos)",
-      "sensor_scan_power_saving": "Economia de Energia do Escaneamento do Sensor"
+      "sensor_scan_power_saving": "Economia de Energia do Escaneamento do Sensor",
+      "select": "Selecione",
+      "enter_alert": "Digite alerta",
+      "exit_alert": "Alerta de saída"
     },
     "accessories": {
       "1-wire_settings": "Configurações 1-Wire",

@@ -2,14 +2,9 @@ import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
-import InputBox from "@/components/inputbox/InputBox";
-import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
-import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
-import NumericInputField from "../(components)/NumericInputField";
-import SwitchField from "../(components)/SwitchField";
 import SelectField from "../(components)/SelectField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
@@ -27,7 +22,7 @@ const McuUpdate = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -94,13 +89,17 @@ const McuUpdate = ({ formData, onChange }: Props) => {
         {SECTIONS.McuUpdate[lang]}
       </h1>
 
-      {/* // TODO Select Placeholder 지원 */}
       <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
         <SelectField id="9900" formData={formData} onChange={handleChange} />
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

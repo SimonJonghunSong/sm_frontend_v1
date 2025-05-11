@@ -1,3 +1,5 @@
+import { SECTIONS } from "constants/searchField";
+
 export const FIELD_VALIDATIONS = {
   "1000": {
     title: {
@@ -940,7 +942,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -948,7 +950,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -6268,7 +6270,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "IMS",
           es: "IMS",
@@ -6276,7 +6278,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Consumer",
           es: "Consumidor",
@@ -6284,7 +6286,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Away",
           es: "Ausente",
@@ -6292,7 +6294,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Recovery",
           es: "Recuperación",
@@ -6300,7 +6302,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "4",
+        value: "04",
         label: {
           en: "BOT",
           es: "BOT",
@@ -6574,7 +6576,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -6582,7 +6584,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -8275,7 +8277,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -8283,7 +8285,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -8793,7 +8795,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Normal",
           es: "Normal",
@@ -8801,7 +8803,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Wall",
           es: "Pared",
@@ -8809,7 +8811,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Vehicle(ACC)",
           es: "Vehículo (ACC)",
@@ -8833,7 +8835,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -8841,7 +8843,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Power Saving Mode1",
           es: "Modo de Ahorro de Energía1",
@@ -8849,7 +8851,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Power Saving Mode2",
           es: "Modo de Ahorro de Energía2",
@@ -8857,7 +8859,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Power Saving Mode1 + Power Saving Mode2",
           es: "Modo de Ahorro de Energía1 + Modo de Ahorro de Energía2",
@@ -9061,7 +9063,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -9069,7 +9071,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -9619,7 +9621,7 @@ export const FIELD_VALIDATIONS = {
     max: 3,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -9627,7 +9629,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Output 1",
           es: "Salida 1",
@@ -9635,7 +9637,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Output 2",
           es: "Salida 2",
@@ -9643,7 +9645,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Output 1+Output 2",
           es: "Salida 1+Salida 2",
@@ -12373,7 +12375,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -12381,7 +12383,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -12389,7 +12391,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -12397,7 +12399,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -12642,7 +12644,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -12650,7 +12652,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -12658,7 +12660,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -12666,7 +12668,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -12911,7 +12913,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -12919,7 +12921,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -12927,7 +12929,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -12935,7 +12937,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -13180,7 +13182,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -13188,7 +13190,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -13196,7 +13198,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -13204,7 +13206,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -13449,7 +13451,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -13457,7 +13459,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -13465,7 +13467,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -13473,7 +13475,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -13718,7 +13720,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -13726,7 +13728,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -13734,7 +13736,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -13742,7 +13744,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -13987,7 +13989,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -13995,7 +13997,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -14003,7 +14005,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -14011,7 +14013,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -14256,7 +14258,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -14264,7 +14266,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -14272,7 +14274,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -14280,7 +14282,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -14525,7 +14527,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -14533,7 +14535,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -14541,7 +14543,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -14549,7 +14551,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -14794,7 +14796,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -14802,7 +14804,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Leave Emergency Mode",
           es: "Salir del Modo de Emergencia",
@@ -14810,7 +14812,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Enter Emergency Mode",
           es: "Entrar en Modo de Emergencia",
@@ -14818,7 +14820,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Enable Emergency Mode in Collaborative Network",
           es: "Activar Modo de Emergencia en la Red Colaborativa",
@@ -16059,7 +16061,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -16067,7 +16069,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Scan All",
           es: "Escanear Todo",
@@ -16075,7 +16077,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Status Scan",
           es: "Escanear Estado",
@@ -16083,7 +16085,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "SNB SNE Scan",
           es: "Escanear SNB SNE",
@@ -16107,7 +16109,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16115,7 +16117,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16139,7 +16141,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16147,7 +16149,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16231,7 +16233,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16239,7 +16241,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16308,7 +16310,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16316,7 +16318,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16340,7 +16342,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Modo de Emergencia",
@@ -16348,7 +16350,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Emergency Mode",
           es: "Informe de Alerta",
@@ -16356,7 +16358,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Alert Report",
         },
@@ -16378,7 +16380,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16386,7 +16388,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16410,7 +16412,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16418,7 +16420,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16457,7 +16459,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16465,7 +16467,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16489,7 +16491,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -16497,7 +16499,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -16626,7 +16628,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "No use",
           es: "Sin uso",
@@ -16634,7 +16636,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Alert",
           es: "Alerta",
@@ -16642,7 +16644,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Emergency",
           es: "Emergencia",
@@ -16650,7 +16652,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "Alert+Emergency",
           es: "Alerta+Emergencia",
@@ -16658,7 +16660,15 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "4",
+        value: "04",
+        label: {
+          en: "Normal",
+          es: "Normal",
+          pt: "Normal",
+        },
+      },
+      {
+        value: "05",
         label: {
           en: "Alert+Normal",
           es: "Alerta+Normal",
@@ -16666,7 +16676,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "5",
+        value: "06",
         label: {
           en: "Emergency+Normal",
           es: "Emergencia+Normal",
@@ -16674,16 +16684,12 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "6",
+        value: "07",
         label: {
           en: "Alert+Emergency+Normal",
           es: "Alerta+Emergencia+Normal",
           pt: "Alerta+Emergência+Normal",
         },
-      },
-      {
-        value: "7",
-        label: {},
       },
     ],
   },
@@ -16702,7 +16708,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "9 digits",
           es: "9 dígitos",
@@ -16710,7 +16716,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "10 digits",
           es: "10 dígitos",
@@ -17282,7 +17288,7 @@ export const FIELD_VALIDATIONS = {
       pt: "Configurações do tempo de varredura BLE para Relatórios de Sensor.\r\n- 4000\r\n• Intervalo(Ligado): 20~120(ST4000), 20~540(ST4950)\r\n• Padrão: 60(ST4000), 540(ST4950)\r\n* A varredura termina quando 4010 é atingido, mesmo que o tempo de varredura definido não seja concluído.\r\n* Para modelos que não suportam 4010, o valor padrão é 50.",
     },
     min: 20,
-    max: 120,
+    max: 540,
     list: null,
   },
   "4012": {
@@ -17360,7 +17366,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -17368,7 +17374,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -17392,7 +17398,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Disable",
           es: "Disable",
@@ -17400,7 +17406,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Enable",
           es: "Enable",
@@ -17454,7 +17460,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "ELA",
           es: "ELA",
@@ -17462,7 +17468,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "ConMet",
           es: "ConMet",
@@ -17470,7 +17476,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "4",
+        value: "04",
         label: {
           en: "ELA+ConMet",
           es: "ELA+ConMet",
@@ -17478,7 +17484,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "7",
+        value: "07",
         label: {
           en: "Otodata",
           es: "Otodata",
@@ -17486,7 +17492,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "8",
+        value: "08",
         label: {
           en: "ELA+Otodata",
           es: "ELA+Otodata",
@@ -17494,7 +17500,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "9",
+        value: "09",
         label: {
           en: "ConMet+Otodata",
           es: "ConMet+Otodata",
@@ -17563,6 +17569,36 @@ export const FIELD_VALIDATIONS = {
       en: "TDI RPM Unit",
       pt: "Unidade de RPM TDI",
       es: "Unidad de RPM TDI",
+    },
+    tooltip: {
+      en: "Maximum and Minimum RPM for the economic range.\r\n• Range : 0~9,999\r\n• Default : 0",
+      es: "Rango máximo y mínimo de RPM para el rango económico.\r\n• Rango: 0~9,999\r\n• Predeterminado: 0",
+      pt: "Faixa máxima e mínima de RPM para a faixa econômica.\r\n• Intervalo: 0~9.999\r\n• Padrão: 0",
+    },
+    min: 0,
+    max: 9999,
+    list: null,
+  },
+  "4203": {
+    title: {
+      en: "TDI ECO RPM",
+      pt: "RPM ECO TDI",
+      es: "RPM ECO TDI",
+    },
+    tooltip: {
+      en: "Set the number of pulses per 1,000 RPM.\r\n• Range(On) : 1~9,999, A\r\n• Default : Off\r\n* If set to Off, the RPM is not used.\r\n* If 'A' is set, the installer needs to calibrate.\r\n- RPM Calibration\r\n1) Turn the ignition line (blue wire) ON and OFF 9 times in sequence:\r\n2) ON (1st) → OFF (2nd) → ON (3rd) → OFF (4th) → ON (5th) → OFF (6th) → ON (7th) → OFF (8th) → ON (9th).\r\n3) Wait for 5 seconds.\r\n4) The WWAN LED (blue) will blink every 0.5 seconds, and the GNSS LED (red) will turn off.\r\n5) Press the accelerator and hold at 2000 RPM for 10 seconds. This must be done within 3 minutes.\r\n6) If the calibration is successful, the WWAN LED will stay on. The LEDs will return to normal after restarting the device. If the calibration fails, the LEDs will blink normally, and the installer should repeat the process from step 1.",
+      es: "Establecer el número de pulsos por 1,000 RPM.\r\n• Rango(Activado): 1~9,999, A\r\n• Predeterminado: Desactivado\r\n* Si se establece en Desactivado, no se utiliza el RPM.\r\n* Si se establece en 'A', el instalador necesita calibrar.\r\n- Calibración de RPM\r\n1) Encender y apagar la línea de ignición (cable azul) 9 veces en secuencia:\r\n2) ENCENDER (1ra vez) → APAGAR (2da vez) → ENCENDER (3ra vez) → APAGAR (4ta vez) → ENCENDER (5ta vez) → APAGAR (6ta vez) → ENCENDER (7ma vez) → APAGAR (8va vez) → ENCENDER (9na vez).\r\n3) Esperar 5 segundos.\r\n4) El LED WWAN (azul) parpadeará cada 0.5 segundos, y el LED GNSS (rojo) se apagará.\r\n5) Presionar el acelerador y mantenerlo en 2000 RPM durante 10 segundos. Esto debe hacerse dentro de los 3 minutos.\r\n6) Si la calibración es exitosa, el LED WWAN permanecerá Activado. Los LED volverán a la normalidad después de reiniciar el dispositivo. Si la calibración falla, los LED parpadearán normalmente, y el instalador debe repetir el proceso desde el paso 1.",
+      pt: "Definir o número de pulsos por 1.000 RPM.\r\n• Intervalo(Ativado): 1~9.999, A\r\n• Padrão : Desativado\r\n* Se definido como Desligado, o RPM não será utilizado.\r\n* Se 'A' for definido, o instalador precisa calibrar.\r\n- Calibração de RPM\r\n1) Ligue e desligue a linha de ignição (fio azul) 9 vezes em sequência:\r\n2) LIGADO (1ª vez) → DESLIGADO (2ª vez) → LIGADO (3ª vez) → DESLIGADO (4ª vez) → LIGADO (5ª vez) → DESLIGADO (6ª vez) → LIGADO (7ª vez) → DESLIGADO (8ª vez) → LIGADO (9ª vez).\r\n3) Aguarde 5 segundos.\r\n4) O LED WWAN (azul) piscará a cada 0,5 segundos, e o LED GNSS (vermelho) se apagará.\r\n5) Pressione o acelerador e mantenha em 2000 RPM por 10 segundos. Isso deve ser feito dentro de 3 minutos.\r\n6) Se a calibração for bem-sucedida, o LED WWAN permanecerá aceso. Os LEDs voltarão ao normal após reiniciar o dispositivo. Se a calibração falhar, os LEDs piscarão normalmente, e o instalador deverá repetir o processo desde o passo 1.",
+    },
+    min: 0,
+    max: 9999,
+    list: null,
+  },
+  "4204": {
+    title: {
+      en: "TDI ECO RPM",
+      pt: "RPM ECO TDI",
+      es: "RPM ECO TDI",
     },
     tooltip: {
       en: "Set the number of pulses per 1,000 RPM.\r\n• Range(On) : 1~9,999, A\r\n• Default : Off\r\n* If set to Off, the RPM is not used.\r\n* If 'A' is set, the installer needs to calibrate.\r\n- RPM Calibration\r\n1) Turn the ignition line (blue wire) ON and OFF 9 times in sequence:\r\n2) ON (1st) → OFF (2nd) → ON (3rd) → OFF (4th) → ON (5th) → OFF (6th) → ON (7th) → OFF (8th) → ON (9th).\r\n3) Wait for 5 seconds.\r\n4) The WWAN LED (blue) will blink every 0.5 seconds, and the GNSS LED (red) will turn off.\r\n5) Press the accelerator and hold at 2000 RPM for 10 seconds. This must be done within 3 minutes.\r\n6) If the calibration is successful, the WWAN LED will stay on. The LEDs will return to normal after restarting the device. If the calibration fails, the LEDs will blink normally, and the installer should repeat the process from step 1.",
@@ -17761,7 +17797,15 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "1",
+        value: "00",
+        label: {
+          en: "Select",
+          es: "Seleccionar",
+          pt: "Selecionar",
+        },
+      },
+      {
+        value: "01",
         label: {
           en: "PC",
           es: "PC",
@@ -17769,7 +17813,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "GPRS/HSPA Network",
           es: "Red GPRS/HSPA",
@@ -17777,7 +17821,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "SMS",
           es: "SMS",
@@ -17966,6 +18010,21 @@ export const FIELD_VALIDATIONS = {
   },
   "0121": {
     title: {
+      en: "Automatic APN List",
+      pt: "Lista de APN Automática",
+      es: "Lista de APN Automática",
+    },
+    tooltip: {
+      en: "Delete the entire APN list.",
+      es: "Borrar toda la lista de APN.",
+      pt: "Exclua toda a lista de APNs.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0121-01": {
+    title: {
       en: "Delete APN List",
       pt: "Excluir Lista de APN",
       es: "Eliminar Lista de APN",
@@ -18086,6 +18145,21 @@ export const FIELD_VALIDATIONS = {
   },
   "0114": {
     title: {
+      en: "PIN Lock Status",
+      pt: "Status do Bloqueio de PIN",
+      es: "Estado del Bloqueo de PIN",
+    },
+    tooltip: {
+      en: "Get the PIN lock status.",
+      es: "Obtener el estado de bloqueo del PIN.",
+      pt: "Obtenha o status de bloqueio do PIN.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0114-01": {
+    title: {
       en: "PIN Unlock",
       pt: "Desbloqueio de PIN",
       es: "Desbloqueo de PIN",
@@ -18125,8 +18199,8 @@ export const FIELD_VALIDATIONS = {
       es: "El servidor envía un comando de desbloqueo del APN al dispositivo.",
       pt: "O servidor envia um comando de desbloqueio de APN para o dispositivo.",
     },
-    min: null,
-    max: null,
+    min: 0,
+    max: 255,
     list: null,
   },
   "0117": {
@@ -18170,8 +18244,8 @@ export const FIELD_VALIDATIONS = {
       es: "Configurar el temporizador de RAT de alta prioridad.\r\n• Rango: 10~300\r\n• Predeterminado: 10",
       pt: "Defina o temporizador de RAT de alta prioridade.\r\n• Intervalo: 10~300\r\n• Padrão: 10",
     },
-    min: null,
-    max: null,
+    min: 10,
+    max: 300,
     list: null,
   },
   "0120": {
@@ -18204,7 +18278,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18212,7 +18286,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18266,7 +18340,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18274,7 +18348,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18328,7 +18402,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18336,7 +18410,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18360,7 +18434,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18368,7 +18442,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18422,7 +18496,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18430,7 +18504,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18484,7 +18558,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18492,7 +18566,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18531,7 +18605,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18539,7 +18613,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18576,7 +18650,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "0",
           es: "0",
@@ -18584,7 +18658,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "1",
           es: "1",
@@ -18592,7 +18666,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "2",
           es: "2",
@@ -18600,7 +18674,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "3",
+        value: "03",
         label: {
           en: "3",
           es: "3",
@@ -18608,7 +18682,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "4",
+        value: "04",
         label: {
           en: "4",
           es: "4",
@@ -18616,7 +18690,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "5",
+        value: "05",
         label: {
           en: "5",
           es: "5",
@@ -18624,7 +18698,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "6",
+        value: "06",
         label: {
           en: "6",
           es: "6",
@@ -18693,7 +18767,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -18701,7 +18775,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -18980,7 +19054,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Hide",
           es: "Ocultar",
@@ -18988,7 +19062,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Show",
           es: "Mostrar",
@@ -19012,7 +19086,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Select",
           es: "Seleccionar",
@@ -19020,7 +19094,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Handset",
           es: "Teléfono",
@@ -19028,7 +19102,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "2",
+        value: "02",
         label: {
           en: "Headset",
           es: "Auriculares",
@@ -19217,7 +19291,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19225,7 +19299,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19631,7 +19705,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19639,7 +19713,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19678,7 +19752,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19686,7 +19760,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19755,7 +19829,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19763,7 +19837,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19832,7 +19906,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19840,7 +19914,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19879,7 +19953,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19887,7 +19961,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19911,7 +19985,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19919,7 +19993,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -19988,7 +20062,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -19996,7 +20070,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20020,7 +20094,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20028,7 +20102,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20067,7 +20141,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20075,7 +20149,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20174,7 +20248,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20182,7 +20256,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20341,7 +20415,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20349,7 +20423,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20373,7 +20447,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20381,7 +20455,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20540,7 +20614,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20548,7 +20622,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20587,7 +20661,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20595,7 +20669,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",
@@ -20664,7 +20738,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "0",
+        value: "00",
         label: {
           en: "Enable",
           es: "Activar",
@@ -20672,7 +20746,7 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
-        value: "1",
+        value: "01",
         label: {
           en: "Disable",
           es: "Desactivar",

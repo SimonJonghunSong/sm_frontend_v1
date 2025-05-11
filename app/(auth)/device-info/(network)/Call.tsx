@@ -24,7 +24,7 @@ const Call = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -87,65 +87,81 @@ const Call = ({ formData, onChange }: Props) => {
       }}
     >
       <h1 data-section-id={SECTIONS.Call.en}>{SECTIONS.Call[lang]}</h1>
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <SwitchField id="1035" formData={formData} onChange={handleChange} />
 
-        {formData["1035"]?.realValue === "01" && (
-          <>
-            <TextInputField
-              id="1036"
-              formData={formData}
-              onChange={handleChange}
-            />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SwitchField
+            id="1035"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-            <TextInputField
-              id="1037"
-              formData={formData}
-              onChange={handleChange}
-            />
+          {formData["1035"]?.realValue === "01" && (
+            <>
+              <TextInputField
+                id="1036"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-            <TextInputField
-              id="1038"
-              formData={formData}
-              onChange={handleChange}
-            />
+              <TextInputField
+                id="1037"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-            <TextInputField
-              id="1039"
-              formData={formData}
-              onChange={handleChange}
-            />
+              <TextInputField
+                id="1038"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-            <TextInputField
-              id="1040"
-              formData={formData}
-              onChange={handleChange}
-            />
-          </>
-        )}
+              <TextInputField
+                id="1039"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
 
-        <NumericInputField
-          id="1041"
-          formData={formData}
-          onChange={handleChange}
-        />
-        <NumericInputField
-          id="1041"
-          formData={formData}
-          onChange={handleChange}
-        />
+              <TextInputField
+                id="1040"
+                formData={formData}
+                onChange={handleChange}
+                style={{ width: "100%" }}
+              />
+            </>
+          )}
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="1041"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="1042"
-          formData={formData}
-          onChange={handleChange}
-        />
+          <NumericInputField
+            id="1042"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <SwitchField id="1043" formData={formData} onChange={handleChange} />
+          <SwitchField id="1043" formData={formData} onChange={handleChange} />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end" alignItems="center">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

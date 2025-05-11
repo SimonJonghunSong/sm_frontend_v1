@@ -153,12 +153,7 @@ const DualCheckboxField = ({
       )}
 
       {isChecked && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={2}
-          paddingTop={"8px"}
-        >
+        <Stack direction="row" alignItems="center" spacing={2}>
           <Stack direction="row" gap="4px" alignItems="center">
             <Checkbox
               style={{ margin: 0 }}

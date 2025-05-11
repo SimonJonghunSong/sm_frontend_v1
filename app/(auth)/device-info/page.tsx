@@ -16,7 +16,12 @@ import RfTab from "app/(auth)/device-info/(tabs)/RfTab";
 import InputOutputTab from "app/(auth)/device-info/(tabs)/InputOutputTab";
 import DriverTab from "app/(auth)/device-info/(tabs)/DriverTab";
 import useCmdStore from "@/src/stores/useCmdStore";
-import { AT_GET_JSON, AT_REQ } from "@/src/hooks/useSerial/constant";
+import {
+  AT_CMD,
+  AT_EDIT_PREFIX,
+  AT_GET_JSON,
+  AT_REQ,
+} from "@/src/hooks/useSerial/constant";
 import useModal from "@/utils/useModal";
 import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
 import { Button } from "@mui/material";
@@ -24,6 +29,7 @@ import Modal from "@/components/Modal";
 import {
   formDataToSearchSectionData,
   SearchField,
+  SearchFields,
 } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
@@ -32,6 +38,10 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
 import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
+import { getSearchParamsData } from "@/src/utils/\bsearchParams";
+import DeviceStatusTab from "app/(auth)/device-info/(tabs)/DeviceStatusTab";
+import useDeviceVersions from "@/src/hooks/useDeviceVersions";
+import { ConstructionOutlined } from "@mui/icons-material";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -182,12 +192,16 @@ export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
+    [key: string]: SearchFields;
+  }>(null);
+  const [searchParamData, setSearchParamData] = useState<{
     [key: string]: SearchField;
   }>(null);
   const {
     state: { portList },
     func: { write },
   } = useSerial();
+  const [isFechedPackage, setIsFechedPackage] = useState(false);
 
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -200,7 +214,17 @@ export default function DeviceInfoPage() {
   const originData = portList.find(({ port }) => port.imei === imei)
     .packageToJson.synctrak;
 
-  const [tab, setTab] = useState("Network");
+  const {
+    deviceVersionsObject,
+    isLoading: deviceInfoLoading,
+    isFetched: isDeviceInfoFetched,
+  } = useDeviceVersions({
+    isFechedPackage,
+    currentPort,
+    write,
+  });
+
+  const [tab, setTab] = useState("DeviceStatus");
   const [formData, setFormData] = useState<{
     [key: string]: FormField | null;
   }>(null);
@@ -219,8 +243,25 @@ export default function DeviceInfoPage() {
   const searchModal = isOpen;
   const toggleSearchModal = isOpen ? onClose : onOpen;
 
+  const handleReboot = () => {
+    write({
+      data: `${AT_CMD}${imei};03;03`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
+
   const renderContent = () => {
     switch (tab) {
+      case "DeviceStatus":
+        return (
+          <DeviceStatusTab
+            originData={originData}
+            formData={formData}
+            deviceVersionsObject={deviceVersionsObject}
+            handleReboot={handleReboot}
+          />
+        );
       case "Network":
         return <NetworkTab formData={formData} setFormData={setFormData} />;
       case "System":
@@ -230,7 +271,16 @@ export default function DeviceInfoPage() {
       case "Tracking":
         return <TrackingTab formData={formData} setFormData={setFormData} />;
       case "Bluetooth":
-        return <BluetoothTab formData={formData} setFormData={setFormData} />;
+        return (
+          <BluetoothTab
+            formData={formData}
+            setFormData={setFormData}
+            isReady={isReady && isFechedPackage && isDeviceInfoFetched}
+            write={write}
+            port={currentPort}
+          />
+        );
+
       case "Accessories":
         return <AccessoriesTab formData={formData} setFormData={setFormData} />;
       case "RF":
@@ -246,6 +296,13 @@ export default function DeviceInfoPage() {
             write={(command) =>
               write({
                 data: `${AT_REQ}${imei};${command}`,
+                port: currentPort.port,
+                writer: currentPort.writer,
+              })
+            }
+            editWrite={(command) =>
+              write({
+                data: `${AT_EDIT_PREFIX}${imei};${command}`,
                 port: currentPort.port,
                 writer: currentPort.writer,
               })
@@ -283,6 +340,7 @@ export default function DeviceInfoPage() {
 
       setFormData(formDataValues);
       setSearchSectionData(formDataToSearchSectionData(formDataValues, lang));
+      setSearchParamData(getSearchParamsData(formDataValues, lang));
       setCommandData(extractCommandData(originData));
     }
   }, [originData]);
@@ -316,10 +374,10 @@ export default function DeviceInfoPage() {
     }
 
     setIsLoading(false);
+    setIsFechedPackage(true);
   };
 
   useEffect(() => {
-    setIsLoading(true);
     if (isReady) {
       console.log("Test ::::");
       handleRefreshJsonPacket();
@@ -328,7 +386,7 @@ export default function DeviceInfoPage() {
 
   return (
     <>
-      {isLoading && <FullLoading />}
+      {(isLoading || deviceInfoLoading) && <FullLoading />}
       <div className="pageWrap">
         <SideMenu
           sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}
@@ -348,7 +406,10 @@ export default function DeviceInfoPage() {
         >
           <SearchModal
             sectionData={searchSectionData}
+            paramData={searchParamData}
             onClose={({ key, tab, type }) => {
+              console.log("key :::", key);
+
               toggleSearchModal();
               setTab(tab);
               setTimeout(() => {
@@ -357,8 +418,9 @@ export default function DeviceInfoPage() {
                 );
 
                 if (type === "param") {
-                  targetElement = document.querySelector(
-                    `[data-param-id="${key}"]`
+                  const allDivs = document.querySelectorAll(".pageWrap div");
+                  targetElement = Array.from(allDivs).find(
+                    (div) => div.textContent === key
                   );
                 }
 

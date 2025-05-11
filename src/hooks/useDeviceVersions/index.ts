@@ -93,18 +93,12 @@ export default function useDeviceVersions({
   currentPort: any;
   write: any;
 }) {
+  const [isFetched, setIsFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const deviceVersionsObjectRef = useRef<Record<string, string>>({});
   const [deviceVersionsObject, setDeviceVersionsObject] = useState<
     Record<string, string>
   >({});
-  const [isFechedDeviceVersions, setIsFechedDeviceVersions] = useState(false);
-
-  const handleIsFechedDeviceVersions = () => {
-    if (Object.keys(deviceVersionsObjectRef.current).length === 11) {
-      setIsFechedDeviceVersions(true);
-    }
-  };
 
   useEffect(() => {
     console.log("isFechedPackage :::::", isFechedPackage);
@@ -114,39 +108,54 @@ export default function useDeviceVersions({
     }
 
     if (currentPort.port.isReadyToUse && isFechedPackage) {
-      setIsLoading(true);
-      console.log("ready~~!!!");
-      const DELAY_MS = 100;
+      setTimeout(() => {
+        setIsLoading(true);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1000); // ??? ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+        setTimeout(() => {
+          setIsFetched(true);
+        }, 4000); // ??? 소닉 메롱
+        console.log("ready~~!!!");
+        const DELAY_MS = 100;
 
-      const commands = [];
+        const commands = [];
 
-      for (let i = 0; i < 10; i++) {
-        const index = i + 1;
-        const command = `${AT_GET_DEVICE_VERSIONS}${index}`;
+        for (let i = 0; i < 10; i++) {
+          const index = i + 1;
+          const command = `${AT_GET_DEVICE_VERSIONS}${index}`;
 
-        console.log("command :::", command);
-        commands.push(command);
-      }
+          console.log("command :::", command);
+          commands.push(command);
+        }
 
-      commands.push(AT_GET_DEVICE_BATTERY_VOLTAGE);
+        // commands.push(AT_GET_DEVICE_BATTERY_VOLTAGE);
 
-      commands.forEach((command, index) => {
-        setTimeout(async () => {
-          currentPort.port.isDeviceVersionsFetching = true;
-          currentPort.port.onEndDeviceVersionsFetched = (data) => {
-            const { key, value } = getDeviceVersionsForString(data);
-            deviceVersionsObjectRef.current[key] = value;
+        commands.forEach((command, index) => {
+          setTimeout(async () => {
+            currentPort.port.isDeviceVersionsFetching = true;
+            currentPort.port.onEndDeviceVersionsFetched = (data) => {
+              const { key, value } = getDeviceVersionsForString(data);
+              deviceVersionsObjectRef.current[key] = value;
 
-            handleIsFechedDeviceVersions();
-          };
+              if (Object.keys(deviceVersionsObjectRef.current).length === 10) {
+                setIsFetched(true);
+              }
 
-          await write({
-            data: command,
-            port: currentPort.port,
-            writer: currentPort.writer,
-          });
-        }, index * DELAY_MS); // 각 명령마다 100ms씩 지연
-      });
+              console.log(
+                "deviceVersionsObjectRef.current :::",
+                deviceVersionsObjectRef.current
+              );
+            };
+
+            await write({
+              data: command,
+              port: currentPort.port,
+              writer: currentPort.writer,
+            });
+          }, index * DELAY_MS); // 각 명령마다 100ms씩 지연
+        });
+      }, 100);
     }
   }, [
     currentPort.port.isReadyToUse,
@@ -156,11 +165,8 @@ export default function useDeviceVersions({
   ]);
 
   useEffect(() => {
-    if (isFechedDeviceVersions) {
-      setDeviceVersionsObject(deviceVersionsObjectRef.current);
-      setIsLoading(false);
-    }
-  }, [isFechedDeviceVersions]);
+    setDeviceVersionsObject(deviceVersionsObjectRef.current);
+  }, [isLoading]);
 
-  return { deviceVersionsObject, isLoading };
+  return { deviceVersionsObject, isLoading, isFetched };
 }

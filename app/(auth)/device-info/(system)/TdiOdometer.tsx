@@ -12,6 +12,7 @@ import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import RangeThresholdField from "../(components)/RangeThresholdField";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.TdiOdometer.en];
 
@@ -26,7 +27,7 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -110,57 +111,82 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
       </Stack>
 
       {formData["4200"]?.realValue === "01" && (
-        <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-          <NumericInputField
-            id="4201"
-            formData={formData}
-            onChange={handleChange}
-          />
-          <NumericInputField
-            id="4202"
-            formData={formData}
-            onChange={handleChange}
-          />
-          {/* // TODO 4203 4204 */}
+        <Stack direction={"row"} gap={"24px"}>
+          <Stack gap={"24px"} flex={1}>
+            <NumericInputField
+              id="4201"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+            />
+            <NumericInputField
+              id="4202"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+            />
 
-          <NumericInputField
-            id="4205"
-            formData={formData}
-            onChange={handleChange}
-          />
+            <RangeThresholdField
+              id={["4203", "4204"]}
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              titleId="4203~4"
+              helperText={
+                lang === "en"
+                  ? "Maximum RPM must be a higher than minimum RPM."
+                  : lang === "es"
+                  ? "El RPM máximo debe ser mayor que el RPM mínimo."
+                  : "O RPM máximo deve ser maior que o RPM mínimo."
+              }
+            />
 
-          {!!formData["4206"] && (
-            <Stack gap={"16px"} style={{ width: "calc(50% - 8px)" }}>
-              <SwitchField
-                id="4206"
-                formData={formData}
-                onChange={handleChange}
-                style={{ width: "100%" }}
-              />
+            <NumericInputField
+              id="4205"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+            />
+          </Stack>
+          <Stack gap={"24px"} flex={1}>
+            {!!formData["4206"] && (
+              <Stack gap={"16px"} style={{ width: "100%" }}>
+                <SwitchField
+                  id="4206"
+                  formData={formData}
+                  onChange={handleChange}
+                  style={{ width: "100%" }}
+                />
 
-              {formData["4206"].realValue === "01" && (
-                <>
-                  <NumericInputField
-                    id="4207"
-                    formData={formData}
-                    onChange={handleChange}
-                    style={{ width: "100%" }}
-                  />
-                  <NumericInputField
-                    id="4208"
-                    formData={formData}
-                    onChange={handleChange}
-                    style={{ width: "100%" }}
-                  />
-                </>
-              )}
-            </Stack>
-          )}
+                {formData["4206"].realValue === "01" && (
+                  <>
+                    <NumericInputField
+                      id="4207"
+                      formData={formData}
+                      onChange={handleChange}
+                      style={{ width: "100%" }}
+                    />
+                    <NumericInputField
+                      id="4208"
+                      formData={formData}
+                      onChange={handleChange}
+                      style={{ width: "100%" }}
+                    />
+                  </>
+                )}
+              </Stack>
+            )}
+          </Stack>
         </Stack>
       )}
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

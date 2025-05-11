@@ -9,11 +9,12 @@ import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
-import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import SwitchField from "../(components)/SwitchField";
+import TimeHMA from "../(components)/TimeHMA";
 
-const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchdule.en];
+const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchedule.en];
 
 interface Props {
   formData: {
@@ -22,47 +23,12 @@ interface Props {
   onChange: (id: string, value: string) => void;
 }
 
-/**
- * 
- * 1638: Start Hour for Working(24H)
-This parameter sets the start time of the report.
-(Only supported by USA)
-Range: 0 ~ 23
-Units: Hour
-Default: 0
-
-1639: End Hour for Working(24H)
-This parameter sets the end time of the report.
-(Only supported by USA)
-Range: 1 ~ 24
-Units: Hour
-Default: 24
-
-1649: Heart Beat 1 UTC time
-This parameter is used to wake up the device and report to the user platform and receiving command.
-Format: HHMM
-Range: 0000 ~ 2359 or empty
-Leave it empty if you want to disable Heart Beat 1 report [스위치로 disable 하면 빈 값으로 보내고, 체크하면 필수값으로 변경]
- */
-
 const ReportSchdule = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-  const { sendFormData } = useSendFormData();
-  // const fieldIds = [
-  //   "1637",
-  //   "1638", // TODO
-  //   "1639", // TODO
-  //   "1640",
-  //   "1649", // TODO
-  //   "1650", // TODO
-  //   "1651", // TODO
-  //   "1652", // TODO
-  //   "1653",
-  //   "1655", // TODO
-  //   "1656",
-  // ];
+  const { sendFormData, isLoading } = useSendFormData();
+  console.log(formData);
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -143,8 +109,8 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
     >
       <Stack direction="row" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap="8px">
-          <h1 data-section-id={SECTIONS.ReportSchdule.en}>
-            {SECTIONS.ReportSchdule[lang]}
+          <h1 data-section-id={SECTIONS.ReportSchedule.en}>
+            {SECTIONS.ReportSchedule[lang]}
           </h1>
           <InputBox.Info
             tooltipText={
@@ -153,17 +119,15 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
               </span>
             }
           />
-          <InputBox.Number>1637</InputBox.Number>
         </Stack>
-        <SwitchPrimary
-          checked={formData["1637"]?.realValue === "01"}
-          onChange={(e) => handleChange("1637", e.target.checked ? "01" : "00")}
-        />
       </Stack>
-      {formData["1637"]?.realValue === "01" && (
-        <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
+
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SwitchField id="1637" formData={formData} onChange={handleChange} />
+
           {!!formData["1640"]?.realValue && (
-            <Stack width={"calc(50% - 8px)"} gap={"8px"}>
+            <Stack width={"100%"} gap={"8px"}>
               <Stack direction="row" gap="4px" alignItems="center">
                 <InputBox.Title>
                   {FIELD_VALIDATIONS["1640"].title[lang]}
@@ -226,8 +190,43 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             id="1656"
             formData={formData}
             onChange={handleChange}
+            style={{ width: "100%" }}
           />
+        </Stack>
 
+        <Stack gap={"24px"} flex={1}>
+          <TimeHMA
+            id="1649"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1649"]?.realValue}
+            onChange={handleChange}
+          />
+          <TimeHMA
+            id="1650"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1650"]?.realValue}
+            onChange={handleChange}
+          />
+          <TimeHMA
+            id="1651"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1651"]?.realValue}
+            onChange={handleChange}
+          />
+          <TimeHMA
+            id="1652"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1652"]?.realValue}
+            onChange={handleChange}
+          />
           <NumericInputField
             id="1653"
             formData={formData}
@@ -235,11 +234,24 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isRequired
             isSwitch
           />
+          <TimeHMA
+            id="1655"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={formData["1655"]?.realValue}
+            onChange={handleChange}
+          />
         </Stack>
-      )}
+      </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

@@ -1,3 +1,5 @@
+import { FIELD_ERRORS } from "constants/fieldErrorValidations";
+
 type CommandsSection =
   | "networkCommands"
   | "systemCommands"
@@ -11,22 +13,31 @@ type CommandsSection =
   | "rfCommands";
 
 type CommandsUIType =
-  | "normal"
-  | "select"
-  | "text-input"
-  | "number-input"
-  | "time-range"
-  | "Automati-APN-List"
-  | "PIN-Lock"
-  | "PIN-Unlock"
-  | "Main-Server"
-  | "LTE-Band"
+  | "normal" // 0
+  | "select" // 0
+  | "text-input" // 0
+  | "number-input" // 0
+  | "time-range" // 0
+  | "Automati-APN-List" // 0
+  | "Delete-APN-List" // 0
+  | "PIN-Lock" // 0
+  | "PIN-Unlock" // 0
+  | "Main-Server" // 0
+  | "LTE-Band" // 0
   | "Detection-Control-Speed";
 
-export const commands: Record<
-  CommandsSection,
-  { id: string; uiType: CommandsUIType }[]
-> = {
+export type Command = {
+  id: string;
+  uiType: CommandsUIType;
+  regex?: RegExp;
+  helperText?: {
+    en: string;
+    es: string;
+    pt: string;
+  };
+};
+
+export const commands: Record<CommandsSection, Command[]> = {
   networkCommands: [
     {
       id: "0101",
@@ -78,7 +89,7 @@ export const commands: Record<
     },
     {
       id: "0121-01", // Delete APN List 중복 ID 입니다....
-      uiType: "normal",
+      uiType: "Delete-APN-List",
     },
     {
       id: "0201",
@@ -87,6 +98,8 @@ export const commands: Record<
     {
       id: "0202",
       uiType: "text-input",
+      regex: /^[A-Za-z0-9\-\.\/]+$/,
+      helperText: FIELD_ERRORS["0202"],
     },
     {
       id: "0203",
@@ -109,11 +122,11 @@ export const commands: Record<
       uiType: "PIN-Lock",
     },
     {
-      id: "0114",
+      id: "0114-01",
       uiType: "PIN-Unlock",
     },
     {
-      id: "0114-1",
+      id: "0114",
       uiType: "normal", // 0114 PIN Lock Status 중복..
     },
     {

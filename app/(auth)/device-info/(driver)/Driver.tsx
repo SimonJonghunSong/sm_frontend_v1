@@ -45,6 +45,21 @@ const commands = [
   "39;80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99",
 ];
 
+const getCommandForId = (id: number): string => {
+  const groupIndex = Math.floor((id - 1) / 100); // 0, 1, 2
+  const offset = (id - 1) % 100; // 0~99
+  const lineIndex = Math.floor(offset / 20); // 0~4
+  const valueIndex = offset % 20; // 0~19
+
+  const commandStr = commands[groupIndex * 5 + lineIndex]; // 해당 문자열
+  const [prefix, valuesStr] = commandStr.split(";");
+
+  const values = valuesStr.split(",");
+  const value = values[valueIndex];
+
+  return `${prefix};${value}`;
+};
+
 interface Props {
   formData: {
     [key: string]: FormField;
@@ -52,10 +67,18 @@ interface Props {
   onChange: (id: string, value: string) => void;
   isReady: boolean;
   write?: (command: string) => Promise<Boolean>;
+  editWrite?: (command: string) => Promise<Boolean>;
   port?: SerialPort;
 }
 
-const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
+const Driver = ({
+  formData,
+  onChange,
+  isReady,
+  write,
+  editWrite,
+  port,
+}: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const [addModal, addModalToggle] = useModal();
@@ -127,10 +150,11 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
         <IconButton
           sx={{ width: 24, height: 24 }}
           onClick={() => {
-            setRows((prev) => {
-              console.log("prev :::", prev);
-              console.log("row :::", row);
+            const command = getCommandForId(row.col1);
 
+            editWrite(`${command}#0000000000000000`);
+
+            setRows((prev) => {
               return prev.filter((item) => item.id !== row.id);
             });
           }}
@@ -157,8 +181,10 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
   };
 
   const handleEditDriverId = (values) => {
-    console.log("values :::", values);
     if (!editRow) return;
+    const command = getCommandForId(values.number);
+
+    editWrite(`${command}#${values.driver_id}`);
 
     setRows((prev) => {
       const index = prev.findIndex((row) => row.col1 === values.number);
@@ -183,21 +209,23 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
   const handleAddDriverId = (values) => {
     const { items } = values;
 
-    console.log("values :::", values);
+    const newRows = items.map((item) => {
+      const command = getCommandForId(Number(item.number));
+      return {
+        id: item.number,
+        col1: item.number,
+        col2: item.driver_id,
+        command: command, // command 정보 추가
+      };
+    });
 
-    const newRows = items.map((item) => ({
-      id: item.number,
-      col1: item.number,
-      col2: item.driver_id,
-    }));
+    editWrite(`${newRows[0].command}#${newRows[0].col2}`);
 
     setRows((prev) => [...prev, ...newRows].sort((a, b) => a.col1 - b.col1));
   };
 
   const handleDeleteDriverId = () => {
     if (!selectedRowIdList || !selectedRowIdList.length) return;
-
-    console.log("delete driver ids :::", selectedRowIdList);
 
     setRows((prev) =>
       prev.filter((row) => !selectedRowIdList.includes(row.id))
@@ -246,18 +274,16 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
         port.onbuffervalue = null;
       }
       const parsedResult = parseDriverIdResponseString(buffer.current);
-      // [{
-      //   id: "001";
-      //   value: "NoData";
-      // },{
-      //   id: "002";
-      //   value: "NoData";
-      // },{
-      //   id: "003";
-      //   value: "NoData";
-      // }]
-      // parsedResult setRow 하면 됩니다.
-      // setRows();
+
+      setRows(
+        parsedResult
+          .filter((item) => item.value !== "NoData")
+          .map((item) => ({
+            id: Number(item.id),
+            col1: Number(item.id),
+            col2: item.value,
+          }))
+      );
     })();
   }, [isReady]);
 
@@ -383,12 +409,6 @@ const Driver = ({ formData, onChange, isReady, write, port }: Props) => {
           }
           disablePagination
         />
-
-        <Stack direction="row" justifyContent="flex-end">
-          <Button color="secondary" variant="contained" type="submit">
-            {t("notify.send")}
-          </Button>
-        </Stack>
       </Form>
 
       {addModal && (
@@ -465,8 +485,6 @@ function AddModal({
     if (!form.formState.isValid) {
       return;
     }
-
-    console.log("::::", form.getValues());
 
     handleConfirm(form.getValues());
     onClose();

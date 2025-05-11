@@ -8,6 +8,7 @@ import {
   AT_GET_MODEL_INFO,
   EXCLUDE_STRING,
   CR,
+  ETX,
 } from "./constant";
 import useSerialStore from "../../stores/useSerialStore";
 import { fileDownload } from "@/utils/fileDownload";
@@ -56,8 +57,14 @@ const useSerial = () => {
   const callbackRef = useRef(new Map());
   const csvBufferRef = useRef(new Map());
   const indexeddbRef = useRef(new Map());
+  const alertBroadcastRef = useRef(new BroadcastChannel("err_alert"));
+  const alertCommandRef = useRef<string | null>("");
   const [connectingPortCount, setConnectingPortCount] = useState(0);
   const broadcastChannel = new BroadcastChannel("command_log");
+  const deviceCommandBroadcastChannel = new BroadcastChannel(
+    "device_command_log"
+  );
+  const deviceCommandLogRef = useRef<string | null>(null);
   const {
     portList,
     getPortList,
@@ -197,6 +204,38 @@ const useSerial = () => {
         console.log(
           "---------------- 기기에서 넘어오는 value end ----------------"
         );
+
+        if (port.isDeviceCommandSend) {
+          if (deviceCommandLogRef.current) {
+            deviceCommandLogRef.current += value;
+          } else {
+            deviceCommandLogRef.current = value;
+          }
+
+          if (isEndOfMessage(value)) {
+            deviceCommandBroadcastChannel.postMessage({
+              type: "RESPONSE",
+              timestamp: new Date().toISOString(),
+              value: deviceCommandLogRef.current,
+            });
+            deviceCommandLogRef.current = null;
+            port.isDeviceCommandSend = false;
+          }
+        }
+
+        if (port.isAlertSend) {
+          if (alertCommandRef.current) {
+            alertCommandRef.current += value;
+          } else {
+            alertCommandRef.current = value;
+          }
+
+          if (value.includes("ERR")) {
+            port.isAlertSend = false;
+            alertBroadcastRef.current.postMessage(alertCommandRef.current);
+            alertCommandRef.current = null;
+          }
+        }
 
         if (value) {
           if (port?.onbuffervalue) {

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { SearchField } from "constants/searchField";
+import { SearchField, SearchFields } from "constants/searchField";
 
 type SearchResult = {
   key: string;
@@ -18,11 +18,16 @@ interface Props {
     tab: string;
     type: "section" | "param";
   }) => void;
-  sectionData: { [key: string]: SearchField };
+  sectionData: { [key: string]: SearchFields };
+  paramData: { [key: string]: SearchField };
 }
 
-export default function SearchModal({ sectionData, onClose }: Props) {
-  console.log("sectionData :::", sectionData);
+export default function SearchModal({
+  sectionData,
+  paramData,
+  onClose,
+}: Props) {
+  console.log("searchParamData :::", paramData);
 
   // uitls
   const t = useTranslations();
@@ -125,8 +130,6 @@ export default function SearchModal({ sectionData, onClose }: Props) {
     if (searchTerm) {
       const sectionResultsEntries = Object.entries(sectionData).filter(
         ([key, value]) => {
-          console.log("value :::");
-
           return (
             value.fields.includes("ALL_SEARCH") ||
             value.searchText.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -136,9 +139,6 @@ export default function SearchModal({ sectionData, onClose }: Props) {
       );
 
       const sectionResults = [];
-
-      console.log("sectionResultsEntries :::", sectionResultsEntries);
-
       sectionResultsEntries.forEach(([key, value]) => {
         if (value.fields.length > 0) {
           sectionResults.push({
@@ -148,8 +148,23 @@ export default function SearchModal({ sectionData, onClose }: Props) {
           });
         }
       });
-
       setSearchSectionResults(sectionResults);
+
+      const paramResults = [];
+      const paramResultsEntries = Object.entries(paramData).filter(
+        ([key, value]) => {
+          return key.toLowerCase().includes(searchTerm.toLowerCase());
+        }
+      );
+
+      paramResultsEntries.forEach(([key, value]) => {
+        paramResults.push({
+          key: value.field,
+          searchText: value.searchText,
+          tab: value.tab,
+        });
+      });
+      setSearchParamResults(paramResults);
     }
   }, [searchTerm]);
 

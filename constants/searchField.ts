@@ -1,5 +1,4 @@
 import { Lang } from "@/utils/useLangStore";
-import AlertConfig1 from "app/(auth)/device-info/(report)/AlertConfig1";
 import { FormField } from "app/(auth)/device-info/page";
 
 export const MENUS = {
@@ -160,7 +159,7 @@ export const SECTIONS = {
     es: "OBD",
     pt: "OBD",
   },
-  ObdPid: {
+  OBDPID: {
     en: "OBD PID",
     es: "PID OBD",
     pt: "PID OBD",
@@ -180,7 +179,7 @@ export const SECTIONS = {
     es: "Mapa de Reporte2",
     pt: "Mapa de Relatório2",
   },
-  ReportSchdule: {
+  ReportSchedule: {
     en: "Report Schedule",
     es: "Programación de Reporte",
     pt: "Programação de Relatório",
@@ -209,7 +208,7 @@ export const SECTIONS = {
   },
 
   // Input/Output
-  InputOutput: {
+  "Input/Output": {
     en: "Input/Output",
     es: "Entrada/Salida",
     pt: "Entrada/Saída",
@@ -292,6 +291,11 @@ export const SECTIONS = {
     es: "Bluetooth",
     pt: "Bluetooth",
   },
+  BleRegistration: {
+    en: "BLE Registration",
+    es: "Registro BLE",
+    pt: "Registro BLE",
+  },
   Sensor: {
     en: "Sensor",
     es: "Sensor",
@@ -330,6 +334,68 @@ export const SECTIONS = {
     en: "Network Commands",
     es: "Comandos de Red",
     pt: "Comandos de Rede",
+  },
+  SystemCommands: {
+    en: "System Commands",
+    es: "Comandos del Sistema",
+    pt: "Comandos do Sistema",
+  },
+  JammingDetectionCommands: {
+    en: "Jamming Detection Commands",
+    es: "Comandos de Detección de Interferencia",
+    pt: "Comandos de Detecção de Interferência",
+  },
+  ReportCommands: {
+    en: "Report Commands",
+    es: "Comandos de Reporte",
+    pt: "Comandos de Relatório",
+  },
+  TrackingCommands: {
+    en: "Tracking Commands",
+    es: "Comandos de Rastreo",
+    pt: "Comandos de Rastreamento",
+  },
+  "I/OCommands": {
+    en: "I/O Commands",
+    es: "Comandos de Entrada/Salida",
+    pt: "Comandos de Entrada/Saída",
+  },
+  GeofenceCommands: {
+    en: "Geofence Commands",
+    es: "Comandos de Geocerca",
+    pt: "Comandos de Geofence",
+  },
+  BleCommands: {
+    en: "BLE Commands",
+    es: "Comandos de Bluetooth",
+    pt: "Comandos de Bluetooth",
+  },
+  AccessoryCommands: {
+    en: "Accessory Commands",
+    es: "Comandos de Accesorios",
+    pt: "Comandos de Acessórios",
+  },
+  RfCommands: {
+    en: "RF Commands",
+    es: "Comandos de RF",
+    pt: "Comandos de RF",
+  },
+
+  // DeviceStatus
+  DeviceInformation: {
+    en: "Device Information",
+    es: "Información del Dispositivo",
+    pt: "Informações do Dispositivo",
+  },
+  GNSSInformation: {
+    en: "GNSS Information",
+    es: "Información de GNSS",
+    pt: "Informações de GNSS",
+  },
+  CellularInformation: {
+    en: "Cellular Information",
+    es: "Información de Celular",
+    pt: "Informações de Celular",
   },
 };
 
@@ -626,12 +692,12 @@ export const INCLUDE_FIELDS = {
 
   // Report
   [SECTIONS.AssignHeader.en]: ["1100", "1075"],
-  [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
   [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
+  [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AntiTheft.en]: ["1050", "1051"],
   [SECTIONS.OBD.en]: ["2000", "2002"],
-  [SECTIONS.ObdPid.en]: [
+  [SECTIONS.OBDPID.en]: [
     "2100",
     "2101",
     "2102",
@@ -723,7 +789,7 @@ export const INCLUDE_FIELDS = {
     "1096",
   ],
   [SECTIONS.ReportMapping2.en]: ["3100", "3101", "3103", "2598"],
-  [SECTIONS.ReportSchdule.en]: [
+  [SECTIONS.ReportSchedule.en]: [
     "1637",
     "1638", // TODO
     "1639", // TODO
@@ -797,6 +863,7 @@ export const INCLUDE_FIELDS = {
     "1974",
     "1975",
     "1999",
+    "1980",
     "1981",
     "1982",
     "1983",
@@ -820,7 +887,7 @@ export const INCLUDE_FIELDS = {
   ],
 
   // Input/Output
-  [SECTIONS.InputOutput.en]: [
+  [SECTIONS["Input/Output"].en]: [
     "1720", // Input 1 Type
     "1721", // Input 1 Chat
     "1722", // Input 2 Type
@@ -897,6 +964,7 @@ export const INCLUDE_FIELDS = {
     "4026",
     "4027",
   ],
+  [SECTIONS.BleRegistration.en]: [],
   [SECTIONS.Sensor.en]: [
     "2610",
     "2611",
@@ -1033,17 +1101,31 @@ export const INCLUDE_FIELDS = {
   ],
 
   // NetworkCommands
-  [SECTIONS.NetworkCommands.en]: ["ALL_SEARCH"],
+  [SECTIONS.NetworkCommands.en]: [],
+  [SECTIONS.SystemCommands.en]: [],
+  [SECTIONS.JammingDetectionCommands.en]: [],
+  [SECTIONS.ReportCommands.en]: [],
+  [SECTIONS.TrackingCommands.en]: [],
+  [SECTIONS["I/OCommands"].en]: [],
+  [SECTIONS.GeofenceCommands.en]: [],
+  [SECTIONS.BleCommands.en]: [],
+  [SECTIONS.AccessoryCommands.en]: [],
 };
 
-export type SearchField = {
+export type SearchFields = {
   fields: (typeof INCLUDE_FIELDS)[keyof typeof INCLUDE_FIELDS];
   searchText: string;
   tab: string;
   key: string;
 };
+export type SearchField = {
+  field: string;
+  searchText: string;
+  tab: string;
+  key: string;
+};
 
-export const NETWORK_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const NETWORK_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Network.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Network.en],
@@ -1250,7 +1332,7 @@ export const NETWORK_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const SYSTEM_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Ignition.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Ignition.en],
@@ -1421,7 +1503,7 @@ export const SYSTEM_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const REPORT_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.AssignHeader.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.AssignHeader.en],
@@ -1447,11 +1529,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.OBD.en,
     },
-    [SECTIONS.ObdPid.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ObdPid.en],
-      searchText: `${MENUS.Report.en} > ${SECTIONS.ObdPid.en}`,
+    [SECTIONS.OBDPID.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OBDPID.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.OBDPID.en}`,
       tab: "Report",
-      key: SECTIONS.ObdPid.en,
+      key: SECTIONS.OBDPID.en,
     },
     [SECTIONS.Report.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Report.en],
@@ -1471,11 +1553,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping2.en,
     },
-    [SECTIONS.ReportSchdule.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
-      searchText: `${MENUS.Report.en} > ${SECTIONS.ReportSchdule.en}`,
+    [SECTIONS.ReportSchedule.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportSchedule.en],
+      searchText: `${MENUS.Report.en} > ${SECTIONS.ReportSchedule.en}`,
       tab: "Report",
-      key: SECTIONS.ReportSchdule.en,
+      key: SECTIONS.ReportSchedule.en,
     },
   },
   es: {
@@ -1503,11 +1585,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.OBD.en,
     },
-    [SECTIONS.ObdPid.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ObdPid.en],
-      searchText: `${MENUS.Report.es} > ${SECTIONS.ObdPid.es}`,
+    [SECTIONS.OBDPID.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OBDPID.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.OBDPID.es}`,
       tab: "Report",
-      key: SECTIONS.ObdPid.en,
+      key: SECTIONS.OBDPID.en,
     },
     [SECTIONS.Report.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.Report.en],
@@ -1527,11 +1609,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping2.en,
     },
-    [SECTIONS.ReportSchdule.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
-      searchText: `${MENUS.Report.es} > ${SECTIONS.ReportSchdule.es}`,
+    [SECTIONS.ReportSchedule.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportSchedule.en],
+      searchText: `${MENUS.Report.es} > ${SECTIONS.ReportSchedule.es}`,
       tab: "Report",
-      key: SECTIONS.ReportSchdule.en,
+      key: SECTIONS.ReportSchedule.en,
     },
   },
   pt: {
@@ -1541,17 +1623,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.AssignHeader.en,
     },
-    [SECTIONS.AlertConfig1.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig1.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig1.pt}`,
+    [SECTIONS.AlertConfig.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig.pt}`,
       tab: "Report",
-      key: SECTIONS.AlertConfig1.en,
-    },
-    [SECTIONS.AlertConfig2.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig2.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig2.pt}`,
-      tab: "Report",
-      key: SECTIONS.AlertConfig2.en,
+      key: SECTIONS.AlertConfig.en,
     },
     [SECTIONS.AntiTheft.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.AntiTheft.en],
@@ -1565,11 +1641,11 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.OBD.en,
     },
-    [SECTIONS.ObdPid.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ObdPid.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.ObdPid.pt}`,
+    [SECTIONS.OBDPID.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.OBDPID.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.OBDPID.pt}`,
       tab: "Report",
-      key: SECTIONS.ObdPid.en,
+      key: SECTIONS.OBDPID.en,
     },
     [SECTIONS.Report.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.Report.en],
@@ -1589,16 +1665,16 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Report",
       key: SECTIONS.ReportMapping2.en,
     },
-    [SECTIONS.ReportSchdule.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.ReportSchdule.en],
-      searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportSchdule.pt}`,
+    [SECTIONS.ReportSchedule.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.ReportSchedule.en],
+      searchText: `${MENUS.Report.pt} > ${SECTIONS.ReportSchedule.pt}`,
       tab: "Report",
-      key: SECTIONS.ReportSchdule.en,
+      key: SECTIONS.ReportSchedule.en,
     },
   },
 };
 
-export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Accessories.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Accessories.en],
@@ -1679,7 +1755,7 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const TRACKING_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const TRACKING_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.DisconnectMode.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.DisconnectMode.en],
@@ -1868,7 +1944,7 @@ export const TRACKING_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const DRIVER_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const DRIVER_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Driver.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Driver.en],
@@ -1895,13 +1971,19 @@ export const DRIVER_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.Ble.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
       searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.Ble.en}`,
       tab: "Bluetooth",
       key: SECTIONS.Ble.en,
+    },
+    [SECTIONS.BleRegistration.en]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
+      searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.BleRegistration.en}`,
+      tab: "Bluetooth",
+      key: SECTIONS.BleRegistration.en,
     },
     [SECTIONS.Sensor.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
@@ -1917,6 +1999,12 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Bluetooth",
       key: SECTIONS.Ble.en,
     },
+    [SECTIONS.BleRegistration.es]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
+      searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.BleRegistration.es}`,
+      tab: "Bluetooth",
+      key: SECTIONS.BleRegistration.en,
+    },
     [SECTIONS.Sensor.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
       searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.Sensor.es}`,
@@ -1931,6 +2019,12 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Bluetooth",
       key: SECTIONS.Ble.en,
     },
+    [SECTIONS.BleRegistration.pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
+      searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.BleRegistration.pt}`,
+      tab: "Bluetooth",
+      key: SECTIONS.BleRegistration.en,
+    },
     [SECTIONS.Sensor.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.Sensor.en],
       searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.Sensor.pt}`,
@@ -1940,7 +2034,7 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-export const RF_SECTION: Record<Lang, Record<string, SearchField>> = {
+export const RF_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.ErbList.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.ErbList.en],
@@ -2039,13 +2133,67 @@ export const RF_SECTION: Record<Lang, Record<string, SearchField>> = {
   },
 };
 
-const COMMAND_SECTION: Record<Lang, Record<string, SearchField>> = {
+const COMMAND_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
     [SECTIONS.NetworkCommands.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.NetworkCommands.en],
+      fields: ["ALL_SEARCH"],
       searchText: `${MENUS.Commands.en} > ${SECTIONS.NetworkCommands.en}`,
       tab: "Commands",
       key: SECTIONS.NetworkCommands.en,
+    },
+    [SECTIONS.SystemCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.SystemCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.SystemCommands.en,
+    },
+    [SECTIONS.JammingDetectionCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.JammingDetectionCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.JammingDetectionCommands.en,
+    },
+    [SECTIONS.ReportCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.ReportCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.ReportCommands.en,
+    },
+    [SECTIONS.TrackingCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.TrackingCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.TrackingCommands.en,
+    },
+    [SECTIONS["I/OCommands"].en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS["I/OCommands"].en}`,
+      tab: "Commands",
+      key: SECTIONS["I/OCommands"].en,
+    },
+    [SECTIONS.GeofenceCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.GeofenceCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.GeofenceCommands.en,
+    },
+    [SECTIONS.BleCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.BleCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.BleCommands.en,
+    },
+    [SECTIONS.AccessoryCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.AccessoryCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.AccessoryCommands.en,
+    },
+    [SECTIONS.RfCommands.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.en} > ${SECTIONS.RfCommands.en}`,
+      tab: "Commands",
+      key: SECTIONS.RfCommands.en,
     },
   },
   es: {
@@ -2055,6 +2203,60 @@ const COMMAND_SECTION: Record<Lang, Record<string, SearchField>> = {
       tab: "Commands",
       key: SECTIONS.NetworkCommands.en,
     },
+    [SECTIONS.SystemCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.SystemCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.SystemCommands.en,
+    },
+    [SECTIONS.JammingDetectionCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.JammingDetectionCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.JammingDetectionCommands.en,
+    },
+    [SECTIONS.ReportCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.ReportCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.ReportCommands.en,
+    },
+    [SECTIONS.TrackingCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.TrackingCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.TrackingCommands.en,
+    },
+    [SECTIONS["I/OCommands"].es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS["I/OCommands"].es}`,
+      tab: "Commands",
+      key: SECTIONS["I/OCommands"].en,
+    },
+    [SECTIONS.GeofenceCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.GeofenceCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.GeofenceCommands.en,
+    },
+    [SECTIONS.BleCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.BleCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.BleCommands.en,
+    },
+    [SECTIONS.AccessoryCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.AccessoryCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.AccessoryCommands.en,
+    },
+    [SECTIONS.RfCommands.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.es} > ${SECTIONS.RfCommands.es}`,
+      tab: "Commands",
+      key: SECTIONS.RfCommands.en,
+    },
   },
   pt: {
     [SECTIONS.NetworkCommands.pt]: {
@@ -2062,6 +2264,123 @@ const COMMAND_SECTION: Record<Lang, Record<string, SearchField>> = {
       searchText: `${MENUS.Commands.pt} > ${SECTIONS.NetworkCommands.pt}`,
       tab: "Commands",
       key: SECTIONS.NetworkCommands.en,
+    },
+    [SECTIONS.SystemCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.SystemCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.SystemCommands.en,
+    },
+    [SECTIONS.JammingDetectionCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.JammingDetectionCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.JammingDetectionCommands.en,
+    },
+    [SECTIONS.ReportCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.ReportCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.ReportCommands.en,
+    },
+    [SECTIONS.TrackingCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.TrackingCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.TrackingCommands.en,
+    },
+    [SECTIONS["I/OCommands"].pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS["I/OCommands"].pt}`,
+      tab: "Commands",
+      key: SECTIONS["I/OCommands"].en,
+    },
+    [SECTIONS.GeofenceCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.GeofenceCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.GeofenceCommands.en,
+    },
+    [SECTIONS.BleCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.BleCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.BleCommands.en,
+    },
+    [SECTIONS.AccessoryCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.AccessoryCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.AccessoryCommands.en,
+    },
+    [SECTIONS.RfCommands.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.Commands.pt} > ${SECTIONS.RfCommands.pt}`,
+      tab: "Commands",
+      key: SECTIONS.RfCommands.en,
+    },
+  },
+};
+
+const DEVICE_STATUS_SECTION: Record<Lang, Record<string, SearchFields>> = {
+  en: {
+    [SECTIONS.DeviceInformation.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.en} > ${SECTIONS.DeviceInformation.en}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.DeviceInformation.en,
+    },
+    [SECTIONS.GNSSInformation.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.en} > ${SECTIONS.GNSSInformation.en}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.GNSSInformation.en,
+    },
+    [SECTIONS.CellularInformation.en]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.en} > ${SECTIONS.CellularInformation.en}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.CellularInformation.en,
+    },
+  },
+  es: {
+    [SECTIONS.DeviceInformation.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.es} > ${SECTIONS.DeviceInformation.es}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.DeviceInformation.en,
+    },
+    [SECTIONS.GNSSInformation.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.es} > ${SECTIONS.GNSSInformation.es}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.GNSSInformation.en,
+    },
+    [SECTIONS.CellularInformation.es]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.es} > ${SECTIONS.CellularInformation.es}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.CellularInformation.en,
+    },
+  },
+  pt: {
+    [SECTIONS.DeviceInformation.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.pt} > ${SECTIONS.DeviceInformation.pt}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.DeviceInformation.en,
+    },
+    [SECTIONS.GNSSInformation.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.pt} > ${SECTIONS.GNSSInformation.pt}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.GNSSInformation.en,
+    },
+    [SECTIONS.CellularInformation.pt]: {
+      fields: ["ALL_SEARCH"],
+      searchText: `${MENUS.DeviceStatus.pt} > ${SECTIONS.CellularInformation.pt}`,
+      tab: "DeviceStatus",
+      key: SECTIONS.CellularInformation.en,
     },
   },
 };
@@ -2084,6 +2403,7 @@ export const SEARCH_SECTION = {
     ...BLUETOOTH_SECTION.en,
     ...RF_SECTION.en,
     ...COMMAND_SECTION.en,
+    ...DEVICE_STATUS_SECTION.en,
   },
   es: {
     ...NETWORK_SECTION.es,
@@ -2095,6 +2415,7 @@ export const SEARCH_SECTION = {
     ...BLUETOOTH_SECTION.es,
     ...RF_SECTION.es,
     ...COMMAND_SECTION.es,
+    ...DEVICE_STATUS_SECTION.es,
   },
   pt: {
     ...NETWORK_SECTION.pt,
@@ -2106,6 +2427,7 @@ export const SEARCH_SECTION = {
     ...BLUETOOTH_SECTION.pt,
     ...RF_SECTION.pt,
     ...COMMAND_SECTION.pt,
+    ...DEVICE_STATUS_SECTION.pt,
   },
 };
 

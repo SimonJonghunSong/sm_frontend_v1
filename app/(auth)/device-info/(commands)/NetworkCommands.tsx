@@ -1,37 +1,18 @@
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
-import { commands } from "app/(auth)/device-info/(commands)/@index";
-import DefaultCommandField from "app/(auth)/device-info/(commands)/DefaultCommandField";
+import { Command, commands } from "app/(auth)/device-info/(commands)/@index";
 import { FIELD_VALIDATIONS } from "constants/field";
-import useSerial from "@/src/hooks/useSerial";
 
 interface Props {
-  imei: string;
+  renderCommand: (command: Command) => React.ReactNode;
 }
 
-const NetworkCommands = ({ imei }: Props) => {
+const NetworkCommands = ({ renderCommand }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
-
-  const {
-    state: { portList },
-    func: { write },
-  } = useSerial();
-  const currentPort = portList[0];
-
-  const handleSendCommand = (message: string) => {
-    write({
-      data: message,
-      port: currentPort.port,
-      writer: currentPort.writer,
-      callback: () => {
-        console.log("callback :::");
-      },
-    });
-  };
 
   return (
     <Container>
@@ -43,33 +24,19 @@ const NetworkCommands = ({ imei }: Props) => {
         </Stack>
       </Stack>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-        <Stack direction="column" gap={"16px"} flex={1}>
+      <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
+        <Stack direction="column" gap={"24px"} flex={1}>
           {commands.networkCommands
-            .slice(0, 17)
+            .slice(0, 22)
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? (
-                <DefaultCommandField
-                  id={item.id}
-                  imei={imei}
-                  handleSendCommand={handleSendCommand}
-                  buttonText={t("configuration.commands.send")}
-                />
-              ) : null
+              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
-        <Stack direction="column" gap={"16px"} flex={1}>
+        <Stack direction="column" gap={"24px"} flex={1}>
           {commands.networkCommands
-            .slice(17)
+            .slice(22)
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? (
-                <DefaultCommandField
-                  id={item.id}
-                  imei={imei}
-                  handleSendCommand={handleSendCommand}
-                  buttonText={t("configuration.commands.send")}
-                />
-              ) : null
+              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
       </Stack>
@@ -99,6 +66,5 @@ const Container = styled.div`
     font-size: 15px;
     line-height: 14px;
     color: #6f6f6f;
-    width: calc(50% - 8px);
   }
 `;

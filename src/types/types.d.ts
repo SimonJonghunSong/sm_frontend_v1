@@ -20,6 +20,7 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  isAlertSend?: boolean;
   onbuffervalue(value: string): unknown;
   circleoutputactivehandler(value: string): unknown;
   iscircleoutputactivefetching: boolean;
@@ -73,6 +74,8 @@ interface SerialPort {
   isAltDataFetching?: boolean;
   isDeviceVersionsFetching?: boolean;
   onEndDeviceVersionsFetched?: (data: string) => void;
+
+  isDeviceCommandSend?: boolean;
 }
 
 interface SerialOptions {

@@ -14,6 +14,7 @@ interface Props {
   >;
   isReady: boolean;
   write?: (command: string) => Promise<Boolean>;
+  editWrite?: (command: string) => Promise<Boolean>;
   port?: SerialPort;
 }
 
@@ -22,6 +23,7 @@ export default function DriverTab({
   setFormData,
   isReady,
   write,
+  editWrite,
   port,
 }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
@@ -44,6 +46,7 @@ export default function DriverTab({
         onChange={handleValueChange}
         isReady={isReady}
         write={write}
+        editWrite={editWrite}
         port={port}
       />
     </Stack>

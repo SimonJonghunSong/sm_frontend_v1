@@ -72,7 +72,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -141,45 +141,45 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
 
       <Stack direction={"row"} gap={"32px 16px"}>
         <Stack direction={"column"} gap={"16px"} flex={1}>
-          {!!formData["1080"] && (
+          {!!formData["3100"] && (
             <CheckboxField
-              id="1080"
+              id="3100"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["1080"].optionString}
-              labelString={checkboxOptions["1080"].labelString}
+              optionString={checkboxOptions["3100"].optionString}
+              labelString={checkboxOptions["3100"].labelString}
               hasAllCheckbox
             />
           )}
-          {!!formData["1082"] && (
+          {!!formData["3101"] && (
             <CheckboxField
-              id="1082"
+              id="3101"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["1082"].optionString}
-              labelString={checkboxOptions["1082"].labelString}
+              optionString={checkboxOptions["3101"].optionString}
+              labelString={checkboxOptions["3101"].labelString}
               hasAllCheckbox
             />
           )}
         </Stack>
         <Stack direction={"column"} gap={"16px"} flex={1}>
-          {!!formData["1080"] && (
+          {!!formData["3103"] && (
             <CheckboxField
-              id="1080"
+              id="3103"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["1080"].optionString}
-              labelString={checkboxOptions["1080"].labelString}
+              optionString={checkboxOptions["3103"].optionString}
+              labelString={checkboxOptions["3103"].labelString}
               hasAllCheckbox
             />
           )}
-          {!!formData["1082"] && (
+          {!!formData["2598"] && (
             <CheckboxField
-              id="1082"
+              id="2598"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["1082"].optionString}
-              labelString={checkboxOptions["1082"].labelString}
+              optionString={checkboxOptions["2598"].optionString}
+              labelString={checkboxOptions["2598"].labelString}
               hasAllCheckbox
             />
           )}
@@ -187,7 +187,12 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

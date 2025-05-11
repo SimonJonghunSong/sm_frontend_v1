@@ -24,7 +24,7 @@ const Device = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -91,28 +91,58 @@ const Device = ({ formData, onChange }: Props) => {
         <h1 data-section-id={SECTIONS.Device.en}>{SECTIONS.Device[lang]}</h1>
       </Stack>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
-        <SelectField
-          id="2704"
-          formData={formData}
-          onChange={handleChange}
-          isSwitch
-        />
-        <SwitchField id="2705" formData={formData} onChange={handleChange} />
-        <SwitchField id="2706" formData={formData} onChange={handleChange} />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <SelectField
+            id="2704"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isSwitch
+          />
+          <SwitchField
+            id="2705"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="2706"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="2707"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
 
-        <NumericInputField
-          id="2707"
-          formData={formData}
-          onChange={handleChange}
-        />
-
-        <SwitchField id="2708" formData={formData} onChange={handleChange} />
-        <SwitchField id="2709" formData={formData} onChange={handleChange} />
+          <SwitchField
+            id="2708"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+          <SwitchField
+            id="2709"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

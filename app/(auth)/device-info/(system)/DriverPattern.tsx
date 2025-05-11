@@ -1,17 +1,17 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
-import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import hasFormDataFields from "../(utils)/hasFormDataFields";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.DriverPattern.en];
 
@@ -26,10 +26,9 @@ const DriverPattern = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
-  const [isChecked, setIsChecked] = useState(true);
+  const { sendFormData, isLoading } = useSendFormData();
 
-  if (!formData) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -114,12 +113,13 @@ const DriverPattern = ({ formData, onChange }: Props) => {
       </Stack>
 
       {formData["1910"]?.realValue === "01" && (
-        <>
-          <Stack flexWrap="wrap" direction={"row"} gap={"32px 16px"}>
+        <Stack direction={"row"} gap={"24px"}>
+          <Stack gap={"24px"} flex={1}>
             <NumericInputField
               id="1911"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
 
@@ -127,6 +127,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               id="1912"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
 
@@ -134,6 +135,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               id="1913"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
 
@@ -141,13 +143,16 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               id="1914"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
-
+          </Stack>
+          <Stack gap={"24px"} flex={1}>
             <NumericInputField
               id="1921"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
 
@@ -155,6 +160,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               id="1922"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
 
@@ -162,18 +168,12 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               id="1923"
               formData={formData}
               onChange={handleChange}
-              isRequired
-            />
-
-            <NumericInputField
-              id="1914"
-              formData={formData}
-              onChange={handleChange}
+              style={{ width: "100%" }}
               isRequired
             />
 
             {!!formData["1924"] && (
-              <Stack gap={"16px"} style={{ width: "calc(50% - 8px)" }}>
+              <Stack gap={"16px"} style={{ width: "100%" }}>
                 <SwitchField
                   style={{ width: "100%" }}
                   id="1924"
@@ -193,10 +193,15 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               </Stack>
             )}
           </Stack>
-        </>
+        </Stack>
       )}
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>

@@ -34,7 +34,7 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
-  const { sendFormData } = useSendFormData();
+  const { sendFormData, isLoading } = useSendFormData();
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -90,9 +90,6 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
           }
           return acc;
         }, {});
-        // 1022 => Access interval disable이면 0으로 값 보낼 것
-        // 1023 => Access time disable이면 00:00 으로 보낼 것
-        // 1023 => Access time enable이면 hh:mm 형식으로 보낼 것
         // 필드 값들을 사용하여 수행할 작업
         sendFormData(fieldValues);
 
@@ -106,79 +103,62 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
         <InputBox.Info tooltipText={tooltipText[lang]} />
       </Stack>
 
-      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-        <TextInputField
-          id="1020"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-          error={!/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)}
-          helperText={
-            !/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)
-              ? FIELD_ERRORS["alphaNumericPatternWithSymbols"][lang]
-              : undefined
-          }
-        />
-
-        <NumericInputField
-          id="1022"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
-
-        <NumericInputField
-          id="1021"
-          formData={formData}
-          onChange={handleChange}
-          isRequired
-        />
-
-        {formData["1023"]?.realValue && (
-          <Stack
-            width={"calc(50% - 8px)"}
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <Stack direction="row" gap="4px" alignItems="center">
-              <InputBox.Title>
-                {FIELD_VALIDATIONS["1023"].title[lang]}
-              </InputBox.Title>
-              <InputBox.Info
-                tooltipText={
-                  <span style={{ whiteSpace: "pre-wrap" }}>
-                    {FIELD_VALIDATIONS["1023"].tooltip[lang]}
-                  </span>
-                }
-              />
-              <InputBox.Number>1023</InputBox.Number>
-            </Stack>
-            <SwitchPrimary
-              onChange={(e) =>
-                onChange("1023", e.target.checked ? "01:00" : "00:00")
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <TextInputField
+            id="1020"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+            error={!/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)}
+            helperText={
+              !/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)
+                ? FIELD_ERRORS["alphaNumericPatternWithSymbols"][lang]
+                : undefined
+            }
+          />
+          <NumericInputField
+            id="1021"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+        </Stack>
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="1022"
+            formData={formData}
+            onChange={handleChange}
+            isRequired
+          />
+          <TimeHMA
+            id="1023"
+            formData={formData}
+            isRequired
+            isSwitch
+            value={
+              formData["1023"]?.realValue
+                ? formData["1023"]?.realValue.replaceAll(":", "")
+                : ""
+            }
+            onChange={(id, value) => {
+              if (!value) {
+                handleChange(id, "00:00");
+              } else {
+                handleChange(id, `${value.slice(0, 2)}:${value.slice(2)}`);
               }
-              checked={formData["1023"].realValue !== "00:00"}
-            />
-          </Stack>
-        )}
-
-        {formData["1023"]?.realValue &&
-          formData["1023"]?.realValue !== "00:00" && (
-            <TimeHMA
-              value={formData["1023"]?.realValue}
-              onChange={(value) => handleChange("1023", value)}
-              isAm={
-                formData["1023"]?.realValue
-                  ? Number(formData["1023"].realValue.split(":")[0]) < 12
-                  : true
-              }
-            />
-          )}
+            }}
+          />
+        </Stack>
       </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
-        <Button color="secondary" variant="contained" type="submit">
+        <Button
+          color="secondary"
+          variant="contained"
+          type="submit"
+          disabled={isLoading}
+        >
           {t("notify.send")}
         </Button>
       </Stack>
