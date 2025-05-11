@@ -18010,6 +18010,21 @@ export const FIELD_VALIDATIONS = {
   },
   "0121": {
     title: {
+      en: "Automatic APN List",
+      pt: "Lista de APN Automática",
+      es: "Lista de APN Automática",
+    },
+    tooltip: {
+      en: "Delete the entire APN list.",
+      es: "Borrar toda la lista de APN.",
+      pt: "Exclua toda a lista de APNs.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0121-01": {
+    title: {
       en: "Delete APN List",
       pt: "Excluir Lista de APN",
       es: "Eliminar Lista de APN",

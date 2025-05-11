@@ -21,6 +21,8 @@ import RfCommands from "app/(auth)/device-info/(commands)/RfCommands";
 import GeofenceCommands from "app/(auth)/device-info/(commands)/GeofenceCommands";
 import JammingDetectionCommands from "app/(auth)/device-info/(commands)/JammingDetectionCommands";
 import ReportCommands from "app/(auth)/device-info/(commands)/ReportCommands";
+import AutomaticApnListCommandField from "app/(auth)/device-info/(commands)/AutomaticApnListCommandField";
+import DeleteApnListField from "app/(auth)/device-info/(commands)/DeleteApnListField";
 
 interface Props {
   imei: string;
@@ -128,6 +130,26 @@ export default function CommandTab({ imei }: Props) {
       case "time-range":
         return (
           <TimeRangeCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "Automati-APN-List":
+        return (
+          <AutomaticApnListCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "Delete-APN-List":
+        return (
+          <DeleteApnListField
             id={command.id}
             imei={imei}
             handleSendCommand={handleSendCommand}

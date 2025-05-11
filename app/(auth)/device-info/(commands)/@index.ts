@@ -17,8 +17,9 @@ type CommandsUIType =
   | "select" // 0
   | "text-input" // 0
   | "number-input" // 0
-  | "time-range"
+  | "time-range" // 0
   | "Automati-APN-List"
+  | "Delete-APN-List"
   | "PIN-Lock"
   | "PIN-Unlock"
   | "Main-Server"
@@ -88,7 +89,7 @@ export const commands: Record<CommandsSection, Command[]> = {
     },
     {
       id: "0121-01", // Delete APN List 중복 ID 입니다....
-      uiType: "normal",
+      uiType: "Delete-APN-List",
     },
     {
       id: "0201",
