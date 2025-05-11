@@ -18,12 +18,12 @@ type CommandsUIType =
   | "text-input" // 0
   | "number-input" // 0
   | "time-range" // 0
-  | "Automati-APN-List"
-  | "Delete-APN-List"
-  | "PIN-Lock"
-  | "PIN-Unlock"
-  | "Main-Server"
-  | "LTE-Band"
+  | "Automati-APN-List" // 0
+  | "Delete-APN-List" // 0
+  | "PIN-Lock" // 0
+  | "PIN-Unlock" // 0
+  | "Main-Server" // 0
+  | "LTE-Band" // 0
   | "Detection-Control-Speed";
 
 export type Command = {
@@ -122,11 +122,11 @@ export const commands: Record<CommandsSection, Command[]> = {
       uiType: "PIN-Lock",
     },
     {
-      id: "0114",
+      id: "0114-01",
       uiType: "PIN-Unlock",
     },
     {
-      id: "0114-1",
+      id: "0114",
       uiType: "normal", // 0114 PIN Lock Status 중복..
     },
     {

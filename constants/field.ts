@@ -18145,6 +18145,21 @@ export const FIELD_VALIDATIONS = {
   },
   "0114": {
     title: {
+      en: "PIN Lock Status",
+      pt: "Status do Bloqueio de PIN",
+      es: "Estado del Bloqueo de PIN",
+    },
+    tooltip: {
+      en: "Get the PIN lock status.",
+      es: "Obtener el estado de bloqueo del PIN.",
+      pt: "Obtenha o status de bloqueio do PIN.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0114-01": {
+    title: {
       en: "PIN Unlock",
       pt: "Desbloqueio de PIN",
       es: "Desbloqueo de PIN",

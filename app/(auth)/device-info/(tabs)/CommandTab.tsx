@@ -23,6 +23,11 @@ import JammingDetectionCommands from "app/(auth)/device-info/(commands)/JammingD
 import ReportCommands from "app/(auth)/device-info/(commands)/ReportCommands";
 import AutomaticApnListCommandField from "app/(auth)/device-info/(commands)/AutomaticApnListCommandField";
 import DeleteApnListField from "app/(auth)/device-info/(commands)/DeleteApnListField";
+import PinLockCommandField from "app/(auth)/device-info/(commands)/PinLockCommandField";
+import PinUnlockCommandField from "app/(auth)/device-info/(commands)/PinUnlockCommandField";
+import LteBandCommandField from "app/(auth)/device-info/(commands)/LteBandCommandField";
+import MainServerCommandField from "app/(auth)/device-info/(commands)/MainServerCommandField";
+import DetectionControlSpeedCommandField from "app/(auth)/device-info/(commands)/DetectionControlSpeedCommandField";
 
 interface Props {
   imei: string;
@@ -150,6 +155,56 @@ export default function CommandTab({ imei }: Props) {
       case "Delete-APN-List":
         return (
           <DeleteApnListField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "PIN-Lock":
+        return (
+          <PinLockCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "PIN-Unlock":
+        return (
+          <PinUnlockCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "LTE-Band":
+        return (
+          <LteBandCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "Main-Server":
+        return (
+          <MainServerCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "Detection-Control-Speed":
+        return (
+          <DetectionControlSpeedCommandField
             id={command.id}
             imei={imei}
             handleSendCommand={handleSendCommand}

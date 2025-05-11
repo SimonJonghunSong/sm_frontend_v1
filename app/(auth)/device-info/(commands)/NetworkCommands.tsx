@@ -27,14 +27,14 @@ const NetworkCommands = ({ renderCommand }: Props) => {
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.networkCommands
-            .slice(0, 17)
+            .slice(0, 22)
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.networkCommands
-            .slice(17)
+            .slice(22)
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
