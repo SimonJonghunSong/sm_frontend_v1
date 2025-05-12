@@ -101,13 +101,11 @@ export default function useDeviceVersions({
   >({});
 
   useEffect(() => {
-    console.log("isFechedPackage :::::", isFechedPackage);
-
-    if (!currentPort.port.writable || !currentPort.port.readable) {
+    if (!currentPort?.port?.writable || !currentPort?.port?.readable) {
       return;
     }
 
-    if (currentPort.port.isReadyToUse && isFechedPackage) {
+    if (currentPort?.port?.isReadyToUse && isFechedPackage) {
       setTimeout(() => {
         setIsLoading(true);
         setTimeout(() => {
@@ -158,9 +156,9 @@ export default function useDeviceVersions({
       }, 100);
     }
   }, [
-    currentPort.port.isReadyToUse,
-    currentPort.port.writable,
-    currentPort.port.readable,
+    currentPort?.port?.isReadyToUse,
+    currentPort?.port?.writable,
+    currentPort?.port?.readable,
     isFechedPackage,
   ]);
 

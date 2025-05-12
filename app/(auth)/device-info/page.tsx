@@ -42,6 +42,7 @@ import { getSearchParamsData } from "@/src/utils/\bsearchParams";
 import DeviceStatusTab from "app/(auth)/device-info/(tabs)/DeviceStatusTab";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 import { ConstructionOutlined } from "@mui/icons-material";
+import { useRouter } from "next/navigation";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -212,7 +213,9 @@ export default function DeviceInfoPage() {
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const originData = portList.find(({ port }) => port.imei === imei)
-    .packageToJson.synctrak;
+    ?.packageToJson.synctrak;
+
+  const navigate = useRouter();
 
   const {
     deviceVersionsObject,
@@ -346,10 +349,10 @@ export default function DeviceInfoPage() {
   }, [originData]);
 
   useEffect(() => {
-    if (currentPort.port.readable && currentPort.port.writable) {
+    if (currentPort?.port?.readable && currentPort?.port?.writable) {
       setIsReady(true);
     }
-  }, [currentPort.port.readable, currentPort.port.writable]);
+  }, [currentPort?.port?.readable, currentPort?.port?.writable]);
 
   const { setPackageFetchingStart } = useSerialStore();
 
@@ -383,6 +386,12 @@ export default function DeviceInfoPage() {
       handleRefreshJsonPacket();
     }
   }, [isReady]);
+
+  useEffect(() => {
+    if (!originData) {
+      navigate.replace("/device");
+    }
+  }, [originData]);
 
   return (
     <>
