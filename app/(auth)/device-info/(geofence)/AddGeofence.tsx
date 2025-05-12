@@ -269,6 +269,17 @@ const AddGeofence = ({
       );
     };
 
+    const getSpeedLimitDebounceHexString = () => {
+      if (
+        !formData["9002"] ||
+        formData["9002"].realValue === "00" ||
+        !circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")
+      )
+        return "";
+
+      return "0000"; // 01로 하면 무조건 에러 남
+    };
+
     const getAntiJammingHexString = () => {
       if (
         !circularGeofenceKeys.includes("ANTI_JAM") ||
@@ -284,8 +295,9 @@ const AddGeofence = ({
     const outputActiveDelayHexString = getOutputActiveDelayHexString();
     const buzzerSpeedLimitHexString = getBuzzerSpeedLimitHexString();
     const antiJammingHexString = getAntiJammingHexString();
+    const speedLimitDebounceHexString = getSpeedLimitDebounceHexString();
 
-    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}`;
+    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
 
     currentPort.port.oneditsuccess = () => {
       onSuccess();

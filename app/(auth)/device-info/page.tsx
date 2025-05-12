@@ -5,7 +5,7 @@ import { sideMenuItems } from "./sideMenuItems";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 // import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import NetworkTab from "app/(auth)/device-info/(tabs)/NetworkTab";
 import SystemTab from "./(tabs)/SystemTab";
 import ReportTab from "./(tabs)/ReportTab";
@@ -22,9 +22,7 @@ import {
   AT_GET_JSON,
   AT_REQ,
 } from "@/src/hooks/useSerial/constant";
-import useModal from "@/utils/useModal";
 import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
-import { Button } from "@mui/material";
 import Modal from "@/components/Modal";
 import {
   formDataToSearchSectionData,
@@ -33,7 +31,7 @@ import {
 } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
-import Controller from "app/(auth)/configuration/components/Controller";
+import Controller from "app/(auth)/device-info/Controller";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
@@ -41,7 +39,7 @@ import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
 import { getSearchParamsData } from "@/src/utils/\bsearchParams";
 import DeviceStatusTab from "app/(auth)/device-info/(tabs)/DeviceStatusTab";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
-import { ConstructionOutlined } from "@mui/icons-material";
+import { Stack } from "@mui/material";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -202,6 +200,7 @@ export default function DeviceInfoPage() {
     func: { write },
   } = useSerial();
   const [isFechedPackage, setIsFechedPackage] = useState(false);
+  const packageCountRef = useRef(0);
 
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -228,6 +227,7 @@ export default function DeviceInfoPage() {
   const [formData, setFormData] = useState<{
     [key: string]: FormField | null;
   }>(null);
+  const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
 
   const handleTabChange = (tab: string) => {
@@ -334,6 +334,22 @@ export default function DeviceInfoPage() {
     }
   };
 
+  const handleApply = async () => {
+    setIsLoading(true);
+    const profileLines = profile.split("\n");
+
+    for (let j = 2; j < profileLines.length; j++) {
+      await delayPromise(100);
+      await write({
+        data: `${AT_EDIT_PREFIX};${profileLines[j].split(";;")[1]}`,
+        writer: currentPort.writer,
+        port: currentPort.port,
+      });
+    }
+
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     if (originData) {
       const formDataValues = transformOriginData(originData);
@@ -363,6 +379,14 @@ export default function DeviceInfoPage() {
       (_, i) => `${AT_GET_JSON}${i + 1}`
     );
     currentPort.port.isjsonpackagefetching = true;
+    currentPort.port.onjsonpacketcountup = (count) => {
+      packageCountRef.current += count;
+      if (packageCountRef.current === currentPort.jsonPackageCount) {
+        setIsFechedPackage(true);
+        setIsLoading(false);
+        packageCountRef.current = 0;
+      }
+    };
     for (const command of commands) {
       await delayPromise(100); // 100ms 지연
 
@@ -373,13 +397,15 @@ export default function DeviceInfoPage() {
       });
     }
 
-    setIsLoading(false);
-    setIsFechedPackage(true);
+    setTimeout(() => {
+      setIsFechedPackage(true);
+      setIsLoading(false);
+      currentPort.port.isjsonpackagefetching = false;
+    }, 10000);
   };
 
   useEffect(() => {
     if (isReady) {
-      console.log("Test ::::");
       handleRefreshJsonPacket();
     }
   }, [isReady]);
@@ -391,7 +417,76 @@ export default function DeviceInfoPage() {
         <SideMenu
           sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}
         />
-        {renderContent()}
+        <Stack flex={1}>
+          <Controller
+            onApply={() => {
+              handleApply();
+            }}
+            onLoadProfile={(profile) => {
+              console.log("=== Profile Data Processing Start ===");
+              console.log("Original Profile:", profile);
+              setProfile(profile);
+
+              const newFormData = { ...formData };
+              console.log("Initial formData:", newFormData);
+
+              // Split profile data into lines and process each line
+              profile.split("\n").forEach((line) => {
+                // Skip empty lines
+                if (!line.trim()) return;
+
+                console.log("\nProcessing line:", line);
+
+                // Parse the line
+                const parts = line.split(";");
+                if (parts.length < 4) return; // Need at least NTW,PRG,empty,prefix
+                console.log(parts, "partspartspartsparts");
+                // Get the prefix (e.g., "10")
+                const prefixValue = parts[2]; // The prefix is the 4th element
+                console.log("Prefix value:", prefixValue);
+
+                // Process each pair (e.g., "00#01")
+                parts.slice(4).forEach((pair) => {
+                  const [id, value] = pair.split("#");
+                  if (!id || !value) return;
+
+                  // Create the key (e.g., "1000")
+                  const key = `${prefixValue}${id}`;
+                  console.log(
+                    `Processing pair - ID: ${id}, Value: ${value}, Key: ${key}`
+                  );
+
+                  // Update only if the key exists in formData
+                  if (newFormData[key]) {
+                    console.log(`Updating formData for key ${key}:`, {
+                      before: newFormData[key],
+                      after: {
+                        ...newFormData[key],
+                        value,
+                        realValue: value,
+                      },
+                    });
+
+                    newFormData[key] = {
+                      ...newFormData[key],
+                      value,
+                      realValue: value,
+                    };
+                  } else {
+                    console.log(`Key ${key} not found in formData`);
+                  }
+                });
+              });
+
+              console.log("\nFinal formData:", newFormData);
+              console.log("=== Profile Data Processing End ===\n");
+
+              setFormData(newFormData);
+            }}
+            onRefreshJsonPacket={handleRefreshJsonPacket}
+          />
+          {renderContent()}
+        </Stack>
       </div>
 
       {searchModal && (
