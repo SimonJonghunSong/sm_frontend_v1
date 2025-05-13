@@ -36,13 +36,11 @@ import FullLoading from "@/components/FullLoading";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 
 interface ModelInfoControllerProps {
-  originData: any;
   onLoadProfile: (profile: string) => void;
   onApply: () => void;
 }
 
 export default function ModelInfoController({
-  originData,
   onLoadProfile,
   onApply,
 }: ModelInfoControllerProps) {

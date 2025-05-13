@@ -196,7 +196,7 @@ export default function DeviceInfoPage() {
   const { lang } = useLangStore();
 
   const [originData, setOriginData] = useState<any[]>([]);
-
+  const [csvData, setCsvData] = useState<any>({});
   const navigate = useRouter();
 
   const { getModelName } = useModelInfoStore();
@@ -243,7 +243,13 @@ export default function DeviceInfoPage() {
       case "System":
         return <SystemTab formData={formData} setFormData={setFormData} />;
       case "Report":
-        return <ReportTab formData={formData} setFormData={setFormData} />;
+        return (
+          <ReportTab
+            csvData={csvData}
+            formData={formData}
+            setFormData={setFormData}
+          />
+        );
       case "Tracking":
         return <TrackingTab formData={formData} setFormData={setFormData} />;
       // case "Bluetooth":
@@ -333,6 +339,7 @@ export default function DeviceInfoPage() {
       const data = ((await getModelDataFromIDB(modelName)) as any) || [];
 
       const jsonData = data?.jsonData?.synctrak || [];
+      const csvData = data?.csvData;
 
       console.log("jsonData :::", jsonData);
 
@@ -341,6 +348,7 @@ export default function DeviceInfoPage() {
       }
 
       setOriginData(jsonData);
+      setCsvData(csvData);
     };
     fetchJsonData();
   }, []);
@@ -356,7 +364,6 @@ export default function DeviceInfoPage() {
         />
         <Stack flex={1}>
           <Controller
-            synctrakData={originData}
             onApply={() => {
               handleApply();
             }}

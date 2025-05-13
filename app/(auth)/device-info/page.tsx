@@ -215,6 +215,8 @@ export default function DeviceInfoPage() {
   const originData = portList.find(({ port }) => port.imei === imei)
     ?.packageToJson.synctrak;
 
+  console.log("originData ::", originData);
+
   const navigate = useRouter();
 
   const {

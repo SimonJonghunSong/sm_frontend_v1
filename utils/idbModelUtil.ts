@@ -73,7 +73,14 @@ export const updateJsonDataToIDB = async (
           const target = targets.find((item) => item === jsonId);
 
           if (target) {
+            console.log("sectionValue :::", sectionValue);
+            console.log("updateDatas[target] :::", updateDatas[target]);
+
             sectionValue.value = updateDatas[target].value;
+
+            if (updateDatas[target].alert_id) {
+              sectionValue.alert_id = updateDatas[target].alert_id;
+            }
           }
         }
       }

@@ -1,4 +1,3 @@
-import StorageIcon from "@mui/icons-material/Storage";
 import StackedBarChartOutlinedIcon from "@mui/icons-material/StackedBarChartOutlined";
 import WifiOutlinedIcon from "@mui/icons-material/WifiOutlined";
 import SettingsApplicationsOutlinedIcon from "@mui/icons-material/SettingsApplicationsOutlined";
@@ -7,41 +6,109 @@ import FlareOutlinedIcon from "@mui/icons-material/FlareOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
+import DriverIcon from "/public/images/driver.svg";
+import Image from "next/image";
 import BluetoothOutlinedIcon from "@mui/icons-material/BluetoothOutlined";
 import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
 import KeyboardCommandKeyOutlinedIcon from "@mui/icons-material/KeyboardCommandKeyOutlined";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import SyncOutlinedIcon from "@mui/icons-material/SyncOutlined";
+import MonitorOutlinedIcon from "@mui/icons-material/MonitorOutlined";
 
-export const getSideMenuIcon = (name: string) => {
-  switch (name) {
-    case "Device Status":
-      return <StackedBarChartOutlinedIcon />;
-    case "Network":
-      return <WifiOutlinedIcon />;
-    case "System":
-      return <SettingsApplicationsOutlinedIcon />;
-    case "Report":
-      return <InsertChartOutlinedIcon />;
-    case "Tracking":
-      return <PinDropOutlinedIcon />;
-    case "Input/Output(I/O)":
-      return <CompareArrowsOutlinedIcon />;
-    case "Geofence":
-      return <HexagonOutlinedIcon />;
-    case "BLE":
-      return <BluetoothOutlinedIcon />;
-    case "Accessories":
-      return <FlareOutlinedIcon />;
-    case "RF":
-      return <PodcastsOutlinedIcon />;
-    case "Commands":
-      return <KeyboardCommandKeyOutlinedIcon />;
-    case "Edit Profile":
-      return <ModeEditOutlineOutlinedIcon />;
-    case "F/W Update":
-      return <SyncOutlinedIcon />;
-    default:
-      return null;
-  }
-};
+export const sideMenuItems = ({
+  onClick,
+  tab,
+}: {
+  onClick: (tab: string) => void;
+  tab: string;
+}) => [
+  {
+    name: "Device Status",
+    href: "#",
+    isActive: tab === "DeviceStatus",
+    icon: () => <StackedBarChartOutlinedIcon />,
+    onClick: () => onClick("DeviceStatus"),
+  },
+  {
+    name: "Network",
+    href: "#",
+    isActive: tab === "Network",
+    icon: () => <WifiOutlinedIcon />,
+    onClick: () => onClick("Network"),
+  },
+  {
+    name: "System",
+    href: "#",
+    isActive: tab === "System",
+    icon: () => <SettingsApplicationsOutlinedIcon />,
+    onClick: () => onClick("System"),
+  },
+  {
+    name: "Report",
+    href: "#",
+    isActive: tab === "Report",
+    icon: () => <InsertChartOutlinedIcon />,
+    onClick: () => onClick("Report"),
+  },
+  {
+    name: "Accessories",
+    href: "#",
+    isActive: tab === "Accessories",
+    icon: () => <FlareOutlinedIcon />,
+    onClick: () => onClick("Accessories"),
+  },
+  {
+    name: "Input/Output(I/O)",
+    href: "#",
+    isActive: tab === "Input/Output(I/O)",
+    icon: () => <CompareArrowsOutlinedIcon />,
+    onClick: () => onClick("Input/Output(I/O)"),
+  },
+  {
+    name: "Geofence",
+    href: "#",
+    isActive: tab === "Geofence",
+    icon: () => <HexagonOutlinedIcon />,
+    onClick: () => onClick("Geofence"),
+  },
+  {
+    name: "Tracking",
+    href: "#",
+    isActive: tab === "Tracking",
+    icon: () => <PinDropOutlinedIcon />,
+    onClick: () => onClick("Tracking"),
+  },
+  {
+    name: "Driver",
+    href: "#",
+    isActive: tab === "Driver",
+    icon: () => <Image src={DriverIcon} alt="DriverIcon" />,
+    onClick: () => onClick("Driver"),
+  },
+  {
+    name: "Bluetooth",
+    href: "#",
+    isActive: tab === "Bluetooth",
+    icon: () => <BluetoothOutlinedIcon />,
+    onClick: () => onClick("Bluetooth"),
+  },
+  {
+    name: "RF",
+    href: "#",
+    isActive: tab === "RF",
+    icon: () => <PodcastsOutlinedIcon />,
+    onClick: () => onClick("RF"),
+  },
+  // {
+  //   name: "Commands",
+  //   href: "#",
+  //   isActive: tab === "Commands",
+  //   icon: () => <KeyboardCommandKeyOutlinedIcon />,
+  //   onClick: () => onClick("Commands"),
+  // },
+  // {
+  //   name: "CMD Tool",
+  //   href: "#",
+  //   isActive: tab === "CMD Tool",
+  //   icon: () => <MonitorOutlinedIcon />,
+  //   onClick: () => onClick("CMD Tool"),
+  // },
+];

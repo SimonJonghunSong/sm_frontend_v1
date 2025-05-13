@@ -74,6 +74,8 @@ export default function AssignHeader({ imei, formData: formDataProps }: Props) {
     m_assigns: [],
     l_assigns: [],
   });
+  console.log("sttData :::", sttData);
+
   const [defaultSttIndexes, setDefaultSttIndexes] = useState({
     s_assigns: [],
     m_assigns: [],
@@ -145,6 +147,11 @@ export default function AssignHeader({ imei, formData: formDataProps }: Props) {
 
           const parseData = parseAssigns(csvDataRef.current);
 
+          console.log("parseData :::", parseData);
+          console.log("sItemsArray :::", sItemsArray);
+          console.log("mItemsArray :::", mItemsArray);
+          console.log("lItemsArray :::", lItemsArray);
+
           setSttData({
             s_assigns: parseData.s_assigns.map((item) =>
               sItemsArray.includes(renderNumber(item.id))
@@ -179,6 +186,7 @@ export default function AssignHeader({ imei, formData: formDataProps }: Props) {
             const [currentChecked, sItems, mItems, lItems] =
               currentCsvValuesArray;
 
+            console.log("currentCsvValuesArray :::", currentCsvValuesArray);
             console.log("sItems :::", sItems);
             console.log("mItems :::", mItems);
             console.log("lItems :::", lItems);

@@ -23,9 +23,20 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
+  csvData: {
+    p1: string;
+    p2: string;
+    p3: string;
+    p4: string;
+    p5: string;
+    p6: string;
+    p7: string;
+    p8: string;
+    p9: string;
+  }[];
 }
 
-export default function ReportTab({ formData, setFormData }: Props) {
+export default function ReportTab({ formData, setFormData, csvData }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
     console.log(name, value, alertId);
     setFormData((prev) => ({
@@ -53,7 +64,7 @@ export default function ReportTab({ formData, setFormData }: Props) {
 
       <ReportMapping2 formData={formData} onChange={handleValueChange} />
 
-      <AssignHeader formData={formData} imei={imei} />
+      <AssignHeader csvData={csvData} />
 
       <AlertConfig formData={formData} onChange={handleValueChange} />
 
