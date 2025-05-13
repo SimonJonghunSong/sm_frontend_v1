@@ -242,6 +242,34 @@ const useSerial = () => {
             port?.onbuffervalue(value);
           }
 
+          if (value.includes("RPR")) {
+            await updateIndexedDB(
+              port.imei,
+              value,
+              indexeddbRef,
+              broadcastChannel
+            );
+            port.oneditsuccess?.();
+            port.oneditsuccess = null;
+          }
+
+          if (value.includes("ERR") || port.iserrorvalue) {
+            await updateIndexedDB(
+              port.imei,
+              value,
+              indexeddbRef,
+              broadcastChannel
+            );
+
+            if (value.includes(CR)) {
+              port.iserrorvalue = false;
+              port.onprev?.();
+              port.onprev = null;
+            } else {
+              port.iserrorvalue = true;
+            }
+          }
+
           if (
             port.isReadyToUse &&
             (!value.includes("PST;Rdy") || !value.includes("Rdy;UP"))
@@ -442,31 +470,6 @@ const useSerial = () => {
                 port.onEndCurrentAltDataFetched?.(altDataBufferRef.current);
                 altDataBufferRef.current = "";
                 port.isAltDataFetching = false;
-              }
-            } else if (value.includes("RPR")) {
-              await updateIndexedDB(
-                port.imei,
-                value,
-                indexeddbRef,
-                broadcastChannel
-              );
-              port.oneditsuccess?.();
-              port.oneditsuccess = null;
-            } else if (value.includes("ERR") || port.iserrorvalue) {
-              await updateIndexedDB(
-                port.imei,
-                value,
-                indexeddbRef,
-                broadcastChannel
-              );
-
-              if (value.includes(CR)) {
-                port.iserrorvalue = false;
-                port.onprev?.();
-                // toast(value, { type: "error" });
-                port.onprev = null;
-              } else {
-                port.iserrorvalue = true;
               }
             } else if (port.isDeviceVersionsFetching) {
               deviceVersionsBufferRef.current += value;
