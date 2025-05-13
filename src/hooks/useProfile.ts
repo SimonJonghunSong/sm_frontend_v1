@@ -216,6 +216,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   };
 
   const getCircularData = async ({ onSuccess }: { onSuccess?: () => void }) => {
+    console.log("circularGeofenceMax::::::::::::", circularGeofenceMax);
     if (Number(circularGeofenceMax) === 0) {
       console.log("circularGeofenceMax", circularGeofenceMax);
       return onSuccess?.();
