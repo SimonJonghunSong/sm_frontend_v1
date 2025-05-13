@@ -33,6 +33,7 @@ import useModelInfoStore from "@/src/stores/useModelInfo";
 import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationTabStore";
 import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
+import useErrorDialog from "@/src/hooks/useErrorDialog";
 
 interface ModelInfoControllerProps {
   onRefreshJsonPacket: () => void;
@@ -463,6 +464,9 @@ function LoadModal({
   fwVer: string;
   onLoad: (text: string) => void;
 }) {
+  const { renderErrorModal, toggle } = useErrorDialog({
+    description: "Profile file is not compatible with the device",
+  });
   const [selectedValue, setSelectedValue] = React.useState<string>();
   const [selectedFiles, setSelectedFiles] = React.useState<
     {
@@ -518,6 +522,15 @@ function LoadModal({
         const modelLine = lines.find((line) => line.startsWith("MODEL="));
         const versionLine = lines.find((line) => line.startsWith("VERSION="));
         ref.current.push({ id: file.name, file: content });
+
+        if (
+          modelLine.split("=")[1].trim() !== modelName ||
+          versionLine.split("=")[1].trim() !== fwVer
+        ) {
+          toggle();
+          reject(new Error("Profile file is not compatible with the device"));
+          return;
+        }
 
         if (!modelLine || !versionLine) {
           reject(new Error("Invalid profile file format"));
@@ -683,6 +696,7 @@ function LoadModal({
 
   return (
     <Stack gap="24px">
+      {renderErrorModal()}
       <input
         type="file"
         ref={fileInputRef}

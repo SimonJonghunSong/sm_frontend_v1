@@ -128,12 +128,13 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const polygonPointRef = useRef("");
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
+
   const { getProfileData } = useTransformedConfigData({
     data: currentPort.packageToJson.synctrak,
     blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
   });
 
-  const geofenceMaxCount = currentPort.packageToJson.synctrak.reduce(
+  const geofenceMaxCount = currentPort.packageToJson.synctrak?.reduce(
     (acc, tab) => {
       const tabsValue = Object.values(tab);
 
@@ -162,8 +163,8 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
       circularGeofenceMax: 0,
     }
   );
-  const polygonGeofenceMax = geofenceMaxCount.polygonGeofenceMax;
-  const circularGeofenceMax = geofenceMaxCount.circularGeofenceMax;
+  const polygonGeofenceMax = geofenceMaxCount?.polygonGeofenceMax || 0;
+  const circularGeofenceMax = geofenceMaxCount?.circularGeofenceMax || 0;
 
   const write = ({ data }: { data: string }) => {
     writeSerial({
@@ -184,7 +185,8 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     setPackageFetchingStart({ imei: port.imei });
     port.isjsonpackagefetching = true;
     port.onafterjsonpacket = () => {
-      onSuccess?.();
+      // port.isjsonpackagefetching = false;
+      // onSuccess?.();
     };
 
     for (const command of commands) {
@@ -328,7 +330,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     setIsDownloading(true);
     await getJsonPkg({});
     setPercentage(25);
-    await delayPromise(DELAY_MS);
+    await delayPromise(10000);
 
     // Polygon 데이터 가져오기
     await getPolygonDataWithPromise();
