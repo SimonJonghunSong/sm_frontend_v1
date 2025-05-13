@@ -232,6 +232,8 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
 
     for (const command of circularGeofenceMax === "999"
       ? AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)
+      : circularGeofenceMax === "10"
+      ? AT_GET_CIRCULAR_GEOFENCE_10_LIST(imei)
       : AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)) {
       write({
         data: command,
