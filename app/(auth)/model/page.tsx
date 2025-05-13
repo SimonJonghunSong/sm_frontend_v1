@@ -54,6 +54,7 @@ import { updateModelPkgDataByEmail } from "@/utils/idbLoginUtil";
 import useAuthStore from "@/utils/useAuthStore";
 import { getJsonDataFromIDB, saveJsonDataToIDB } from "@/utils/idbModelUtil";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import { mockData } from "app/(auth)/model/mock";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -106,6 +107,8 @@ export default function Model() {
       };
     },
   });
+
+  console.log("data :::", data);
 
   const getColumns: () => GridColDef[] = () => [
     {
@@ -251,6 +254,7 @@ export default function Model() {
       }
     });
 
+  console.log("filteredRowData ::::", filteredRowData);
   const [columnData, setColumnData] = useState(getColumns());
 
   const [viewType, setViewType] = React.useState<string | null>("galleryType");
@@ -699,7 +703,10 @@ function ModelButton({ onNetworkError, model, model_version, style }) {
     onSuccess: async (res) => {
       try {
         // await saveJsonDataToIDB("ST4505", res.data.result.records);
-        await saveJsonDataToIDB(model, res.data.result.records);
+        await saveJsonDataToIDB(model, res.data.result.records, {
+          jsonData: mockData.result.records.json_data,
+          csvData: mockData.result.records.csv_data,
+        });
 
         setIsLoaded(true);
       } catch (e) {

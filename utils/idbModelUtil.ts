@@ -20,10 +20,96 @@ export const initDB = () => {
   });
 };
 
+export const updateJsonDataToIDB = async (
+  modelName: string,
+  updateDatas: any
+) => {
+  try {
+    const db = (await initDB()) as IDBDatabase;
+    return new Promise(async (resolve, reject) => {
+      // 1. 현재 저장된 데이터 가져오기
+      const currentData = (await getModelDataFromIDB(modelName)) as any;
+      const currentJsonData = currentData?.jsonData?.synctrak;
+
+      if (!currentData || !currentJsonData) {
+        reject(new Error(`No data found for model: ${modelName}`));
+        return;
+      }
+
+      let firstKey = 1;
+      let secondKey = 0;
+
+      for (let i = 1; i < currentJsonData.length; i++) {
+        firstKey = i;
+        const sectionData = currentJsonData[i];
+        const sectionInfo = Object.values(
+          Object.values(sectionData)[0][0]
+        )[0][0];
+
+        const tabId =
+          sectionInfo.tab_id < 10
+            ? `0${sectionInfo.tab_id}`
+            : sectionInfo.tab_id;
+
+        const targets = Object.keys(updateDatas).filter(
+          (item: string) => item.slice(0, 2) === tabId
+        );
+
+        if (!targets.length) {
+          continue;
+        }
+
+        const sectionValues = Object.values(sectionData)[0] as any[];
+
+        for (let j = 1; j < sectionValues.length; j++) {
+          secondKey = j;
+
+          const sectionValue = Object.values(sectionValues[j])[0][0];
+
+          const jsonId = `${tabId}${
+            sectionValue.ID < 10 ? `0${sectionValue.ID}` : sectionValue.ID
+          }`;
+
+          const target = targets.find((item) => item === jsonId);
+
+          if (target) {
+            sectionValue.value = updateDatas[target].value;
+          }
+        }
+      }
+
+      // 3. 업데이트된 데이터 저장
+      const transaction = db.transaction([STORE_NAME], "readwrite");
+      const store = transaction.objectStore(STORE_NAME);
+
+      const request = store.put({
+        modelName,
+        data: currentData.data,
+        jsonData: currentData.jsonData,
+        csvData: currentData.csvData,
+        updatedAt: new Date(),
+      });
+
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Error updating parameters in IndexedDB:", error);
+    throw error;
+  }
+};
+
 export const saveJsonDataToIDB = async (
   modelName: string,
-  jsonData: ModelConfig[]
+  jsonData: ModelConfig[],
+  data?: {
+    jsonData: any;
+    csvData: any[];
+  }
 ) => {
+  console.log("data :::", data);
+  // return;
+
   try {
     const db = (await initDB()) as IDBDatabase;
     return new Promise((resolve, reject) => {
@@ -42,9 +128,13 @@ export const saveJsonDataToIDB = async (
           })
         : jsonData;
 
+      console.log("processedData :::", processedData);
+
       const request = store.put({
         modelName,
         data: processedData,
+        jsonData: data?.jsonData,
+        csvData: data?.csvData,
         updatedAt: new Date(),
       });
       request.onsuccess = () => resolve(request.result);
@@ -66,6 +156,24 @@ export const getJsonDataFromIDB = async (modelName: string) => {
       const request = store.get(modelName);
 
       request.onsuccess = () => resolve(request.result?.data || null);
+      request.onerror = () => reject(request.error);
+    });
+  } catch (error) {
+    console.error("Error reading from IndexedDB:", error);
+    throw error;
+  }
+};
+
+export const getModelDataFromIDB = async (modelName: string) => {
+  try {
+    const db = (await initDB()) as IDBDatabase;
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([STORE_NAME], "readonly");
+      const store = transaction.objectStore(STORE_NAME);
+
+      const request = store.get(modelName);
+
+      request.onsuccess = () => resolve(request.result || null);
       request.onerror = () => reject(request.error);
     });
   } catch (error) {
