@@ -10,6 +10,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormGroup,
   Radio,
   RadioGroup,
   Stack,
@@ -25,7 +26,7 @@ import { addModel } from "@/src/api/services/model";
 export interface FormState {
   devName: string;
   firmwareVersion: string;
-  country: string;
+  country: string[];
   imageFile: File;
   imageFileSmall: string;
   supportedNetworkType: string[];
@@ -57,7 +58,12 @@ function reducer(state: FormState, action: FormAction): FormState {
     case "SET_DEV_NAME":
       return { ...state, devName: action.value };
     case "SET_COUNTRY":
-      return { ...state, country: action.value };
+      return {
+        ...state,
+        country: state.country.includes(action.value)
+          ? state.country.filter((c) => c !== action.value)
+          : [...state.country, action.value],
+      };
     case "SET_IMAGE_FILE":
       return { ...state, imageFile: action.value };
     case "SET_SUPPORTED_NETWORK_TYPE":
@@ -78,7 +84,7 @@ function reducer(state: FormState, action: FormAction): FormState {
 const initialState: FormState = {
   devName: "",
   firmwareVersion: "",
-  country: "",
+  country: [],
   imageFile: undefined,
   imageFileSmall: "",
   supportedNetworkType: [],
@@ -131,7 +137,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
       );
     },
   });
-
+  console.log(state);
   const {
     devName,
     firmwareVersion,
@@ -366,36 +372,60 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
             </InputBox.Title>
           </InputBox.Head>
           <InputBox.Body>
-            <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                defaultValue=""
-                value={country}
-                onChange={(e) => {
-                  dispatch({ type: "SET_COUNTRY", value: e.target.value });
-                }}
-                name="country"
-                row
-                sx={{ gap: "24px" }}
-              >
-                <FormControlLabel value="USA" control={<Radio />} label="SU" />
-                <FormControlLabel
-                  value="Brazil"
-                  control={<Radio />}
-                  label="SB"
-                />
-                <FormControlLabel
-                  value="Mexico"
-                  control={<Radio />}
-                  label="SM"
-                />
-                <FormControlLabel
-                  value="Europe"
-                  control={<Radio />}
-                  label="SE"
-                />
-              </RadioGroup>
-            </FormControl>
+            <FormGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              row
+              sx={{ gap: "24px" }}
+            >
+              <FormControlLabel
+                value="USA"
+                control={
+                  <Checkbox
+                    onChange={(e) => {
+                      dispatch({ type: "SET_COUNTRY", value: "USA" });
+                    }}
+                    checked={country.includes("USA")}
+                  />
+                }
+                label="SU"
+              />
+              <FormControlLabel
+                value="Brazil"
+                control={
+                  <Checkbox
+                    onChange={(e) => {
+                      dispatch({ type: "SET_COUNTRY", value: "Brazil" });
+                    }}
+                    checked={country.includes("Brazil")}
+                  />
+                }
+                label="SB"
+              />
+              <FormControlLabel
+                value="Mexico"
+                control={
+                  <Checkbox
+                    onChange={(e) => {
+                      dispatch({ type: "SET_COUNTRY", value: "Mexico" });
+                    }}
+                    checked={country.includes("Mexico")}
+                  />
+                }
+                label="SM"
+              />
+              <FormControlLabel
+                value="Europe"
+                control={
+                  <Checkbox
+                    onChange={(e) => {
+                      dispatch({ type: "SET_COUNTRY", value: "Europe" });
+                    }}
+                    checked={country.includes("Europe")}
+                  />
+                }
+                label="SE"
+              />
+            </FormGroup>
           </InputBox.Body>
         </InputBox>
 

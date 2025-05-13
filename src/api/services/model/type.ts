@@ -6,8 +6,9 @@ export interface Model {
   image_file: string;
   image_file_small: string;
   dev_name: string;
+  target_country: string[];
   fw_ver: string;
-  country: Country;
+  country: Country[];
   default_profile: string;
   hide: boolean;
   reg_date: string;
