@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import useSerialStore from "../stores/useSerialStore";
 import { delayPromise } from "./useSerial";
 import {
+  AT_GET_CIRCULAR_GEOFENCE_10_LIST,
   AT_GET_CIRCULAR_GEOFENCE_255_LIST,
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
   AT_GET_JSON,
@@ -218,7 +219,6 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const getCircularData = async ({ onSuccess }: { onSuccess?: () => void }) => {
     console.log("circularGeofenceMax::::::::::::", circularGeofenceMax);
     if (Number(circularGeofenceMax) === 0) {
-      console.log("circularGeofenceMax", circularGeofenceMax);
       return onSuccess?.();
     }
 
@@ -232,6 +232,8 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
 
     for (const command of circularGeofenceMax === "255"
       ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
+      : circularGeofenceMax === "10"
+      ? AT_GET_CIRCULAR_GEOFENCE_10_LIST(imei)
       : AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)) {
       write({
         data: command,
