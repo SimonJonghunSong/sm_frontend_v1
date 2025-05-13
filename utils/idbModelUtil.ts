@@ -157,7 +157,7 @@ export const getJsonDataFromIDB = async (modelName: string) => {
 
       const request = store.get(modelName);
 
-      request.onsuccess = () => resolve(request.result?.data || null);
+      request.onsuccess = () => resolve(request.result?.jsonData || null);
       request.onerror = () => reject(request.error);
     });
   } catch (error) {
