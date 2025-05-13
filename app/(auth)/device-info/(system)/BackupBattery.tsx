@@ -111,7 +111,6 @@ const BackupBattery = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -119,7 +118,6 @@ const BackupBattery = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -127,7 +125,6 @@ const BackupBattery = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -136,7 +133,6 @@ const BackupBattery = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <SelectField
@@ -144,7 +140,6 @@ const BackupBattery = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <SwitchField

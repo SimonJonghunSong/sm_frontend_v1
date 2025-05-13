@@ -158,21 +158,18 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
               <NumericInputField
                 id="1903"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
               <NumericInputField
                 id="1904"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
             </Stack>
             <Stack gap={"24px"} flex={1}>
@@ -181,7 +178,6 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <SwitchField
@@ -198,14 +194,12 @@ const Motion = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
-                    isRequired
                   />
                   <NumericInputField
                     id="1917"
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
-                    isRequired
                   />
                 </>
               )}
@@ -215,7 +209,6 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <SwitchField
@@ -231,7 +224,6 @@ const Motion = ({ formData, onChange }: Props) => {
                   formData={formData}
                   onChange={handleChange}
                   style={{ width: "100%" }}
-                  isRequired
                 />
               )}
             </Stack>

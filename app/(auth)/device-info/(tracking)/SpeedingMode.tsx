@@ -121,38 +121,32 @@ const SpeedingMode = ({ formData, onChange }: Props) => {
               id="1620"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
 
             <NumericInputField
               id="1621"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1622"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1623"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1624"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1625"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 

@@ -28,7 +28,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
-  console.log(formData);
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -131,9 +131,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
               <Stack direction="row" gap="4px" alignItems="center">
                 <InputBox.Title>
                   {FIELD_VALIDATIONS["1640"].title[lang]}
-                  <span style={{ color: "#FF0000", paddingLeft: "4px" }}>
-                    *
-                  </span>
                 </InputBox.Title>
                 <InputBox.Info
                   tooltipText={
@@ -198,7 +195,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1649"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1649"]?.realValue}
             onChange={handleChange}
@@ -206,7 +202,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1650"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1650"]?.realValue}
             onChange={handleChange}
@@ -214,7 +209,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1651"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1651"]?.realValue}
             onChange={handleChange}
@@ -222,7 +216,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1652"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1652"]?.realValue}
             onChange={handleChange}
@@ -231,13 +224,11 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             id="1653"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <TimeHMA
             id="1655"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1655"]?.realValue}
             onChange={handleChange}

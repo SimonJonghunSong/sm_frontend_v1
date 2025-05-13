@@ -111,11 +111,19 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>Reboot</FieldLabel>
-            <FieldValue>
+            <FieldValue
+              style={{
+                height: 62,
+                padding: "16px",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Button
-                variant="contained"
+                variant="outlined"
                 color="secondary"
-                fullWidth
+                sx={{ height: 30 }}
+                size="small"
                 onClick={handleReboot}
               >
                 Reboot

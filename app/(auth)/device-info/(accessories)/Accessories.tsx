@@ -106,7 +106,6 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
-            isRequired
           />
           <SelectField
             id="2301"
@@ -114,7 +113,6 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
-            isRequired
           />
           <SelectField
             id="2302"
@@ -122,7 +120,6 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
-            isRequired
           />
           <SelectField
             id="2303"
@@ -130,20 +127,17 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
-            isRequired
           />
           <NumericInputField
             id="2304"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
           <NumericInputField
             id="2305"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
 
@@ -153,27 +147,23 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
-            isRequired
           />
           <NumericInputField
             id="2307"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
           <NumericInputField
             id="2308"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
           <NumericInputField
             id="2309"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
 
@@ -182,7 +172,6 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
         </Stack>
 
@@ -222,7 +211,6 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
             isSwitch
           />
 
@@ -248,7 +236,6 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
             isSwitch
           />
           <NumericInputField
@@ -256,35 +243,30 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
           <NumericInputField
             id="2331"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
           <NumericInputField
             id="2332"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
           <NumericInputField
             id="2333"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
           <NumericInputField
             id="2334"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
           <NumericInputField
             id="2336"

@@ -121,50 +121,42 @@ const IdleMode = ({ formData, onChange }: Props) => {
               id="1610"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
 
             <NumericInputField
               id="1611"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1612"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1613"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1614"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1615"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1616"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
             <NumericInputField
               id="1617"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 

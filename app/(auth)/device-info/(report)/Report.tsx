@@ -142,7 +142,6 @@ const Report = ({ formData, onChange }: Props) => {
               />
               {formData["1072"]?.realValue === "01" && (
                 <TextInputField
-                  isRequired
                   id="1073"
                   formData={formData}
                   error={is1072Error && formData["1073"]?.value !== ""}
@@ -163,7 +162,6 @@ const Report = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <SelectField
@@ -171,7 +169,6 @@ const Report = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <SwitchField

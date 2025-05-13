@@ -122,14 +122,12 @@ const InstallMode = ({ formData, onChange }: Props) => {
               id="1602"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
 
             <NumericInputField
               id="1603"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 

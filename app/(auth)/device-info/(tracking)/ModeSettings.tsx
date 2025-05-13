@@ -106,7 +106,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1670"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -115,7 +114,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1673"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -124,7 +122,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1676"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -138,7 +135,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1679"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -147,7 +143,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1685"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -156,7 +151,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1688"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     style={{ width: "100%" }}
                   />
@@ -165,7 +159,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1682"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -174,7 +167,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1697"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     style={{ width: "100%" }}
                   />
@@ -182,7 +174,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1681"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -191,7 +182,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1684"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     isSwitch
                     isUnderbarId
                     style={{ width: "100%" }}
@@ -209,21 +199,18 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1670"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1671"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1672"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </Stack>
@@ -241,21 +228,18 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1673"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1674"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1675"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </Stack>
@@ -273,21 +257,18 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1676"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1677"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1678"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </Stack>
@@ -301,21 +282,18 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1679"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1680"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1681"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </Stack>
@@ -333,21 +311,18 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1682"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1683"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1684"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </Stack>
@@ -365,21 +340,18 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                     id="1685"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1686"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1687"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </Stack>
@@ -394,7 +366,6 @@ const ModeSettings = ({ formData, onChange }: Props) => {
                   id="1078"
                   formData={formData}
                   onChange={handleChange}
-                  isRequired
                   style={{ width: "100%" }}
                 /> */}
               </Stack>

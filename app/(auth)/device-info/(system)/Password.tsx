@@ -171,7 +171,6 @@ const Password = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             type="password"
-            isRequired
             error={
               formData["3002"]?.realValue.length < 6 ||
               formData["3002"]?.realValue.length > 18

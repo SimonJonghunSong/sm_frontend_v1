@@ -120,7 +120,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
 
             <NumericInputField
@@ -128,7 +127,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
 
             <NumericInputField
@@ -136,7 +134,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
 
             <NumericInputField
@@ -144,7 +141,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
           </Stack>
           <Stack gap={"24px"} flex={1}>
@@ -153,7 +149,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
 
             <NumericInputField
@@ -161,7 +156,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
 
             <NumericInputField
@@ -169,7 +163,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
-              isRequired
             />
 
             {!!formData["1924"] && (
@@ -187,7 +180,6 @@ const DriverPattern = ({ formData, onChange }: Props) => {
                     id="1925"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                   />
                 )}
               </Stack>

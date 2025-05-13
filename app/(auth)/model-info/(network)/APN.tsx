@@ -96,6 +96,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isRequired
           />
 
           <TextInputField

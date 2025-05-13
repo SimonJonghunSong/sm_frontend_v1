@@ -122,14 +122,12 @@ const DriveMode = ({ formData, onChange }: Props) => {
               id="1600"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
 
             <NumericInputField
               id="1601"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 

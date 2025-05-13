@@ -14,6 +14,7 @@ interface Props {
   isSwitch?: boolean;
   style?: React.CSSProperties;
   optionString: string;
+  isRequired?: boolean;
   labelString: {
     TEXT_EN_ITEM_CONTENT: string;
     TEXT_ES_ITEM_CONTENT: string;
@@ -30,6 +31,7 @@ export default function CheckboxField({
   labelString,
   isSwitch,
   style,
+  isRequired = false,
   hasAllCheckbox = false,
 }: Props) {
   const lang = useLangStore((state) => state.lang);
@@ -40,7 +42,9 @@ export default function CheckboxField({
         <InputBox.Title>
           {FIELD_VALIDATIONS[id].title[lang]}
 
-          <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
+          {isRequired && (
+            <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
+          )}
         </InputBox.Title>
         {FIELD_VALIDATIONS[id].tooltip?.[lang] && (
           <InputBox.Info

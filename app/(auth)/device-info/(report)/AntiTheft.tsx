@@ -108,14 +108,12 @@ const Report = ({ formData, onChange }: Props) => {
           id="1050"
           formData={formData}
           onChange={handleChange}
-          isRequired
         />
 
         <NumericInputField
           id="1051"
           formData={formData}
           onChange={handleChange}
-          isRequired
         />
       </Stack>
 

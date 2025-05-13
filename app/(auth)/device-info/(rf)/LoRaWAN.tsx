@@ -149,14 +149,12 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                 id="2583"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 isSwitch
               />
               <NumericInputField
                 id="2584"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 isSwitch
               />
               <TextInputField
@@ -204,25 +202,21 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                 id="2589"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
               />
               <NumericInputField
                 id="2590"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
               />
               <NumericInputField
                 id="2591"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
               />
               <NumericInputField
                 id="2592"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
               />
               <NumericInputField
                 id="2593"

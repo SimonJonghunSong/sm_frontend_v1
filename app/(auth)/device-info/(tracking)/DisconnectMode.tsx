@@ -120,7 +120,6 @@ const DisconnectMode = ({ formData, onChange }: Props) => {
               id="1641"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 
