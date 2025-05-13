@@ -157,8 +157,8 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
       return acc;
     },
     {
-      polygonGeofenceMax: undefined,
-      circularGeofenceMax: undefined,
+      polygonGeofenceMax: 0,
+      circularGeofenceMax: 0,
     }
   );
   const polygonGeofenceMax = geofenceMaxCount.polygonGeofenceMax;
@@ -197,6 +197,11 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const getPolygonData = async ({ onSuccess }: { onSuccess?: () => void }) => {
     currentPort.port.polygonfetchcount = 0;
     currentPort.port.polygonmax = Number(polygonGeofenceMax);
+
+    if (Number(polygonGeofenceMax) === 0) {
+      return onSuccess?.();
+    }
+
     currentPort.port.ispolygonfetching = true;
     currentPort.port.onafterpolygongeofence = () => {
       onSuccess?.();
@@ -214,6 +219,11 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     currentPort.port.circularfetchcount = 0;
     currentPort.port.iscircularfetching = true;
     currentPort.port.circlemax = Number(circularGeofenceMax);
+
+    if (Number(circularGeofenceMax) === 0) {
+      return onSuccess?.();
+    }
+
     currentPort.port.onaftercirculargeofence = () => {
       onSuccess?.();
     };
@@ -233,6 +243,10 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   }: {
     onSuccess?: () => void;
   }) => {
+    if (Number(polygonGeofenceMax) === 0) {
+      return onSuccess?.();
+    }
+
     const polygonGeofence = getStorePolygonData({ imei });
     const validPolygon = polygonGeofence.filter((polygon) => {
       const [number, value] = polygon.split("#");
