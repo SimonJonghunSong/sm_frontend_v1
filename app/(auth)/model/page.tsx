@@ -385,9 +385,6 @@ export default function Model() {
           setRowData(filteredRows);
         } else {
           // showLoadedModels가 false일 때는 모든 행 표시
-          console.log("loadedRows :::", loadedRows);
-          console.log("rows :::", rows);
-
           setRowData(
             rows.map((row) => {
               if (loadedRows.find(({ id }) => id === row.id)) {
