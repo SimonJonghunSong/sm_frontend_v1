@@ -54,7 +54,6 @@ import { updateModelPkgDataByEmail } from "@/utils/idbLoginUtil";
 import useAuthStore from "@/utils/useAuthStore";
 import { getJsonDataFromIDB, saveJsonDataToIDB } from "@/utils/idbModelUtil";
 import useModelInfoStore from "@/src/stores/useModelInfo";
-import { mockData } from "app/(auth)/model/mock";
 
 const selectSortData = (lang: "en" | "pt" | "es") => [
   {
@@ -703,9 +702,9 @@ function ModelButton({ onNetworkError, model, model_version, style }) {
     onSuccess: async (res) => {
       try {
         // await saveJsonDataToIDB("ST4505", res.data.result.records);
-        await saveJsonDataToIDB(model, res.data.result.records, {
-          jsonData: mockData.result.records.json_data,
-          csvData: mockData.result.records.csv_data,
+        await saveJsonDataToIDB(model, {
+          jsonData: res.data.result.records.json_data,
+          csvData: res.data.result.records.csv_data,
         });
 
         setIsLoaded(true);

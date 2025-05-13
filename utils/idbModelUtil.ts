@@ -1,5 +1,17 @@
 import { ModelConfig } from "@/src/api/services/model/type";
 
+export interface CsvData {
+  p1: string;
+  p2: string;
+  p3: string;
+  p4: string;
+  p5: string;
+  p6: string;
+  p7: string;
+  p8: string;
+  p9: string;
+}
+
 const DB_NAME = "DeviceDB";
 const DB_VERSION = 1;
 const STORE_NAME = "deviceJsonData";
@@ -91,7 +103,6 @@ export const updateJsonDataToIDB = async (
 
       const request = store.put({
         modelName,
-        data: currentData.data,
         jsonData: currentData.jsonData,
         csvData: currentData.csvData,
         updatedAt: new Date(),
@@ -108,10 +119,9 @@ export const updateJsonDataToIDB = async (
 
 export const saveJsonDataToIDB = async (
   modelName: string,
-  jsonData: ModelConfig[],
-  data?: {
+  data: {
     jsonData: any;
-    csvData: any[];
+    csvData: CsvData[];
   }
 ) => {
   console.log("data :::", data);
@@ -122,24 +132,9 @@ export const saveJsonDataToIDB = async (
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
-      // DEFAULT_VALUE가 있는 경우 value 필드 추가
-      const processedData = Array.isArray(jsonData)
-        ? jsonData.map((item) => {
-            if ("DEFAULT_VALUE" in item) {
-              return {
-                ...item,
-                value: item.DEFAULT_VALUE,
-              };
-            }
-            return item;
-          })
-        : jsonData;
-
-      console.log("processedData :::", processedData);
 
       const request = store.put({
         modelName,
-        data: processedData,
         jsonData: data?.jsonData,
         csvData: data?.csvData,
         updatedAt: new Date(),
@@ -203,58 +198,6 @@ export const deleteJsonDataFromIDB = async (modelName: string) => {
     });
   } catch (error) {
     console.error("Error deleting from IndexedDB:", error);
-    throw error;
-  }
-};
-
-export const updateParametersInIDB = async (
-  modelName: string,
-  updatedParameters: { no: number | string; [key: string]: any }[]
-) => {
-  try {
-    const db = (await initDB()) as IDBDatabase;
-    return new Promise(async (resolve, reject) => {
-      // 1. 현재 저장된 데이터 가져오기
-      const currentData = (await getJsonDataFromIDB(
-        modelName
-      )) as ModelConfig[];
-      if (!currentData) {
-        reject(new Error(`No data found for model: ${modelName}`));
-        return;
-      }
-
-      // 2. 데이터 업데이트
-      const updatedData = currentData.map((item: any) => {
-        // 업데이트할 파라미터 찾기
-        const updateInfo = updatedParameters.find(
-          (param) => param.no === item.no
-        );
-        if (updateInfo) {
-          // id는 유지하고 나머지 데이터만 업데이트
-          const { no, ...updateData } = updateInfo;
-          return {
-            ...item,
-            ...updateData,
-          };
-        }
-        return item;
-      });
-
-      // 3. 업데이트된 데이터 저장
-      const transaction = db.transaction([STORE_NAME], "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-
-      const request = store.put({
-        modelName,
-        data: updatedData,
-        updatedAt: new Date(),
-      });
-
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-  } catch (error) {
-    console.error("Error updating parameters in IndexedDB:", error);
     throw error;
   }
 };

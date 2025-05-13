@@ -76,13 +76,13 @@ export const sideMenuItems = ({
     icon: () => <PinDropOutlinedIcon />,
     onClick: () => onClick("Tracking"),
   },
-  {
-    name: "Driver",
-    href: "#",
-    isActive: tab === "Driver",
-    icon: () => <Image src={DriverIcon} alt="DriverIcon" />,
-    onClick: () => onClick("Driver"),
-  },
+  // {
+  //   name: "Driver",
+  //   href: "#",
+  //   isActive: tab === "Driver",
+  //   icon: () => <Image src={DriverIcon} alt="DriverIcon" />,
+  //   onClick: () => onClick("Driver"),
+  // },
   {
     name: "Bluetooth",
     href: "#",

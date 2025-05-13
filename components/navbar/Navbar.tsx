@@ -425,7 +425,8 @@ export default function Navbar() {
 
           {userRole !== "ROOT" && (
             <>
-              {pathname.includes("device-info") && (
+              {(pathname.includes("device-info") ||
+                pathname.includes("model-info")) && (
                 <TextField
                   variant="outlined"
                   size="small"
@@ -457,8 +458,7 @@ export default function Navbar() {
           {userRole !== "ROOT" && (
             <>
               {(pathname.includes("configuration") ||
-                pathname.includes("device-configuration") ||
-                pathname.includes("model-info")) && (
+                pathname.includes("device-configuration")) && (
                 <TextField
                   variant="outlined"
                   size="small"

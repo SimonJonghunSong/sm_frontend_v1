@@ -27,6 +27,7 @@ export default function SearchModal({
   paramData,
   onClose,
 }: Props) {
+  console.log("sectionData :::", sectionData);
   console.log("searchParamData :::", paramData);
 
   // uitls

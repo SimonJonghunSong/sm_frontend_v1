@@ -31,6 +31,7 @@ import { Stack } from "@mui/material";
 import { getModelDataFromIDB } from "@/utils/idbModelUtil";
 import { ModelConfigWithData } from "@/src/api/services/model/type";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import BluetoothTab from "app/(auth)/model-info/(tabs)/BluetoothTab";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -252,15 +253,8 @@ export default function DeviceInfoPage() {
         );
       case "Tracking":
         return <TrackingTab formData={formData} setFormData={setFormData} />;
-      // case "Bluetooth":
-      //   return (
-      //     <BluetoothTab
-      //       formData={formData}
-      //       setFormData={setFormData}
-      //       isReady={isReady && isFechedPackage}
-      //     />
-      //   );
-
+      case "Bluetooth":
+        return <BluetoothTab formData={formData} setFormData={setFormData} />;
       case "Accessories":
         return <AccessoriesTab formData={formData} setFormData={setFormData} />;
       case "RF":
@@ -354,6 +348,8 @@ export default function DeviceInfoPage() {
   }, []);
 
   console.log("originData :::", originData);
+  console.log("searchSectionData :::", searchSectionData);
+  console.log("searchParamData :::", searchParamData);
 
   return (
     <>
@@ -448,6 +444,7 @@ export default function DeviceInfoPage() {
             paramData={searchParamData}
             onClose={({ key, tab, type }) => {
               console.log("key :::", key);
+              console.log("tab :::", tab);
 
               toggleSearchModal();
               setTab(tab);

@@ -42,7 +42,7 @@ const getModelConfig = (model_name: string, model_version: string) => {
     {
       response: { code: string; reason: string };
       result: {
-        records: ModelConfig[];
+        records: any;
       };
     },
     { model_name: string; model_version: string }
