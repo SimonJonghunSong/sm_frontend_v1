@@ -102,6 +102,14 @@ export default function SideMenu({
                 <li
                   key={link.name}
                   className={link?.isActive ? styles.active : undefined}
+                  style={
+                    link.name === "CMD Tool"
+                      ? {
+                          borderTop: "1px solid var(--grey7)",
+                          paddingTop: "8px",
+                        }
+                      : undefined
+                  }
                 >
                   {link?.onClick ? (
                     <button
