@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 import { Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
-import { Command, commands } from "app/(auth)/device-info/(commands)/@index";
+import { Command, commands } from "./@index";
 import { FIELD_VALIDATIONS } from "constants/field";
 
 interface Props {
