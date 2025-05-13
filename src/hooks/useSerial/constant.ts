@@ -56,7 +56,7 @@ export const POLYGON_GEOFENCE_POINTS = [
 // 050101 001e8480 06db
 
 export const AT_GET_CIRCULAR_GEOFENCE_10_LIST = (imei: string) => [
-  `${AT_REQ}${imei};50;25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44`,
+  `${AT_REQ}${imei};50;25,26,27,28,29,30,31,32,33,34`,
 ];
 
 export const AT_GET_CIRCULAR_GEOFENCE_255_LIST = (imei: string) => [
