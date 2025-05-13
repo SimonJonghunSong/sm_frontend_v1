@@ -216,13 +216,14 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   };
 
   const getCircularData = async ({ onSuccess }: { onSuccess?: () => void }) => {
+    if (Number(circularGeofenceMax) === 0) {
+      console.log("circularGeofenceMax", circularGeofenceMax);
+      return onSuccess?.();
+    }
+
     currentPort.port.circularfetchcount = 0;
     currentPort.port.iscircularfetching = true;
     currentPort.port.circlemax = Number(circularGeofenceMax);
-
-    if (Number(circularGeofenceMax) === 0) {
-      return onSuccess?.();
-    }
 
     currentPort.port.onaftercirculargeofence = () => {
       onSuccess?.();
