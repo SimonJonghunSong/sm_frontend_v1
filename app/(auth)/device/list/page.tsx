@@ -15,7 +15,7 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
-import { getJsonDataFromIDB } from "@/utils/idbModelUtil";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 const modalColumns: (t) => GridColDef[] = (t) => [
   {
@@ -75,6 +75,7 @@ export default function DeviceList() {
     func: { requestPort, forget, write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
+  const { setModelName, setFwVer } = useModelInfoStore();
 
   const columns: GridColDef[] = [
     {
@@ -223,48 +224,17 @@ export default function DeviceList() {
                   e.stopPropagation();
                   setImei(params.value.port.port.imei);
                   resetTab();
-
+                  setModelName(params.value.port.port.modelinfo.split("_")[0]);
+                  setFwVer(
+                    params.value.port.port.modelinfo.split("_")[
+                      params.value.port.port.modelinfo.split("_").length - 1
+                    ]
+                  );
                   router.push(`/device-info`);
                 }}
               >
                 {t("device.device_list.configure")}
               </Button>
-              {/* <Button
-                disabled={
-                  params.value.isPackageFetching ||
-                  !params.value.port.writer.write ||
-                  !params.value.port.reader.read
-                }
-                variant="outlined"
-                color="secondary"
-                sx={{ width: "10px" }}
-                onClick={async (e) => {
-                  e.stopPropagation();
-
-                  params.value.port.port.grpNo =
-                    params.value.port.jsonPackageCount;
-
-                  setPackageFetchingStart({
-                    imei: params.value.port.port.imei,
-                  });
-
-                  const commands = Array.from(
-                    { length: params.value.port.jsonPackageCount },
-                    (_, i) => `${AT_GET_JSON}${i + 1}`
-                  );
-                  params.value.port.port.isjsonpackagefetching = true;
-                  for (const command of commands) {
-                    write({
-                      data: command,
-                      port: params.value.port.port,
-                      writer: params.value.port.writer,
-                    });
-                    await delayPromise(DELAY_MS); // 100ms 지연
-                  }
-                }}
-              >
-                <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
-              </Button> */}
             </Stack>
           );
         }

@@ -2,6 +2,7 @@ import { AT_GET_DEVICE_BATTERY_VOLTAGE } from "@/src/hooks/useSerial/constant";
 import { AT_GET_DEVICE_VERSIONS } from "@/src/hooks/useSerial/constant";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
+import { delayPromise } from "../useSerial";
 
 function getBackupBatteryVoltage(value: string) {
   const voltageMap = {
@@ -139,11 +140,6 @@ export default function useDeviceVersions({
               if (Object.keys(deviceVersionsObjectRef.current).length === 10) {
                 setIsFetched(true);
               }
-
-              console.log(
-                "deviceVersionsObjectRef.current :::",
-                deviceVersionsObjectRef.current
-              );
             };
 
             await write({
@@ -153,7 +149,7 @@ export default function useDeviceVersions({
             });
           }, index * DELAY_MS); // 각 명령마다 100ms씩 지연
         });
-      }, 100);
+      }, 10);
     }
   }, [
     currentPort?.port?.isReadyToUse,
