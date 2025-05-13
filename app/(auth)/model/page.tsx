@@ -361,21 +361,22 @@ export default function Model() {
     const filterLoadedModels = async () => {
       try {
         const rows = getRows(data?.data?.records);
+        // Promise.all을 사용하여 모든 비동기 작업 완료 대기
+        const loadedRows = await Promise.all(
+          rows.map(async (item) => {
+            try {
+              const jsonData = await getJsonDataFromIDB(item.col2);
+              return jsonData
+                ? { ...item, idbData: jsonData, hide: false }
+                : null;
+            } catch (error) {
+              console.error(`Error loading data for ${item.col2}:`, error);
+              return null;
+            }
+          })
+        );
 
         if (showLoadedModels) {
-          // Promise.all을 사용하여 모든 비동기 작업 완료 대기
-          const loadedRows = await Promise.all(
-            rows.map(async (item) => {
-              try {
-                const jsonData = await getJsonDataFromIDB(item.col2);
-                return jsonData ? { ...item, idbData: jsonData } : null;
-              } catch (error) {
-                console.error(`Error loading data for ${item.col2}:`, error);
-                return null;
-              }
-            })
-          );
-
           // null 값을 제거하고 유효한 데이터만 필터링
           const filteredRows = loadedRows.filter(
             (item): item is NonNullable<typeof item> => item !== null
@@ -384,7 +385,18 @@ export default function Model() {
           setRowData(filteredRows);
         } else {
           // showLoadedModels가 false일 때는 모든 행 표시
-          setRowData(rows);
+          console.log("loadedRows :::", loadedRows);
+          console.log("rows :::", rows);
+
+          setRowData(
+            rows.map((row) => {
+              if (loadedRows.find(({ id }) => id === row.id)) {
+                return { ...row, hide: false };
+              }
+
+              return row;
+            })
+          );
         }
       } catch (error) {
         console.error("Error filtering loaded models:", error);

@@ -262,7 +262,7 @@ export default function Model() {
     if (targetData) {
       const {
         dev_name,
-        country,
+        target_country,
         hide,
         supported_network_type,
         supported_features,
@@ -276,7 +276,7 @@ export default function Model() {
           uid,
           dev_name,
           fw_ver: "1.1.0",
-          country: country.name,
+          country: target_country,
           supported_network_type,
           supported_features,
           hide: !hide,
