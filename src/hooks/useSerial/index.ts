@@ -477,9 +477,7 @@ const useSerial = () => {
                 port.onEndDeviceVersionsFetched?.(
                   deviceVersionsBufferRef.current
                 );
-                port.onEndDeviceVersionsFetched = null;
                 deviceVersionsBufferRef.current = "";
-                port.isDeviceVersionsFetching = false;
               }
             } else if (port.ispolygonfetching) {
               port.polygongeofence = (port.polygongeofence || "") + value;

@@ -1,8 +1,6 @@
-import { AT_GET_DEVICE_BATTERY_VOLTAGE } from "@/src/hooks/useSerial/constant";
 import { AT_GET_DEVICE_VERSIONS } from "@/src/hooks/useSerial/constant";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
-import { delayPromise } from "../useSerial";
 
 function getBackupBatteryVoltage(value: string) {
   const voltageMap = {
@@ -110,11 +108,11 @@ export default function useDeviceVersions({
       setTimeout(() => {
         setIsLoading(true);
         setTimeout(() => {
-          setIsLoading(false);
-        }, 1000); // ??? ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
-        setTimeout(() => {
           setIsFetched(true);
-        }, 4000); // ??? 소닉 메롱
+          setIsLoading(false);
+          currentPort.port.isDeviceVersionsFetching = false;
+          currentPort.port.onEndDeviceVersionsFetched = null;
+        }, 8000); // ??? 소닉 메롱
         console.log("ready~~!!!");
         const DELAY_MS = 100;
 
@@ -128,8 +126,6 @@ export default function useDeviceVersions({
           commands.push(command);
         }
 
-        // commands.push(AT_GET_DEVICE_BATTERY_VOLTAGE);
-
         commands.forEach((command, index) => {
           setTimeout(async () => {
             currentPort.port.isDeviceVersionsFetching = true;
@@ -138,7 +134,12 @@ export default function useDeviceVersions({
               deviceVersionsObjectRef.current[key] = value;
 
               if (Object.keys(deviceVersionsObjectRef.current).length === 10) {
+                currentPort.port.isDeviceVersionsFetching = false;
+                currentPort.port.onEndDeviceVersionsFetched = null;
+
                 setIsFetched(true);
+                setIsLoading(false);
+                setDeviceVersionsObject(deviceVersionsObjectRef.current);
               }
             };
 
@@ -157,10 +158,6 @@ export default function useDeviceVersions({
     currentPort?.port?.readable,
     isFechedPackage,
   ]);
-
-  useEffect(() => {
-    setDeviceVersionsObject(deviceVersionsObjectRef.current);
-  }, [isLoading]);
 
   return { deviceVersionsObject, isLoading, isFetched };
 }
