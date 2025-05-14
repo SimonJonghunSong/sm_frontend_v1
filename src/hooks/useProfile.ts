@@ -114,7 +114,7 @@ const groupById = (data: string[], imei: string) => {
   return Object.values(groupedData);
 };
 
-const DELAY_MS = 100;
+const DELAY_MS = 200;
 
 const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const [isDownloading, setIsDownloading] = useState(false);

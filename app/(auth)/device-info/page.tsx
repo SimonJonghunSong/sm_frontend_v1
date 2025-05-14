@@ -345,7 +345,7 @@ export default function DeviceInfoPage() {
     const profileLines = profile.split("\n");
 
     for (let j = 2; j < profileLines.length; j++) {
-      await delayPromise(100);
+      await delayPromise(200);
       await write({
         data: `${AT_EDIT_PREFIX};${profileLines[j].split(";;")[1]}`,
         writer: currentPort.writer,
@@ -394,7 +394,7 @@ export default function DeviceInfoPage() {
       }
     };
     for (const command of commands) {
-      await delayPromise(100); // 100ms 지연
+      await delayPromise(300); // 100ms 지연
 
       write({
         data: command,

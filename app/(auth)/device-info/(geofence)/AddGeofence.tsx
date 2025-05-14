@@ -799,7 +799,7 @@ const AddGeofence = ({
     );
 
     currentPort.port.oneditsuccess = async () => {
-      await delayPromise(100);
+      await delayPromise(200);
 
       const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
       const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
