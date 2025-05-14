@@ -19,7 +19,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const errorMessages = {
   longBytes: {
@@ -41,8 +41,8 @@ const WireSettings = ({ formData, onChange }: Props) => {
   const { sendFormData, isLoading } = useSendFormData();
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {
@@ -128,7 +128,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
           <NumericInputField
             id="1971"
             formData={formData}
-            onChange={onChange}
+            onChange={handleChange}
             isSwitch
             style={{ width: "100%" }}
           />
@@ -136,7 +136,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
           <NumericInputField
             id="1972"
             formData={formData}
-            onChange={onChange}
+            onChange={handleChange}
             isSwitch
             style={{ width: "100%" }}
           />
