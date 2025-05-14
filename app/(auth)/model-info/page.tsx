@@ -234,6 +234,7 @@ const extractCommandData = (originData: any[]) => {
 
 export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
+
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
     [key: string]: SearchFields;
@@ -467,16 +468,22 @@ export default function DeviceInfoPage() {
 
                 // Parse the line
                 const parts = line.split(";");
-                if (parts.length < 4) return; // Need at least NTW,PRG,empty,prefix
+                if (parts.length < 3) return; // Need at least NTW,PRG,empty,prefix
                 console.log(parts, "partspartspartsparts");
                 // Get the prefix (e.g., "10")
                 const prefixValue = parts[2]; // The prefix is the 4th element
                 console.log("Prefix value:", prefixValue);
 
                 // Process each pair (e.g., "00#01")
-                parts.slice(4).forEach((pair) => {
+                parts.slice(3).forEach((pair) => {
                   const [id, value] = pair.split("#");
-                  if (!id || !value) return;
+                  console.log("id ::::", id);
+
+                  // 빈값은 이미 입력된 값으로
+                  // if (!id || !value) return;
+
+                  // 빈값도 load
+                  if (!id) return;
 
                   // Create the key (e.g., "1000")
                   const key = `${prefixValue}${id}`;
@@ -485,6 +492,8 @@ export default function DeviceInfoPage() {
                   );
 
                   // Update only if the key exists in formData
+                  console.log("key :::", key);
+
                   if (newFormData[key]) {
                     console.log(`Updating formData for key ${key}:`, {
                       before: newFormData[key],
