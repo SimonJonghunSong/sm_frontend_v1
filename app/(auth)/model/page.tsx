@@ -376,6 +376,8 @@ export default function Model() {
           })
         );
 
+        console.log(loadedRows);
+
         if (showLoadedModels) {
           // null 값을 제거하고 유효한 데이터만 필터링
           const filteredRows = loadedRows.filter(
@@ -387,7 +389,7 @@ export default function Model() {
           // showLoadedModels가 false일 때는 모든 행 표시
           setRowData(
             rows.map((row) => {
-              if (loadedRows.find(({ id }) => id === row.id)) {
+              if (loadedRows.find((loadedRow) => loadedRow?.id === row.id)) {
                 return { ...row, hide: false };
               }
 
