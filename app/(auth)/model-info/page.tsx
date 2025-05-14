@@ -32,6 +32,7 @@ import { getModelDataFromIDB } from "@/utils/idbModelUtil";
 import { ModelConfigWithData } from "@/src/api/services/model/type";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 import BluetoothTab from "app/(auth)/model-info/(tabs)/BluetoothTab";
+import useSendFormData from "app/(auth)/model-info/(utils)/useSendFormData";
 const SCROLL_TOP_OFFSET = 140;
 
 export type AssignItem = {
@@ -235,6 +236,8 @@ const extractCommandData = (originData: any[]) => {
 export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
 
+  const { sendFormData } = useSendFormData();
+
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
     [key: string]: SearchFields;
@@ -388,11 +391,89 @@ export default function DeviceInfoPage() {
     }
   };
 
+  const getFormDataByProfile = (profile: string) => {
+    const newFormData = { ...formData };
+    console.log("Initial formData:", newFormData);
+
+    // Split profile data into lines and process each line
+    profile.split("\n").forEach((line) => {
+      // Skip empty lines
+      if (!line.trim()) return;
+
+      console.log("\nProcessing line:", line);
+
+      // Parse the line
+      const parts = line.split(";");
+      if (parts.length < 3) return; // Need at least NTW,PRG,empty,prefix
+      console.log(parts, "partspartspartsparts");
+      // Get the prefix (e.g., "10")
+      const prefixValue = parts[2]; // The prefix is the 4th element
+      console.log("Prefix value:", prefixValue);
+
+      // Process each pair (e.g., "00#01")
+      parts.slice(3).forEach((pair) => {
+        const [id, value] = pair.split("#");
+        console.log("id ::::", id);
+
+        // 빈값은 이미 입력된 값으로
+        // if (!id || !value) return;
+
+        // 빈값도 load
+        if (!id) return;
+
+        // Create the key (e.g., "1000")
+        const key = `${prefixValue}${id}`;
+        console.log(
+          `Processing pair - ID: ${id}, Value: ${value}, Key: ${key}`
+        );
+
+        // Update only if the key exists in formData
+        console.log("key :::", key);
+
+        if (newFormData[key]) {
+          console.log(`Updating formData for key ${key}:`, {
+            before: newFormData[key],
+            after: {
+              ...newFormData[key],
+              value,
+              realValue: value,
+            },
+          });
+
+          newFormData[key] = {
+            ...newFormData[key],
+            value,
+            realValue: value,
+          };
+        } else {
+          console.log(`Key ${key} not found in formData`);
+        }
+      });
+    });
+
+    console.log("\nFinal formData:", newFormData);
+    console.log("=== Profile Data Processing End ===\n");
+
+    return newFormData;
+  };
+
   const handleApply = async () => {
     setIsLoading(true);
-    const profileLines = profile.split("\n");
+    const newFormData = getFormDataByProfile(profile);
 
-    console.log("handleApply :::::");
+    const fieldValues = Object.keys(newFormData).reduce((acc, key) => {
+      if (formData[key]) {
+        acc[key] = {
+          id: key,
+          value: formData[key].value,
+          realValue: formData[key].realValue,
+        };
+      }
+
+      return acc;
+    }, {});
+
+    sendFormData(fieldValues);
 
     setIsLoading(false);
   };
@@ -456,67 +537,7 @@ export default function DeviceInfoPage() {
               console.log("Original Profile:", profile);
               setProfile(profile);
 
-              const newFormData = { ...formData };
-              console.log("Initial formData:", newFormData);
-
-              // Split profile data into lines and process each line
-              profile.split("\n").forEach((line) => {
-                // Skip empty lines
-                if (!line.trim()) return;
-
-                console.log("\nProcessing line:", line);
-
-                // Parse the line
-                const parts = line.split(";");
-                if (parts.length < 3) return; // Need at least NTW,PRG,empty,prefix
-                console.log(parts, "partspartspartsparts");
-                // Get the prefix (e.g., "10")
-                const prefixValue = parts[2]; // The prefix is the 4th element
-                console.log("Prefix value:", prefixValue);
-
-                // Process each pair (e.g., "00#01")
-                parts.slice(3).forEach((pair) => {
-                  const [id, value] = pair.split("#");
-                  console.log("id ::::", id);
-
-                  // 빈값은 이미 입력된 값으로
-                  // if (!id || !value) return;
-
-                  // 빈값도 load
-                  if (!id) return;
-
-                  // Create the key (e.g., "1000")
-                  const key = `${prefixValue}${id}`;
-                  console.log(
-                    `Processing pair - ID: ${id}, Value: ${value}, Key: ${key}`
-                  );
-
-                  // Update only if the key exists in formData
-                  console.log("key :::", key);
-
-                  if (newFormData[key]) {
-                    console.log(`Updating formData for key ${key}:`, {
-                      before: newFormData[key],
-                      after: {
-                        ...newFormData[key],
-                        value,
-                        realValue: value,
-                      },
-                    });
-
-                    newFormData[key] = {
-                      ...newFormData[key],
-                      value,
-                      realValue: value,
-                    };
-                  } else {
-                    console.log(`Key ${key} not found in formData`);
-                  }
-                });
-              });
-
-              console.log("\nFinal formData:", newFormData);
-              console.log("=== Profile Data Processing End ===\n");
+              const newFormData = getFormDataByProfile(profile);
 
               setFormData(newFormData);
             }}
