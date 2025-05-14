@@ -214,7 +214,7 @@ export default function AssignHeader({
         .filter((item) => item.value === "1")
         .map((item) => Number(item.text_num)),
     });
-  }, [csvData, altFormData, sttFormData]);
+  }, [csvData]);
 
   return (
     <Container>
