@@ -14,7 +14,12 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string, alertId?: string) => void;
+  onChange: (
+    id: string,
+    value: string,
+    alertId?: string,
+    selectValue?: string
+  ) => void;
 }
 
 // 형식 변환 유틸리티 함수

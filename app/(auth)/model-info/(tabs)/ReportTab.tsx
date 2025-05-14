@@ -71,15 +71,19 @@ export default function ReportTab({
   setStt,
   setAlt,
 }: Props) {
-  const handleValueChange = (name, value, alertId = undefined) => {
-    console.log(name, value, alertId);
+  const handleValueChange = (
+    name,
+    value,
+    selectValue = undefined,
+    alertId = undefined
+  ) => {
+    console.log(name, value, selectValue, alertId);
     setFormData((prev) => ({
       ...prev,
       [name]: {
-        value,
-        key: prev[name].key,
+        ...prev[name],
+        value: selectValue || value,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));

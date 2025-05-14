@@ -20,7 +20,12 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (
+    id: string,
+    value: string,
+    alertId?: string,
+    selectValue?: string
+  ) => void;
 }
 
 const ReportSchdule = ({ formData, onChange }: Props) => {
@@ -31,8 +36,8 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
   console.log(formData);
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   // 요일별 Y/N 값 처리 함수

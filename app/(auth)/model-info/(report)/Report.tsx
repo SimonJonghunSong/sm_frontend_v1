@@ -20,7 +20,12 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (
+    id: string,
+    value: string,
+    alertId?: string,
+    selectValue?: string
+  ) => void;
 }
 
 const Report = ({ formData, onChange }: Props) => {
@@ -33,8 +38,8 @@ const Report = ({ formData, onChange }: Props) => {
 
   const is1072Error = !/^[A-Za-z0-9]{32}$/.test(formData["1073"]?.value);
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {
