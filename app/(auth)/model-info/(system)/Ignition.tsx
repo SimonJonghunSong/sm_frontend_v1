@@ -16,7 +16,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const tooltipText = {
   en: "The ignition function detects whether a vehicle's engine is on or off. \n• Default : On",
@@ -49,8 +49,8 @@ const Ignition = ({ formData, onChange }: Props) => {
 
   if (!formData) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {
