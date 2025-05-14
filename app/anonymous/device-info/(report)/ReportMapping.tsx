@@ -7,8 +7,8 @@ import { FormField } from "../page";
 import SwitchField from "../(components)/SwitchField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
-import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
-import CheckboxField from "app/(auth)/device-info/(components)/CheckboxField";
+import useSendFormData from "../(utils)/useSendFormData";
+import CheckboxField from "../(components)/CheckboxField";
 
 const checkboxOptions = {
   "1080": {
