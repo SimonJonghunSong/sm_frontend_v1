@@ -15,15 +15,13 @@ interface Props {
 }
 
 export default function InputOutputTab({ formData, setFormData }: Props) {
-  const handleValueChange = (name, value, alertId = undefined) => {
+  const handleValueChange = (name, value) => {
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
-        alert_id: alertId,
       },
     }));
   };

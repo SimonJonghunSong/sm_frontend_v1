@@ -7,7 +7,7 @@ import { MenuItem, Select, Stack, TextField, Tooltip } from "@mui/material";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import DataTable from "@/components/dataTable";
 import useLangStore from "@/utils/useLangStore";
-import { FormField } from "../page";
+import { FormField } from "../../page";
 import { FIELD_VALIDATIONS } from "constants/field";
 
 const tooltips = {
