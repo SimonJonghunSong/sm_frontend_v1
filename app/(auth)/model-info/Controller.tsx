@@ -18,14 +18,12 @@ import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
 
 interface ModelInfoControllerProps {
   onLoadProfile: (profile: string) => void;
-  onApply: () => void;
   data: Record<string, any>[];
   getOriginData: () => Promise<Record<string, any>[]>;
 }
 
 export default function ModelInfoController({
   onLoadProfile,
-  onApply,
   data,
   getOriginData,
 }: ModelInfoControllerProps) {
@@ -46,7 +44,6 @@ export default function ModelInfoController({
     data,
   });
 
-  const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
   const [loadModal, loadModalToggle] = useModal();
   const [uploadModal, uploadModalToggle] = useModal();
@@ -59,9 +56,6 @@ export default function ModelInfoController({
     mutationFn: uploadProfile,
   });
 
-  const handleApply = () => {
-    applyModalToggle();
-  };
   const handleSave = () => {
     saveModalToggle();
   };
@@ -149,15 +143,7 @@ export default function ModelInfoController({
           >
             Profile
           </span>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ width: 100 }}
-            onClick={handleApply}
-            disabled={!isLoadedProfile}
-          >
-            Apply
-          </Button>
+
           <Button
             variant="contained"
             color="secondary"
@@ -206,21 +192,6 @@ export default function ModelInfoController({
             </Button>
           </Tooltip>
         </Stack>
-
-        {/* Apply Modal */}
-        <Modal
-          open={applyModal}
-          toggleOpen={applyModalToggle}
-          title="Confirm"
-          disabled={!isLoadedProfile}
-          confirm={onApply}
-          confirmButtonText="Apply"
-          width="360px"
-        >
-          <Stack>
-            <span>Are you sure you want to apply profile to the device?</span>
-          </Stack>
-        </Modal>
 
         {/* Save Modal */}
         <Modal

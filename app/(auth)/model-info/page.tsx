@@ -448,18 +448,20 @@ export default function DeviceInfoPage() {
         console.log("key :::", key);
 
         if (newFormData[key]) {
+          const isList = !!newFormData[key]?.labelList;
+
           console.log(`Updating formData for key ${key}:`, {
             before: newFormData[key],
             after: {
               ...newFormData[key],
-              value,
+              value: isList ? newFormData[key].labelList[value] : value,
               realValue: value,
             },
           });
 
           newFormData[key] = {
             ...newFormData[key],
-            value,
+            value: isList ? newFormData[key].labelList[value] : value,
             realValue: value,
           };
         } else {
@@ -472,27 +474,6 @@ export default function DeviceInfoPage() {
     console.log("=== Profile Data Processing End ===\n");
 
     return newFormData;
-  };
-
-  const handleApply = async () => {
-    setIsLoading(true);
-    const newFormData = getFormDataByProfile(profile);
-
-    const fieldValues = Object.keys(newFormData).reduce((acc, key) => {
-      if (formData[key]) {
-        acc[key] = {
-          id: key,
-          value: formData[key].value,
-          realValue: formData[key].realValue,
-        };
-      }
-
-      return acc;
-    }, {});
-
-    sendFormData(fieldValues);
-
-    setIsLoading(false);
   };
 
   const uploadProfileMutation = useMutation({
@@ -559,9 +540,6 @@ export default function DeviceInfoPage() {
           <Controller
             data={originData}
             getOriginData={getOriginData}
-            onApply={() => {
-              handleApply();
-            }}
             onLoadProfile={(profile) => {
               console.log("=== Profile Data Processing Start ===");
               console.log("Original Profile:", profile);
@@ -570,6 +548,23 @@ export default function DeviceInfoPage() {
               const newFormData = getFormDataByProfile(profile);
 
               setFormData(newFormData);
+
+              const fieldValues = Object.keys(newFormData).reduce(
+                (acc, key) => {
+                  if (formData[key]) {
+                    acc[key] = {
+                      id: key,
+                      value: newFormData[key].value,
+                      realValue: newFormData[key].realValue,
+                    };
+                  }
+
+                  return acc;
+                },
+                {}
+              );
+
+              sendFormData(fieldValues);
             }}
           />
           {renderContent()}
