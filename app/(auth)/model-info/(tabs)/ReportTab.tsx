@@ -78,6 +78,7 @@ export default function ReportTab({
     alertId = undefined
   ) => {
     console.log(name, value, selectValue, alertId);
+
     setFormData((prev) => ({
       ...prev,
       [name]: {
