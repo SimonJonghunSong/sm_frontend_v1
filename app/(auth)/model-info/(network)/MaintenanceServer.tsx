@@ -19,7 +19,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 
 const tooltipText = {
@@ -38,8 +38,8 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {

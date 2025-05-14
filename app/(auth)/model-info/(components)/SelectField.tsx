@@ -11,7 +11,7 @@ interface SelectFieldProps {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
   isRequired?: boolean;
   isSwitch?: boolean;
   style?: React.CSSProperties;
@@ -81,7 +81,13 @@ const SelectField = ({
           <Select
             value={formData[id].realValue}
             style={{ width: "100%" }}
-            onChange={(e) => onChange(id, e.target.value)}
+            onChange={(e) =>
+              onChange(
+                id,
+                e.target.value,
+                formData?.[id]?.labelList?.[e.target.value]
+              )
+            }
           >
             {FIELD_VALIDATIONS[id].list
               .filter((listItem) => hardwareList.includes(listItem.value))

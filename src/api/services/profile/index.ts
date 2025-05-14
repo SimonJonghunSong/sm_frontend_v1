@@ -18,6 +18,8 @@ const downloadProfile = ({
   model_version?: string;
   nickname?: string;
 }) => {
+  console.log("model_version ::::::::", model_version);
+
   return post<
     DownloadProfileResponse,
     { model_name?: string; model_version?: string; nickname?: string }
