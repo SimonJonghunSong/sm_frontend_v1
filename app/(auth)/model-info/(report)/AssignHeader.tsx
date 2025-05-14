@@ -159,6 +159,8 @@ export default function AssignHeader({
     );
   }, [updateSttDatas]);
 
+  console.log("defaultSttIndexes :::", defaultSttIndexes);
+
   // alt
   const [altData, setAltData] = useState({
     s_assigns: [],
@@ -212,7 +214,7 @@ export default function AssignHeader({
         .filter((item) => item.value === "1")
         .map((item) => Number(item.text_num)),
     });
-  }, [tab]);
+  }, [csvData, altFormData, sttFormData]);
 
   return (
     <Container>

@@ -256,6 +256,7 @@ export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { sendFormData } = useSendFormData();
+  const [dataLoadToggle, setDataLoadToggle] = useState(false);
 
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
@@ -264,9 +265,6 @@ export default function DeviceInfoPage() {
   const [searchParamData, setSearchParamData] = useState<{
     [key: string]: SearchField;
   }>(null);
-
-  const [isFechedPackage, setIsFechedPackage] = useState(false);
-  const packageCountRef = useRef(0);
 
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -325,6 +323,9 @@ export default function DeviceInfoPage() {
   const handleReboot = () => {
     console.log("reboot!!!");
   };
+
+  console.log("stt 333 :::", stt);
+  console.log("alt 333 :::", alt);
 
   const renderContent = () => {
     switch (tab) {
@@ -452,8 +453,19 @@ export default function DeviceInfoPage() {
         if (newFormData[key]) {
           const isAlertId = !!newFormData[key]?.alert_id;
           const isList = !!newFormData[key]?.labelList;
+          const isAssign = !!newFormData[key]?.text_num;
           let valueProps = value;
           let realValueProps = value;
+          let textNumProps = undefined;
+
+          console.log("isAssign :::", isAssign);
+          if (isAssign) {
+            console.log("isAssign value ::::", value);
+
+            textNumProps = `${Number(value)}`;
+            valueProps = value === "00" ? "0" : "1";
+            realValueProps = valueProps;
+          }
 
           if (isAlertId) {
             valueProps = value?.[1] || "0";
@@ -470,6 +482,7 @@ export default function DeviceInfoPage() {
               ...newFormData[key],
               value: valueProps,
               realValue: realValueProps,
+              text_num: textNumProps,
             },
           });
 
@@ -477,6 +490,7 @@ export default function DeviceInfoPage() {
             ...newFormData[key],
             value: valueProps,
             realValue: realValueProps,
+            text_num: textNumProps,
           };
         } else {
           console.log(`Key ${key} not found in formData`);
@@ -493,6 +507,8 @@ export default function DeviceInfoPage() {
   const uploadProfileMutation = useMutation({
     mutationFn: uploadProfile,
   });
+
+  console.log("originData ::::", originData);
 
   useEffect(() => {
     if (originData) {
@@ -539,9 +555,14 @@ export default function DeviceInfoPage() {
       (item) => Object.keys(item)[0] === "ASSIGN HEADER(ALT)"
     );
 
+    console.log("originData UE :::", originData);
+
+    console.log("sttData UE ::::", sttData);
+    console.log("altData UE ::::", altData);
+
     setStt(flattenAssignData(sttData?.["ASSIGN HEADER(STT)"]));
     setAlt(flattenAssignData(altData?.["ASSIGN HEADER(ALT)"]));
-  }, [originData]);
+  }, [originData, dataLoadToggle]);
 
   return (
     <>
@@ -570,6 +591,8 @@ export default function DeviceInfoPage() {
                       id: key,
                       value: newFormData[key].value,
                       realValue: newFormData[key].realValue,
+                      text_num: newFormData[key].text_num,
+                      alert_id: newFormData[key].alert_id,
                     };
                   }
 
@@ -579,6 +602,7 @@ export default function DeviceInfoPage() {
               );
 
               sendFormData(fieldValues);
+              setDataLoadToggle((prev) => !prev);
             }}
           />
           {renderContent()}
