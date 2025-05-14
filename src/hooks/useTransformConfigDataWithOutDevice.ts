@@ -192,6 +192,8 @@ function fieldToEditString(fieldData: Field): string {
   const optionId =
     Number(fieldData.ID) < 10 ? `0${fieldData.ID}` : fieldData.ID;
 
+  console.log("fieldData :::", fieldData);
+
   switch (fieldData.type) {
     case "combo":
       if ("list" in fieldData) {
@@ -215,7 +217,11 @@ function fieldToEditString(fieldData: Field): string {
     case "sAssign":
     case "mAssign":
     case "lAssign":
-      return `${optionId}#0${fieldData.value}`;
+      return `${optionId}#${
+        Number(fieldData.text_num) < 10
+          ? `0${Number(fieldData.text_num)}`
+          : fieldData.text_num
+      }`;
     case "edit+button":
     case "edit":
     case "ip":
@@ -233,6 +239,9 @@ export function useTransformConfigDataWithOutDevice({
 
   const [isDirty, setIsDirty] = useState(false);
   const [originData, setOriginData] = useState(data || []);
+
+  console.log("originData :::", originData);
+
   const formData = useMemo(
     () =>
       (originData || [])
@@ -427,6 +436,8 @@ export function useTransformConfigDataWithOutDevice({
           ).reduce((acc, cur) => {
             return [...acc, fieldToEditString(cur)];
           }, [] as string[]);
+
+          console.log("assignEditStrings :::", assignEditStrings);
 
           if (assignEditStrings.length === 0) return [];
 

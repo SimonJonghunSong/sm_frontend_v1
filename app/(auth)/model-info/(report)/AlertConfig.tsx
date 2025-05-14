@@ -17,8 +17,8 @@ interface Props {
   onChange: (
     id: string,
     value: string,
-    alertId?: string,
-    selectValue?: string
+    selectValue?: string,
+    alertId?: string
   ) => void;
 }
 
@@ -64,6 +64,14 @@ const AlertConfig = ({ formData, onChange }: Props) => {
   );
   const { sendFormData, isLoading } = useSendFormData();
 
+  const handleChange = (id: string, value: string, alertId?: string) => {
+    console.log("id :::", id);
+    console.log("value :::", value);
+    console.log("alertId :::", alertId);
+
+    onChange(id, value, undefined, alertId);
+  };
+
   return (
     <Form
       ref={formRef}
@@ -78,13 +86,14 @@ const AlertConfig = ({ formData, onChange }: Props) => {
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
           if (fields.map(String).includes(key)) {
-            const { realValue, alert_id } = formData[key];
+            const { value, realValue, alert_id } = formData[key];
 
             // 파라미터 구조로 변환
             const formattedValue = formatFieldValue(realValue, alert_id || "0");
 
             acc[key] = {
               id: key,
+              value: value,
               realValue,
               alert_id: alert_id || "0",
               parameterFormat: formattedValue.raw, // 0x01 0x22 형식
@@ -120,10 +129,10 @@ const AlertConfig = ({ formData, onChange }: Props) => {
 
       <TabContent>
         {tab === "alert_config_1" && (
-          <AlertConfig1 formData={formData} onChange={onChange} />
+          <AlertConfig1 formData={formData} onChange={handleChange} />
         )}
         {tab === "alert_config_2" && (
-          <AlertConfig2 formData={formData} onChange={onChange} />
+          <AlertConfig2 formData={formData} onChange={handleChange} />
         )}
       </TabContent>
 

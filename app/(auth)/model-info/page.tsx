@@ -413,6 +413,8 @@ export default function DeviceInfoPage() {
   const getFormDataByProfile = (profile: string) => {
     const newFormData = { ...formData };
 
+    console.log("newFormData ::::", newFormData);
+
     // Split profile data into lines and process each line
     profile.split("\n").forEach((line) => {
       // Skip empty lines
@@ -448,21 +450,33 @@ export default function DeviceInfoPage() {
         console.log("key :::", key);
 
         if (newFormData[key]) {
+          const isAlertId = !!newFormData[key]?.alert_id;
           const isList = !!newFormData[key]?.labelList;
+          let valueProps = value;
+          let realValueProps = value;
+
+          if (isAlertId) {
+            valueProps = value?.[1] || "0";
+            realValueProps = valueProps;
+          }
+
+          if (isList) {
+            valueProps = newFormData[key].labelList[value];
+          }
 
           console.log(`Updating formData for key ${key}:`, {
             before: newFormData[key],
             after: {
               ...newFormData[key],
-              value: isList ? newFormData[key].labelList[value] : value,
-              realValue: value,
+              value: valueProps,
+              realValue: realValueProps,
             },
           });
 
           newFormData[key] = {
             ...newFormData[key],
-            value: isList ? newFormData[key].labelList[value] : value,
-            realValue: value,
+            value: valueProps,
+            realValue: realValueProps,
           };
         } else {
           console.log(`Key ${key} not found in formData`);
