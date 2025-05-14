@@ -1,8 +1,7 @@
 import { Stack } from "@mui/material";
 import NetworkCommands from "../(commands)/NetworkCommands";
 import { useEffect, useRef, useState } from "react";
-import styles from "../../_cmd-tool/styles.module.scss";
-import { clearLogsByIMEI, getLogsByIMEI } from "@/utils/idbLogUtil";
+import styles from "app/(auth)/_cmd-tool/styles.module.scss";
 import useSerial from "@/src/hooks/useSerial";
 import { delayPromise } from "@/src/hooks/useSerial";
 import { Command } from "../(commands)/@index";

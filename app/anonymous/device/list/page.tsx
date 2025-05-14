@@ -15,6 +15,7 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 const modalColumns: (t) => GridColDef[] = (t) => [
   {
@@ -74,6 +75,7 @@ export default function DeviceList() {
     func: { requestPort, forget, write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
+  const { setModelName, setFwVer } = useModelInfoStore();
 
   const columns: GridColDef[] = [
     {
@@ -221,7 +223,13 @@ export default function DeviceList() {
                   e.stopPropagation();
                   setImei(params.value.port.port.imei);
                   resetTab();
-                  router.push(`/anonymous/configuration/device-status`);
+                  setModelName(params.value.port.port.modelinfo.split("_")[0]);
+                  setFwVer(
+                    params.value.port.port.modelinfo.split("_")[
+                      params.value.port.port.modelinfo.split("_").length - 1
+                    ]
+                  );
+                  router.push(`/anonymous/device-info`);
                 }}
               >
                 {t("device.device_list.configure")}

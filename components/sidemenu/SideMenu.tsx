@@ -18,7 +18,6 @@ import { useTranslations } from "next-intl";
 import Modal from "@/components/Modal";
 import CmdTool from "app/(auth)/_cmd-tool/CmdTool";
 import useModal from "@/utils/useModal";
-import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
 import useModelPkgStore from "@/src/stores/useModelPkgStore";
 
 type sideMenuItem = {
