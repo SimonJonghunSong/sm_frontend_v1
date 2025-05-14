@@ -9,7 +9,9 @@ export interface Model {
   target_country: string[];
   fw_ver: string;
   country: Country[];
+  default_json: string;
   default_profile: string;
+  default_csv: string;
   hide: boolean;
   reg_date: string;
   updated: string;

@@ -196,9 +196,9 @@ function fieldToEditString(fieldData: Field): string {
     case "combo":
       if ("list" in fieldData) {
         const options = parseComboList(fieldData.list);
-        const selectValue = options.find(
-          (item) => item.value === fieldData.value
-        ).realValue;
+        const selectValue =
+          options.find((item) => item.value === fieldData.value)?.realValue ||
+          "";
 
         const editValue =
           Number(selectValue) < 10 ? `0${selectValue}` : `${selectValue}`;

@@ -31,6 +31,7 @@ export interface FormState {
   supportedNetworkType: string[];
   supportedFeatures: string[];
   settingFile: File;
+  csvFile: File;
   hide: boolean;
 }
 
@@ -44,6 +45,7 @@ type FormAction =
   | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
   | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
   | { type: "SET_SETTING_FILE"; value: File }
+  | { type: "SET_CSV_FILE"; value: File }
   | { type: "SET_HIDE"; value: boolean };
 
 // 리듀서 함수 정의
@@ -70,6 +72,8 @@ function reducer(state: FormState, action: FormAction): FormState {
       return { ...state, supportedFeatures: action.value };
     case "SET_SETTING_FILE":
       return { ...state, settingFile: action.value };
+    case "SET_CSV_FILE":
+      return { ...state, csvFile: action.value };
     case "SET_HIDE":
       return { ...state, hide: action.value };
     default:
@@ -84,6 +88,7 @@ const initialState: FormState = {
   supportedNetworkType: [],
   supportedFeatures: [],
   settingFile: undefined,
+  csvFile: undefined,
   hide: false,
 };
 
@@ -133,9 +138,11 @@ export default function EditModal({
     supportedFeatures,
     settingFile,
     hide,
+    csvFile,
   } = state;
 
   const [file, setFile] = useState<File>(null);
+  const [csv, setCsv] = useState<File>(null);
   const [imagePreview, setThumbnailPreview] = useState(null);
 
   const handleFileChange = (e) => {
@@ -143,6 +150,15 @@ export default function EditModal({
 
     dispatch({
       type: "SET_SETTING_FILE",
+      value: e.target.files[0],
+    });
+  };
+
+  const handleCsvFileChange = (e) => {
+    setCsv(e.target.files[0]);
+
+    dispatch({
+      type: "SET_CSV_FILE",
       value: e.target.files[0],
     });
   };
@@ -252,6 +268,7 @@ export default function EditModal({
       supportedNetworkType: selectedData.supported_network_type,
       supportedFeatures: selectedData.supported_features,
       settingFile: undefined,
+      csvFile: undefined,
       hide: selectedData.hide,
     };
 
@@ -635,7 +652,7 @@ export default function EditModal({
             <Stack direction="row" gap="8px">
               <TextField
                 fullWidth
-                value={file?.name || selectedData.default_profile}
+                value={file?.name || selectedData.default_json}
                 inputProps={{ readOnly: true }}
               />
               <Button variant="contained" color="secondary" component="label">
@@ -643,8 +660,36 @@ export default function EditModal({
                   style={{ display: "none" }}
                   type="file"
                   hidden
-                  accept=".xlsx, .xls"
+                  accept=".json"
                   onChange={handleFileChange}
+                />
+                {t("model.edit_model_pop_up.upload")}
+              </Button>
+            </Stack>
+          </InputBox.Body>
+        </InputBox>
+
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>
+              CSV File
+              <i>*</i>
+            </InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <Stack direction="row" gap="8px">
+              <TextField
+                fullWidth
+                value={csv?.name || selectedData.default_csv}
+                inputProps={{ readOnly: true }}
+              />
+              <Button variant="contained" color="secondary" component="label">
+                <input
+                  style={{ display: "none" }}
+                  type="file"
+                  hidden
+                  accept=".csv"
+                  onChange={handleCsvFileChange}
                 />
                 {t("model.edit_model_pop_up.upload")}
               </Button>

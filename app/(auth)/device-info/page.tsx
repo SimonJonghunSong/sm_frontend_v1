@@ -422,6 +422,8 @@ export default function DeviceInfoPage() {
     }
   }, [originData]);
 
+  console.log(originData);
+
   return (
     <>
       {(isLoading || deviceInfoLoading) && <FullLoading />}

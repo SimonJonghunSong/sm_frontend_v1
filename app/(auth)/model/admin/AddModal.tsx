@@ -32,6 +32,7 @@ export interface FormState {
   supportedNetworkType: string[];
   supportedFeatures: string[];
   settingFile: File;
+  csvFile: File;
   hide: boolean;
 }
 
@@ -46,6 +47,7 @@ type FormAction =
   | { type: "SET_SUPPORTED_NETWORK_TYPE"; value: string[] }
   | { type: "SET_SUPPORTED_FEATURES"; value: string[] }
   | { type: "SET_SETTING_FILE"; value: File }
+  | { type: "SET_CSV_FILE"; value: File }
   | { type: "SET_HIDE"; value: boolean };
 
 // 리듀서 함수 정의
@@ -76,6 +78,8 @@ function reducer(state: FormState, action: FormAction): FormState {
       return { ...state, hide: action.value };
     case "SET_FIRMWARE_VERSION":
       return { ...state, firmwareVersion: action.value };
+    case "SET_CSV_FILE":
+      return { ...state, csvFile: action.value };
     default:
       return state;
   }
@@ -90,6 +94,7 @@ const initialState: FormState = {
   supportedNetworkType: [],
   supportedFeatures: [],
   settingFile: undefined,
+  csvFile: undefined,
   hide: false,
 };
 
@@ -146,15 +151,25 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
     supportedNetworkType,
     supportedFeatures,
     settingFile,
+    csvFile,
     hide,
   } = state;
 
   const [file, setFile] = useState<File>(null);
+  const [csv, setCsv] = useState<File>(null);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
 
     dispatch({
       type: "SET_SETTING_FILE",
+      value: e.target.files[0],
+    });
+  };
+  const handleCsvFileChange = (e) => {
+    setCsv(e.target.files[0]);
+
+    dispatch({
+      type: "SET_CSV_FILE",
       value: e.target.files[0],
     });
   };
@@ -223,7 +238,8 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
     const formData = new FormData();
 
     formData.append("image_file", imageFile);
-    formData.append("default_config_file", settingFile);
+    formData.append("default_json", settingFile);
+    formData.append("default_csv", csvFile);
     formData.append(
       "json",
       JSON.stringify({
@@ -655,8 +671,37 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   style={{ display: "none" }}
                   type="file"
                   hidden
-                  accept=".xlsx, .xls"
+                  // accept=".json"
                   onChange={handleFileChange}
+                />
+                {t("model.add_model_pop_up.upload")}
+              </Button>
+            </Stack>
+          </InputBox.Body>
+        </InputBox>
+
+        <InputBox>
+          <InputBox.Head>
+            <InputBox.Title>
+              CSV File
+              <i>*</i>
+            </InputBox.Title>
+          </InputBox.Head>
+          <InputBox.Body>
+            <Stack direction="row" gap="8px">
+              <TextField
+                placeholder={t("model.add_model_pop_up.choose_file_to_upload")}
+                fullWidth
+                value={csv?.name || ""}
+                inputProps={{ readOnly: true }}
+              />
+              <Button variant="contained" color="secondary" component="label">
+                <input
+                  style={{ display: "none" }}
+                  type="file"
+                  hidden
+                  // accept=".csv"
+                  onChange={handleCsvFileChange}
                 />
                 {t("model.add_model_pop_up.upload")}
               </Button>
