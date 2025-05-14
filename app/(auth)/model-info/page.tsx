@@ -3,7 +3,7 @@
 import SideMenu from "@/components/sidemenu/SideMenu";
 import { sideMenuItems } from "./sideMenuItems";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import NetworkTab from "./(tabs)/NetworkTab";
 import SystemTab from "./(tabs)/SystemTab";
 import ReportTab from "./(tabs)/ReportTab";
@@ -187,8 +187,6 @@ const transformFieldData = (
   const optionsValueList = getList(fieldData);
   const optionsLabelList = getValueList(fieldData);
 
-  console.log("optionsLabelList :::", optionsLabelList);
-
   return [
     `${tabId}${fieldId}`,
     {
@@ -284,14 +282,6 @@ export default function DeviceInfoPage() {
 
   const modelName = useMemo(() => getModelName(), [getModelName]);
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
-
-  const {
-    func: { getProfileAllData },
-  } = useProfileWithoutDevice({
-    modelName,
-    modelVersion: fwVer,
-    data: originData,
-  });
 
   const [tab, setTab] = useState("DeviceStatus");
   const [formData, setFormData] = useState<{
@@ -422,7 +412,6 @@ export default function DeviceInfoPage() {
 
   const getFormDataByProfile = (profile: string) => {
     const newFormData = { ...formData };
-    console.log("Initial formData:", newFormData);
 
     // Split profile data into lines and process each line
     profile.split("\n").forEach((line) => {
@@ -442,7 +431,6 @@ export default function DeviceInfoPage() {
       // Process each pair (e.g., "00#01")
       parts.slice(3).forEach((pair) => {
         const [id, value] = pair.split("#");
-        console.log("id ::::", id);
 
         // 빈값은 이미 입력된 값으로
         // if (!id || !value) return;
@@ -460,13 +448,6 @@ export default function DeviceInfoPage() {
         console.log("key :::", key);
 
         if (newFormData[key]) {
-          const isList = !!newFormData[key]?.list?.length;
-
-          console.log(
-            "newFormData[key] :::",
-            newFormData[key]?.labelList?.[value]
-          );
-
           console.log(`Updating formData for key ${key}:`, {
             before: newFormData[key],
             after: {
@@ -518,10 +499,6 @@ export default function DeviceInfoPage() {
     mutationFn: uploadProfile,
   });
 
-  console.log("formData :::", formData);
-
-  console.log("originData :::", originData);
-
   useEffect(() => {
     if (originData) {
       const formDataValues = transformOriginData(originData);
@@ -533,24 +510,31 @@ export default function DeviceInfoPage() {
     }
   }, [originData]);
 
+  const fetchJsonData = useCallback(async () => {
+    const data = ((await getModelDataFromIDB(modelName)) as any) || [];
+
+    const jsonData = data?.jsonData?.synctrak || [];
+    const csvData = data?.csvData;
+
+    if (!jsonData?.length) {
+      navigate.replace("/device");
+    }
+
+    setOriginData(jsonData);
+    setCsvData(csvData);
+  }, [modelName, navigate]);
+
+  const getOriginData = useCallback(async () => {
+    const data = ((await getModelDataFromIDB(modelName)) as any) || [];
+
+    const jsonData = data?.jsonData?.synctrak || [];
+
+    return jsonData;
+  }, [modelName]);
+
   useEffect(() => {
-    const fetchJsonData = async () => {
-      const data = ((await getModelDataFromIDB(modelName)) as any) || [];
-
-      const jsonData = data?.jsonData?.synctrak || [];
-      const csvData = data?.csvData;
-
-      console.log("jsonData :::", jsonData);
-
-      if (!jsonData?.length) {
-        navigate.replace("/device");
-      }
-
-      setOriginData(jsonData);
-      setCsvData(csvData);
-    };
     fetchJsonData();
-  }, []);
+  }, [tab, fetchJsonData]);
 
   useEffect(() => {
     const sttData = originData.find(
@@ -574,6 +558,7 @@ export default function DeviceInfoPage() {
         <Stack flex={1}>
           <Controller
             data={originData}
+            getOriginData={getOriginData}
             onApply={() => {
               handleApply();
             }}
@@ -605,9 +590,6 @@ export default function DeviceInfoPage() {
             sectionData={searchSectionData}
             paramData={searchParamData}
             onClose={({ key, tab, type }) => {
-              console.log("key :::", key);
-              console.log("tab :::", tab);
-
               toggleSearchModal();
               setTab(tab);
               setTimeout(() => {
@@ -629,7 +611,6 @@ export default function DeviceInfoPage() {
                     top: rect.top + scrollTop - SCROLL_TOP_OFFSET, // 100px offset
                     behavior: "smooth",
                   });
-                  console.log("targetElement ::::", targetElement);
                 }
               }, 100);
             }}

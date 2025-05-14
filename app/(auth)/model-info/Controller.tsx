@@ -13,27 +13,21 @@ import {
 } from "@/src/api/services/profile";
 import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
-import useSerial from "@/src/hooks/useSerial";
-import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { checkModelDataExists } from "@/utils/idbModelUtil";
-import { useRouter } from "next/navigation";
 import useModelInfoStore from "@/src/stores/useModelInfo";
-import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationTabStore";
-import useProfile from "@/src/hooks/useProfile";
-import FullLoading from "@/components/FullLoading";
-import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
 import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
 
 interface ModelInfoControllerProps {
   onLoadProfile: (profile: string) => void;
   onApply: () => void;
   data: Record<string, any>[];
+  getOriginData: () => Promise<Record<string, any>[]>;
 }
 
 export default function ModelInfoController({
   onLoadProfile,
   onApply,
   data,
+  getOriginData,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
@@ -44,7 +38,6 @@ export default function ModelInfoController({
   const modelName = useMemo(() => getModelName(), [getModelName]);
   const fw_ver = useMemo(() => getFwVer(), [getFwVer]);
 
-  console.log("fw_ver :::", fw_ver);
   const {
     func: { getProfileAllData },
   } = useProfileWithoutDevice({
@@ -80,7 +73,10 @@ export default function ModelInfoController({
   };
 
   const handleUploadProfileConfirm = async () => {
-    const profileData = await getProfileAllData(false);
+    const originData = await getOriginData();
+
+    const profileData = await getProfileAllData(originData, false);
+
     const mockFile = new File(
       [profileData.join("\n")],
       `${modelName}_${fw_ver}.profile`,
@@ -231,7 +227,10 @@ export default function ModelInfoController({
           open={saveModal}
           toggleOpen={saveModalToggle}
           title="Confirm"
-          confirm={async () => await getProfileAllData(true)}
+          confirm={async () => {
+            const originData = await getOriginData();
+            await getProfileAllData(originData, true);
+          }}
           confirmButtonText="Yes"
           width="360px"
         >
@@ -514,7 +513,7 @@ function LoadModal({
       }
 
       const text = await response.text(); // 텍스트로 읽기
-      console.log(text);
+
       onLoad(text);
     } catch (err) {
       console.error(err);

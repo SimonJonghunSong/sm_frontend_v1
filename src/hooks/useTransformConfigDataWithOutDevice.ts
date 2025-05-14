@@ -200,9 +200,6 @@ function fieldToEditString(fieldData: Field): string {
           options.find((item) => item.value === fieldData.value)?.realValue ||
           "";
 
-        console.log("fieldData ::::", fieldData);
-        console.log("selectValue ::::", selectValue);
-
         const editValue =
           Number(selectValue) < 10 ? `0${selectValue}` : `${selectValue}`;
 
@@ -281,6 +278,51 @@ export function useTransformConfigDataWithOutDevice({
     [originData]
   );
 
+  const originToFormData = (originData: Record<string, any>[]) => {
+    return (
+      (originData || [])
+        .map((tabObj) => {
+          const [tabName, tabFields] = Object.entries(tabObj)[0];
+          if (blacklist.includes(tabName)) return null;
+
+          let tabInfo: TabInfo | undefined;
+          const fields: Field[] = [];
+
+          tabFields.forEach((fieldObj) => {
+            const [fieldName, fieldDataArray] = Object.entries(fieldObj)[0];
+
+            if (fieldName === "info") {
+              tabInfo = (fieldDataArray as TabInfo[])[0];
+            } else {
+              const fieldData = (fieldDataArray as Field[])[0];
+
+              const processedField = processField(fieldData, fieldName);
+              if (processedField) {
+                fields.push(processedField);
+              }
+            }
+          });
+
+          if (!tabInfo && tabName === "info") {
+            return {
+              tabName,
+              info: tabFields?.[0] || {},
+              fields: [],
+            };
+          }
+
+          if (!tabInfo) return null;
+
+          return {
+            tabName,
+            info: tabInfo,
+            fields,
+          };
+        })
+        .filter((field) => field !== null) || []
+    );
+  };
+
   const getFormFields = useCallback(
     (tabName: string, fieldName: string) => {
       const { value, alert_id }: { value: string; alert_id?: string } = formData
@@ -301,8 +343,6 @@ export function useTransformConfigDataWithOutDevice({
                     return fieldKey === fieldName
                       ? {
                           [fieldKey]: (info as any[]).map((infoItem) => {
-                            console.log("infoItem >>>", infoItem);
-
                             return {
                               ...infoItem,
                               ...(options || {}),
@@ -346,15 +386,9 @@ export function useTransformConfigDataWithOutDevice({
     [formData, data, searchParams.get("tab")]
   );
 
-  const resetData = useCallback(() => {
-    setOriginData(data);
-  }, [data]);
-
   const getEditDataForPage = useCallback(
-    (pageName: string, onlyEdited = true) => {
-      const pageData = (formData || []).find(
-        (item) => item.tabName === pageName
-      );
+    (pageName: string, formData, onlyEdited = true) => {
+      const pageData = formData.find((item) => item.tabName === pageName);
 
       if (!pageData) return [];
 
@@ -437,50 +471,22 @@ export function useTransformConfigDataWithOutDevice({
     [formData, getFormFields]
   );
 
-  const getEditedData = useCallback(() => {
-    const editedData = formData.filter((item) => item.tabName !== "info");
+  const getProfileData = useCallback(
+    (originData: Record<string, any>[]) => {
+      let editStrings = [] as string[];
 
-    const editString = Object.entries(editedData).reduce((acc, cur) => {
-      const [curKey, curValue] = cur;
+      const formData = originToFormData(originData);
 
-      const tabId =
-        curValue.info.id < 10 ? `0${curValue.info.id}` : curValue.info.id;
-
-      const editedData = curValue.fields.filter(
-        (item) => getFormFields(curValue.tabName, item.fieldName).isChange
-      );
-
-      // 전체 데이터 처리
-      // const tabEditString = (curValue.fields || []).reduce((acc, cur) => {
-      //   return acc + fieldToEditString(cur);
-      // }, "");
-
-      // 수정 된 값만 처리
-      const tabEditStrings: string[] = editedData.reduce((acc, cur) => {
-        return [...acc, fieldToEditString(cur)];
-      }, [] as string[]);
-
-      if (tabEditStrings.length === 0) {
-        return acc;
-      }
-
-      return acc + `${tabId};${tabEditStrings.join(";")}`;
-    }, "");
-
-    console.log("editString >>>", editString);
-  }, [formData]);
-
-  const getProfileData = useCallback(() => {
-    let editStrings = [] as string[];
-
-    formData.forEach((item) => {
-      getEditDataForPage(item.tabName, false).forEach((data) => {
-        editStrings.push(`${item.info.hdr},PRG;;${data}`);
+      formData.forEach((item) => {
+        getEditDataForPage(item.tabName, formData, false).forEach((data) => {
+          editStrings.push(`${item.info.hdr},PRG;;${data}`);
+        });
       });
-    });
 
-    return editStrings;
-  }, [formData]);
+      return editStrings;
+    },
+    [originToFormData]
+  );
 
   useEffect(() => {
     setOriginData(data);

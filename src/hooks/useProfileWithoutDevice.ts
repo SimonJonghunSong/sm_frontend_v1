@@ -21,11 +21,14 @@ const useProfileWithoutDevice = ({
     blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
   });
 
-  const getProfileAllData = async (isDownload: boolean = true) => {
+  const getProfileAllData = async (
+    originData: Record<string, any>[],
+    isDownload: boolean = true
+  ) => {
     setPercentage(0);
     setIsDownloading(true);
 
-    const profilePartial = getProfileData();
+    const profilePartial = getProfileData(originData);
 
     const text = [
       `MODEL=${modelName}`,
