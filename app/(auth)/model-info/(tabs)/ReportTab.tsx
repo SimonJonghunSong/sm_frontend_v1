@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { FormField, AssignItem } from "../page";
 import { Stack } from "@mui/material";
 import Report from "../(report)/Report";
@@ -93,6 +93,9 @@ export default function ReportTab({
   const { sendFormData } = useSendFormData();
 
   const imei = getCurrentImei();
+
+  console.log("sttFormData 222 :::", sttFormData);
+  console.log("altFormData 222 :::", altFormData);
 
   const handleSttChange = (
     smallDataIndexes: AssignMenuItem[],
