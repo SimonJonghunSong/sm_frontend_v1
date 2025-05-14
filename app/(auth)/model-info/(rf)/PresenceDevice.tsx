@@ -17,7 +17,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const tooltipText = {
   en: "The serial number of the Presence function.\n* It consists of 9 or 10 numeric digits.\n* For ST4410 Series : The serial number is 9 digits, starting from the second digit of the ESN.",
@@ -35,8 +35,8 @@ const PresenceDevice = ({ formData, onChange }: Props) => {
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {

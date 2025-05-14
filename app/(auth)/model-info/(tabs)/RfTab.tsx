@@ -20,15 +20,13 @@ interface Props {
 }
 
 export default function RfTab({ formData, setFormData }: Props) {
-  const handleValueChange = (name, value, alertId = undefined) => {
+  const handleValueChange = (name, value, selectValue = undefined) => {
     setFormData((prev) => ({
       ...prev,
       [name]: {
-        value,
-        key: prev[name].key,
+        ...prev[name],
+        value: selectValue || value,
         realValue: value,
-        list: prev[name].list,
-        alert_id: alertId,
       },
     }));
   };

@@ -22,7 +22,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const tooltipText = {
   en: "The type of presence function.\n• Option\n - Participant\n - Coordinator",
@@ -50,8 +50,8 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
   // LoRa App. Session Key
   const is2587Error = !/^[0-9A-Fa-f]{32}$/.test(formData["2587"]?.value);
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {

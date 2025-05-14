@@ -18,7 +18,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const tooltipText = {
   en: "Use of RF(Radio Frequency). \n• Default : On",
@@ -35,8 +35,8 @@ const ErbList = ({ formData, onChange }: Props) => {
   const { sendFormData, isLoading } = useSendFormData();
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {

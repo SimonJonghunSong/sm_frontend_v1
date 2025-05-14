@@ -22,7 +22,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const tooltipText = {
   en: "Use of RF(Radio Frequency). \n• Default : On",
@@ -53,8 +53,8 @@ const Rf = ({ formData, onChange }: Props) => {
 
   const is2810Error = !/^[A-Za-z0-9]{32}$/.test(formData["2810"]?.value);
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {

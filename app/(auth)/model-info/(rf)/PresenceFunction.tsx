@@ -20,7 +20,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 const tooltipText = {
   en: "The type of presence function.\n• Option\n - Participant\n - Coordinator",
@@ -39,8 +39,8 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {
