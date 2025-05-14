@@ -1,12 +1,13 @@
-import AssignMenus from "@/components/AssignMenus";
+import AssignMenus, { AssignMenuItem } from "@/components/AssignMenus";
 import FullLoading from "@/components/FullLoading";
 import useLangStore from "@/utils/useLangStore";
 import { Button, Stack, Tab, Tabs } from "@mui/material";
-import { FIELD_VALIDATIONS } from "constants/field";
-import { SECTIONS } from "constants/searchField";
+import { AssignItem, FormField } from "../page";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
+import { FIELD_VALIDATIONS } from "constants/field";
+import { SECTIONS } from "constants/searchField";
 
 function parseAssigns(
   inputs: {
@@ -79,6 +80,16 @@ function parseAssigns(
 }
 
 interface Props {
+  sttFormData: {
+    s_assigns: AssignItem[];
+    m_assigns: AssignItem[];
+    l_assigns: AssignItem[];
+  };
+  altFormData: {
+    s_assigns: AssignItem[];
+    m_assigns: AssignItem[];
+    l_assigns: AssignItem[];
+  };
   csvData: {
     p1: string;
     p2: string;
@@ -90,16 +101,38 @@ interface Props {
     p8: string;
     p9: string;
   }[];
+  onSttChange: (
+    smallDataIndexes: AssignMenuItem[],
+    mediumDataIndexes: AssignMenuItem[],
+    largeDataIndexes: AssignMenuItem[]
+  ) => void;
+  onAltChange: (
+    smallDataIndexes: AssignMenuItem[],
+    mediumDataIndexes: AssignMenuItem[],
+    largeDataIndexes: AssignMenuItem[]
+  ) => void;
+  handleSendStt: () => void;
+  handleSendAlt: () => void;
 }
 
-export default function AssignHeader({ csvData }: Props) {
+export default function AssignHeader({
+  sttFormData,
+  altFormData,
+  csvData,
+  onSttChange,
+  onAltChange,
+  handleSendStt,
+  handleSendAlt,
+}: Props) {
   // utils
   const t = useTranslations();
+
+  console.log("sttFormData :::", sttFormData);
+  console.log("altFormData :::", altFormData);
 
   // state
   const [tab, setTab] = useState<string>("stt");
   const [isFullLoading, setIsFullLoading] = useState(false);
-  const csvDataRef = useRef("");
   const { lang } = useLangStore();
 
   // stt
@@ -156,26 +189,30 @@ export default function AssignHeader({ csvData }: Props) {
 
     setSttData(parseData);
     setDefaultSttIndexes({
-      s_assigns: [],
-      m_assigns: [],
-      l_assigns: [],
+      s_assigns: sttFormData.s_assigns
+        .filter((item) => item.value === "1")
+        .map((item) => Number(item.text_num)),
+      m_assigns: sttFormData.m_assigns
+        .filter((item) => item.value === "1")
+        .map((item) => Number(item.text_num)),
+      l_assigns: sttFormData.l_assigns
+        .filter((item) => item.value === "1")
+        .map((item) => Number(item.text_num)),
     });
 
     setAltData(parseData);
     setDefaultAltIndexes({
-      s_assigns: [],
-      m_assigns: [],
-      l_assigns: [],
+      s_assigns: altFormData.s_assigns
+        .filter((item) => item.value === "1")
+        .map((item) => Number(item.text_num)),
+      m_assigns: altFormData.m_assigns
+        .filter((item) => item.value === "1")
+        .map((item) => Number(item.text_num)),
+      l_assigns: altFormData.l_assigns
+        .filter((item) => item.value === "1")
+        .map((item) => Number(item.text_num)),
     });
-  }, []);
-
-  const handleSendStt = () => {
-    console.log("handleSendStt ::::");
-  };
-
-  const handleSendAlt = () => {
-    console.log("handleSendAlt ::::");
-  };
+  }, [tab]);
 
   return (
     <Container>
@@ -235,6 +272,12 @@ export default function AssignHeader({ csvData }: Props) {
                 mediumDataIndexes,
                 largeDataIndexes
               ) => {
+                onSttChange(
+                  smallDataIndexes,
+                  mediumDataIndexes,
+                  largeDataIndexes
+                );
+
                 setUpdateSttDatas({
                   s_assigns: smallDataIndexes,
                   m_assigns: mediumDataIndexes,
@@ -278,6 +321,12 @@ export default function AssignHeader({ csvData }: Props) {
                 mediumDataIndexes,
                 largeDataIndexes
               ) => {
+                onAltChange(
+                  smallDataIndexes,
+                  mediumDataIndexes,
+                  largeDataIndexes
+                );
+
                 setUpdateAltDatas({
                   s_assigns: smallDataIndexes,
                   m_assigns: mediumDataIndexes,

@@ -34,6 +34,59 @@ import useModelInfoStore from "@/src/stores/useModelInfo";
 import BluetoothTab from "app/(auth)/model-info/(tabs)/BluetoothTab";
 const SCROLL_TOP_OFFSET = 140;
 
+export type AssignItem = {
+  type: string;
+  ID: string;
+  value: string;
+  text_num: string;
+  max: string;
+};
+
+type AssignInput = Array<{
+  [key: string]: any;
+}>;
+
+type AssignOutput = {
+  [key: string]: AssignItem;
+};
+
+function flattenAssignData(input?: AssignInput): {
+  s_assigns: AssignItem[];
+  m_assigns: AssignItem[];
+  l_assigns: AssignItem[];
+} {
+  if (!input) return { s_assigns: [], m_assigns: [], l_assigns: [] };
+
+  const result: AssignOutput = {};
+  input.forEach((item) => {
+    const key = Object.keys(item)[0];
+    if (key === "info") return;
+    result[key] = item[key][0];
+  });
+
+  // 배열로 변환
+  const s_assigns: AssignItem[] = [];
+  const m_assigns: AssignItem[] = [];
+  const l_assigns: AssignItem[] = [];
+
+  Object.entries(result).forEach(([key, value]) => {
+    if (key.startsWith("S_ASSIGN")) {
+      s_assigns.push(value);
+    } else if (key.startsWith("M_ASSIGN")) {
+      m_assigns.push(value);
+    } else if (key.startsWith("L_ASSIGN")) {
+      l_assigns.push(value);
+    }
+  });
+
+  // ID 기준으로 정렬(숫자 오름차순)
+  s_assigns.sort((a, b) => Number(a.ID) - Number(b.ID));
+  m_assigns.sort((a, b) => Number(a.ID) - Number(b.ID));
+  l_assigns.sort((a, b) => Number(a.ID) - Number(b.ID));
+
+  return { s_assigns, m_assigns, l_assigns };
+}
+
 // Type definitions
 interface FieldInfo {
   tab_id: string;
@@ -63,6 +116,7 @@ export interface FormField {
   realValue: string;
   list: string[] | null;
   alert_id: string | null;
+  text_num?: string;
 }
 
 interface FormData {
@@ -122,6 +176,7 @@ const transformFieldData = (
       realValue,
       list: optionsValueList,
       alert_id: fieldData.alert_id,
+      text_num: fieldData.text_num,
     },
   ];
 };
@@ -200,6 +255,7 @@ export default function DeviceInfoPage() {
   const [csvData, setCsvData] = useState<any>({});
   const navigate = useRouter();
 
+  console.log("originData :::", originData);
   const { getModelName } = useModelInfoStore();
 
   const modelName = useMemo(() => getModelName(), [getModelName]);
@@ -210,6 +266,25 @@ export default function DeviceInfoPage() {
   }>(null);
   const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
+
+  const [stt, setStt] = useState<{
+    s_assigns: AssignItem[];
+    m_assigns: AssignItem[];
+    l_assigns: AssignItem[];
+  }>({
+    s_assigns: [],
+    m_assigns: [],
+    l_assigns: [],
+  });
+  const [alt, setAlt] = useState<{
+    s_assigns: AssignItem[];
+    m_assigns: AssignItem[];
+    l_assigns: AssignItem[];
+  }>({
+    s_assigns: [],
+    m_assigns: [],
+    l_assigns: [],
+  });
 
   const handleTabChange = (tab: string) => {
     if (tab === "CMD Tool") {
@@ -249,6 +324,10 @@ export default function DeviceInfoPage() {
             csvData={csvData}
             formData={formData}
             setFormData={setFormData}
+            setStt={setStt}
+            setAlt={setAlt}
+            sttFormData={stt}
+            altFormData={alt}
           />
         );
       case "Tracking":
@@ -347,9 +426,17 @@ export default function DeviceInfoPage() {
     fetchJsonData();
   }, []);
 
-  console.log("originData :::", originData);
-  console.log("searchSectionData :::", searchSectionData);
-  console.log("searchParamData :::", searchParamData);
+  useEffect(() => {
+    const sttData = originData.find(
+      (item) => Object.keys(item)[0] === "ASSIGN HEADER(STT)"
+    );
+    const altData = originData.find(
+      (item) => Object.keys(item)[0] === "ASSIGN HEADER(ALT)"
+    );
+
+    setStt(flattenAssignData(sttData?.["ASSIGN HEADER(STT)"]));
+    setAlt(flattenAssignData(altData?.["ASSIGN HEADER(ALT)"]));
+  }, [originData]);
 
   return (
     <>

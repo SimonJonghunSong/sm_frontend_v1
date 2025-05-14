@@ -11,7 +11,7 @@ import useLangStore from "@/utils/useLangStore";
 import { useEffect, useState } from "react";
 import InputBox from "@/components/inputbox/InputBox";
 
-interface AssignItem {
+export interface AssignMenuItem {
   id: string;
   name: string;
   description: string;
@@ -19,16 +19,16 @@ interface AssignItem {
 }
 
 interface Props {
-  smallItems?: AssignItem[];
-  mediumItems?: AssignItem[];
-  largeItems?: AssignItem[];
+  smallItems?: AssignMenuItem[];
+  mediumItems?: AssignMenuItem[];
+  largeItems?: AssignMenuItem[];
   defaultSmallIndexes?: number[];
   defaultMediumIndexes?: number[];
   defaultLargeIndexes?: number[];
   onChange?: (
-    smallDataIndexes: AssignItem[],
-    mediumDataIndexes: AssignItem[],
-    largeDataIndexes: AssignItem[]
+    smallDataIndexes: AssignMenuItem[],
+    mediumDataIndexes: AssignMenuItem[],
+    largeDataIndexes: AssignMenuItem[]
   ) => void;
 }
 

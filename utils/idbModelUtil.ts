@@ -93,6 +93,10 @@ export const updateJsonDataToIDB = async (
             if (updateDatas[target].alert_id) {
               sectionValue.alert_id = updateDatas[target].alert_id;
             }
+
+            if (updateDatas[target].text_num) {
+              sectionValue.text_num = updateDatas[target].text_num;
+            }
           }
         }
       }
