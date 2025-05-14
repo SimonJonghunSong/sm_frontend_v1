@@ -205,11 +205,6 @@ const Geofence = ({
           if (type === "polygon") {
             const zeroLength = polygonList[groupId - 1].split("#")[1].length;
 
-            console.log(
-              polygonList[groupId - 1].split("#")[1].length,
-              polygonList[groupId - 1].split("#")[1]
-            );
-
             currentPort.port.oneditsuccess = () => {
               setPolygonGeofence({
                 imei,

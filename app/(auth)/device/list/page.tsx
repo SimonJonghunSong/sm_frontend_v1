@@ -4,18 +4,19 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import { Button, IconButton, Skeleton, Stack } from "@mui/material";
+import { Button, IconButton, Skeleton, Stack, TextField } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import Modal from "@/components/Modal";
 import useModal from "@/utils/useModal";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
+import { AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
 import useSerialStore from "@/src/stores/useSerialStore";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
 import useModelInfoStore from "@/src/stores/useModelInfo";
+import useErrorDialog from "@/src/hooks/useErrorDialog";
 
 const modalColumns: (t) => GridColDef[] = (t) => [
   {
@@ -222,6 +223,12 @@ export default function DeviceList() {
                 sx={{ width: "120px" }}
                 onClick={(e) => {
                   e.stopPropagation();
+                  const isLock = params.value.port.port.isLock;
+                  if (isLock) {
+                    imeiRef.current = params.value.port.port.imei;
+                    passwordModalToggle();
+                    return;
+                  }
                   setImei(params.value.port.port.imei);
                   resetTab();
                   setModelName(params.value.port.port.modelinfo.split("_")[0]);
@@ -266,8 +273,50 @@ export default function DeviceList() {
     };
   });
 
+  const [password, setPassword] = useState("");
+  const [passwordModal, passwordModalToggle] = useModal();
+  const imeiRef = useRef<string>();
   const [modal, modalToggle] = useModal();
   const router = useRouter();
+  const bufferRef = useRef<string>("");
+  const { renderErrorModal, toggle } = useErrorDialog({
+    description: t("error.Passwords_do_not_match"),
+  });
+
+  const handlePassword = () => {
+    const imei = imeiRef.current;
+    const currentPort = portList.find((port) => port.imei === imei);
+
+    currentPort.port.onbuffervalue = (value) => {
+      bufferRef.current += value;
+      if (value.includes(CR)) {
+        if (bufferRef.current.trim() === "AT^$PST;UPD;2") {
+          toggle();
+        }
+
+        if (bufferRef.current.trim() === "AT^$PST;UPD;1") {
+          setImei(currentPort.port.imei);
+          resetTab();
+          setModelName(currentPort.port.modelinfo.split("_")[0]);
+          setFwVer(
+            currentPort.port.modelinfo.split("_")[
+              currentPort.port.modelinfo.split("_").length - 1
+            ]
+          );
+          router.push(`/device-info`);
+        }
+
+        bufferRef.current = "";
+        currentPort.port.onbuffervalue = null;
+      }
+    };
+
+    write({
+      data: `AT^$PSTUPD;${password}`,
+      writer: currentPort.writer,
+      port: currentPort.port,
+    });
+  };
 
   return (
     <div className="pageWrap">
@@ -344,6 +393,29 @@ export default function DeviceList() {
       >
         <ProfileModal modalToggle={modalToggle} write={write} />
       </Modal>
+
+      <Modal
+        width="360px"
+        closeButton
+        open={passwordModal}
+        toggleOpen={() => {
+          passwordModalToggle();
+          setPassword("");
+        }}
+        title={"Password"}
+        confirm={handlePassword}
+        disabled={password.length === 0}
+      >
+        <Stack>
+          <TextField
+            placeholder="Enter Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Stack>
+      </Modal>
+      {renderErrorModal()}
     </div>
   );
 }

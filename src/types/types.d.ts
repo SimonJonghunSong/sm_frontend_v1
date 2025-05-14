@@ -20,6 +20,8 @@ interface SerialPortFilter {
 }
 
 interface SerialPort {
+  isLock: boolean;
+  password: string;
   isAlertSend?: boolean;
   onbuffervalue(value: string): unknown;
   circleoutputactivehandler(value: string): unknown;

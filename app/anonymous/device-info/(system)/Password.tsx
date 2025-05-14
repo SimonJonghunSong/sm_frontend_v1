@@ -120,7 +120,6 @@ const Password = ({ formData, onChange }: Props) => {
             <Stack direction="row" gap="4px" alignItems="center">
               <InputBox.Title>
                 {FIELD_VALIDATIONS["3001"].title[lang]}
-                <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
               </InputBox.Title>
               {FIELD_VALIDATIONS["3001"].tooltip?.[lang] && (
                 <InputBox.Info

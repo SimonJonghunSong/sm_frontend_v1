@@ -286,6 +286,9 @@ const useSerial = () => {
                   port.injectedId
                 );
                 const modelVersion = modelVersionBuffer.trim().split(";")[2];
+                const isLock = modelVersionBuffer.trim().split(";")[6] === "1";
+
+                port.isLock = isLock;
                 port.modelinfo = modelVersion;
                 port.ismodelinfofetching = false;
                 modelVersionBufferRef.current.set(port.injectedId, undefined);

@@ -120,7 +120,6 @@ const Password = ({ formData, onChange }: Props) => {
             <Stack direction="row" gap="4px" alignItems="center">
               <InputBox.Title>
                 {FIELD_VALIDATIONS["3001"].title[lang]}
-                <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
               </InputBox.Title>
               {FIELD_VALIDATIONS["3001"].tooltip?.[lang] && (
                 <InputBox.Info
@@ -134,10 +133,10 @@ const Password = ({ formData, onChange }: Props) => {
               <InputBox.Number>3001</InputBox.Number>
             </Stack>
             <TextField
-              required
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
+                handleChange("3001", e.target.value);
               }}
               error={(formData["3001"]?.realValue || "st5656") !== password}
               helperText={
