@@ -16,7 +16,6 @@ import Maps from "@/components/Map";
 import { useReducer, useRef, useState } from "react";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import DataTable from "@/components/dataTable";
-import { getPolygonGeofenceData } from "@/src/hooks/useSerial/utils";
 import { SerialPortState } from "@/src/stores/useSerialStore";
 import { useTranslations } from "next-intl";
 import { SwitchPrimary } from "@/components/switches";
@@ -50,6 +49,7 @@ interface Props {
   polygonGeofenceMax: number;
   circularGeofenceMax: number;
   circularGeofenceKeys: string[];
+  polygonGeofenceKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
 }
@@ -149,6 +149,8 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimitDebounce":
+      return { ...state, speedLimitDebounce: action.payload };
   }
 };
 
@@ -159,11 +161,12 @@ const AddGeofence = ({
   polygonGeofenceMax,
   circularGeofenceMax,
   circularGeofenceKeys,
+  polygonGeofenceKeys,
   onSuccess,
   onCancel,
 }: Props) => {
   const [typeFilter, setTypeFilter] = useState<"Polygon" | "Circular">(
-    "Circular"
+    circularGeofenceMax === 0 ? "Polygon" : "Circular"
   );
 
   const [circleState, circleDispatch] = useReducer(circleReducer, {
@@ -182,6 +185,7 @@ const AddGeofence = ({
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
+    speedLimitDebounce: 0,
   });
 
   const t = useTranslations();
@@ -585,12 +589,16 @@ const AddGeofence = ({
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as any)}
             >
-              <MenuItem value={"Circular"}>
-                {t("configuration.geofence.circular")}
-              </MenuItem>
-              <MenuItem value={"Polygon"}>
-                {t("configuration.geofence.polygon")}
-              </MenuItem>
+              {circularGeofenceMax !== 0 && (
+                <MenuItem value={"Circular"}>
+                  {t("configuration.geofence.circular")}
+                </MenuItem>
+              )}
+              {polygonGeofenceMax !== 0 && (
+                <MenuItem value={"Polygon"}>
+                  {t("configuration.geofence.polygon")}
+                </MenuItem>
+              )}
             </Select>
           </Stack>
 
@@ -807,9 +815,22 @@ const AddGeofence = ({
         .padStart(8, "0")
         .toUpperCase();
 
-      const getPolygonSpeedLimitHex = isPolygonSpeedLimitDisabled
-        ? ""
-        : buzzerSpeedLimitHex;
+      const speedLimitDebounceHex = Math.floor(polygonState.speedLimitDebounce)
+        .toString(16)
+        .padStart(4, "0")
+        .toUpperCase();
+
+      const getPolygonSpeedLimitHex =
+        !isPolygonSpeedLimitDisabled &&
+        polygonGeofenceKeys.includes("Polygon Speed Limit")
+          ? buzzerSpeedLimitHex
+          : "";
+
+      const getSpeedLimitDebounceHex =
+        !isPolygonSpeedLimitDisabled &&
+        polygonGeofenceKeys.includes("Speed Limit Debounce")
+          ? speedLimitDebounceHex
+          : "";
 
       currentPort.port.oneditsuccess = () => {
         onSuccess();
@@ -821,7 +842,10 @@ const AddGeofence = ({
           polygonState.id - 1
         ).padStart(2, "0")}#${mapManager.polygons[0].path.length
           .toString(16)
-          .padStart(2, "0")}${enterExitHexString}${getPolygonSpeedLimitHex}`,
+          .padStart(
+            2,
+            "0"
+          )}${enterExitHexString}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
         port: currentPort,
         writer: currentPort.writer,
       });
@@ -842,7 +866,12 @@ const AddGeofence = ({
   };
 
   const renderPolygonSpeedLimit = () => {
-    if (!formData["9000"] || formData["9000"].realValue === "00") return null;
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Polygon Speed Limit")
+    )
+      return null;
     return (
       <Stack gap="8px">
         <Stack direction="row" gap="4px" alignItems="center">
@@ -878,6 +907,52 @@ const AddGeofence = ({
           inputProps={{
             min: 0,
             max: 300,
+          }}
+        />
+      </Stack>
+    );
+  };
+
+  const renderSpeedLimitDebounce = () => {
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Speed Limit Debounce")
+    )
+      return null;
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>Speed Limit Debounce</InputBox.Title>
+        </Stack>
+
+        <TextField
+          type="number"
+          value={polygonState.speedLimitDebounce}
+          onChange={(e) =>
+            polygonDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (polygonState.speedLimitDebounce > 1800 ||
+              polygonState.speedLimitDebounce < 0) &&
+            polygonState.speedLimitDebounce !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 1,800`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 1,800`
+                : `Entrada solo entre 0 ~ 1,800`
+              : ""
+          }
+          error={
+            polygonState.speedLimitDebounce > 1800 ||
+            polygonState.speedLimitDebounce < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 1800,
           }}
         />
       </Stack>
@@ -920,12 +995,16 @@ const AddGeofence = ({
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as any)}
             >
-              <MenuItem value={"Circular"}>
-                {t("configuration.geofence.circular")}
-              </MenuItem>
-              <MenuItem value={"Polygon"}>
-                {t("configuration.geofence.polygon")}
-              </MenuItem>
+              {circularGeofenceMax !== 0 && (
+                <MenuItem value={"Circular"}>
+                  {t("configuration.geofence.circular")}
+                </MenuItem>
+              )}
+              {polygonGeofenceMax !== 0 && (
+                <MenuItem value={"Polygon"}>
+                  {t("configuration.geofence.polygon")}
+                </MenuItem>
+              )}
             </Select>
           </Stack>
 
@@ -1030,6 +1109,7 @@ const AddGeofence = ({
           </Stack>
 
           {renderPolygonSpeedLimit()}
+          {renderSpeedLimitDebounce()}
         </Stack>
 
         <Stack gap={"24px"} flex={1}>

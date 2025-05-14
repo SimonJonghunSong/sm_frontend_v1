@@ -203,19 +203,19 @@ const Geofence = ({
         onDelete: () => {
           const imei = currentPort.port.imei;
           if (type === "polygon") {
-            const isPolygonSpeedLimitDisabled =
-              polygonList[groupId - 1].split("#")[1].length === 6;
+            const zeroLength = polygonList[groupId - 1].split("#")[1].length;
+
+            console.log(
+              polygonList[groupId - 1].split("#")[1].length,
+              polygonList[groupId - 1].split("#")[1]
+            );
 
             currentPort.port.oneditsuccess = () => {
               setPolygonGeofence({
                 imei,
                 payload: polygonList.map((value, index) =>
                   index === groupId - 1
-                    ? `${groupId}#${
-                        isPolygonSpeedLimitDisabled
-                          ? "000000"
-                          : "00000000000000"
-                      }`
+                    ? `${groupId}#${"0".repeat(zeroLength)}`
                     : value
                 ),
               });
@@ -225,7 +225,7 @@ const Geofence = ({
               data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
                 2,
                 "0"
-              )}#${isPolygonSpeedLimitDisabled ? "000000" : "00000000000000"}`,
+              )}#${"0".repeat(zeroLength)}`,
               port: currentPort,
               writer: currentPort.writer,
             });
@@ -342,6 +342,7 @@ const Geofence = ({
     } else {
       setFetchedPolygonData(undefined);
       const circleIndex = findCircleIndexByNumber(data.row.groupId - 1);
+      currentPort.port.ispolygonpointfetching = false;
       currentPort.port.iscircularpointfetching = true;
       currentPort.port.circlehandler = (value) => {
         circlePointRef.current += value;

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { delayPromise } from "./useSerial";
 import {
+  AT_GET_CIRCULAR_GEOFENCE_10_LIST,
   AT_GET_CIRCULAR_GEOFENCE_255_LIST,
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
   AT_GET_POLYGON_GEOFENCE_LIST,
@@ -74,6 +75,13 @@ const useGefence = ({
       return;
     }
 
+    if (!circularGeofenceMax) {
+      setIsFetching(false);
+      setIsCircularFetchReady(false);
+      onAfterFetch?.();
+      return;
+    }
+
     port.circularfetchcount = 0;
     port.iscircularfetching = true;
     port.circlemax = Number(circularGeofenceMax);
@@ -86,10 +94,14 @@ const useGefence = ({
     };
 
     (async () => {
-      for (const command of circularGeofenceMax === 255
+      for (const command of circularGeofenceMax === 10
+        ? AT_GET_CIRCULAR_GEOFENCE_10_LIST(imei)
+        : circularGeofenceMax === 255
         ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
         : AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)) {
-        await delayPromise(circularGeofenceMax === 255 ? 60 : 100); // 100ms 지연
+        await delayPromise(
+          circularGeofenceMax === 10 || circularGeofenceMax === 255 ? 60 : 100
+        ); // 100ms 지연
 
         write({
           data: command,
