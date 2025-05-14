@@ -35,7 +35,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
 }
 
 const Ble = ({ formData, onChange }: Props) => {
@@ -45,8 +45,8 @@ const Ble = ({ formData, onChange }: Props) => {
   const { sendFormData, isLoading } = useSendFormData();
   if (!formData["4021"] || !hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleChange = (id: string, value: string) => {
-    onChange(id, value);
+  const handleChange = (id: string, value: string, selectValue?: string) => {
+    onChange(id, value, selectValue);
   };
 
   const validateForm = (): boolean => {

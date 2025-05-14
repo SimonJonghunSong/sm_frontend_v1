@@ -26,15 +26,14 @@ export default function BluetoothTab({
 // write,
 // port,
 Props) {
-  const handleValueChange = (name, value, alertId = undefined) => {
+  const handleValueChange = (name, value, selectValue = undefined) => {
     setFormData((prev) => ({
       ...prev,
       [name]: {
-        value,
+        ...prev[name],
+        value: selectValue || value,
         key: name,
         realValue: value,
-        list: prev[name].list,
-        alert_id: alertId,
       },
     }));
   };
