@@ -3,7 +3,6 @@ import {
   Button,
   CircularProgress,
   MenuItem,
-  Select,
   Stack,
   TextField,
   Tooltip,
@@ -12,10 +11,9 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import styled from "styled-components";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InputBox from "@/components/inputbox/InputBox";
-import { useState } from "react";
-import { FIELD_ERRORS } from "constants/fieldErrorValidations";
-import { SwitchPrimary } from "@/components/switches";
 import { Controller, useForm } from "react-hook-form";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 
 interface Props {
   id: string;
@@ -56,6 +54,10 @@ export default function MainServerCommandField({
   });
 
   const { lang } = useLangStore();
+  const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
+  if (isHiddenParameter && hiddenParameter) return null;
 
   const handleSubmit = () => {
     const values = form.getValues();
@@ -68,7 +70,7 @@ export default function MainServerCommandField({
 
   return (
     <Container>
-      <Title>
+      <Title isHiddenParameter={isHiddenParameter}>
         <div>
           <h3>{FIELD_VALIDATIONS[id].title[lang]}</h3>
           <Tooltip
@@ -221,7 +223,7 @@ const InputWithButton = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ isHiddenParameter: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -230,6 +232,7 @@ const Title = styled.div`
 
   h3 {
     width: fit-content;
+    color: ${(props) => (props.isHiddenParameter ? "#FF0000" : "#6f6f6f")};
   }
 
   & > div {

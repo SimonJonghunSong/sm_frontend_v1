@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { useTranslations } from "next-intl";
 import { Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
@@ -11,7 +10,6 @@ interface Props {
 }
 
 const NetworkCommands = ({ renderCommand }: Props) => {
-  const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
 
   return (

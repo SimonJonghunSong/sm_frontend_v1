@@ -16,6 +16,8 @@ import { useState } from "react";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import { SwitchPrimary } from "@/components/switches";
 import { Controller, useForm } from "react-hook-form";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 
 interface Props {
   id: string;
@@ -42,6 +44,11 @@ export default function PinLockCommandField({
 
   const { lang } = useLangStore();
 
+  const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
+  if (isHiddenParameter && hiddenParameter) return null;
+
   const handleSubmit = () => {
     const values = form.getValues();
     handleSendCommand(
@@ -53,7 +60,7 @@ export default function PinLockCommandField({
 
   return (
     <Container>
-      <Title>
+      <Title isHiddenParameter={isHiddenParameter}>
         <div>
           <h3>{FIELD_VALIDATIONS[id].title[lang]}</h3>
           <Tooltip
@@ -141,7 +148,7 @@ const InputWithButton = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ isHiddenParameter: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -150,6 +157,7 @@ const Title = styled.div`
 
   h3 {
     width: fit-content;
+    color: ${(props) => (props.isHiddenParameter ? "#FF0000" : "#6f6f6f")};
   }
 
   & > div {

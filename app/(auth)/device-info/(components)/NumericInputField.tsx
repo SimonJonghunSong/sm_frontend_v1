@@ -5,6 +5,7 @@ import { Stack, TextField } from "@mui/material";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
+import useParameterStore from "@/utils/useParameterStore";
 
 interface InputFieldProps {
   id: string;
@@ -19,6 +20,7 @@ interface InputFieldProps {
   customError?: boolean;
   customErrorMessage?: string;
   isUnderbarId?: boolean; // 1670 같은 중복으로 인해서 추가된 속성
+  isHiddenParameter?: boolean;
 }
 
 const NumericInputField = ({
@@ -32,13 +34,17 @@ const NumericInputField = ({
   customError,
   customErrorMessage,
   isUnderbarId,
+  isHiddenParameter,
 }: InputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
     Number(formData[id]?.realValue) !== 0
   );
 
+  const { hiddenParameter } = useParameterStore();
   if (!formData[id]) return null;
+
+  if (isHiddenParameter && hiddenParameter) return null;
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
 
@@ -71,7 +77,7 @@ const NumericInputField = ({
       style={{ ...(isSwitch && { position: "relative" }), ...style }}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>
+        <InputBox.Title style={{ color: isHiddenParameter && "#FF0000" }}>
           {FIELD_VALIDATIONS[realId].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>

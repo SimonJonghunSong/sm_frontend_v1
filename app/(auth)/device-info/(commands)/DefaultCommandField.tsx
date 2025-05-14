@@ -4,6 +4,8 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import styled from "styled-components";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InputBox from "@/components/inputbox/InputBox";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
+import useParameterStore from "@/utils/useParameterStore";
 
 interface Props {
   id: string;
@@ -21,10 +23,14 @@ export default function DefaultCommandField({
   isLoading,
 }: Props) {
   const { lang } = useLangStore();
+  const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
+  if (isHiddenParameter && hiddenParameter) return null;
 
   return (
     <Container>
-      <Title>
+      <Title isHiddenParameter={isHiddenParameter}>
         <h3>{FIELD_VALIDATIONS[id].title[lang]}</h3>
         <Tooltip
           title={FIELD_VALIDATIONS[id].tooltip[lang]}
@@ -68,7 +74,7 @@ export default function DefaultCommandField({
   );
 }
 
-const Title = styled.div`
+const Title = styled.div<{ isHiddenParameter: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -76,6 +82,7 @@ const Title = styled.div`
 
   h3 {
     width: fit-content;
+    color: ${(props) => (props.isHiddenParameter ? "#FF0000" : "#6f6f6f")};
   }
 `;
 

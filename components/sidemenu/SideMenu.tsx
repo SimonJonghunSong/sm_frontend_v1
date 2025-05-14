@@ -5,8 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import { Divider } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { SwitchSecondary } from "../switches";
 import useParameterStore from "../../utils/useParameterStore";
 import useAuthStore from "@/utils/useAuthStore";
@@ -97,7 +96,25 @@ export default function SideMenu({
       <aside className={styles.sideMenuWrap}>
         <ul className={styles.sideMenu}>
           {sideMenuItems.map((link) => {
-            if (link.href) {
+            if (link.name === "Show Hidden Parameters") {
+              return (
+                <li key={link.name}>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems={"center"}
+                    padding="16px 16px 8px"
+                    borderTop="1px solid #4D4D56"
+                  >
+                    {t("configuration.side_bar.show_hidden_parameters")}
+                    <SwitchSecondary
+                      checked={!hiddenParameter}
+                      onChange={() => toggleHiddenParameter()}
+                    />
+                  </Stack>
+                </li>
+              );
+            } else if (link.href) {
               return (
                 <li
                   key={link.name}
@@ -151,7 +168,7 @@ export default function SideMenu({
             }
           })}
 
-          {configuration && (
+          {/* {configuration && (
             <>
               <li>
                 <Divider
@@ -198,7 +215,7 @@ export default function SideMenu({
                 </div>
               </li>
             </>
-          )}
+          )} */}
         </ul>
       </aside>
 

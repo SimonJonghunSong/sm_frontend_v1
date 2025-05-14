@@ -12,7 +12,8 @@ import styled from "styled-components";
 import ErrorOutlineOutlinedIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import InputBox from "@/components/inputbox/InputBox";
 import { useState } from "react";
-import { FIELD_ERRORS } from "constants/fieldErrorValidations";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 
 interface Props {
   id: string;
@@ -40,11 +41,14 @@ export default function TextCommandField({
   const [value, setValue] = useState<string>("");
   const { lang } = useLangStore();
 
-  console.log("FIELD_VALIDATIONS[id] ::", FIELD_VALIDATIONS[id]);
+  const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
+  if (isHiddenParameter && hiddenParameter) return null;
 
   return (
     <Container>
-      <Title>
+      <Title isHiddenParameter={isHiddenParameter}>
         <h3>{FIELD_VALIDATIONS[id].title[lang]}</h3>
         <Tooltip
           title={FIELD_VALIDATIONS[id].tooltip[lang]}
@@ -108,7 +112,7 @@ const InputWithButton = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div`
+const Title = styled.div<{ isHiddenParameter: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -116,6 +120,7 @@ const Title = styled.div`
 
   h3 {
     width: fit-content;
+    color: ${(props) => (props.isHiddenParameter ? "#FF0000" : "#6f6f6f")};
   }
 `;
 
