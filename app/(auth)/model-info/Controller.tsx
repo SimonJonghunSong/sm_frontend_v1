@@ -1,18 +1,6 @@
-import {
-  Button,
-  IconButton,
-  Radio,
-  Stack,
-  Tooltip,
-  Chip,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from "@mui/material";
-import React, { useCallback, useRef, useState } from "react";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import { Button, IconButton, Radio, Stack, Tooltip, Chip } from "@mui/material";
+import React, { useMemo, useRef, useState } from "react";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { GridColDef } from "@mui/x-data-grid";
 import useModal from "@/utils/useModal";
 import Modal from "@/components/Modal";
@@ -34,21 +22,36 @@ import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationT
 import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
 import { useTransformedConfigData } from "@/src/hooks/useTransformConfigData";
+import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
 
 interface ModelInfoControllerProps {
   onLoadProfile: (profile: string) => void;
   onApply: () => void;
+  data: Record<string, any>[];
 }
 
 export default function ModelInfoController({
   onLoadProfile,
   onApply,
+  data,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
   const [isLoadedProfile, setIsLoadedProfile] = useState(false);
 
-  const { modelName, fw_ver } = useModelInfoStore();
+  const { getFwVer, getModelName } = useModelInfoStore();
+
+  const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fw_ver = useMemo(() => getFwVer(), [getFwVer]);
+
+  console.log("fw_ver :::", fw_ver);
+  const {
+    func: { getProfileAllData },
+  } = useProfileWithoutDevice({
+    modelName,
+    modelVersion: fw_ver,
+    data,
+  });
 
   const [applyModal, applyModalToggle] = useModal();
   const [saveModal, saveModalToggle] = useModal();
@@ -61,9 +64,6 @@ export default function ModelInfoController({
 
   const uploadProfileMutation = useMutation({
     mutationFn: uploadProfile,
-  });
-  const downloadProfileMutation = useMutation({
-    mutationFn: downloadProfile,
   });
 
   const handleApply = () => {
@@ -79,65 +79,47 @@ export default function ModelInfoController({
     uploadModalToggle();
   };
 
-  const handleDownloadProfileFile = () => {
-    try {
-      downloadProfileMutation
-        .mutateAsync({
-          model_name: modelName,
-          model_version: fw_ver,
-        })
-        .then((response) => {
-          const { data } = response;
-
-          // TODO: 지금은 만약 여러개 있으면 가장 마지막 것만 다운로드 되도록 구현함
-          const records = data?.result?.records;
-
-          if (records.length > 0) {
-            const targetRcord = records[records.length - 1];
-
-            const { file, file_nickname } = targetRcord;
-            const url = file;
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = file_nickname;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-          } else {
-            toggleIsOpenCommonPopup();
-            commonPopupTitle.current = t("common.popup.error");
-            // TODO: 임의 에러 메시지 표기중
-            commonPopupMessage.current = t(
-              "configuration.popup_message.no_profile"
-            );
-          }
-        })
-        .catch((error) => {
-          toggleIsOpenCommonPopup();
-          commonPopupTitle.current = t("common.popup.error");
-          // TODO: 임의 에러 메시지 표기중
-          commonPopupMessage.current = t(
-            "configuration.popup_message.failed_download_profile"
-          );
-          console.error("Error downloading file:", error);
-        });
-    } catch (error) {
-      toggleIsOpenCommonPopup();
-      commonPopupTitle.current = t("common.popup.error");
-      // TODO: 임의 에러 메시지 표기중
-      commonPopupMessage.current = t(
-        "configuration.popup_message.failed_download_profile"
-      );
-      console.error("Error creating download link:", error);
-    }
-  };
-
   const handleUploadProfileConfirm = async () => {
-    console.log("test1 ::::");
-  };
-
-  const getProfileAllData = async () => {
-    console.log("test2 ::::");
+    const profileData = await getProfileAllData(false);
+    const mockFile = new File(
+      [profileData.join("\n")],
+      `${modelName}_${fw_ver}.profile`,
+      {
+        type: "text/plain",
+      }
+    );
+    const formData = new FormData();
+    formData.append(
+      "json",
+      JSON.stringify({
+        profile_info: [
+          {
+            model_name: modelName,
+            model_version: fw_ver,
+            nickname: `profile_${Date.now()}`,
+          },
+        ],
+      })
+    );
+    formData.append("profile", mockFile);
+    uploadProfileMutation
+      .mutateAsync(formData)
+      .then(() => {
+        toggleIsOpenCommonPopup();
+        commonPopupTitle.current = t("common.popup.success");
+        // TODO: 임의 에러 메시지 표기중
+        commonPopupMessage.current = t(
+          "configuration.popup_message.success_upload_profile"
+        );
+      })
+      .catch(() => {
+        toggleIsOpenCommonPopup();
+        commonPopupTitle.current = t("common.popup.error");
+        // TODO: 임의 에러 메시지 표기중
+        commonPopupMessage.current = t(
+          "configuration.popup_message.failed_upload_profile"
+        );
+      });
   };
 
   return (
@@ -249,7 +231,7 @@ export default function ModelInfoController({
           open={saveModal}
           toggleOpen={saveModalToggle}
           title="Confirm"
-          confirm={async () => await getProfileAllData()}
+          confirm={async () => await getProfileAllData(true)}
           confirmButtonText="Yes"
           width="360px"
         >
@@ -358,6 +340,7 @@ function LoadModal({
   const handleLoadFromScuti = () => {
     profileFromScutiMutation.mutate({
       model_name: modelName,
+      model_version: fwVer,
     });
   };
 

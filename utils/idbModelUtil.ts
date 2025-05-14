@@ -37,6 +37,8 @@ export const updateJsonDataToIDB = async (
   updateDatas: any
 ) => {
   try {
+    console.log("updateDatas  ::::", updateDatas);
+
     const db = (await initDB()) as IDBDatabase;
     return new Promise(async (resolve, reject) => {
       // 1. 현재 저장된 데이터 가져오기
@@ -85,9 +87,6 @@ export const updateJsonDataToIDB = async (
           const target = targets.find((item) => item === jsonId);
 
           if (target) {
-            console.log("sectionValue :::", sectionValue);
-            console.log("updateDatas[target] :::", updateDatas[target]);
-
             sectionValue.value = updateDatas[target].value;
 
             if (updateDatas[target].alert_id) {

@@ -33,6 +33,9 @@ import { ModelConfigWithData } from "@/src/api/services/model/type";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 import BluetoothTab from "app/(auth)/model-info/(tabs)/BluetoothTab";
 import useSendFormData from "app/(auth)/model-info/(utils)/useSendFormData";
+import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
+import { uploadProfile } from "@/src/api/services/profile";
+import { useMutation } from "@tanstack/react-query";
 const SCROLL_TOP_OFFSET = 140;
 
 export type AssignItem = {
@@ -118,6 +121,7 @@ export interface FormField {
   list: string[] | null;
   alert_id: string | null;
   text_num?: string;
+  labelList?: { [key: string]: string };
 }
 
 interface FormData {
@@ -155,6 +159,19 @@ const getList = (field: FieldValue): string[] => {
   );
 };
 
+const getValueList = (field: FieldValue): { [key: string]: string } => {
+  if (!field.list) return null;
+
+  return Object.values(field.list[0]).reduce((acc, item) => {
+    acc[
+      Number(item.split(";")[0]) < 10
+        ? `0${item.split(";")[0]}`
+        : item.split(";")[0]
+    ] = item.split(";")[1];
+    return acc;
+  }, {} as { [key: string]: string });
+};
+
 const transformFieldData = (
   field: Field,
   tabId: string
@@ -168,6 +185,9 @@ const transformFieldData = (
   const fieldId = formatFieldId(fieldData.ID);
   const realValue = getRealValue(fieldData);
   const optionsValueList = getList(fieldData);
+  const optionsLabelList = getValueList(fieldData);
+
+  console.log("optionsLabelList :::", optionsLabelList);
 
   return [
     `${tabId}${fieldId}`,
@@ -176,6 +196,7 @@ const transformFieldData = (
       value: fieldData.value,
       realValue,
       list: optionsValueList,
+      labelList: optionsLabelList,
       alert_id: fieldData.alert_id,
       text_num: fieldData.text_num,
     },
@@ -259,10 +280,18 @@ export default function DeviceInfoPage() {
   const [csvData, setCsvData] = useState<any>({});
   const navigate = useRouter();
 
-  console.log("originData :::", originData);
-  const { getModelName } = useModelInfoStore();
+  const { getModelName, getFwVer } = useModelInfoStore();
 
   const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+
+  const {
+    func: { getProfileAllData },
+  } = useProfileWithoutDevice({
+    modelName,
+    modelVersion: fwVer,
+    data: originData,
+  });
 
   const [tab, setTab] = useState("DeviceStatus");
   const [formData, setFormData] = useState<{
@@ -431,6 +460,13 @@ export default function DeviceInfoPage() {
         console.log("key :::", key);
 
         if (newFormData[key]) {
+          const isList = !!newFormData[key]?.list?.length;
+
+          console.log(
+            "newFormData[key] :::",
+            newFormData[key]?.labelList?.[value]
+          );
+
           console.log(`Updating formData for key ${key}:`, {
             before: newFormData[key],
             after: {
@@ -477,6 +513,14 @@ export default function DeviceInfoPage() {
 
     setIsLoading(false);
   };
+
+  const uploadProfileMutation = useMutation({
+    mutationFn: uploadProfile,
+  });
+
+  console.log("formData :::", formData);
+
+  console.log("originData :::", originData);
 
   useEffect(() => {
     if (originData) {
@@ -529,6 +573,7 @@ export default function DeviceInfoPage() {
         />
         <Stack flex={1}>
           <Controller
+            data={originData}
             onApply={() => {
               handleApply();
             }}
