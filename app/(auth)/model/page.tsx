@@ -397,8 +397,6 @@ export default function Model() {
         }
       } catch (error) {
         console.error("Error filtering loaded models:", error);
-        // 에러 발생 시 빈 배열이나 기존 데이터 유지
-        setRowData([]);
       }
     };
 
