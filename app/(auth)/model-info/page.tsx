@@ -24,7 +24,7 @@ import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
 import Controller from "./Controller";
 import FullLoading from "@/components/FullLoading";
 import CommandTab from "./(tabs)/CommandTab";
-import { getSearchParamsData } from "@/src/utils/\bsearchParams";
+import { getSearchParamsData } from "@/src/utils/searchParams";
 import DeviceStatusTab from "./(tabs)/DeviceStatusTab";
 import { useRouter } from "next/navigation";
 import { Stack } from "@mui/material";

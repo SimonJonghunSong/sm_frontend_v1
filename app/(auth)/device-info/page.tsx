@@ -36,7 +36,7 @@ import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
 import CommandTab from "app/(auth)/device-info/(tabs)/CommandTab";
-import { getSearchParamsData } from "@/src/utils/\bsearchParams";
+import { getSearchParamsData } from "@/src/utils/searchParams";
 import DeviceStatusTab from "app/(auth)/device-info/(tabs)/DeviceStatusTab";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 import { ConstructionOutlined } from "@mui/icons-material";

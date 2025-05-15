@@ -28,7 +28,7 @@ import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
 import useSerialStore from "@/src/stores/useSerialStore";
 import FullLoading from "@/components/FullLoading";
 import GeofenceTab from "./(tabs)/GeofenceTab";
-import { getSearchParamsData } from "@/src/utils/\bsearchParams";
+import { getSearchParamsData } from "@/src/utils/searchParams";
 import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 import { useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
