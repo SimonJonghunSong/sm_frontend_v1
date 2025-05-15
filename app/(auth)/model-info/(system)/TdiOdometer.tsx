@@ -187,7 +187,7 @@ const TdiOdometer = ({ formData, onChange }: Props) => {
           type="submit"
           disabled={isLoading}
         >
-          {t("notify.send")}
+          {t("common.save")}
         </Button>
       </Stack>
     </Form>

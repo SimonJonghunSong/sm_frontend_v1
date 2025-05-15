@@ -9,7 +9,6 @@ import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
-import DualCheckboxField from "../(components)/DualCheckboxField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
@@ -189,7 +188,7 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
               type="submit"
               disabled={isLoading}
             >
-              {t("notify.send")}
+              {t("common.save")}
             </Button>
           </Stack>
         </>

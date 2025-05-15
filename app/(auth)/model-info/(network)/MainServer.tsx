@@ -10,9 +10,6 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import { hasFormDataFields } from "../(utils)/@index";
 import SwitchField from "../(components)/SwitchField";
-import InputBox from "@/components/inputbox/InputBox";
-import { FIELD_VALIDATIONS } from "constants/field";
-import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import CheckboxComp from "../(components)/CheckboxComp";
@@ -205,7 +202,7 @@ const MainServer = ({ formData, onChange }: Props) => {
           type="submit"
           disabled={isLoading}
         >
-          {t("notify.send")}
+          {t("common.save")}
         </Button>
       </Stack>
     </Form>

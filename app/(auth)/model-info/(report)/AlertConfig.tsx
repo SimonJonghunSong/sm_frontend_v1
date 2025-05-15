@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { AlertConfig1, AlertConfig2 } from "./@index";
 import { ALERT_CONFIG_1 } from "./AlertConfig1";
 import { ALERT_CONFIG_2 } from "./AlertConfig2";
-import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import { SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "../(utils)/useSendFormData";
 
@@ -143,7 +143,7 @@ const AlertConfig = ({ formData, onChange }: Props) => {
           type="submit"
           disabled={isLoading}
         >
-          {t("notify.send")}
+          {t("common.save")}
         </Button>
       </Stack>
     </Form>

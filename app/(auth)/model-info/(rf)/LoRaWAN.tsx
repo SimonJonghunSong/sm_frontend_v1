@@ -7,9 +7,7 @@ import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
 import NumericInputField from "../(components)/NumericInputField";
-import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
-import DualCheckboxField from "../(components)/DualCheckboxField";
 import TextInputField from "../(components)/TextInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
@@ -264,7 +262,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
               type="submit"
               disabled={isLoading}
             >
-              {t("notify.send")}
+              {t("common.save")}
             </Button>
           </Stack>
         </>

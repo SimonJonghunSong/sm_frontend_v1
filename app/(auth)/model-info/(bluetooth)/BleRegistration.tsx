@@ -4,10 +4,8 @@ import { useTranslations } from "next-intl";
 import {
   Button,
   FormControl,
-  FormHelperText,
   IconButton,
   MenuItem,
-  Select,
   Stack,
   TextField,
 } from "@mui/material";
@@ -15,8 +13,6 @@ import { FormField } from "../page";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
-import useSendFormData from "../(utils)/useSendFormData";
-import SelectField from "../(components)/SelectField";
 import DataTable from "@/components/dataTable";
 import useModal from "@/utils/useModal";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";

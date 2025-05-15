@@ -3,9 +3,7 @@ import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
-import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
-import { FIELD_VALIDATIONS } from "constants/field";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
@@ -159,7 +157,7 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
           type="submit"
           disabled={isLoading}
         >
-          {t("notify.send")}
+          {t("common.save")}
         </Button>
       </Stack>
     </Form>

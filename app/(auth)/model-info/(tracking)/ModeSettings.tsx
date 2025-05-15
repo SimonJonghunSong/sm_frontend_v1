@@ -6,7 +6,6 @@ import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import {
-  INCLUDE_FIELDS,
   modeSettingsFieldsWithoutUnderbar,
   modeSettingsFieldsWithUnderbar,
   SECTIONS,
@@ -409,7 +408,7 @@ const ModeSettings = ({ formData, onChange }: Props) => {
             type="submit"
             disabled={isLoading}
           >
-            {t("notify.send")}
+            {t("common.save")}
           </Button>
         </Stack>
       </>

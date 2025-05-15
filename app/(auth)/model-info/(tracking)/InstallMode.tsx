@@ -6,7 +6,6 @@ import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
-import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
@@ -140,7 +139,7 @@ const InstallMode = ({ formData, onChange }: Props) => {
               type="submit"
               disabled={isLoading}
             >
-              {t("notify.send")}
+              {t("common.save")}
             </Button>
           </Stack>
         </>

@@ -1,17 +1,13 @@
 import { useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { FormField } from "../page";
 import NumericInputField from "../(components)/NumericInputField";
 import SwitchField from "../(components)/SwitchField";
 import { hasFormDataFields } from "../(utils)/@index";
-import { SwitchPrimary } from "@/components/switches";
-import { FIELD_VALIDATIONS } from "constants/field";
-import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import SelectField from "../(components)/SelectField";
-import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import RangeThresholdField from "../(components)/RangeThresholdField";
@@ -190,7 +186,7 @@ const Sensor = ({ formData, onChange }: Props) => {
           type="submit"
           disabled={isLoading}
         >
-          {t("notify.send")}
+          {t("common.save")}
         </Button>
       </Stack>
     </Form>

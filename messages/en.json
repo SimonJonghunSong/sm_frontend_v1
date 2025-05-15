@@ -1,5 +1,6 @@
 {
   "common": {
+    "save": "Save",
     "country": {
       "select,_나라명": "Select, 나라명"
     },

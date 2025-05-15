@@ -758,7 +758,7 @@ export default function AssignHeader({
           // disabled={tab === "stt" ? sttPageSendDisabled : altPageSendDisabled}
           onClick={tab === "stt" ? handleSaveStt : handleSaveAlt}
         >
-          {t("configuration.commands.send")}
+          {t("common.save")}
         </Button>
       </Stack>
     </Container>

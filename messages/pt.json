@@ -22,7 +22,8 @@
     },
     "table-message": {
       "no-operation-logs-yet": "Ainda não há registros de operação."
-    }
+    },
+    "save": "Salvar"
   },
   "login": {
     "login": {
@@ -259,7 +260,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -334,7 +338,10 @@
       "network_*": "Rede",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [null, "LTE Cat.1"],
+      "lte_cat": [
+        null,
+        "LTE Cat.1"
+      ],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",

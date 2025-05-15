@@ -2,13 +2,11 @@ import { useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
-import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import { SwitchPrimary } from "@/components/switches";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import SelectField from "../(components)/SelectField";
-import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 
@@ -119,7 +117,7 @@ const OperationMode = ({ formData, onChange }: Props) => {
               type="submit"
               disabled={isLoading}
             >
-              {t("notify.send")}
+              {t("common.save")}
             </Button>
           </Stack>
         </>
