@@ -148,7 +148,6 @@ const MainServer = ({ formData, onChange }: Props) => {
                 formData["1011"]?.realValue !== "0" &&
                 formData["1011"]?.realValue !== "00"
               }
-              isRequired
             />
 
             {formData["1011"]?.realValue !== "0" &&
