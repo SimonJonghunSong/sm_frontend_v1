@@ -28,7 +28,7 @@ const SwitchField = ({
 
   return (
     <Stack
-      width={"calc(50% - 8px)"}
+      width={"100%"}
       direction="row"
       alignItems="center"
       justifyContent="space-between"
