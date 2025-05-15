@@ -203,7 +203,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1649"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1649"]?.realValue}
             onChange={handleChange}
@@ -211,7 +210,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1650"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1650"]?.realValue}
             onChange={handleChange}
@@ -219,7 +217,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1651"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1651"]?.realValue}
             onChange={handleChange}
@@ -227,7 +224,6 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           <TimeHMA
             id="1652"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1652"]?.realValue}
             onChange={handleChange}
@@ -236,13 +232,11 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             id="1653"
             formData={formData}
             onChange={handleChange}
-            isRequired
             isSwitch
           />
           <TimeHMA
             id="1655"
             formData={formData}
-            isRequired
             isSwitch
             value={formData["1655"]?.realValue}
             onChange={handleChange}

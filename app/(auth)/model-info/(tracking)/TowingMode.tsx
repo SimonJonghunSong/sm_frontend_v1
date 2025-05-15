@@ -120,7 +120,6 @@ const TowingMode = ({ formData, onChange }: Props) => {
               id="1636"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 

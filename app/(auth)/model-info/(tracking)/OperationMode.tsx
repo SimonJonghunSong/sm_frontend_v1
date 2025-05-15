@@ -106,7 +106,6 @@ const OperationMode = ({ formData, onChange }: Props) => {
               id="1698"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
 

@@ -95,7 +95,6 @@ const Sensor = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
             isSwitch
           />
           <SwitchField
@@ -118,7 +117,6 @@ const Sensor = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 titleId="2613~4"
-                isRequired
               />
               <RangeThresholdField
                 id={["2615", "2616"]}
@@ -126,7 +124,6 @@ const Sensor = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 titleId="2615~6"
-                isRequired
                 helperText={
                   lang === "en"
                     ? "High humidity must be higher than low humidity."
@@ -151,14 +148,12 @@ const Sensor = ({ formData, onChange }: Props) => {
             id="2618"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
           <NumericInputField
             id="2619"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
 
@@ -166,7 +161,6 @@ const Sensor = ({ formData, onChange }: Props) => {
             id="2620"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
 

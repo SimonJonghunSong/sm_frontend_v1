@@ -143,21 +143,18 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
               <NumericInputField
                 id="1701"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
               <NumericInputField
                 id="1705"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
                 isSwitch
                 switchDisabled={
                   formData["1711"]?.realValue === "00" ||
@@ -178,7 +175,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
                 isSwitch
                 switchDisabled={
                   formData["1711"]?.realValue === "00" ||
@@ -200,7 +196,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <NumericInputField
@@ -208,7 +203,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
             </Stack>
             <Stack gap={"24px"} flex={1}>
@@ -217,7 +211,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <NumericInputField
@@ -225,7 +218,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <NumericInputField
@@ -233,7 +225,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
                 isSwitch
                 switchDisabled={
                   formData["1705"]?.realValue === "00" ||
@@ -248,7 +239,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
                 isSwitch
                 switchDisabled={
                   formData["1705"]?.realValue === "00" ||
@@ -263,7 +253,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <NumericInputField
@@ -271,7 +260,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <NumericInputField
@@ -279,7 +267,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <NumericInputField
@@ -287,7 +274,6 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
-                isRequired
               />
 
               <SwitchField

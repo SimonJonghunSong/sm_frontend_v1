@@ -142,7 +142,6 @@ const Satellite = ({ formData, onChange }: Props) => {
                 id="1053"
                 formData={formData}
                 onChange={handleChange}
-                isRequired
                 style={{ width: "100%" }}
               />
             </Stack>

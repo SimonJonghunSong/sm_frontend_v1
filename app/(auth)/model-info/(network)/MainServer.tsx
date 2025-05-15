@@ -110,7 +110,6 @@ const MainServer = ({ formData, onChange }: Props) => {
             id="1005"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
             error={!/^[A-Za-z0-9\-.]*$/.test(formData["1005"]?.realValue)}
             helperText={
@@ -124,7 +123,6 @@ const MainServer = ({ formData, onChange }: Props) => {
             id="1006"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
         </Stack>
@@ -134,7 +132,6 @@ const MainServer = ({ formData, onChange }: Props) => {
             id="1007"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
 

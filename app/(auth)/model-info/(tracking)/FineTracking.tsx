@@ -117,14 +117,12 @@ const FineTracking = ({ formData, onChange }: Props) => {
             id="3011"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
 
           <NumericInputField
             id="3012"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
         </Stack>
       )}

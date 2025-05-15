@@ -107,7 +107,6 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
             id="1020"
             formData={formData}
             onChange={handleChange}
-            isRequired
             error={!/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)}
             helperText={
               !/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)
@@ -119,7 +118,6 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
             id="1021"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -127,12 +125,10 @@ const MaintenanceServer = ({ formData, onChange }: Props) => {
             id="1022"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TimeHMA
             id="1023"
             formData={formData}
-            isRequired
             isSwitch
             value={
               formData["1023"]?.realValue

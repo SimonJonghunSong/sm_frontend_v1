@@ -117,7 +117,6 @@ const OBD = ({ formData, onChange }: Props) => {
               id="2002"
               formData={formData}
               onChange={handleChange}
-              isRequired
             />
           </Stack>
         </Stack>

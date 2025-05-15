@@ -115,31 +115,26 @@ const PresenceDevice = ({ formData, onChange }: Props) => {
             id="2571"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2572"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2573"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2574"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2575"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
         </Stack>
         <Stack direction="column" gap={"16px"} flex={1}>
@@ -147,31 +142,26 @@ const PresenceDevice = ({ formData, onChange }: Props) => {
             id="2576"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2577"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2578"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2579"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
           <TextInputField
             id="2580"
             formData={formData}
             onChange={handleChange}
-            isRequired
           />
         </Stack>
       </Stack>

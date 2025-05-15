@@ -113,7 +113,6 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
             id="1956"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
         </Stack>
@@ -123,7 +122,6 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
             id="1957"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
           />
           <SwitchField

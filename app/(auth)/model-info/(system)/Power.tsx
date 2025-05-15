@@ -106,7 +106,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -114,7 +113,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -122,7 +120,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -131,7 +128,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -139,7 +135,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -147,7 +142,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -155,7 +149,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           <NumericInputField
@@ -163,7 +156,6 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            isRequired
           />
 
           {!!formData["1944"] && (
@@ -181,14 +173,12 @@ const Power = ({ formData, onChange }: Props) => {
                     id="1945"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                   <NumericInputField
                     id="1946"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   />
                 </>
@@ -213,7 +203,6 @@ const Power = ({ formData, onChange }: Props) => {
                     id="1950"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                   /> */}
                 </>
@@ -236,7 +225,6 @@ const Power = ({ formData, onChange }: Props) => {
                     id="1953"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                     isSwitch
                   />
@@ -244,7 +232,6 @@ const Power = ({ formData, onChange }: Props) => {
                     id="1954"
                     formData={formData}
                     onChange={handleChange}
-                    isRequired
                     style={{ width: "100%" }}
                     isSwitch
                   />
@@ -257,7 +244,6 @@ const Power = ({ formData, onChange }: Props) => {
             id="1959"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
             isSwitch
           />

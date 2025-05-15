@@ -116,7 +116,6 @@ const Ble = ({ formData, onChange }: Props) => {
               id="4020"
               formData={formData}
               onChange={handleChange}
-              isRequired
               isSwitch
               style={{ width: "100%" }}
             />
@@ -124,7 +123,6 @@ const Ble = ({ formData, onChange }: Props) => {
             <SelectField
               id="4028"
               formData={formData}
-              isRequired
               onChange={handleChange}
               style={{ width: "100%" }}
             />
@@ -140,21 +138,18 @@ const Ble = ({ formData, onChange }: Props) => {
               id="4012"
               formData={formData}
               onChange={handleChange}
-              isRequired
               style={{ width: "100%" }}
             />
             <NumericInputField
               id="4026"
               formData={formData}
               onChange={handleChange}
-              isRequired
               style={{ width: "100%" }}
             />
             <NumericInputField
               id="4027"
               formData={formData}
               onChange={handleChange}
-              isRequired
               style={{ width: "100%" }}
             />
           </Stack>
@@ -164,7 +159,6 @@ const Ble = ({ formData, onChange }: Props) => {
               id="4000"
               formData={formData}
               onChange={handleChange}
-              isRequired
               style={{ width: "100%" }}
             />
 
@@ -173,7 +167,6 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               isSwitch
-              isRequired
               style={{ width: "100%" }}
             />
 
@@ -182,7 +175,6 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               isSwitch
-              isRequired
               style={{ width: "100%" }}
             />
 
@@ -191,7 +183,6 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               isSwitch
-              isRequired
               style={{ width: "100%" }}
             />
 
@@ -200,7 +191,6 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               isSwitch
-              isRequired
               style={{ width: "100%" }}
             />
           </Stack>

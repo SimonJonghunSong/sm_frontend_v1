@@ -133,7 +133,6 @@ const Password = ({ formData, onChange }: Props) => {
               <InputBox.Number>3001</InputBox.Number>
             </Stack>
             <TextField
-              required
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -170,7 +169,6 @@ const Password = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             type="password"
-            isRequired
             error={
               formData["3002"]?.realValue.length < 6 ||
               formData["3002"]?.realValue.length > 18
