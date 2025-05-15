@@ -256,7 +256,6 @@ export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   const { sendFormData } = useSendFormData();
-  const [dataLoadToggle, setDataLoadToggle] = useState(false);
 
   // data
   const [searchSectionData, setSearchSectionData] = useState<{
@@ -288,25 +287,6 @@ export default function DeviceInfoPage() {
   const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
 
-  const [stt, setStt] = useState<{
-    s_assigns: AssignItem[];
-    m_assigns: AssignItem[];
-    l_assigns: AssignItem[];
-  }>({
-    s_assigns: [],
-    m_assigns: [],
-    l_assigns: [],
-  });
-  const [alt, setAlt] = useState<{
-    s_assigns: AssignItem[];
-    m_assigns: AssignItem[];
-    l_assigns: AssignItem[];
-  }>({
-    s_assigns: [],
-    m_assigns: [],
-    l_assigns: [],
-  });
-
   const handleTabChange = (tab: string) => {
     if (tab === "CMD Tool") {
       toggleOpen();
@@ -323,9 +303,6 @@ export default function DeviceInfoPage() {
   const handleReboot = () => {
     console.log("reboot!!!");
   };
-
-  console.log("stt 333 :::", stt);
-  console.log("alt 333 :::", alt);
 
   const renderContent = () => {
     switch (tab) {
@@ -348,10 +325,6 @@ export default function DeviceInfoPage() {
             csvData={csvData}
             formData={formData}
             setFormData={setFormData}
-            setStt={setStt}
-            setAlt={setAlt}
-            sttFormData={stt}
-            altFormData={alt}
           />
         );
       case "Tracking":
@@ -547,23 +520,6 @@ export default function DeviceInfoPage() {
     fetchJsonData();
   }, [tab, fetchJsonData]);
 
-  useEffect(() => {
-    const sttData = originData.find(
-      (item) => Object.keys(item)[0] === "ASSIGN HEADER(STT)"
-    );
-    const altData = originData.find(
-      (item) => Object.keys(item)[0] === "ASSIGN HEADER(ALT)"
-    );
-
-    console.log("originData UE :::", originData);
-
-    console.log("sttData UE ::::", sttData);
-    console.log("altData UE ::::", altData);
-
-    setStt(flattenAssignData(sttData?.["ASSIGN HEADER(STT)"]));
-    setAlt(flattenAssignData(altData?.["ASSIGN HEADER(ALT)"]));
-  }, [originData, dataLoadToggle]);
-
   return (
     <>
       {isLoading && <FullLoading />}
@@ -602,7 +558,6 @@ export default function DeviceInfoPage() {
               );
 
               sendFormData(fieldValues);
-              setDataLoadToggle((prev) => !prev);
             }}
           />
           {renderContent()}
