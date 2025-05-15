@@ -169,7 +169,7 @@ export default function ModelInfoController({
       targetProt.modelVersion?.split("_")[
         targetProt.modelVersion?.split("_").length - 1
       ];
-
+    setModelNameState(targetProt.imei);
     setImei(targetProt.imei);
     setModelNameFromModelInfoStore(targetModelName);
     setFwVerFromModelInfoStore(targetFwVer);
