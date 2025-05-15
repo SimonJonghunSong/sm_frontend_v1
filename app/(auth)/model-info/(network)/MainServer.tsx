@@ -117,6 +117,7 @@ const MainServer = ({ formData, onChange }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
+            isRequired
           />
 
           <NumericInputField
@@ -124,6 +125,7 @@ const MainServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isRequired
           />
         </Stack>
 
@@ -133,6 +135,7 @@ const MainServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isRequired
           />
 
           <Stack gap={"16px"}>
@@ -145,6 +148,7 @@ const MainServer = ({ formData, onChange }: Props) => {
                 formData["1011"]?.realValue !== "0" &&
                 formData["1011"]?.realValue !== "00"
               }
+              isRequired
             />
 
             {formData["1011"]?.realValue !== "0" &&

@@ -13,6 +13,7 @@ interface SwitchFieldProps {
   onChange: (id: string, value: string) => void;
   style?: React.CSSProperties;
   customChecked?: boolean;
+  isRequired?: boolean;
 }
 
 const SwitchField = ({
@@ -21,6 +22,7 @@ const SwitchField = ({
   onChange,
   style,
   customChecked,
+  isRequired,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
@@ -35,7 +37,12 @@ const SwitchField = ({
       style={style}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>{FIELD_VALIDATIONS[id].title[lang]}</InputBox.Title>
+        <InputBox.Title>
+          {FIELD_VALIDATIONS[id].title[lang]}
+          {isRequired && (
+            <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
+          )}
+        </InputBox.Title>
         <InputBox.Info
           tooltipText={
             <span style={{ whiteSpace: "pre-wrap" }}>

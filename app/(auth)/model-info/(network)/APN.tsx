@@ -96,6 +96,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isRequired
           />
 
           <TextInputField
@@ -109,6 +110,7 @@ const Network = ({ formData, onChange }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
+            isRequired
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -123,6 +125,7 @@ const Network = ({ formData, onChange }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
+            isRequired
           />
 
           <TextInputField
@@ -136,6 +139,7 @@ const Network = ({ formData, onChange }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
+            isRequired
           />
           <TextInputField
             id="1004"
