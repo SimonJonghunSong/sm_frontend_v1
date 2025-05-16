@@ -14,6 +14,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
+import { CR } from "@/src/hooks/useSerial/constant";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Password.en];
 
@@ -22,15 +23,18 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  port: SerialPort;
 }
 
-const Password = ({ formData, onChange }: Props) => {
+const Password = ({ formData, onChange, port }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const { sendFormData, isLoading } = useSendFormData();
+  const responseRef = useRef<string>("");
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -62,8 +66,6 @@ const Password = ({ formData, onChange }: Props) => {
     return true;
   };
 
-  console.log(formData["3001"]?.realValue, "::::");
-
   return (
     <Form
       ref={formRef}
@@ -87,6 +89,21 @@ const Password = ({ formData, onChange }: Props) => {
           }
           return acc;
         }, {});
+
+        port.onbuffervalue = (data) => {
+          responseRef.current += data;
+          if (data.includes(CR)) {
+            if (responseRef.current.includes("OK;30;00#01")) {
+              port.isLock = true;
+            }
+
+            if (responseRef.current.includes("OK;30;00#00")) {
+              port.isLock = false;
+            }
+            responseRef.current = "";
+            port.onbuffervalue = null;
+          }
+        };
 
         // 필드 값들을 사용하여 수행할 작업
         sendFormData(fieldValues);
@@ -114,57 +131,48 @@ const Password = ({ formData, onChange }: Props) => {
         />
       </Stack>
 
-      {formData["3000"]?.realValue === "01" && (
-        <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-          <Stack width={"calc(50% - 8px)"} gap={"8px"}>
-            <Stack direction="row" gap="4px" alignItems="center">
-              <InputBox.Title>
-                {FIELD_VALIDATIONS["3001"].title[lang]}
-              </InputBox.Title>
-              {FIELD_VALIDATIONS["3001"].tooltip?.[lang] && (
-                <InputBox.Info
-                  tooltipText={
-                    <span style={{ whiteSpace: "pre-wrap" }}>
-                      {FIELD_VALIDATIONS["3001"].tooltip[lang]}
-                    </span>
-                  }
-                />
-              )}
-              <InputBox.Number>3001</InputBox.Number>
-            </Stack>
-            <TextField
-              required
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              error={(formData["3001"]?.realValue || "st5656") !== password}
-              helperText={
-                (formData["3001"]?.realValue || "st5656") !== password
-                  ? FIELD_ERRORS["3001"][lang]
-                  : undefined
-              }
-              type={showPassword ? "text" : "password"}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? (
-                      <VisibilityOutlinedIcon sx={{ color: "var(--grey5)" }} />
-                    ) : (
-                      <VisibilityOffOutlinedIcon
-                        sx={{ color: "var(--grey5)" }}
-                      />
-                    )}
-                  </IconButton>
-                ),
-              }}
-            />
+      <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
+        <Stack width={"calc(50% - 8px)"} gap={"8px"}>
+          <Stack direction="row" gap="4px" alignItems="center">
+            <InputBox.Title>
+              {FIELD_VALIDATIONS["3001"].title[lang]}
+            </InputBox.Title>
+            {FIELD_VALIDATIONS["3001"].tooltip?.[lang] && (
+              <InputBox.Info
+                tooltipText={
+                  <span style={{ whiteSpace: "pre-wrap" }}>
+                    {FIELD_VALIDATIONS["3001"].tooltip[lang]}
+                  </span>
+                }
+              />
+            )}
+            <InputBox.Number>3001</InputBox.Number>
           </Stack>
-
+          <TextField
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+              handleChange("3001", e.target.value);
+            }}
+            type={showPassword ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
+                >
+                  {showPassword ? (
+                    <VisibilityOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  ) : (
+                    <VisibilityOffOutlinedIcon sx={{ color: "var(--grey5)" }} />
+                  )}
+                </IconButton>
+              ),
+            }}
+          />
+        </Stack>
+        {formData["3000"]?.realValue === "01" && (
           <TextInputField
             id="3002"
             formData={formData}
@@ -182,8 +190,8 @@ const Password = ({ formData, onChange }: Props) => {
                 : undefined
             }
           />
-        </Stack>
-      )}
+        )}
+      </Stack>
 
       <Stack direction="row" justifyContent="flex-end">
         <Button

@@ -22,9 +22,10 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
+  port: SerialPort;
 }
 
-export default function SystemTab({ formData, setFormData }: Props) {
+export default function SystemTab({ formData, setFormData, port }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -49,7 +50,7 @@ export default function SystemTab({ formData, setFormData }: Props) {
 
       <BackupBattery formData={formData} onChange={handleValueChange} />
 
-      <Password formData={formData} onChange={handleValueChange} />
+      <Password formData={formData} onChange={handleValueChange} port={port} />
 
       <Device formData={formData} onChange={handleValueChange} />
 
