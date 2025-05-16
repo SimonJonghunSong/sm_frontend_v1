@@ -25,6 +25,14 @@ export default function GNSSInformation({ lat, lng }: Props) {
       <Stack direction="column" flex={1}>
         <Box sx={{ width: "100%", height: "400px" }}>
           <Maps
+            markers={[
+              {
+                position: {
+                  lat: Number(lat),
+                  lng: Number(lng),
+                },
+              },
+            ]}
             apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string}
             center={{
               lat: Number(lat),
