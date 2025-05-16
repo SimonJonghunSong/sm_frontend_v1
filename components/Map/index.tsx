@@ -71,6 +71,7 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
     const { isLoaded, loadError } = useLoadScript({
       googleMapsApiKey: apiKey,
       libraries: libraries as unknown as Libraries,
+      language: "en",
     });
 
     const mapRef = useRef<google.maps.Map | null>(null);
