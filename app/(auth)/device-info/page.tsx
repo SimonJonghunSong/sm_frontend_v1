@@ -271,7 +271,13 @@ export default function DeviceInfoPage() {
       case "Network":
         return <NetworkTab formData={formData} setFormData={setFormData} />;
       case "System":
-        return <SystemTab formData={formData} setFormData={setFormData} />;
+        return (
+          <SystemTab
+            formData={formData}
+            setFormData={setFormData}
+            port={currentPort.port}
+          />
+        );
       case "Report":
         return <ReportTab formData={formData} setFormData={setFormData} />;
       case "Tracking":
