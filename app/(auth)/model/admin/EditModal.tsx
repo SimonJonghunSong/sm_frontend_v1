@@ -92,7 +92,7 @@ const initialState: FormState = {
   hide: false,
 };
 
-const MAX_IMAGE_SIZE_MB = 5;
+const MAX_IMAGE_SIZE_MB = 3;
 const MAX_IMAGE_SIZE_BYTES = MAX_IMAGE_SIZE_MB * 1024 * 1024;
 
 interface Props {
@@ -168,7 +168,7 @@ export default function EditModal({
     if (!imageFile) return;
 
     if (imageFile.size > MAX_IMAGE_SIZE_BYTES) {
-      openErrorPopup(t("popup.model.add_model_pop_up.image_size_exceeds_5mb"));
+      openErrorPopup(t("popup.model.add_model_pop_up.image_size_exceeds_3mb"));
       e.target.value = ""; // 파일 선택 취소
       return;
     }
@@ -342,7 +342,7 @@ export default function EditModal({
               </Stack>
               <span className="text-grey-5">
                 {t(
-                  "model.edit_model_pop_up.png_or_jpg_only_1000x1000px_recommended_max_5mb"
+                  "model.edit_model_pop_up.png_or_jpg_only_1000x1000px_recommended_max_3mb"
                 )}
               </span>
             </Stack>
@@ -644,7 +644,7 @@ export default function EditModal({
         <InputBox>
           <InputBox.Head>
             <InputBox.Title>
-              {t("model.edit_model_pop_up.setting_file_*")}
+              {t("model.edit_model_pop_up.json_file")}
               <i>*</i>
             </InputBox.Title>
           </InputBox.Head>

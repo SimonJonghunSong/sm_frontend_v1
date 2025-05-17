@@ -322,7 +322,9 @@
         "rechargeable-battery": "Bateria recarregável",
         "dpa": "APD",
         "backup-battery": "Bateria reserva"
-      }
+      },
+      "json_file": "Arquivo json",
+      "png_or_jpg_only_1000x1000px_recommended_max_3mb": "PNG ou JPG SOMENTE, 1000X1000PX RECOMENDADO, MAX 3MB"
     },
     "edit_model_pop_up": {
       "edit_model": "Editar Modelo",
@@ -364,7 +366,9 @@
       "setting_file_*": "Arquivo de Configuração",
       "hide_from_list": "Ocultar da Lista",
       "cancel": "Cancelar",
-      "save": "Salvar"
+      "save": "Salvar",
+      "png_or_jpg_only_1000x1000px_recommended_max_3mb": "PNG ou JPG SOMENTE, 1000X1000PX RECOMENDADO, MAX 3MB",
+      "json_file": "Arquivo json"
     }
   },
   "device": {
@@ -1672,7 +1676,8 @@
         "this_model_name_is_already_registered": "Este nome de modelo já está registrado.",
         "are_you_sure_you_want_to_leave_this_page_without_adding?": "Você tem certeza de que deseja sair desta página sem adicionar?",
         "the_image_file_size_is_too_large": "O arquivo é muito grande. \nFaça o upload de um arquivo menor que 5 MB.",
-        "image_size_exceeds_5mb": "O tamanho da imagem excede 5MB."
+        "image_size_exceeds_5mb": "O tamanho da imagem excede 5MB.",
+        "image_size_exceeds_3mb": "O tamanho da imagem excede 3MB."
       },
       "edit_model_pop_up": {
         "saved_successfully!": "Salvo com sucesso!",
