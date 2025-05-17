@@ -4,6 +4,7 @@ import { FormField } from "../page";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
+import EditDot from "app/(auth)/model-info/(components)/EditDot";
 
 interface SwitchFieldProps {
   id: string;
@@ -14,6 +15,7 @@ interface SwitchFieldProps {
   style?: React.CSSProperties;
   customChecked?: boolean;
   isRequired?: boolean;
+  isDirty?: boolean;
 }
 
 const SwitchField = ({
@@ -23,6 +25,7 @@ const SwitchField = ({
   style,
   customChecked,
   isRequired,
+  isDirty = false,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
@@ -51,6 +54,7 @@ const SwitchField = ({
           }
         />
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
       <SwitchPrimary
         onChange={(e) => onChange(id, e.target.checked ? "01" : "00")}

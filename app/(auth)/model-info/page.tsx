@@ -123,6 +123,7 @@ export interface FormField {
   realValue: string;
   list: string[] | null;
   alert_id: string | null;
+  beforeValue: string;
   text_num?: string;
   labelList?: { [key: string]: string };
 }
@@ -200,6 +201,7 @@ const transformFieldData = (
       labelList: optionsLabelList,
       alert_id: fieldData.alert_id,
       text_num: fieldData.text_num,
+      beforeValue: realValue,
     },
   ];
 };
@@ -351,8 +353,6 @@ export default function DeviceInfoPage() {
         return !!formData[item];
       });
 
-      console.log("hasBluetooth ::::", hasBluetooth);
-
       if (hasNetwork === -1) {
         excludeMenus.push(MENUS.Network.en);
       }
@@ -482,8 +482,6 @@ export default function DeviceInfoPage() {
   const getFormDataByProfile = (profile: string) => {
     const newFormData = { ...formData };
 
-    console.log("newFormData ::::", newFormData);
-
     // Split profile data into lines and process each line
     profile.split("\n").forEach((line) => {
       // Skip empty lines
@@ -526,10 +524,7 @@ export default function DeviceInfoPage() {
           let realValueProps = value;
           let textNumProps = undefined;
 
-          console.log("isAssign :::", isAssign);
           if (isAssign) {
-            console.log("isAssign value ::::", value);
-
             textNumProps = `${Number(value)}`;
             valueProps = value === "00" ? "0" : "1";
             realValueProps = valueProps;
@@ -575,8 +570,6 @@ export default function DeviceInfoPage() {
   const uploadProfileMutation = useMutation({
     mutationFn: uploadProfile,
   });
-
-  console.log("originData2222 ::::", originData);
 
   useEffect(() => {
     console.log("reload originData :::::::");
@@ -675,6 +668,7 @@ export default function DeviceInfoPage() {
                       realValue: newFormData[key].realValue,
                       text_num: newFormData[key].text_num,
                       alert_id: newFormData[key].alert_id,
+                      beforeValue: newFormData[key].realValue,
                     };
                   }
 

@@ -4,6 +4,7 @@ import { Stack } from "@mui/material";
 import CheckboxComp from "./CheckboxComp";
 import { FormField } from "../page";
 import { FIELD_VALIDATIONS } from "constants/field";
+import EditDot from "./EditDot";
 
 interface Props {
   id: string;
@@ -20,6 +21,7 @@ interface Props {
     TEXT_PT_ITEM_CONTENT: string;
   };
   hasAllCheckbox?: boolean;
+  isDirty?: boolean;
 }
 
 export default function CheckboxField({
@@ -31,6 +33,7 @@ export default function CheckboxField({
   isSwitch,
   style,
   hasAllCheckbox = false,
+  isDirty = false,
 }: Props) {
   const lang = useLangStore((state) => state.lang);
 
@@ -52,6 +55,7 @@ export default function CheckboxField({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
       <CheckboxComp
         value={formData[id]?.realValue}

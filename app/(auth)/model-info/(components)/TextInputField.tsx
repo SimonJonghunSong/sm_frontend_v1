@@ -6,6 +6,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
+import EditDot from "./EditDot";
 
 interface TextInputFieldProps {
   id: string;
@@ -18,6 +19,7 @@ interface TextInputFieldProps {
   error?: boolean;
   helperText?: string;
   type?: HTMLInputTypeAttribute;
+  isDirty?: boolean;
 }
 
 const TextInputField = ({
@@ -29,6 +31,7 @@ const TextInputField = ({
   error = false,
   helperText,
   type = "text",
+  isDirty = false,
 }: TextInputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
@@ -55,6 +58,7 @@ const TextInputField = ({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
       <TextField
         value={formData[id].realValue}

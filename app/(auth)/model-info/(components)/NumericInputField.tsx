@@ -5,6 +5,7 @@ import { Stack, TextField } from "@mui/material";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
+import EditDot from "./EditDot";
 
 interface InputFieldProps {
   id: string;
@@ -19,6 +20,7 @@ interface InputFieldProps {
   customError?: boolean;
   customErrorMessage?: string;
   isUnderbarId?: boolean; // 1670 같은 중복으로 인해서 추가된 속성
+  isDirty?: boolean;
 }
 
 const NumericInputField = ({
@@ -32,6 +34,7 @@ const NumericInputField = ({
   customError,
   customErrorMessage,
   isUnderbarId,
+  isDirty = false,
 }: InputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
@@ -87,6 +90,7 @@ const NumericInputField = ({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (

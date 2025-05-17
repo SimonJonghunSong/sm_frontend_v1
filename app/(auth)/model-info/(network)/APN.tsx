@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -16,15 +16,25 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.APN.en];
 
-const Network = ({ formData, onChange }: Props) => {
+const Network = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldsId.includes(key) &&
+        formData[key].realValue !== formData[key].beforeValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -82,7 +92,7 @@ const Network = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -97,6 +107,7 @@ const Network = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isRequired
+            isDirty={isDirtyFields.includes("1000")}
           />
 
           <TextInputField
@@ -111,6 +122,7 @@ const Network = ({ formData, onChange }: Props) => {
                 : undefined
             }
             isRequired
+            isDirty={isDirtyFields.includes("1001")}
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -126,6 +138,7 @@ const Network = ({ formData, onChange }: Props) => {
                 : undefined
             }
             isRequired
+            isDirty={isDirtyFields.includes("1002")}
           />
 
           <TextInputField
@@ -140,6 +153,7 @@ const Network = ({ formData, onChange }: Props) => {
                 : undefined
             }
             isRequired
+            isDirty={isDirtyFields.includes("1003")}
           />
           <TextInputField
             id="1004"
@@ -147,6 +161,7 @@ const Network = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             type="password"
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1004")}
           />
         </Stack>
       </Stack>
@@ -156,7 +171,7 @@ const Network = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>
