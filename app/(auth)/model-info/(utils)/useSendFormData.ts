@@ -17,7 +17,12 @@ export default function useSendFormData() {
     if (setFormData) {
       setFormData((prev) =>
         Object.entries(prev).reduce((acc, [key, value]) => {
-          acc[key] = { ...value, beforeValue: value.realValue };
+          acc[key] = {
+            ...value,
+            beforeValue: value.realValue,
+            beforeAlertId: value.alert_id,
+            beforeTextNum: value.text_num,
+          };
           return acc;
         }, {} as { [key: string]: FormField })
       );

@@ -124,6 +124,8 @@ export interface FormField {
   list: string[] | null;
   alert_id: string | null;
   beforeValue: string;
+  beforeAlertId?: string | null;
+  beforeTextNum?: string | null;
   text_num?: string;
   labelList?: { [key: string]: string };
 }
@@ -202,6 +204,8 @@ const transformFieldData = (
       alert_id: fieldData.alert_id,
       text_num: fieldData.text_num,
       beforeValue: realValue,
+      beforeAlertId: fieldData.alert_id,
+      beforeTextNum: fieldData.text_num,
     },
   ];
 };
@@ -523,6 +527,7 @@ export default function DeviceInfoPage() {
           let valueProps = value;
           let realValueProps = value;
           let textNumProps = undefined;
+          let alertIdProps = undefined;
 
           if (isAssign) {
             textNumProps = `${Number(value)}`;
@@ -531,8 +536,11 @@ export default function DeviceInfoPage() {
           }
 
           if (isAlertId) {
+            const alertIdValue = parseInt(value.slice(2), 16);
+
             valueProps = value?.[1] || "0";
             realValueProps = valueProps;
+            alertIdProps = alertIdValue;
           }
 
           if (isList) {
@@ -546,6 +554,10 @@ export default function DeviceInfoPage() {
               value: valueProps,
               realValue: realValueProps,
               text_num: textNumProps,
+              alert_id: alertIdProps,
+              beforeValue: realValueProps,
+              beforeTextNum: textNumProps,
+              beforeAlertId: alertIdProps,
             },
           });
 
@@ -554,6 +566,10 @@ export default function DeviceInfoPage() {
             value: valueProps,
             realValue: realValueProps,
             text_num: textNumProps,
+            alert_id: alertIdProps,
+            beforeValue: realValueProps,
+            beforeTextNum: textNumProps,
+            beforeAlertId: alertIdProps,
           };
         } else {
           console.log(`Key ${key} not found in formData`);
@@ -668,7 +684,6 @@ export default function DeviceInfoPage() {
                       realValue: newFormData[key].realValue,
                       text_num: newFormData[key].text_num,
                       alert_id: newFormData[key].alert_id,
-                      beforeValue: newFormData[key].realValue,
                     };
                   }
 

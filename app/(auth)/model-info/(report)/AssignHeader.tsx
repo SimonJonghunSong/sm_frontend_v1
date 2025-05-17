@@ -203,6 +203,18 @@ export default function AssignHeader({
 
   const parseData = parseAssigns(csvData);
 
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        (tab === "stt"
+          ? [...sttSmallIds, ...sttMediumIds, ...sttLargeIds].includes(key)
+          : [...altSmallIds, ...altMediumIds, ...altLargeIds].includes(key)) &&
+        (formData[key].realValue !== formData[key].beforeValue ||
+          formData[key].text_num !== formData[key].beforeTextNum)
+      );
+    });
+  }, [tab, formData]);
+
   // stt
   const sttData = parseData;
   const selectedSttData = useMemo(() => {
@@ -268,7 +280,7 @@ export default function AssignHeader({
       return acc;
     }, {});
 
-    sendFormData(fieldValues);
+    sendFormData(fieldValues, setFormData);
   };
   const handleUpdateStt = ({
     s_assigns,
@@ -506,7 +518,7 @@ export default function AssignHeader({
       return acc;
     }, {});
 
-    sendFormData(fieldValues);
+    sendFormData(fieldValues, setFormData);
   };
   const handleUpdateAlt = ({
     s_assigns,
@@ -755,7 +767,7 @@ export default function AssignHeader({
           color="secondary"
           style={{ alignSelf: "flex-end" }}
           variant="contained"
-          // disabled={tab === "stt" ? sttPageSendDisabled : altPageSendDisabled}
+          disabled={isDirtyFields.length === 0}
           onClick={tab === "stt" ? handleSaveStt : handleSaveAlt}
         >
           {t("common.save")}
