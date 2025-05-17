@@ -2431,13 +2431,52 @@ export const SEARCH_SECTION = {
   },
 };
 
+export const SEARCH_SECTION_WITHOUT_DEVICE = {
+  en: {
+    ...NETWORK_SECTION.en,
+    ...SYSTEM_SECTION.en,
+    ...REPORT_SECTION.en,
+    ...ACCESSORIES_SECTION.en,
+    ...TRACKING_SECTION.en,
+    ...DRIVER_SECTION.en,
+    ...BLUETOOTH_SECTION.en,
+    ...RF_SECTION.en,
+    ...DEVICE_STATUS_SECTION.en,
+  },
+  es: {
+    ...NETWORK_SECTION.es,
+    ...SYSTEM_SECTION.es,
+    ...REPORT_SECTION.es,
+    ...ACCESSORIES_SECTION.es,
+    ...TRACKING_SECTION.es,
+    ...DRIVER_SECTION.es,
+    ...BLUETOOTH_SECTION.es,
+    ...RF_SECTION.es,
+    ...DEVICE_STATUS_SECTION.es,
+  },
+  pt: {
+    ...NETWORK_SECTION.pt,
+    ...SYSTEM_SECTION.pt,
+    ...REPORT_SECTION.pt,
+    ...ACCESSORIES_SECTION.pt,
+    ...TRACKING_SECTION.pt,
+    ...DRIVER_SECTION.pt,
+    ...BLUETOOTH_SECTION.pt,
+    ...RF_SECTION.pt,
+    ...DEVICE_STATUS_SECTION.pt,
+  },
+};
+
 export const formDataToSearchSectionData = (
   formData: {
     [key: string]: FormField;
   },
-  lang: Lang
+  lang: Lang,
+  withoutDevice = false
 ) => {
-  return Object.entries(SEARCH_SECTION[lang]).reduce((acc, [key, value]) => {
+  return Object.entries(
+    withoutDevice ? SEARCH_SECTION_WITHOUT_DEVICE[lang] : SEARCH_SECTION[lang]
+  ).reduce((acc, [key, value]) => {
     const fields = value.fields;
     const searchText = value.searchText;
     const tab = value.tab;

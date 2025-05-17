@@ -131,11 +131,10 @@ export default function SearchModal({
     if (searchTerm) {
       const sectionResultsEntries = Object.entries(sectionData).filter(
         ([key, value]) => {
-          return (
-            value.fields.includes("ALL_SEARCH") ||
-            value.searchText.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            key.toLowerCase().includes(searchTerm.toLowerCase())
-          );
+          return value.key
+            .toLowerCase()
+            .replaceAll(" ", "")
+            .includes(searchTerm.toLowerCase().replaceAll(" ", ""));
         }
       );
 
@@ -154,7 +153,10 @@ export default function SearchModal({
       const paramResults = [];
       const paramResultsEntries = Object.entries(paramData).filter(
         ([key, value]) => {
-          return key.toLowerCase().includes(searchTerm.toLowerCase());
+          return key
+            .toLowerCase()
+            .replaceAll(" ", "")
+            .includes(searchTerm.toLowerCase().replaceAll(" ", ""));
         }
       );
 

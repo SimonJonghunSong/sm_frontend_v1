@@ -503,7 +503,9 @@ export default function DeviceInfoPage() {
       const formDataValues = transformOriginData(originData);
 
       setFormData(formDataValues);
-      setSearchSectionData(formDataToSearchSectionData(formDataValues, lang));
+      setSearchSectionData(
+        formDataToSearchSectionData(formDataValues, lang, true)
+      );
       setSearchParamData(getSearchParamsData(formDataValues, lang));
       setCommandData(extractCommandData(originData));
     }
