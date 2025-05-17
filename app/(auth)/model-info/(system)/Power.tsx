@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -17,13 +17,23 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Power = ({ formData, onChange }: Props) => {
+const Power = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].realValue !== formData[key].beforeValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -80,7 +90,7 @@ const Power = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -94,18 +104,21 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1930")}
           />
           <SwitchField
             id="1931"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1931")}
           />
           <NumericInputField
             id="1933"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1933")}
           />
 
           <NumericInputField
@@ -113,6 +126,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1934")}
           />
 
           <NumericInputField
@@ -120,6 +134,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1935")}
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -128,6 +143,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1939")}
           />
 
           <NumericInputField
@@ -135,6 +151,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1940")}
           />
 
           <NumericInputField
@@ -142,6 +159,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1941")}
           />
 
           <NumericInputField
@@ -149,6 +167,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1942")}
           />
 
           <NumericInputField
@@ -156,6 +175,7 @@ const Power = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1943")}
           />
 
           {!!formData["1944"] && (
@@ -165,6 +185,7 @@ const Power = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1944")}
               />
 
               {formData["1944"]?.realValue === "01" && (
@@ -174,12 +195,14 @@ const Power = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1945")}
                   />
                   <NumericInputField
                     id="1946"
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1946")}
                   />
                 </>
               )}
@@ -193,6 +216,7 @@ const Power = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1949")}
               />
 
               {formData["1949"]?.realValue === "01" && (
@@ -204,7 +228,7 @@ const Power = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
-                  /> */}
+                    /> */}
                 </>
               )}
             </Stack>
@@ -217,6 +241,7 @@ const Power = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1952")}
               />
 
               {formData["1952"]?.realValue === "01" && (
@@ -234,6 +259,7 @@ const Power = ({ formData, onChange }: Props) => {
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isSwitch
+                    isDirty={isDirtyFields.includes("1954")}
                   />
                 </>
               )}
@@ -246,6 +272,7 @@ const Power = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("1959")}
           />
         </Stack>
       </Stack>
@@ -255,7 +282,7 @@ const Power = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>

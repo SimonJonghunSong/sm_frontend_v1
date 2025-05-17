@@ -37,23 +37,59 @@ export default function SystemTab({ formData, setFormData }: Props) {
   };
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Ignition formData={formData} onChange={handleValueChange} />
+      <Ignition
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Motion formData={formData} onChange={handleValueChange} />
+      <Motion
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <DriverPattern formData={formData} onChange={handleValueChange} />
+      <DriverPattern
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Power formData={formData} onChange={handleValueChange} />
+      <Power
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <BackupBattery formData={formData} onChange={handleValueChange} />
+      <BackupBattery
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Password formData={formData} onChange={handleValueChange} />
+      <Password
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Device formData={formData} onChange={handleValueChange} />
+      <Device
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <TdiOdometer formData={formData} onChange={handleValueChange} />
+      <TdiOdometer
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <McuUpdate formData={formData} onChange={handleValueChange} />
+      <McuUpdate
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }

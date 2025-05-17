@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -18,13 +18,23 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Device = ({ formData, onChange }: Props) => {
+const Device = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].realValue !== formData[key].beforeValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -82,7 +92,7 @@ const Device = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -99,18 +109,21 @@ const Device = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2704")}
           />
           <SwitchField
             id="2705"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2705")}
           />
           <SwitchField
             id="2706"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2706")}
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -119,6 +132,7 @@ const Device = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2707")}
           />
 
           <SwitchField
@@ -126,12 +140,14 @@ const Device = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2708")}
           />
           <SwitchField
             id="2709"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2709")}
           />
         </Stack>
       </Stack>
@@ -141,7 +157,7 @@ const Device = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>

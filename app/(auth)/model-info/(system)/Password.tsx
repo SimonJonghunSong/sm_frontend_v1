@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, IconButton, Stack, TextField } from "@mui/material";
@@ -14,6 +14,7 @@ import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import { hasFormDataFields } from "../(utils)/@index";
 import useSendFormData from "../(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Password.en];
 
@@ -22,15 +23,26 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Password = ({ formData, onChange }: Props) => {
+const Password = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].realValue !== formData[key].beforeValue
+      );
+    });
+  }, [formData]);
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string, selectValue?: string) => {
@@ -89,7 +101,7 @@ const Password = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -107,6 +119,7 @@ const Password = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>3000</InputBox.Number>
+          {isDirtyFields.includes("3000") && <EditDot />}
         </Stack>
         <SwitchPrimary
           onChange={(e) => handleChange("3000", e.target.checked ? "01" : "00")}
@@ -131,6 +144,7 @@ const Password = ({ formData, onChange }: Props) => {
                 />
               )}
               <InputBox.Number>3001</InputBox.Number>
+              {isDirtyFields.includes("3001") && <EditDot />}
             </Stack>
             <TextField
               value={password}
@@ -180,6 +194,7 @@ const Password = ({ formData, onChange }: Props) => {
                 ? FIELD_ERRORS["3002"].en
                 : undefined
             }
+            isDirty={isDirtyFields.includes("3002")}
           />
         </Stack>
       )}
@@ -189,7 +204,7 @@ const Password = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>
