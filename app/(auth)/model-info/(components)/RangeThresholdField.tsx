@@ -6,6 +6,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
+import EditDot from "./EditDot";
 
 interface RangeThresholdFieldProps {
   id: [string, string]; // [minId, maxId]
@@ -20,6 +21,7 @@ interface RangeThresholdFieldProps {
   unit?: string;
   helperText?: string;
   titleId?: string; // Optional ID for title/label display
+  isDirty?: boolean;
 }
 
 const RangeThresholdField = ({
@@ -33,6 +35,7 @@ const RangeThresholdField = ({
   unit = "",
   helperText,
   titleId,
+  isDirty,
 }: RangeThresholdFieldProps) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -178,6 +181,7 @@ const RangeThresholdField = ({
           />
         )}
         <InputBox.Number>{displayId}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (

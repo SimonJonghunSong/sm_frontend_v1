@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -18,13 +18,24 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const SerialRs232 = ({ formData, onChange }: Props) => {
+const SerialRs232 = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(
+    () =>
+      Object.keys(formData).filter(
+        (key) =>
+          fieldIds.includes(key) &&
+          formData[key].beforeValue !== formData[key].realValue
+      ),
+    [formData]
+  );
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -82,7 +93,7 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -98,6 +109,7 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1950")}
             isSwitch
           />
 
@@ -106,6 +118,7 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1951")}
             isSwitch
           />
 
@@ -114,6 +127,7 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1956")}
           />
         </Stack>
 
@@ -123,12 +137,14 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1957")}
           />
           <SwitchField
             id="1958"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1958")}
           />
         </Stack>
       </Stack>
@@ -138,7 +154,7 @@ const SerialRs232 = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>

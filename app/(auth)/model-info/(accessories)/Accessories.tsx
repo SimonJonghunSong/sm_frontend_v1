@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -19,13 +19,20 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Accessories = ({ formData, onChange }: Props) => {
+const Accessories = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter(
+    (key) =>
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+  );
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -83,7 +90,7 @@ const Accessories = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -99,6 +106,7 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("0610")}
           />
           <SelectField
             id="2300"
@@ -106,6 +114,7 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2300")}
           />
           <SelectField
             id="2301"
@@ -113,6 +122,7 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2301")}
           />
           <SelectField
             id="2302"
@@ -120,6 +130,7 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2302")}
           />
           <SelectField
             id="2303"
@@ -133,12 +144,14 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2304")}
           />
           <NumericInputField
             id="2305"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2305")}
           />
 
           <SelectField
@@ -147,24 +160,28 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2306")}
           />
           <NumericInputField
             id="2307"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2307")}
           />
           <NumericInputField
             id="2308"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2308")}
           />
           <NumericInputField
             id="2309"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2309")}
           />
 
           <NumericInputField
@@ -172,6 +189,7 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2310")}
           />
         </Stack>
 
@@ -181,12 +199,14 @@ const Accessories = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2311")}
           />
           <SwitchField
             id="2312"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2312")}
           />
 
           <DualCheckboxField
@@ -204,6 +224,7 @@ const Accessories = ({ formData, onChange }: Props) => {
               es: t("configuration.accessories.rising_edge"),
               pt: t("configuration.accessories.rising_edge"),
             }}
+            isDirty={isDirtyFields.includes("2313")}
           />
 
           <NumericInputField
@@ -212,6 +233,7 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2314")}
           />
 
           <DualCheckboxField
@@ -229,6 +251,7 @@ const Accessories = ({ formData, onChange }: Props) => {
               es: t("configuration.accessories.rising_edge"),
               pt: t("configuration.accessories.rising_edge"),
             }}
+            isDirty={isDirtyFields.includes("2315")}
           />
 
           <NumericInputField
@@ -237,42 +260,49 @@ const Accessories = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2316")}
           />
           <NumericInputField
             id="2330"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2330")}
           />
           <NumericInputField
             id="2331"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2331")}
           />
           <NumericInputField
             id="2332"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2332")}
           />
           <NumericInputField
             id="2333"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2333")}
           />
           <NumericInputField
             id="2334"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2334")}
           />
           <NumericInputField
             id="2336"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2336")}
           />
         </Stack>
       </Stack>
@@ -282,7 +312,7 @@ const Accessories = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>

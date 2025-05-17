@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -20,6 +20,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 const errorMessages = {
   longBytes: {
@@ -34,11 +35,18 @@ const errorMessages = {
   },
 };
 
-const WireSettings = ({ formData, onChange }: Props) => {
+const WireSettings = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter(
+    (key) =>
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+  );
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string, selectValue?: string) => {
@@ -95,7 +103,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -121,6 +129,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
               es: t("configuration.accessories.temperature_sensors"),
               pt: t("configuration.accessories.temperature_sensors"),
             }}
+            isDirty={isDirtyFields.includes("1970")}
           />
 
           <h2>{t("configuration.report.driver_id")}</h2>
@@ -131,6 +140,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             isSwitch
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1971")}
           />
 
           <NumericInputField
@@ -139,6 +149,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             isSwitch
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1972")}
           />
 
           <SwitchField
@@ -146,6 +157,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1973")}
           />
 
           <TextInputField
@@ -169,6 +181,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
                   : undefined
                 : undefined
             }
+            isDirty={isDirtyFields.includes("1974")}
           />
 
           <TextInputField
@@ -192,6 +205,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
                   : undefined
                 : undefined
             }
+            isDirty={isDirtyFields.includes("1975")}
           />
 
           <NumericInputField
@@ -200,6 +214,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("1999")}
           />
         </Stack>
 
@@ -212,6 +227,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1980~1"
+            isDirty={
+              isDirtyFields.includes("1980") || isDirtyFields.includes("1981")
+            }
           />
           <RangeThresholdField
             id={["1983", "1982"]}
@@ -219,6 +237,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1982~3"
+            isDirty={
+              isDirtyFields.includes("1982") || isDirtyFields.includes("1983")
+            }
           />
 
           <RangeThresholdField
@@ -227,6 +248,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1984~5"
+            isDirty={
+              isDirtyFields.includes("1984") || isDirtyFields.includes("1985")
+            }
           />
           <RangeThresholdField
             id={["1987", "1986"]}
@@ -234,6 +258,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1986~7"
+            isDirty={
+              isDirtyFields.includes("1986") || isDirtyFields.includes("1987")
+            }
           />
           <RangeThresholdField
             id={["1989", "1988"]}
@@ -241,6 +268,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1988~9"
+            isDirty={
+              isDirtyFields.includes("1988") || isDirtyFields.includes("1989")
+            }
           />
           <RangeThresholdField
             id={["1991", "1990"]}
@@ -248,6 +278,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1990~1"
+            isDirty={
+              isDirtyFields.includes("1990") || isDirtyFields.includes("1991")
+            }
           />
           <RangeThresholdField
             id={["1993", "1992"]}
@@ -255,6 +288,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1992~3"
+            isDirty={
+              isDirtyFields.includes("1992") || isDirtyFields.includes("1993")
+            }
           />
           <RangeThresholdField
             id={["1995", "1994"]}
@@ -262,6 +298,9 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             titleId="1994~5"
+            isDirty={
+              isDirtyFields.includes("1994") || isDirtyFields.includes("1995")
+            }
           />
 
           <NumericInputField
@@ -270,6 +309,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("1996")}
           />
           <NumericInputField
             id="1997"
@@ -277,6 +317,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("1997")}
           />
           <NumericInputField
             id="1998"
@@ -284,6 +325,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("1998")}
           />
 
           <DualCheckboxField
@@ -301,6 +343,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
               es: "Flanco de subida",
               pt: "Borda de subida",
             }}
+            isDirty={isDirtyFields.includes("2313")}
           />
         </Stack>
       </Stack>
@@ -310,7 +353,7 @@ const WireSettings = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>
