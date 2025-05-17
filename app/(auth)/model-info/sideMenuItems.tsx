@@ -6,12 +6,9 @@ import FlareOutlinedIcon from "@mui/icons-material/FlareOutlined";
 import CompareArrowsOutlinedIcon from "@mui/icons-material/CompareArrowsOutlined";
 import HexagonOutlinedIcon from "@mui/icons-material/HexagonOutlined";
 import PinDropOutlinedIcon from "@mui/icons-material/PinDropOutlined";
-import DriverIcon from "/public/images/driver.svg";
-import Image from "next/image";
 import BluetoothOutlinedIcon from "@mui/icons-material/BluetoothOutlined";
 import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
-import KeyboardCommandKeyOutlinedIcon from "@mui/icons-material/KeyboardCommandKeyOutlined";
-import MonitorOutlinedIcon from "@mui/icons-material/MonitorOutlined";
+import { EditOutlined } from "@mui/icons-material";
 
 export const sideMenuItems = ({
   onClick,
@@ -96,6 +93,13 @@ export const sideMenuItems = ({
     isActive: tab === "RF",
     icon: () => <PodcastsOutlinedIcon />,
     onClick: () => onClick("RF"),
+  },
+  {
+    name: "Edit Profile",
+    href: "#",
+    isActive: tab === "EditProfile",
+    icon: () => <EditOutlined />,
+    onClick: () => onClick("EditProfile"),
   },
   // {
   //   name: "Commands",

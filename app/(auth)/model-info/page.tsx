@@ -36,6 +36,7 @@ import useSendFormData from "app/(auth)/model-info/(utils)/useSendFormData";
 import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
 import { uploadProfile } from "@/src/api/services/profile";
 import { useMutation } from "@tanstack/react-query";
+import EditProfileTab from "app/(auth)/model-info/(tabs)/EditProfileTab";
 const SCROLL_TOP_OFFSET = 140;
 
 export type AssignItem = {
@@ -254,6 +255,7 @@ const extractCommandData = (originData: any[]) => {
 
 export default function DeviceInfoPage() {
   const [isLoading, setIsLoading] = useState(false);
+  const [profileData, setProfileData] = useState<string>("");
 
   const { sendFormData } = useSendFormData();
 
@@ -362,6 +364,15 @@ export default function DeviceInfoPage() {
       //   );
       case "Commands":
         return <CommandTab imei={imei} />;
+      case "EditProfile":
+        return (
+          <EditProfileTab
+            profileData={profileData}
+            setProfileData={setProfileData}
+            formData={formData}
+            setFormData={setFormData}
+          />
+        );
       // case "Geofence":
       //   return (
       //     <GeofenceTab
@@ -481,7 +492,11 @@ export default function DeviceInfoPage() {
     mutationFn: uploadProfile,
   });
 
-  console.log("originData ::::", originData);
+  console.log("originData2222 ::::", originData);
+
+  useEffect(() => {
+    console.log("reload originData :::::::");
+  }, [originData]);
 
   useEffect(() => {
     if (originData) {
@@ -520,6 +535,27 @@ export default function DeviceInfoPage() {
     fetchJsonData();
   }, [tab, fetchJsonData]);
 
+  const {
+    func: { getProfileAllData },
+  } = useProfileWithoutDevice({
+    modelName,
+    modelVersion: fwVer,
+    data: originData,
+  });
+
+  useEffect(() => {
+    if (!originData) return;
+
+    const initProfile = async () => {
+      const profileAllData = await getProfileAllData(originData, false);
+
+      console.log("profileAllData ::::", profileAllData);
+
+      setProfileData(profileAllData.join("\n"));
+    };
+    initProfile();
+  }, [originData]);
+
   return (
     <>
       {isLoading && <FullLoading />}
@@ -557,6 +593,7 @@ export default function DeviceInfoPage() {
                 {}
               );
 
+              setProfileData(profile);
               sendFormData(fieldValues);
             }}
           />

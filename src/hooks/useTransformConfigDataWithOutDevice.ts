@@ -334,11 +334,18 @@ export function useTransformConfigDataWithOutDevice({
 
   const getFormFields = useCallback(
     (tabName: string, fieldName: string) => {
-      const { value, alert_id }: { value: string; alert_id?: string } = formData
+      console.log("formData223 :::", formData);
+
+      const target: { value: string; alert_id?: string } = formData
         .find((item) => {
           return item.tabName === tabName;
         })
-        .fields.find((field) => field.fieldName === fieldName);
+        ?.fields.find((field) => field.fieldName === fieldName);
+
+      if (!target) return { value: "", alert_id: "" };
+
+      const { value, alert_id } = target;
+
       const onChange = (value: string, options?: Partial<Field>) => {
         setOriginData((prev) => {
           return prev.map((item) => {
