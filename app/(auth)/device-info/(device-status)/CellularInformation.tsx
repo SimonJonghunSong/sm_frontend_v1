@@ -19,27 +19,27 @@ export default function CellularInformation() {
       <Stack direction="column" flex={1}>
         <FieldItem>
           <FieldLabel>Modem Status</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Network Status</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Current Operator</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Signal Level</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Socket Type</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Socket</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
       </Stack>
     </Container>

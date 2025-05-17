@@ -54,11 +54,11 @@ export default function GNSSInformation({ lat, lng }: Props) {
         </FieldItem>
         <FieldItem>
           <FieldLabel>Angle</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Speed</FieldLabel>
-          <FieldValue>-</FieldValue>
+          <FieldValue>NA</FieldValue>
         </FieldItem>
       </Stack>
     </Container>
