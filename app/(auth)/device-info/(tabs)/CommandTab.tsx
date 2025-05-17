@@ -230,24 +230,24 @@ export default function CommandTab({ imei }: Props) {
 
   return (
     <Stack
-      className="contentWrap"
       direction="column"
       gap={"20px"}
-      height={"80vh"}
+      height={"calc(100vh - 200px)"}
       padding={"0px !important"}
-      overflow={"scroll"}
+      overflow={"hidden"}
     >
       {/* 명령 로그 표시 영역 */}
       <div
         className={styles.logWrap}
         style={{
           marginBottom: "20px",
-          height: "300px",
-          minHeight: "300px",
+          height: "40%",
+          minHeight: "160px",
+          maxHeight: "300px",
           width: "100%",
           border: "1px solid #e0e0e0",
           borderRadius: "8px",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+          boxShadow: "0 2px 4px rgba(142, 127, 127, 0.05)",
           position: "sticky",
           top: 0,
           zIndex: 2,
@@ -362,9 +362,11 @@ export default function CommandTab({ imei }: Props) {
       <div
         style={{
           display: "flex",
+          flex: 1,
           gap: "24px",
           flexDirection: "column",
           padding: "20px",
+          overflowY: "scroll",
         }}
       >
         <NetworkCommands renderCommand={renderCommand} />
