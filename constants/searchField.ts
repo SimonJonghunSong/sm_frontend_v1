@@ -546,8 +546,7 @@ export const modeSettingsFieldsWithoutUnderbar = [
   "1078",
 ];
 
-export const INCLUDE_FIELDS = {
-  // Network
+const INCLUDE_FIELDS_NETWORK = {
   [SECTIONS.Network.en]: [
     "1013",
     "1054",
@@ -603,8 +602,9 @@ export const INCLUDE_FIELDS = {
     "1042",
     "1043",
   ],
+};
 
-  // System
+const INCLUDE_FIELDS_SYSTEM = {
   [SECTIONS.Ignition.en]: [
     "1700",
     "1701",
@@ -689,8 +689,9 @@ export const INCLUDE_FIELDS = {
     "4205",
     "4206",
   ],
+};
 
-  // Report
+const INCLUDE_FIELDS_REPORT = {
   [SECTIONS.AssignHeader.en]: ["1100", "1075"],
   [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
   [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
@@ -802,8 +803,9 @@ export const INCLUDE_FIELDS = {
     "1655", // TODO
     "1656",
   ],
+};
 
-  // Accessories
+const INCLUDE_FIELDS_ACCESSORIES = {
   [SECTIONS.Accessories.en]: [
     "0610",
     "2300",
@@ -885,8 +887,9 @@ export const INCLUDE_FIELDS = {
     "2313",
     "2350",
   ],
+};
 
-  // Input/Output
+const INCLUDE_FIELDS_INPUT_OUTPUT = {
   [SECTIONS["Input/Output"].en]: [
     "1720", // Input 1 Type
     "1721", // Input 1 Chat
@@ -918,11 +921,13 @@ export const INCLUDE_FIELDS = {
     "1784", // Pulse 3 On
     "1785", // Pulse 3 Off
   ],
+};
 
-  // Geofence
+const INCLUDE_FIELDS_GEOFENCE = {
   [SECTIONS.GeofenceConfig.en]: ["9000", "9001", "9002"],
+};
 
-  // Tracking
+const INCLUDE_FIELDS_TRACKING = {
   [SECTIONS.DisconnectMode.en]: ["1641"],
   [SECTIONS.DriveMode.en]: ["1600", "1601"],
   [SECTIONS.FineTracking.en]: ["3010", "3011", "3012"],
@@ -945,11 +950,13 @@ export const INCLUDE_FIELDS = {
   [SECTIONS.ParkMode.en]: ["1605", "1606"],
   [SECTIONS.SpeedingMode.en]: ["1620", "1621", "1622", "1623", "1624", "1625"],
   [SECTIONS.TowingMode.en]: ["1636"],
+};
 
-  // Driver
+const INCLUDE_FIELDS_DRIVER = {
   [SECTIONS.Driver.en]: [],
+};
 
-  // Bluetooth
+const INCLUDE_FIELDS_BLUETOOTH = {
   [SECTIONS.Ble.en]: [
     "4020",
     "4021",
@@ -979,8 +986,9 @@ export const INCLUDE_FIELDS = {
     "2620",
     "2621",
   ],
+};
 
-  // RF
+const INCLUDE_FIELDS_RF = {
   [SECTIONS.ErbList.en]: [
     "2511",
     "2512",
@@ -1099,8 +1107,9 @@ export const INCLUDE_FIELDS = {
     "2508",
     "2510",
   ],
+};
 
-  // NetworkCommands
+const INCLUDE_FIELDS_COMMANDS = {
   [SECTIONS.NetworkCommands.en]: [],
   [SECTIONS.SystemCommands.en]: [],
   [SECTIONS.JammingDetectionCommands.en]: [],
@@ -1111,6 +1120,96 @@ export const INCLUDE_FIELDS = {
   [SECTIONS.BleCommands.en]: [],
   [SECTIONS.AccessoryCommands.en]: [],
 };
+
+export const INCLUDE_FIELDS = {
+  // Network
+  ...INCLUDE_FIELDS_NETWORK,
+
+  // System
+  ...INCLUDE_FIELDS_SYSTEM,
+
+  // Report
+  ...INCLUDE_FIELDS_REPORT,
+
+  // Accessories
+  ...INCLUDE_FIELDS_ACCESSORIES,
+
+  // Input/Output
+  ...INCLUDE_FIELDS_INPUT_OUTPUT,
+
+  // Geofence
+  ...INCLUDE_FIELDS_GEOFENCE,
+
+  // Tracking
+  ...INCLUDE_FIELDS_TRACKING,
+
+  // Driver
+  ...INCLUDE_FIELDS_DRIVER,
+
+  // Bluetooth
+  ...INCLUDE_FIELDS_BLUETOOTH,
+
+  // RF
+  ...INCLUDE_FIELDS_RF,
+
+  // NetworkCommands
+  ...INCLUDE_FIELDS_COMMANDS,
+};
+
+export const INCLUDE_SECTIONS = {
+  [MENUS.Network.en]: Object.values(INCLUDE_FIELDS_NETWORK).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS.System.en]: Object.values(INCLUDE_FIELDS_SYSTEM).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS.Report.en]: Object.values(INCLUDE_FIELDS_REPORT).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS.Accessories.en]: Object.values(INCLUDE_FIELDS_ACCESSORIES).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS["Input/Output(I/O)"].en]: Object.values(
+    INCLUDE_FIELDS_INPUT_OUTPUT
+  ).reduce((acc, value) => {
+    return [...acc, ...value];
+  }, []),
+  [MENUS.Tracking.en]: Object.values(INCLUDE_FIELDS_TRACKING).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS.Driver.en]: Object.values(INCLUDE_FIELDS_DRIVER).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS.Bluetooth.en]: Object.values(INCLUDE_FIELDS_BLUETOOTH).reduce(
+    (acc, value) => {
+      return [...acc, ...value];
+    },
+    []
+  ),
+  [MENUS.RF.en]: Object.values(INCLUDE_FIELDS_RF).reduce((acc, value) => {
+    return [...acc, ...value];
+  }, []),
+};
+
+console.log("INCLUDE_SECTIONS :::", INCLUDE_SECTIONS);
 
 export type SearchFields = {
   fields: (typeof INCLUDE_FIELDS)[keyof typeof INCLUDE_FIELDS];

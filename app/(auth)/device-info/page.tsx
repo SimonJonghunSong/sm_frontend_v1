@@ -26,6 +26,8 @@ import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
 import Modal from "@/components/Modal";
 import {
   formDataToSearchSectionData,
+  INCLUDE_SECTIONS,
+  MENUS,
   SearchField,
   SearchFields,
 } from "constants/searchField";
@@ -249,6 +251,88 @@ export default function DeviceInfoPage() {
   const searchModal = isOpen;
   const toggleSearchModal = isOpen ? onClose : onOpen;
 
+  const [excludeMenus, setExcludeMenus] = useState<string[]>([]);
+  const isReadyMenusRef = useRef(false);
+
+  useEffect(() => {
+    if (isReadyMenusRef.current) return;
+
+    if (formData && Object.keys(formData)?.length > 0) {
+      const excludeMenus = [];
+
+      const hasNetwork = INCLUDE_SECTIONS[MENUS.Network.en].findIndex(
+        (item) => {
+          return !!formData[item];
+        }
+      );
+      const hasSystem = INCLUDE_SECTIONS[MENUS.System.en].findIndex((item) => {
+        return !!formData[item];
+      });
+      const hasReport = INCLUDE_SECTIONS[MENUS.Report.en].findIndex((item) => {
+        return !!formData[item];
+      });
+      const hasAccessories = INCLUDE_SECTIONS[MENUS.Accessories.en].findIndex(
+        (item) => {
+          return !!formData[item];
+        }
+      );
+      const hasInputOutput = INCLUDE_SECTIONS[
+        MENUS["Input/Output(I/O)"].en
+      ].findIndex((item) => {
+        return !!formData[item];
+      });
+      const hasTracking = INCLUDE_SECTIONS[MENUS.Tracking.en].findIndex(
+        (item) => {
+          return !!formData[item];
+        }
+      );
+      const hasBluetooth = INCLUDE_SECTIONS[MENUS.Bluetooth.en].findIndex(
+        (item) => {
+          return !!formData[item];
+        }
+      );
+      const hasDriver = INCLUDE_SECTIONS[MENUS.Driver.en].findIndex((item) => {
+        return !!formData[item];
+      });
+      const hasRf = INCLUDE_SECTIONS[MENUS.RF.en].findIndex((item) => {
+        return !!formData[item];
+      });
+
+      console.log("hasBluetooth ::::", hasBluetooth);
+
+      if (hasNetwork === -1) {
+        excludeMenus.push(MENUS.Network.en);
+      }
+      if (hasSystem === -1) {
+        excludeMenus.push(MENUS.System.en);
+      }
+      if (hasReport === -1) {
+        excludeMenus.push(MENUS.Report.en);
+      }
+      if (hasAccessories === -1) {
+        excludeMenus.push(MENUS.Accessories.en);
+      }
+      if (hasInputOutput === -1) {
+        excludeMenus.push(MENUS["Input/Output(I/O)"].en);
+      }
+      if (hasTracking === -1) {
+        excludeMenus.push(MENUS.Tracking.en);
+      }
+      if (hasBluetooth === -1) {
+        excludeMenus.push(MENUS.Bluetooth.en);
+      }
+      if (hasDriver === -1) {
+        excludeMenus.push(MENUS.Driver.en);
+      }
+      if (hasRf === -1) {
+        excludeMenus.push(MENUS.RF.en);
+      }
+
+      setExcludeMenus(excludeMenus);
+      isReadyMenusRef.current = true;
+    }
+  }, [formData]);
+
   const handleReboot = () => {
     write({
       data: `${AT_CMD}${imei};03;03`,
@@ -435,7 +519,11 @@ export default function DeviceInfoPage() {
       {(isLoading || deviceInfoLoading) && <FullLoading />}
       <div className="pageWrap">
         <SideMenu
-          sideMenuItems={sideMenuItems({ onClick: handleTabChange, tab })}
+          sideMenuItems={sideMenuItems({
+            onClick: handleTabChange,
+            tab,
+            exclude: excludeMenus,
+          })}
         />
         <Stack flex={1}>
           <Controller
