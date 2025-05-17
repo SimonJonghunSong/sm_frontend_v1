@@ -244,7 +244,7 @@ export default function EditModal({
               uid: selectedData.uid,
               dev_name: devName,
               fw_ver: "1.1.0",
-              country,
+              target_country: country,
               supported_network_type: supportedNetworkType,
               supported_features: supportedFeatures,
               hide,
