@@ -19,17 +19,20 @@ export default function InputOutputTab({ formData, setFormData }: Props) {
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
   };
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <InputOutput formData={formData} onChange={handleValueChange} />
+      <InputOutput
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }
