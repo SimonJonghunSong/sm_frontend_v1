@@ -1,7 +1,9 @@
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
+import { AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
+import useLangStore from "@/utils/useLangStore";
 import { FormField } from "app/(auth)/device-info/page";
+import { FIELD_VALIDATIONS } from "constants/field";
 import { useRef, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -10,6 +12,7 @@ export default function useSendFormData() {
     state: { portList },
     func: { write },
   } = useSerial();
+  const lang = useLangStore((state) => state.lang);
   const { getCurrentImei } = useSerialConfigurationStore();
   const imei = getCurrentImei();
   const alertBroadcastRef = useRef(new BroadcastChannel("err_alert"));
@@ -82,14 +85,26 @@ export default function useSendFormData() {
         .join(";")}`;
     });
 
-    console.log("writable :::", currentPort.port.writable);
-
     for (const message of sendMessages) {
       const handleAlert = (event: MessageEvent) => {
-        console.log("event :::", event);
         const { data } = event;
 
-        toast.error(data);
+        const errorMessage = (data as string)
+          .trim()
+          .split(CR)
+          .find((msg) => msg.includes("ERR"));
+
+        const errorParameterNo =
+          errorMessage.split(";")[errorMessage.split(";").length - 1];
+
+        const fieldName =
+          FIELD_VALIDATIONS[errorParameterNo]?.title[lang] || "";
+
+        toast.error(
+          fieldName
+            ? `[${fieldName} - ${errorParameterNo}] Error`
+            : errorMessage
+        );
 
         alertBroadcastRef.current.removeEventListener("message", handleAlert);
       };
@@ -108,7 +123,7 @@ export default function useSendFormData() {
       setTimeout(() => {
         alertBroadcastRef.current.removeEventListener("message", handleAlert);
         currentPort.port.isAlertSend = false;
-      }, 100);
+      }, 800);
     }
 
     setIsLoading(false);
