@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -17,6 +17,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 const tooltipText = {
   en: "The ignition function detects whether a vehicle's engine is on or off. \n• Default : On",
@@ -39,13 +40,23 @@ const error = {
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Ignition.en];
 
-const Ignition = ({ formData, onChange }: Props) => {
+const Ignition = ({ formData, onChange, setFormData }: Props) => {
   const { sendFormData, isLoading } = useSendFormData();
 
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
+
+  console.log("fieldIds :::", fieldIds);
+  console.log("isDirtyFields@@@ :::", isDirtyFields);
 
   if (!formData) return null;
 
@@ -103,7 +114,7 @@ const Ignition = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -111,7 +122,7 @@ const Ignition = ({ formData, onChange }: Props) => {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
           <h1 data-section-id={SECTIONS.Ignition.en}>
-            {SECTIONS.Ignition[lang]}
+            {SECTIONS.Ignition[lang]}22
           </h1>
           <InputBox.Info
             tooltipText={
@@ -137,18 +148,21 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1700")}
               />
               <NumericInputField
                 id="1702"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1702")}
               />
               <NumericInputField
                 id="1701"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1701")}
               />
               <NumericInputField
                 id="1705"
@@ -169,6 +183,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                     : false
                 }
                 customErrorMessage={error[1705][lang]}
+                isDirty={isDirtyFields.includes("1705")}
               />
               <NumericInputField
                 id="1708"
@@ -189,6 +204,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                     : false
                 }
                 customErrorMessage={error[1708][lang]}
+                isDirty={isDirtyFields.includes("1708")}
               />
 
               <NumericInputField
@@ -196,6 +212,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1706")}
               />
 
               <NumericInputField
@@ -203,6 +220,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1709")}
               />
             </Stack>
             <Stack gap={"24px"} flex={1}>
@@ -211,6 +229,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1707")}
               />
 
               <NumericInputField
@@ -218,6 +237,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1710")}
               />
 
               <NumericInputField
@@ -232,6 +252,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                   formData["1708"]?.realValue === "00" ||
                   formData["1708"]?.realValue === "0"
                 }
+                isDirty={isDirtyFields.includes("1711")}
               />
 
               <NumericInputField
@@ -246,6 +267,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                   formData["1708"]?.realValue === "00" ||
                   formData["1708"]?.realValue === "0"
                 }
+                isDirty={isDirtyFields.includes("1713")}
               />
 
               <NumericInputField
@@ -253,6 +275,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1712")}
               />
 
               <NumericInputField
@@ -260,6 +283,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1714")}
               />
 
               <NumericInputField
@@ -267,6 +291,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1715")}
               />
 
               <NumericInputField
@@ -274,6 +299,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1716")}
               />
 
               <SwitchField
@@ -281,6 +307,7 @@ const Ignition = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1717")}
               />
             </Stack>
           </Stack>
@@ -290,7 +317,7 @@ const Ignition = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDirtyFields.length === 0}
             >
               {t("notify.send")}
             </Button>

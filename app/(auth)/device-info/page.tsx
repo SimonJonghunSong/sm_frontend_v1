@@ -75,6 +75,10 @@ export interface FormField {
   realValue: string;
   list: string[] | null;
   alert_id: string | null;
+  text_num: string | null;
+  beforeValue: string;
+  beforeAlertId: string | null;
+  beforeTextNum: string | null;
 }
 
 interface FormData {
@@ -134,6 +138,10 @@ const transformFieldData = (
       realValue,
       list: optionsValueList,
       alert_id: fieldData.alert_id,
+      text_num: fieldData.text_num,
+      beforeValue: realValue,
+      beforeAlertId: fieldData.alert_id,
+      beforeTextNum: fieldData.text_num,
     },
   ];
 };
@@ -235,6 +243,9 @@ export default function DeviceInfoPage() {
   const [formData, setFormData] = useState<{
     [key: string]: FormField | null;
   }>(null);
+
+  console.log("formData :::", formData);
+
   const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
 
@@ -448,6 +459,8 @@ export default function DeviceInfoPage() {
 
   useEffect(() => {
     if (originData) {
+      console.log("여기 타나요~~?????");
+
       const formDataValues = transformOriginData(originData);
 
       setFormData(formDataValues);

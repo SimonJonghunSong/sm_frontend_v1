@@ -27,36 +27,76 @@ interface Props {
 
 export default function SystemTab({ formData, setFormData, port }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: {
-        value,
-        key: prev[name].key,
-        realValue: value,
-        list: prev[name].list,
-        alert_id: alertId,
-      },
-    }));
+    setFormData((prev) => {
+      return {
+        ...prev,
+        [name]: {
+          ...prev[name],
+          value,
+          key: prev[name].key,
+          realValue: value,
+          list: prev[name].list,
+          alert_id: alertId,
+        },
+      };
+    });
   };
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Ignition formData={formData} onChange={handleValueChange} />
+      <Ignition
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Motion formData={formData} onChange={handleValueChange} />
+      <Motion
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <DriverPattern formData={formData} onChange={handleValueChange} />
+      <DriverPattern
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Power formData={formData} onChange={handleValueChange} />
+      <Power
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <BackupBattery formData={formData} onChange={handleValueChange} />
+      <BackupBattery
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Password formData={formData} onChange={handleValueChange} port={port} />
+      <Password
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+        port={port}
+      />
 
-      <Device formData={formData} onChange={handleValueChange} />
+      <Device
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <TdiOdometer formData={formData} onChange={handleValueChange} />
+      <TdiOdometer
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <McuUpdate formData={formData} onChange={handleValueChange} />
+      <McuUpdate
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }

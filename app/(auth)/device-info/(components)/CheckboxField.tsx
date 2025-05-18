@@ -3,6 +3,7 @@ import useLangStore from "@/utils/useLangStore";
 import { Stack } from "@mui/material";
 import CheckboxComp from "app/(auth)/device-info/(components)/CheckboxComp";
 import { FormField } from "app/(auth)/device-info/page";
+import EditDot from "./EditDot";
 import { FIELD_VALIDATIONS } from "constants/field";
 
 interface Props {
@@ -21,6 +22,7 @@ interface Props {
     TEXT_PT_ITEM_CONTENT: string;
   };
   hasAllCheckbox?: boolean;
+  isDirty?: boolean;
 }
 
 export default function CheckboxField({
@@ -33,6 +35,7 @@ export default function CheckboxField({
   style,
   isRequired = false,
   hasAllCheckbox = false,
+  isDirty = false,
 }: Props) {
   const lang = useLangStore((state) => state.lang);
 
@@ -56,6 +59,7 @@ export default function CheckboxField({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
       <CheckboxComp
         value={formData[id]?.realValue}

@@ -597,9 +597,9 @@ export default function DeviceInfoPage() {
 
       setFormData(formDataValues);
       setSearchSectionData(
-        formDataToSearchSectionData(formDataValues, lang, true)
+        formDataToSearchSectionData(formDataValues as any, lang, true)
       );
-      setSearchParamData(getSearchParamsData(formDataValues, lang));
+      setSearchParamData(getSearchParamsData(formDataValues as any, lang));
       setCommandData(extractCommandData(originData));
     }
   }, [originData]);

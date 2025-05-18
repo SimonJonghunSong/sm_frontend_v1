@@ -5,7 +5,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import useLangStore from "@/utils/useLangStore";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
-
+import EditDot from "./EditDot";
 // Constants
 const DEFAULT_HOUR_VALUE = "01";
 const DEFAULT_MIN_VALUE = "00";
@@ -57,6 +57,7 @@ interface TimeHMAProps {
   unit?: 1 | 10 | 30;
   hourType?: 12 | 24;
   isSwitch?: boolean;
+  isDirty?: boolean;
 }
 
 // Utility functions
@@ -120,6 +121,7 @@ export default function TimeHMA({
   unit = 1,
   hourType = 12,
   isSwitch = false,
+  isDirty = false,
 }: TimeHMAProps) {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(!!formData[id]?.realValue);
@@ -178,6 +180,7 @@ export default function TimeHMA({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (

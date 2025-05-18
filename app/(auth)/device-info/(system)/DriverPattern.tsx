@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -12,6 +12,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.DriverPattern.en];
 
@@ -20,13 +21,23 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const DriverPattern = ({ formData, onChange }: Props) => {
+const DriverPattern = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
+
+  console.log("isDirtyFields :::", isDirtyFields);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -84,7 +95,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -102,6 +113,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>{1910}</InputBox.Number>
+          {isDirtyFields.includes("1910") && <EditDot />}
         </Stack>
 
         <SwitchPrimary
@@ -120,6 +132,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1911")}
             />
 
             <NumericInputField
@@ -127,6 +140,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1912")}
             />
 
             <NumericInputField
@@ -134,6 +148,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1913")}
             />
 
             <NumericInputField
@@ -141,6 +156,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1914")}
             />
           </Stack>
           <Stack gap={"24px"} flex={1}>
@@ -149,6 +165,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1921")}
             />
 
             <NumericInputField
@@ -156,6 +173,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1922")}
             />
 
             <NumericInputField
@@ -163,6 +181,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1923")}
             />
 
             {!!formData["1924"] && (
@@ -172,6 +191,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
                   id="1924"
                   formData={formData}
                   onChange={handleChange}
+                  isDirty={isDirtyFields.includes("1924")}
                 />
 
                 {formData["1924"]?.realValue === "01" && (
@@ -180,6 +200,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
                     id="1925"
                     formData={formData}
                     onChange={handleChange}
+                    isDirty={isDirtyFields.includes("1925")}
                   />
                 )}
               </Stack>
@@ -192,7 +213,7 @@ const DriverPattern = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

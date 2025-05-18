@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, IconButton, Stack, TextField } from "@mui/material";
@@ -15,6 +15,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import { hasFormDataFields } from "app/(auth)/device-info/(utils)/@index";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import { CR } from "@/src/hooks/useSerial/constant";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Password.en];
 
@@ -24,9 +25,10 @@ interface Props {
   };
   onChange: (id: string, value: string) => void;
   port: SerialPort;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Password = ({ formData, onChange, port }: Props) => {
+const Password = ({ formData, onChange, port, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
@@ -34,6 +36,13 @@ const Password = ({ formData, onChange, port }: Props) => {
   const [password, setPassword] = useState("");
   const { sendFormData, isLoading } = useSendFormData();
   const responseRef = useRef<string>("");
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -106,7 +115,7 @@ const Password = ({ formData, onChange, port }: Props) => {
         };
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -124,6 +133,7 @@ const Password = ({ formData, onChange, port }: Props) => {
             }
           />
           <InputBox.Number>3000</InputBox.Number>
+          {isDirtyFields.includes("3000") && <EditDot />}
         </Stack>
         <SwitchPrimary
           onChange={(e) => handleChange("3000", e.target.checked ? "01" : "00")}
@@ -147,6 +157,7 @@ const Password = ({ formData, onChange, port }: Props) => {
               />
             )}
             <InputBox.Number>3001</InputBox.Number>
+            {isDirtyFields.includes("3001") && <EditDot />}
           </Stack>
           <TextField
             value={password}
@@ -189,6 +200,7 @@ const Password = ({ formData, onChange, port }: Props) => {
                 ? FIELD_ERRORS["3002"].en
                 : undefined
             }
+            isDirty={isDirtyFields.includes("3002")}
           />
         )}
       </Stack>
@@ -198,7 +210,7 @@ const Password = ({ formData, onChange, port }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>
