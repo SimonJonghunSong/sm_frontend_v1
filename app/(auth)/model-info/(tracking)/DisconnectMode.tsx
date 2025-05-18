@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -18,6 +18,11 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<
+    SetStateAction<{
+      [key: string]: FormField;
+    }>
+  >;
 }
 
 const tooltipText = {
@@ -26,12 +31,21 @@ const tooltipText = {
   es: "Modo ingresado cuando la alimentación principal del dispositivo (conectada al vehículo) se desconecta.\nEl dispositivo informará mensajes en Modo Desconectado.\n• Predeterminado: Desactivado\n* Desactivado significa que el dispositivo nunca ingresará en Modo Desconectado. Mantendrá el modo anterior, como Modo de Estacionamiento o Modo de Conducción.",
 };
 
-const DisconnectMode = ({ formData, onChange }: Props) => {
+const DisconnectMode = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -88,7 +102,7 @@ const DisconnectMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -120,6 +134,7 @@ const DisconnectMode = ({ formData, onChange }: Props) => {
               id="1641"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1641")}
             />
           </Stack>
 
@@ -128,7 +143,7 @@ const DisconnectMode = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDirtyFields.length === 0}
             >
               {t("common.save")}
             </Button>
