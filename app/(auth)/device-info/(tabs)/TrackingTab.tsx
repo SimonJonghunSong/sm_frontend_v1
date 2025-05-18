@@ -30,10 +30,9 @@ export default function TrackingTab({ formData, setFormData }: Props) {
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
@@ -41,25 +40,65 @@ export default function TrackingTab({ formData, setFormData }: Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <DriveMode formData={formData} onChange={handleValueChange} />
+      <DriveMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <InstallMode formData={formData} onChange={handleValueChange} />
+      <InstallMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ParkMode formData={formData} onChange={handleValueChange} />
+      <ParkMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <IdleMode formData={formData} onChange={handleValueChange} />
+      <IdleMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <SpeedingMode formData={formData} onChange={handleValueChange} />
+      <SpeedingMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <TowingMode formData={formData} onChange={handleValueChange} />
+      <TowingMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <DisconnectMode formData={formData} onChange={handleValueChange} />
+      <DisconnectMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <OperationMode formData={formData} onChange={handleValueChange} />
+      <OperationMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ModeSettings formData={formData} onChange={handleValueChange} />
+      <ModeSettings
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <FineTracking formData={formData} onChange={handleValueChange} />
+      <FineTracking
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -20,6 +20,11 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<
+    SetStateAction<{
+      [key: string]: FormField;
+    }>
+  >;
 }
 
 const tooltipText = {
@@ -28,12 +33,19 @@ const tooltipText = {
   es: "El dispositivo informará mensajes en el Modo de Conducción.\n• Predeterminado: Activado\n* Desactivado significa que el dispositivo no enviará el Informe de Estado en Modo de Conducción, pero aún ingresará en el modo basado en los parámetros de Ignición.\n* El dispositivo envía el Informe de Estado solo en Modo de Conducción si detecta un cambio en 'Distancia' o 'Dirección/Ángulo'.",
 };
 
-const DriveMode = ({ formData, onChange }: Props) => {
+const DriveMode = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -90,7 +102,7 @@ const DriveMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -122,12 +134,14 @@ const DriveMode = ({ formData, onChange }: Props) => {
               id="1600"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1600")}
             />
 
             <NumericInputField
               id="1601"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1601")}
             />
           </Stack>
 
@@ -136,7 +150,7 @@ const DriveMode = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDirtyFields.length === 0}
             >
               {t("notify.send")}
             </Button>
