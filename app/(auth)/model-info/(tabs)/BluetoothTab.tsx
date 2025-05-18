@@ -40,7 +40,11 @@ Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Ble formData={formData} onChange={handleValueChange} />
+      <Ble
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
       {/* <BleRegistration
         formData={formData}
@@ -50,7 +54,11 @@ Props) {
         port={port}
       /> */}
 
-      <Sensor formData={formData} onChange={handleValueChange} />
+      <Sensor
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -19,13 +19,25 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Sensor = ({ formData, onChange }: Props) => {
+const Sensor = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(
+    () =>
+      Object.keys(formData).filter(
+        (key) =>
+          fieldIds.includes(key) &&
+          formData[key].beforeValue !== formData[key].realValue
+      ),
+    [formData]
+  );
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string, selectValue?: string) => {
@@ -83,7 +95,7 @@ const Sensor = ({ formData, onChange }: Props) => {
         // 필드 값들을 사용하여 수행할 작업
         console.log("Form values:", fieldValues);
 
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
       }}
     >
       <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
@@ -96,18 +108,21 @@ const Sensor = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2610")}
           />
           <SwitchField
             id="2611"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2611")}
           />
           <SwitchField
             id="2612"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2612")}
           />
           {formData["2612"]?.realValue === "01" && (
             <>
@@ -117,6 +132,10 @@ const Sensor = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 titleId="2613~4"
+                isDirty={
+                  isDirtyFields.includes("2613") ||
+                  isDirtyFields.includes("2614")
+                }
               />
               <RangeThresholdField
                 id={["2615", "2616"]}
@@ -131,6 +150,10 @@ const Sensor = ({ formData, onChange }: Props) => {
                     ? "La humedad alta debe ser mayor que la humedad baja."
                     : "A umidade alta deve ser maior que a umidade baixa."
                 }
+                isDirty={
+                  isDirtyFields.includes("2615") ||
+                  isDirtyFields.includes("2616")
+                }
               />
             </>
           )}
@@ -140,6 +163,7 @@ const Sensor = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2617")}
           />
         </Stack>
 
@@ -149,12 +173,14 @@ const Sensor = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2618")}
           />
           <NumericInputField
             id="2619"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2619")}
           />
 
           <NumericInputField
@@ -162,6 +188,7 @@ const Sensor = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2620")}
           />
 
           <SwitchField
@@ -169,6 +196,7 @@ const Sensor = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2621")}
           />
         </Stack>
       </Stack>
@@ -178,7 +206,7 @@ const Sensor = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("common.save")}
         </Button>

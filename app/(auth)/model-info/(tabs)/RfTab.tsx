@@ -33,15 +33,35 @@ export default function RfTab({ formData, setFormData }: Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Rf formData={formData} onChange={handleValueChange} />
+      <Rf
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ErbList formData={formData} onChange={handleValueChange} />
+      <ErbList
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <PresenceFunction formData={formData} onChange={handleValueChange} />
+      <PresenceFunction
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <PresenceDevice formData={formData} onChange={handleValueChange} />
+      <PresenceDevice
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <LoRaWAN formData={formData} onChange={handleValueChange} />
+      <LoRaWAN
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }
