@@ -24,10 +24,9 @@ export default function AccessoriesTab({ formData, setFormData }: Props) {
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
@@ -35,13 +34,29 @@ export default function AccessoriesTab({ formData, setFormData }: Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <WireSettings formData={formData} onChange={handleValueChange} />
+      <WireSettings
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <SerialRs232 formData={formData} onChange={handleValueChange} />
+      <SerialRs232
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Accessories formData={formData} onChange={handleValueChange} />
+      <Accessories
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <MDSM7 formData={formData} onChange={handleValueChange} />
+      <MDSM7
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }
