@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -15,6 +15,7 @@ import getMinMaxLengthError from "../(utils)/getMinMaxLengthError";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Rf.en];
 
@@ -23,6 +24,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 const tooltipText = {
   en: "Use of RF(Radio Frequency). \n• Default : On",
@@ -30,24 +32,21 @@ const tooltipText = {
   es: "Uso de RF (Radio Frecuencia). \n• Predeterminado: Activado",
 };
 
-const error = {
-  1705: {
-    en: "Cannot be less than the value of 1708",
-    es: "No puede ser menor que el valor de 1708",
-    ps: "Não pode ser menor que o valor de 1708",
-  },
-  1708: {
-    en: "Cannot be greater than the value of 1705",
-    es: "No puede ser mayor que el valor de 1705",
-    ps: "Não pode ser maior que o valor de 1705",
-  },
-};
-
-const Rf = ({ formData, onChange }: Props) => {
+const Rf = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(
+    () =>
+      Object.keys(formData).filter(
+        (key) =>
+          fieldIds.includes(key) &&
+          formData[key].beforeValue !== formData[key].realValue
+      ),
+    [formData]
+  );
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -107,7 +106,7 @@ const Rf = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -123,6 +122,7 @@ const Rf = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>2500</InputBox.Number>
+          {isDirtyFields.includes("2500") && <EditDot />}
         </Stack>
 
         <SwitchPrimary
@@ -139,12 +139,14 @@ const Rf = ({ formData, onChange }: Props) => {
                 id="2501"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2501")}
               />
               <NumericInputField
                 id="2502"
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2502")}
               />
               <NumericInputField
                 id="2505"
@@ -156,26 +158,31 @@ const Rf = ({ formData, onChange }: Props) => {
                   min: 6,
                   max: 10,
                 })}
+                isDirty={isDirtyFields.includes("2505")}
               />
               <NumericInputField
                 id="2503"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2503")}
               />
               <NumericInputField
                 id="2504"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2504")}
               />
               <NumericInputField
                 id="2800"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2800")}
               />
               <NumericInputField
                 id="2801"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2801")}
               />
               <NumericInputField
                 id="2802"
@@ -186,11 +193,13 @@ const Rf = ({ formData, onChange }: Props) => {
                 id="2803"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2803")}
               />
               <NumericInputField
                 id="2804"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2804")}
               />
             </Stack>
             <Stack direction="column" gap={"16px"} flex={1}>
@@ -198,22 +207,26 @@ const Rf = ({ formData, onChange }: Props) => {
                 id="2805"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2805")}
               />
               <NumericInputField
                 id="2806"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2806")}
               />
               {/* 체크박스 필요 */}
               <SelectField
                 id="2808"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2808")}
               />
               <NumericInputField
                 id="2809"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2809")}
               />
 
               <TextInputField
@@ -226,6 +239,7 @@ const Rf = ({ formData, onChange }: Props) => {
                     ? FIELD_ERRORS["2810"][lang]
                     : undefined
                 }
+                isDirty={isDirtyFields.includes("2810")}
               />
 
               <NumericInputField
@@ -233,21 +247,25 @@ const Rf = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2506")}
               />
               <NumericInputField
                 id="2507"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2507")}
               />
               <NumericInputField
                 id="2508"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2508")}
               />
               <SwitchField
                 id="2510"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2510")}
               />
             </Stack>
           </Stack>
@@ -257,7 +275,7 @@ const Rf = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDirtyFields.length === 0}
             >
               {t("common.save")}
             </Button>
