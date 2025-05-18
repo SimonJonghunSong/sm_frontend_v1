@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -14,6 +14,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import CheckboxField from "../(components)/CheckboxField";
 import SelectField from "../(components)/SelectField";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Ble.en];
 
@@ -36,13 +37,22 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Ble = ({ formData, onChange }: Props) => {
+const Ble = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
+
   if (!formData["4021"] || !hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -98,7 +108,7 @@ const Ble = ({ formData, onChange }: Props) => {
         }, {});
         console.log("fieldValues :::", fieldValues);
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -116,6 +126,7 @@ const Ble = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>4021</InputBox.Number>
+          {isDirtyFields.includes("4021") && <EditDot />}
         </Stack>
 
         <SwitchPrimary
@@ -133,6 +144,7 @@ const Ble = ({ formData, onChange }: Props) => {
               onChange={handleChange}
               isSwitch
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4020")}
             />
 
             <SelectField
@@ -140,6 +152,7 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4028")}
             />
 
             <SwitchField
@@ -147,6 +160,7 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4025")}
             />
 
             <NumericInputField
@@ -154,18 +168,21 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4012")}
             />
             <NumericInputField
               id="4026"
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4026")}
             />
             <NumericInputField
               id="4027"
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4027")}
             />
           </Stack>
 
@@ -175,6 +192,7 @@ const Ble = ({ formData, onChange }: Props) => {
               formData={formData}
               onChange={handleChange}
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4000")}
             />
 
             <NumericInputField
@@ -183,6 +201,7 @@ const Ble = ({ formData, onChange }: Props) => {
               onChange={handleChange}
               isSwitch
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4010")}
             />
 
             <NumericInputField
@@ -191,6 +210,7 @@ const Ble = ({ formData, onChange }: Props) => {
               onChange={handleChange}
               isSwitch
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4011")}
             />
 
             <NumericInputField
@@ -199,6 +219,7 @@ const Ble = ({ formData, onChange }: Props) => {
               onChange={handleChange}
               isSwitch
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4013")}
             />
 
             <NumericInputField
@@ -207,6 +228,7 @@ const Ble = ({ formData, onChange }: Props) => {
               onChange={handleChange}
               isSwitch
               style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("4014")}
             />
           </Stack>
         </Stack>
@@ -217,7 +239,7 @@ const Ble = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>
