@@ -27,10 +27,10 @@ interface Props {
 
 export default function ReportTab({ formData, setFormData }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
-    console.log(name, value, alertId);
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
         key: prev[name].key,
         realValue: value,
@@ -45,23 +45,55 @@ export default function ReportTab({ formData, setFormData }: Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Report formData={formData} onChange={handleValueChange} />
+      <Report
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <AntiTheft formData={formData} onChange={handleValueChange} />
+      <AntiTheft
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ReportMapping formData={formData} onChange={handleValueChange} />
+      <ReportMapping
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ReportMapping2 formData={formData} onChange={handleValueChange} />
+      <ReportMapping2
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <AssignHeader formData={formData} imei={imei} />
+      <AssignHeader formData={formData} imei={imei} setFormData={setFormData} />
 
-      <AlertConfig formData={formData} onChange={handleValueChange} />
+      <AlertConfig
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <OBD formData={formData} onChange={handleValueChange} />
+      <OBD
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ObdPid formData={formData} onChange={handleValueChange} />
+      <ObdPid
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <ReportSchdule formData={formData} onChange={handleValueChange} />
+      <ReportSchdule
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }

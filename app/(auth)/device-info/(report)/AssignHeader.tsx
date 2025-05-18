@@ -19,7 +19,14 @@ import { FormField } from "app/(auth)/device-info/page";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.AssignHeader.en];
@@ -35,9 +42,14 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-export default function AssignHeader({ imei, formData: formDataProps }: Props) {
+export default function AssignHeader({
+  imei,
+  formData: formDataProps,
+  setFormData,
+}: Props) {
   // utils
   const t = useTranslations();
   const {
@@ -45,6 +57,13 @@ export default function AssignHeader({ imei, formData: formDataProps }: Props) {
     func: { write },
   } = useSerial();
   const currentPort = portList.find(({ port }) => port.imei === imei);
+
+  const isDirtyFields = Object.keys(formDataProps).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formDataProps[key].beforeValue !== formDataProps[key].realValue
+    );
+  });
 
   // state
   const [tab, setTab] = useState<string>("stt");

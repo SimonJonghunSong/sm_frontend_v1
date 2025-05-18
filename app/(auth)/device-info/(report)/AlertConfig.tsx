@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { FormField } from "../page";
 import { useTranslations } from "next-intl";
 import { Button, Stack, Tab as MuiTab, Tabs } from "@mui/material";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { AlertConfig1, AlertConfig2 } from "./@index";
 import { ALERT_CONFIG_1 } from "./AlertConfig1";
 import { ALERT_CONFIG_2 } from "./AlertConfig2";
@@ -15,6 +15,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, alertId?: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 // 형식 변환 유틸리티 함수
@@ -50,7 +51,7 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const AlertConfig = ({ formData, onChange }: Props) => {
+const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -58,6 +59,18 @@ const AlertConfig = ({ formData, onChange }: Props) => {
     "alert_config_1"
   );
   const { sendFormData, isLoading } = useSendFormData();
+
+  console.log("isLoading :::", isLoading);
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      (tab === "alert_config_1" ? ALERT_CONFIG_1 : ALERT_CONFIG_2)
+        .map(String)
+        .includes(key) &&
+      (formData[key].beforeValue !== formData[key].realValue ||
+        formData[key].beforeAlertId !== formData[key].alert_id)
+    );
+  });
 
   return (
     <Form
@@ -89,7 +102,7 @@ const AlertConfig = ({ formData, onChange }: Props) => {
         }, {});
 
         // 변환 작업된 values
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
       }}
     >
       <h1 data-section-id={SECTIONS.AlertConfig.en}>
@@ -115,10 +128,18 @@ const AlertConfig = ({ formData, onChange }: Props) => {
 
       <TabContent>
         {tab === "alert_config_1" && (
-          <AlertConfig1 formData={formData} onChange={onChange} />
+          <AlertConfig1
+            formData={formData}
+            onChange={onChange}
+            isDirtyFields={isDirtyFields}
+          />
         )}
         {tab === "alert_config_2" && (
-          <AlertConfig2 formData={formData} onChange={onChange} />
+          <AlertConfig2
+            formData={formData}
+            onChange={onChange}
+            isDirtyFields={isDirtyFields}
+          />
         )}
       </TabContent>
 
@@ -127,7 +148,7 @@ const AlertConfig = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

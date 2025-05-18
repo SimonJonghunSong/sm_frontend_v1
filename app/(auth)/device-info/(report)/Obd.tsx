@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -11,6 +11,7 @@ import { hasFormDataFields } from "../(utils)/@index";
 import NumericInputField from "../(components)/NumericInputField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 const fieldsIds = INCLUDE_FIELDS[SECTIONS.OBD.en];
 
@@ -19,13 +20,21 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const OBD = ({ formData, onChange }: Props) => {
+const OBD = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldsIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldsIds)) return null;
 
@@ -82,7 +91,7 @@ const OBD = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -98,6 +107,7 @@ const OBD = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>2000</InputBox.Number>
+          {isDirtyFields.includes("2000") && <EditDot />}
         </Stack>
         <SwitchPrimary
           onChange={(e) => handleChange("2000", e.target.checked ? "01" : "00")}
@@ -112,6 +122,8 @@ const OBD = ({ formData, onChange }: Props) => {
               id="2002"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("2002")}
+              style={{ width: "100%" }}
             />
           </Stack>
         </Stack>
@@ -122,7 +134,7 @@ const OBD = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

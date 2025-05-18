@@ -133,11 +133,9 @@ export default function useSendFormData() {
       }, 800);
     }
 
-    if (setFormData) {
-      setTimeout(() => {
+    setTimeout(() => {
+      if (setFormData) {
         if (!hasErrorRef.current) {
-          console.log("test ::@::@::::");
-
           setFormData((prev) =>
             Object.entries(prev).reduce((acc, [key, value]) => {
               acc[key] = {
@@ -152,8 +150,10 @@ export default function useSendFormData() {
         }
         setIsLoading(false);
         hasErrorRef.current = false;
-      }, 100);
-    }
+      } else {
+        setIsLoading(false);
+      }
+    }, 100);
   };
 
   return { sendFormData, isLoading };

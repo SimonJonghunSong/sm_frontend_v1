@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -66,13 +66,21 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const ReportMapping2 = ({ formData, onChange }: Props) => {
+const ReportMapping2 = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -130,7 +138,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -149,6 +157,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["3100"].optionString}
               labelString={checkboxOptions["3100"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("3100")}
             />
           )}
           {!!formData["3101"] && (
@@ -159,6 +168,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["3101"].optionString}
               labelString={checkboxOptions["3101"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("3101")}
             />
           )}
         </Stack>
@@ -171,6 +181,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["3103"].optionString}
               labelString={checkboxOptions["3103"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("3103")}
             />
           )}
           {!!formData["2598"] && (
@@ -181,6 +192,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["2598"].optionString}
               labelString={checkboxOptions["2598"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("2598")}
             />
           )}
         </Stack>
@@ -191,7 +203,7 @@ const ReportMapping2 = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

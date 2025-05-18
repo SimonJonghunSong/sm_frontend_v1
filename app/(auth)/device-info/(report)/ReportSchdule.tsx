@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Checkbox, FormControlLabel, Stack } from "@mui/material";
@@ -13,6 +13,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import SwitchField from "../(components)/SwitchField";
 import TimeHMA from "../(components)/TimeHMA";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.ReportSchedule.en];
 
@@ -21,13 +22,21 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const ReportSchdule = ({ formData, onChange }: Props) => {
+const ReportSchdule = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -102,7 +111,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -124,7 +133,13 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>
-          <SwitchField id="1637" formData={formData} onChange={handleChange} />
+          <SwitchField
+            id="1637"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1637")}
+          />
 
           {!!formData["1640"]?.realValue && (
             <Stack width={"100%"} gap={"8px"}>
@@ -140,6 +155,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
                   }
                 />
                 <InputBox.Number>{1640}</InputBox.Number>
+                {isDirtyFields.includes("1640") && <EditDot />}
               </Stack>
 
               <Stack direction="row" gap="8px" flexWrap="wrap">
@@ -188,6 +204,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1656")}
           />
         </Stack>
 
@@ -198,6 +215,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isSwitch
             value={formData["1649"]?.realValue}
             onChange={handleChange}
+            isDirty={isDirtyFields.includes("1649")}
           />
           <TimeHMA
             id="1650"
@@ -205,6 +223,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isSwitch
             value={formData["1650"]?.realValue}
             onChange={handleChange}
+            isDirty={isDirtyFields.includes("1650")}
           />
           <TimeHMA
             id="1651"
@@ -212,6 +231,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isSwitch
             value={formData["1651"]?.realValue}
             onChange={handleChange}
+            isDirty={isDirtyFields.includes("1651")}
           />
           <TimeHMA
             id="1652"
@@ -219,12 +239,14 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isSwitch
             value={formData["1652"]?.realValue}
             onChange={handleChange}
+            isDirty={isDirtyFields.includes("1652")}
           />
           <NumericInputField
             id="1653"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("1653")}
           />
           <TimeHMA
             id="1655"
@@ -232,6 +254,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
             isSwitch
             value={formData["1655"]?.realValue}
             onChange={handleChange}
+            isDirty={isDirtyFields.includes("1655")}
           />
         </Stack>
       </Stack>
@@ -241,7 +264,7 @@ const ReportSchdule = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>
