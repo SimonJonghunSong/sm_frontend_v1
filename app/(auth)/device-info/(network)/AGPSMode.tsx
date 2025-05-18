@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -12,17 +12,19 @@ import TextInputField from "../(components)/TextInputField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 interface Props {
   formData: {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.AGPSMode.en];
 
-const AGPSMode = ({ formData, onChange }: Props) => {
+const AGPSMode = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
@@ -30,6 +32,13 @@ const AGPSMode = ({ formData, onChange }: Props) => {
 
   const allowedChars = /^[A-Za-z0-9\-./:]*$/;
   const urlPattern = /^(https?:\/\/)?([^\s$.?#].[^\s]*)$/i;
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldsId.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -87,7 +96,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -105,6 +114,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>1014</InputBox.Number>
+          {isDirtyFields.includes("1014") && <EditDot />}
         </Stack>
         <SwitchPrimary
           onChange={(e) => handleChange("1014", e.target.checked ? "01" : "00")}
@@ -131,6 +141,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
                 ? FIELD_ERRORS["invalidUrl"][lang]
                 : undefined)
             }
+            isDirty={isDirtyFields.includes("1015")}
           />
         </Stack>
       )}
@@ -140,7 +151,7 @@ const AGPSMode = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, Dispatch, SetStateAction } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -18,16 +18,24 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.JammingDetection.en];
 
-const JammingDetection = ({ formData, onChange }: Props) => {
+const JammingDetection = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
   const [isJammingDetection, setIsJammingDetection] = useState(false);
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldsId.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -84,7 +92,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -119,6 +127,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1061")}
               />
               {formData["1061"]?.realValue !== "00" && (
                 <>
@@ -127,6 +136,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1062")}
                   />
 
                   <NumericInputField
@@ -134,6 +144,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1063")}
                   />
                 </>
               )}
@@ -146,6 +157,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1065")}
                   />
 
                   <NumericInputField
@@ -153,6 +165,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1066")}
                   />
 
                   <NumericInputField
@@ -160,6 +173,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1067")}
                   />
 
                   <NumericInputField
@@ -167,6 +181,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1068")}
                   />
                 </>
               )}
@@ -178,7 +193,7 @@ const JammingDetection = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDirtyFields.length === 0}
             >
               {t("notify.send")}
             </Button>
