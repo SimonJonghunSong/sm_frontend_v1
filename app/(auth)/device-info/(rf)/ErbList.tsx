@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Divider, Stack, Typography } from "@mui/material";
@@ -19,6 +19,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 const tooltipText = {
   en: "Use of RF(Radio Frequency). \n• Default : On",
@@ -28,11 +29,19 @@ const tooltipText = {
 
 const error = {};
 
-const ErbList = ({ formData, onChange }: Props) => {
+const ErbList = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -89,7 +98,7 @@ const ErbList = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -123,14 +132,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2511")}
           />
           <NumericInputField
             id="2512"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2512")}
           />
-          <SelectField id="2513" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2513"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2513")}
+          />
           <NumericInputField
             id="2514"
             formData={formData}
@@ -142,8 +158,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2514")}
           />
-          <SelectField id="2515" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2515"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2515")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 2</h3>
           <NumericInputField
@@ -157,14 +179,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2516")}
           />
           <NumericInputField
             id="2517"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2517")}
           />
-          <SelectField id="2518" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2518"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2518")}
+          />
           <NumericInputField
             id="2519"
             formData={formData}
@@ -176,8 +205,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2519")}
           />
-          <SelectField id="2520" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2520"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2520")}
+          />
 
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 3</h3>
@@ -192,14 +227,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2521")}
           />
           <NumericInputField
             id="2522"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2522")}
           />
-          <SelectField id="2523" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2523"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2523")}
+          />
           <NumericInputField
             id="2524"
             formData={formData}
@@ -211,8 +253,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2524")}
           />
-          <SelectField id="2525" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2525"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2525")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 4</h3>
           <NumericInputField
@@ -226,14 +274,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2526")}
           />
           <NumericInputField
             id="2527"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2527")}
           />
-          <SelectField id="2528" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2528"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2528")}
+          />
           <NumericInputField
             id="2529"
             formData={formData}
@@ -245,8 +300,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2529")}
           />
-          <SelectField id="2530" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2530"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2530")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 5</h3>
           <NumericInputField
@@ -260,14 +321,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2531")}
           />
           <NumericInputField
             id="2532"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2532")}
           />
-          <SelectField id="2533" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2533"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2533")}
+          />
           <NumericInputField
             id="2534"
             formData={formData}
@@ -279,8 +347,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2534")}
           />
-          <SelectField id="2535" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2535"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2535")}
+          />
         </Stack>
         <Stack direction="column" gap={"16px"} flex={1}>
           <h3>{t("configuration.rf.rf_device")} 6</h3>
@@ -295,14 +369,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2536")}
           />
           <NumericInputField
             id="2537"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2537")}
           />
-          <SelectField id="2538" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2538"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2538")}
+          />
           <NumericInputField
             id="2539"
             formData={formData}
@@ -314,8 +395,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2539")}
           />
-          <SelectField id="2540" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2540"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2540")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 7</h3>
           <NumericInputField
@@ -329,14 +416,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2541")}
           />
           <NumericInputField
             id="2542"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2542")}
           />
-          <SelectField id="2543" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2543"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2543")}
+          />
           <NumericInputField
             id="2544"
             formData={formData}
@@ -348,8 +442,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2544")}
           />
-          <SelectField id="2545" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2545"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2545")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 8</h3>
           <NumericInputField
@@ -363,14 +463,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2546")}
           />
           <NumericInputField
             id="2547"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2547")}
           />
-          <SelectField id="2548" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2548"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2548")}
+          />
           <NumericInputField
             id="2549"
             formData={formData}
@@ -382,8 +489,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2549")}
           />
-          <SelectField id="2550" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2550"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2550")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 9</h3>
           <NumericInputField
@@ -397,14 +510,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2551")}
           />
           <NumericInputField
             id="2552"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2552")}
           />
-          <SelectField id="2553" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2553"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2553")}
+          />
           <NumericInputField
             id="2554"
             formData={formData}
@@ -416,8 +536,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2554")}
           />
-          <SelectField id="2555" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2555"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2555")}
+          />
           <Divider />
           <h3>{t("configuration.rf.rf_device")} 10</h3>
           <NumericInputField
@@ -431,14 +557,21 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 9,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2556")}
           />
           <NumericInputField
             id="2557"
             formData={formData}
             onChange={handleChange}
             isSwitch
+            isDirty={isDirtyFields.includes("2557")}
           />
-          <SelectField id="2558" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2558"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2558")}
+          />
           <NumericInputField
             id="2559"
             formData={formData}
@@ -450,8 +583,14 @@ const ErbList = ({ formData, onChange }: Props) => {
               min: 6,
               max: 10,
             })}
+            isDirty={isDirtyFields.includes("2559")}
           />
-          <SelectField id="2560" formData={formData} onChange={handleChange} />
+          <SelectField
+            id="2560"
+            formData={formData}
+            onChange={handleChange}
+            isDirty={isDirtyFields.includes("2560")}
+          />
         </Stack>
       </Stack>
 
@@ -460,7 +599,7 @@ const ErbList = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -13,6 +13,7 @@ import DualCheckboxField from "app/(auth)/device-info/(components)/DualCheckboxF
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.PresenceFunction.en];
 
@@ -21,6 +22,11 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<
+    SetStateAction<{
+      [key: string]: FormField;
+    }>
+  >;
 }
 const tooltipText = {
   en: "The type of presence function.\n• Option\n - Participant\n - Coordinator",
@@ -30,12 +36,19 @@ const tooltipText = {
 
 const error = {};
 
-const PresenceFunction = ({ formData, onChange }: Props) => {
+const PresenceFunction = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -93,7 +106,7 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -111,6 +124,7 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>2561</InputBox.Number>
+          {isDirtyFields.includes("2561") && <EditDot />}
         </Stack>
 
         <SwitchPrimary
@@ -127,27 +141,32 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
                 id="2561"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2561")}
               />
               <NumericInputField
                 id="2563"
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2563")}
               />
               <SelectField
                 id="2562"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2562")}
               />
               <SwitchField
                 id="2564"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2564")}
               />
               <SelectField
                 id="2565"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2565")}
               />
             </Stack>
             <Stack direction="column" gap={"16px"} flex={1}>
@@ -156,28 +175,33 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2566")}
               />
               <NumericInputField
                 id="2567"
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2567")}
               />
               <NumericInputField
                 id="2568"
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2568")}
               />
               <NumericInputField
                 id="2569"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2569")}
               />
               <SwitchField
                 id="1642"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("1642")}
               />
             </Stack>
           </Stack>
@@ -187,7 +211,7 @@ const PresenceFunction = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || isDirtyFields.length === 0}
             >
               {t("notify.send")}
             </Button>
