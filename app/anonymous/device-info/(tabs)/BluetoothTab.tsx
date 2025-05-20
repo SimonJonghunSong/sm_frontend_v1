@@ -30,10 +30,10 @@ export default function BluetoothTab({
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
         key: name,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
@@ -41,7 +41,11 @@ export default function BluetoothTab({
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Ble formData={formData} onChange={handleValueChange} />
+      <Ble
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
       <BleRegistration
         formData={formData}
@@ -51,7 +55,11 @@ export default function BluetoothTab({
         port={port}
       />
 
-      <Sensor formData={formData} onChange={handleValueChange} />
+      <Sensor
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }
