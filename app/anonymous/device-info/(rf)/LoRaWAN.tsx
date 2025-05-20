@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -13,6 +13,7 @@ import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.LoRaWAN.en];
 
@@ -21,6 +22,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 const tooltipText = {
   en: "The type of presence function.\n• Option\n - Participant\n - Coordinator",
@@ -30,12 +32,21 @@ const tooltipText = {
 
 const error = {};
 
-const LoRaWAN = ({ formData, onChange }: Props) => {
+const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].value !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -102,7 +113,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -120,6 +131,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
             }
           />
           <InputBox.Number>2581</InputBox.Number>
+          {isDirtyFields.includes("2581") && <EditDot />}
         </Stack>
 
         <SwitchPrimary
@@ -142,18 +154,21 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                     ? FIELD_ERRORS["2582"][lang]
                     : undefined
                 }
+                isDirty={isDirtyFields.includes("2582")}
               />
               <NumericInputField
                 id="2583"
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2583")}
               />
               <NumericInputField
                 id="2584"
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2584")}
               />
               <TextInputField
                 id="2585"
@@ -165,6 +180,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                     ? FIELD_ERRORS["2585"][lang]
                     : undefined
                 }
+                isDirty={isDirtyFields.includes("2585")}
               />
               <TextInputField
                 id="2586"
@@ -176,6 +192,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                     ? FIELD_ERRORS["2586"][lang]
                     : undefined
                 }
+                isDirty={isDirtyFields.includes("2586")}
               />
               <TextInputField
                 id="2587"
@@ -187,6 +204,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                     ? FIELD_ERRORS["2587"][lang]
                     : undefined
                 }
+                isDirty={isDirtyFields.includes("2587")}
               />
             </Stack>
             <Stack direction="column" gap={"16px"} flex={1}>
@@ -195,56 +213,67 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                isDirty={isDirtyFields.includes("2588")}
               />
               <NumericInputField
                 id="2589"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2589")}
               />
               <NumericInputField
                 id="2590"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2590")}
               />
               <NumericInputField
                 id="2591"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2591")}
               />
               <NumericInputField
                 id="2592"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2592")}
               />
               <NumericInputField
                 id="2593"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2593")}
               />
               <SelectField
                 id="2594"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2594")}
               />
               <SelectField
                 id="2570"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2570")}
               />
               <NumericInputField
                 id="2595"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2595")}
               />
               <NumericInputField
                 id="2596"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2596")}
               />
               <NumericInputField
                 id="2597"
                 formData={formData}
                 onChange={handleChange}
+                isDirty={isDirtyFields.includes("2597")}
               />
             </Stack>
           </Stack>
@@ -254,7 +283,7 @@ const LoRaWAN = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isDirtyFields.length}
             >
               {t("notify.send")}
             </Button>
