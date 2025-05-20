@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -19,6 +19,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const tooltipText = {
@@ -27,12 +28,21 @@ const tooltipText = {
   es: "El dispositivo informará mensajes en Modo Inactivo.\n• Predeterminado: Activado\n* Desactivado significa que el dispositivo no enviará el Informe de Estado en Modo Inactivo, pero aún ingresará en el modo basado en los parámetros de Inactivo.\n* El modo Inactivo no se apagará por completo a menos que 1611 o 1612 estén configurados en 65,535, incluso si el Modo Inactivo está Desactivado.",
 };
 
-const IdleMode = ({ formData, onChange }: Props) => {
+const IdleMode = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].value !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -89,7 +99,7 @@ const IdleMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -121,42 +131,50 @@ const IdleMode = ({ formData, onChange }: Props) => {
               id="1610"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1610")}
             />
 
             <NumericInputField
               id="1611"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1611")}
             />
             <NumericInputField
               id="1612"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1612")}
             />
             <NumericInputField
               id="1613"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1613")}
             />
             <NumericInputField
               id="1614"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1614")}
             />
             <NumericInputField
               id="1615"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1615")}
             />
             <NumericInputField
               id="1616"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1616")}
             />
             <NumericInputField
               id="1617"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1617")}
             />
           </Stack>
 
@@ -165,7 +183,7 @@ const IdleMode = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isDirtyFields.length}
             >
               {t("notify.send")}
             </Button>

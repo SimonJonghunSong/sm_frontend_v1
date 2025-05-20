@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -18,6 +18,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const tooltipText = {
@@ -26,12 +27,21 @@ const tooltipText = {
   es: "El dispositivo informará mensajes en Modo de Remolque.\n• Predeterminado: Desactivado",
 };
 
-const TowingMode = ({ formData, onChange }: Props) => {
+const TowingMode = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].value !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -88,7 +98,7 @@ const TowingMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -120,6 +130,7 @@ const TowingMode = ({ formData, onChange }: Props) => {
               id="1636"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1636")}
             />
           </Stack>
 
@@ -128,7 +139,7 @@ const TowingMode = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isDirtyFields.length}
             >
               {t("notify.send")}
             </Button>

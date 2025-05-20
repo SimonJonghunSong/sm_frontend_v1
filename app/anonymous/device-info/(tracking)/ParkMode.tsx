@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -19,6 +19,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const tooltipText = {
@@ -27,12 +28,21 @@ const tooltipText = {
   es: "El dispositivo informará mensajes en Modo de Estacionamiento.\n• Predeterminado: Activado\n* Desactivado significa que el dispositivo no enviará el Informe de Estado en Modo de Estacionamiento, pero aún ingresará en el modo basado en los parámetros de Ignición.",
 };
 
-const InstallMode = ({ formData, onChange }: Props) => {
+const InstallMode = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].value !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -89,7 +99,7 @@ const InstallMode = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -121,12 +131,14 @@ const InstallMode = ({ formData, onChange }: Props) => {
               id="1605"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1605")}
             />
 
             <NumericInputField
               id="1606"
               formData={formData}
               onChange={handleChange}
+              isDirty={isDirtyFields.includes("1606")}
             />
           </Stack>
 
@@ -135,7 +147,7 @@ const InstallMode = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isDirtyFields.length}
             >
               {t("notify.send")}
             </Button>
