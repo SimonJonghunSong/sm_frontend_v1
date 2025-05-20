@@ -43,7 +43,7 @@ const ErbList = ({ formData, onChange, setFormData }: Props) => {
     return Object.keys(formData).filter((key) => {
       return (
         fieldIds.includes(key) &&
-        formData[key].value !== formData[key].realValue
+        formData[key].beforeValue !== formData[key].realValue
       );
     });
   }, [formData]);
