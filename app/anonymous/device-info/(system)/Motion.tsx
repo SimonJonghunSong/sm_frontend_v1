@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -12,6 +12,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import CheckboxComp from "../(components)/CheckboxComp";
+import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Motion.en];
 
@@ -20,6 +21,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 const tooltipText = {
   en: "• Default : On",
@@ -33,12 +35,21 @@ const labelsString = {
   TEXT_PT_ITEM_CONTENT: "Movimento, Choque, Colisão",
 };
 
-const Motion = ({ formData, onChange }: Props) => {
+const Motion = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   // TODO 렌더링 조건 추가 유틸로 만들어서 한번에 처리
   if (!formData) return null;
@@ -96,7 +107,7 @@ const Motion = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
         // 여기에 데이터 제출 로직 추가
       }}
     >
@@ -141,6 +152,7 @@ const Motion = ({ formData, onChange }: Props) => {
                     />
                   )}
                   <InputBox.Number>1900</InputBox.Number>
+                  {isDirtyFields.includes("1900") && <EditDot />}
                 </Stack>
                 <CheckboxComp
                   value={formData["1900"]?.realValue}
@@ -158,18 +170,21 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1901")}
               />
               <NumericInputField
                 id="1903"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1903")}
               />
               <NumericInputField
                 id="1904"
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1904")}
               />
             </Stack>
             <Stack gap={"24px"} flex={1}>
@@ -178,6 +193,7 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1902")}
               />
 
               <SwitchField
@@ -185,6 +201,7 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1915")}
               />
 
               {formData["1915"]?.realValue === "01" && (
@@ -194,12 +211,14 @@ const Motion = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1916")}
                   />
                   <NumericInputField
                     id="1917"
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1917")}
                   />
                 </>
               )}
@@ -209,6 +228,7 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1918")}
               />
 
               <SwitchField
@@ -216,6 +236,7 @@ const Motion = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1919")}
               />
 
               {formData["1919"]?.realValue === "01" && (
@@ -224,6 +245,7 @@ const Motion = ({ formData, onChange }: Props) => {
                   formData={formData}
                   onChange={handleChange}
                   style={{ width: "100%" }}
+                  isDirty={isDirtyFields.includes("1920")}
                 />
               )}
             </Stack>
@@ -234,7 +256,7 @@ const Motion = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isDirtyFields.length}
             >
               {t("notify.send")}
             </Button>
