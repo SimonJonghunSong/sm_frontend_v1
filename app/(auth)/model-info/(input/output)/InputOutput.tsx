@@ -10,6 +10,7 @@ import { hasFormDataFields } from "../../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "../../(utils)/useSendFormData";
+import EditDot from "../../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
@@ -94,7 +95,7 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -105,6 +106,7 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
             {SECTIONS["Input/Output"][lang]}
           </h1>
           <InputBox.Number>16</InputBox.Number>
+          {isDirtyFields.length > 0 && <EditDot />}
         </Stack>
       </Stack>
 

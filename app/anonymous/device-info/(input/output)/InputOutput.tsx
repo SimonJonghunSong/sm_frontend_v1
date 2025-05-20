@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { SetStateAction, Dispatch, useRef, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack, Tab as MuiTab, Tabs } from "@mui/material";
@@ -10,6 +10,7 @@ import { hasFormDataFields } from "../../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "../../(utils)/useSendFormData";
+import EditDot from "../../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
@@ -18,15 +19,25 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const InputOutput = ({ formData, onChange }: Props) => {
+const InputOutput = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
 
   const [tab, setTab] = useState<"input" | "output">("input");
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -91,6 +102,7 @@ const InputOutput = ({ formData, onChange }: Props) => {
             {SECTIONS["Input/Output"][lang]}
           </h1>
           <InputBox.Number>16</InputBox.Number>
+          {isDirtyFields.length > 0 && <EditDot />}
         </Stack>
       </Stack>
 
@@ -121,7 +133,7 @@ const InputOutput = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>
