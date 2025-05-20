@@ -31,10 +31,9 @@ export default function NetworkTab({ formData, setFormData }: Props) {
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
@@ -42,27 +41,71 @@ export default function NetworkTab({ formData, setFormData }: Props) {
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
-      <Network formData={formData} onChange={handleValueChange} />
+      <Network
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <APN formData={formData} onChange={handleValueChange} />
+      <APN
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <MainServer formData={formData} onChange={handleValueChange} />
+      <MainServer
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <BackupServer formData={formData} onChange={handleValueChange} />
+      <BackupServer
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <AGPSMode formData={formData} onChange={handleValueChange} />
+      <AGPSMode
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <MaintenanceServer formData={formData} onChange={handleValueChange} />
+      <MaintenanceServer
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <NTPServer formData={formData} onChange={handleValueChange} />
+      <NTPServer
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Satellite formData={formData} onChange={handleValueChange} />
+      <Satellite
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <JammingDetection formData={formData} onChange={handleValueChange} />
+      <JammingDetection
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Sms formData={formData} onChange={handleValueChange} />
+      <Sms
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
 
-      <Call formData={formData} onChange={handleValueChange} />
+      <Call
+        formData={formData}
+        onChange={handleValueChange}
+        setFormData={setFormData}
+      />
     </Stack>
   );
 }

@@ -76,6 +76,10 @@ export interface FormField {
   realValue: string;
   list: string[] | null;
   alert_id: string | null;
+  text_num: string | null;
+  beforeValue: string;
+  beforeAlertId: string | null;
+  beforeTextNum: string | null;
 }
 
 interface FormData {
@@ -135,6 +139,10 @@ const transformFieldData = (
       realValue,
       list: optionsValueList,
       alert_id: fieldData.alert_id,
+      text_num: fieldData.text_num,
+      beforeValue: realValue,
+      beforeAlertId: fieldData.alert_id,
+      beforeTextNum: fieldData.text_num,
     },
   ];
 };

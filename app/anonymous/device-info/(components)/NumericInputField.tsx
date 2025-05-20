@@ -6,6 +6,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import useParameterStore from "@/utils/useParameterStore";
+import EditDot from "./EditDot";
 
 interface InputFieldProps {
   id: string;
@@ -21,6 +22,7 @@ interface InputFieldProps {
   customErrorMessage?: string;
   isUnderbarId?: boolean; // 1670 같은 중복으로 인해서 추가된 속성
   isHiddenParameter?: boolean;
+  isDirty?: boolean;
 }
 
 const NumericInputField = ({
@@ -35,6 +37,7 @@ const NumericInputField = ({
   customErrorMessage,
   isUnderbarId,
   isHiddenParameter,
+  isDirty,
 }: InputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
@@ -93,6 +96,7 @@ const NumericInputField = ({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (

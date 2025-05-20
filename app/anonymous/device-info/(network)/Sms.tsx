@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -15,15 +15,25 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.SMS.en];
 
-const Sms = ({ formData, onChange }: Props) => {
+const Sms = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldsId.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -80,7 +90,7 @@ const Sms = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -94,6 +104,7 @@ const Sms = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1025")}
           />
         </Stack>
 
@@ -103,6 +114,7 @@ const Sms = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1030")}
           />
           {formData["1030"]?.realValue === "01" && (
             <>
@@ -111,6 +123,7 @@ const Sms = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1031")}
               />
 
               <NumericInputField
@@ -118,6 +131,7 @@ const Sms = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1032")}
               />
 
               <NumericInputField
@@ -125,6 +139,7 @@ const Sms = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1033")}
               />
 
               <NumericInputField
@@ -132,6 +147,7 @@ const Sms = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1034")}
               />
             </>
           )}
@@ -142,7 +158,7 @@ const Sms = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>

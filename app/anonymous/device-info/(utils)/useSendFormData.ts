@@ -2,7 +2,7 @@ import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { FormField } from "../page";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function useSendFormData() {
@@ -17,7 +17,12 @@ export default function useSendFormData() {
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
-  const sendFormData = async (formData: { [key: string]: FormField }) => {
+  const hasErrorRef = useRef(false);
+
+  const sendFormData = async (
+    formData: { [key: string]: FormField },
+    setFormData?: Dispatch<SetStateAction<{ [key: string]: FormField }>>
+  ) => {
     setIsLoading(true);
     console.log("Form values:", formData);
     const sortedFormData = Object.entries(formData)
@@ -108,10 +113,30 @@ export default function useSendFormData() {
       setTimeout(() => {
         alertBroadcastRef.current.removeEventListener("message", handleAlert);
         currentPort.port.isAlertSend = false;
-      }, 100);
+      }, 800);
     }
 
-    setIsLoading(false);
+    setTimeout(() => {
+      if (setFormData) {
+        if (!hasErrorRef.current) {
+          setFormData((prev) =>
+            Object.entries(prev).reduce((acc, [key, value]) => {
+              acc[key] = {
+                ...value,
+                beforeValue: value.realValue,
+                beforeAlertId: value.alert_id,
+                beforeTextNum: value.text_num,
+              };
+              return acc;
+            }, {} as { [key: string]: FormField })
+          );
+        }
+        setIsLoading(false);
+        hasErrorRef.current = false;
+      } else {
+        setIsLoading(false);
+      }
+    }, 100);
   };
 
   return { sendFormData, isLoading };

@@ -5,7 +5,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
-
+import EditDot from "./EditDot";
 interface DualCheckboxFieldProps {
   id: string;
   formData: {
@@ -25,6 +25,7 @@ interface DualCheckboxFieldProps {
   };
   switchDisabled?: boolean;
   hasSwitch?: boolean;
+  isDirty?: boolean;
 }
 
 const DualCheckboxField = ({
@@ -36,6 +37,7 @@ const DualCheckboxField = ({
   secondOptionLabel,
   switchDisabled,
   hasSwitch = true,
+  isDirty = false,
 }: DualCheckboxFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
@@ -135,6 +137,7 @@ const DualCheckboxField = ({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {hasSwitch && (

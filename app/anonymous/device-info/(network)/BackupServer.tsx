@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -29,15 +29,25 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.BackupServer.en];
 
-const BackupServer = ({ formData, onChange }: Props) => {
+const BackupServer = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldsId.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -95,7 +105,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -117,6 +127,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
                 : undefined
             }
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1008")}
           />
 
           <NumericInputField
@@ -124,6 +135,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1009")}
           />
         </Stack>
 
@@ -133,6 +145,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1010")}
           />
 
           <Stack gap={"16px"}>
@@ -145,6 +158,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
                 formData["1011"]?.realValue !== "0" &&
                 formData["1011"]?.realValue !== "00"
               }
+              isDirty={isDirtyFields.includes("1011")}
             />
 
             {formData["1011"]?.realValue !== "0" &&
@@ -167,6 +181,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1012")}
           />
 
           <NumericInputField
@@ -174,6 +189,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1017")}
           />
 
           <NumericInputField
@@ -181,6 +197,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1018")}
           />
 
           <NumericInputField
@@ -188,6 +205,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1019")}
           />
         </Stack>
       </Stack>
@@ -197,7 +215,7 @@ const BackupServer = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>

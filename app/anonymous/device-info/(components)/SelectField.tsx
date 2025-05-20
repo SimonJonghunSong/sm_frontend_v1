@@ -5,6 +5,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { FormField } from "../page";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
+import EditDot from "./EditDot";
 
 interface SelectFieldProps {
   id: string;
@@ -15,6 +16,7 @@ interface SelectFieldProps {
   isRequired?: boolean;
   isSwitch?: boolean;
   style?: React.CSSProperties;
+  isDirty?: boolean;
 }
 
 const SelectField = ({
@@ -24,6 +26,7 @@ const SelectField = ({
   isRequired,
   isSwitch,
   style,
+  isDirty,
 }: SelectFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
@@ -55,6 +58,7 @@ const SelectField = ({
           }
         />
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (

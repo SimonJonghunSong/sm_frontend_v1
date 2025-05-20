@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -17,6 +17,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.Satellite.en];
@@ -27,12 +28,21 @@ const tooltipText = {
   es: "Cuando el estado de la red es 'Sin Red' (por ejemplo, SIM con PIN bloqueado, No puede conectar a la red, Sin SIM, o SIM bloqueada), la salida se activará si este estado persiste durante el tiempo de retraso configurado.\nLa salida se desactivará una vez que el estado de la red vuelva a la normalidad.\n• Predeterminado: Desactivado",
 };
 
-const Satellite = ({ formData, onChange }: Props) => {
+const Satellite = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore();
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(false);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldsId.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -90,7 +100,7 @@ const Satellite = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -135,6 +145,7 @@ const Satellite = ({ formData, onChange }: Props) => {
                   pt: t("configuration.network.output2"),
                 }}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1052")}
               />
             </Stack>
             <Stack gap={"24px"} flex={1}>
@@ -143,6 +154,7 @@ const Satellite = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1053")}
               />
             </Stack>
           </Stack>
@@ -152,7 +164,7 @@ const Satellite = ({ formData, onChange }: Props) => {
               color="secondary"
               variant="contained"
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !isDirtyFields.length}
             >
               {t("notify.send")}
             </Button>

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -12,21 +12,36 @@ import NumericInputField from "../(components)/NumericInputField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 interface Props {
   formData: {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<
+    SetStateAction<{
+      [key: string]: FormField;
+    }>
+  >;
 }
 
 const fieldsId = INCLUDE_FIELDS[SECTIONS.Network.en];
 
-const Network = ({ formData, onChange }: Props) => {
+const Network = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldsId.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldsId)) return null;
 
@@ -84,7 +99,7 @@ const Network = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -98,6 +113,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1013")}
           />
 
           <NumericInputField
@@ -105,6 +121,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1027")}
           />
 
           <NumericInputField
@@ -112,6 +129,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1060")}
           />
         </Stack>
 
@@ -121,6 +139,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1054")}
           />
 
           <SelectField
@@ -128,6 +147,7 @@ const Network = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1016")}
           />
 
           {formData["1070"] && (
@@ -145,6 +165,7 @@ const Network = ({ formData, onChange }: Props) => {
                     }
                   />
                   <InputBox.Number>1070</InputBox.Number>
+                  {isDirtyFields.includes("1070") && <EditDot />}
                 </Stack>
 
                 <SwitchPrimary
@@ -162,6 +183,7 @@ const Network = ({ formData, onChange }: Props) => {
                     formData={formData}
                     onChange={handleChange}
                     style={{ width: "100%" }}
+                    isDirty={isDirtyFields.includes("1071")}
                   />
                 </Stack>
               )}
@@ -175,7 +197,7 @@ const Network = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isDirtyFields.length === 0}
         >
           {t("notify.send")}
         </Button>

@@ -5,7 +5,7 @@ import { Stack, TextField, Typography } from "@mui/material";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
-
+import EditDot from "./EditDot";
 interface SpecialRangeNumericFieldProps {
   id: string;
   formData: {
@@ -21,6 +21,7 @@ interface SpecialRangeNumericFieldProps {
   max?: number;
   unit?: string;
   helperText?: string;
+  isDirty?: boolean;
 }
 
 const SpecialRangeNumericField = ({
@@ -36,6 +37,7 @@ const SpecialRangeNumericField = ({
   max,
   unit,
   helperText,
+  isDirty,
 }: SpecialRangeNumericFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
@@ -140,6 +142,7 @@ const SpecialRangeNumericField = ({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
+        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (
