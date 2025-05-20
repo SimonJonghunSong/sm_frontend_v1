@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack, TextField } from "@mui/material";
@@ -10,6 +10,7 @@ import hasFormDataFields, {
 import InputBox from "@/components/inputbox/InputBox";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import EditDot from "../(components)/EditDot";
 
 export const OBD_PID = INCLUDE_FIELDS[SECTIONS.OBDPID.en];
 
@@ -24,15 +25,25 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const ObdPid = ({ formData, onChange }: Props) => {
+const ObdPid = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
 
   const existingFields = filterFormDataFields(formData, OBD_PID.map(String));
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        OBD_PID.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, existingFields)) return null;
 
@@ -90,7 +101,7 @@ const ObdPid = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -116,6 +127,7 @@ const ObdPid = ({ formData, onChange }: Props) => {
             <Stack direction="row" alignItems="center" gap="8px" flexShrink={0}>
               <h2>PID {index + 1 < 10 ? `0${index + 1}` : index + 1}</h2>
               <InputBox.Number>{field}</InputBox.Number>
+              {isDirtyFields.includes(field) && <EditDot />}
             </Stack>
             <TextField
               fullWidth
@@ -131,7 +143,7 @@ const ObdPid = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>

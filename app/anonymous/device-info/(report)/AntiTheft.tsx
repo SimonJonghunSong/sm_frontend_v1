@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -17,6 +17,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const tooltipText = {
@@ -25,11 +26,20 @@ const tooltipText = {
   pt: "A função anti-roubo usa um alarme, imobilizador e alertas do servidor para proteger contra roubo.\r\n• Padrão  : Ativado\r\n• A ignição deve estar ligada.\r\n• Um dos inputs deve ser configurado como 'Botão Anti-Roubo'.\r\n• Se uma das saídas estiver configurada como imobilizador ou alarme, ela pode ser automaticamente ativada quando uma violação anti-roubo ocorrer.",
 };
 
-const Report = ({ formData, onChange }: Props) => {
+const Report = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -87,7 +97,7 @@ const Report = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -108,12 +118,14 @@ const Report = ({ formData, onChange }: Props) => {
           id="1050"
           formData={formData}
           onChange={handleChange}
+          isDirty={isDirtyFields.includes("1050")}
         />
 
         <NumericInputField
           id="1051"
           formData={formData}
           onChange={handleChange}
+          isDirty={isDirtyFields.includes("1051")}
         />
       </Stack>
 
@@ -122,7 +134,7 @@ const Report = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>

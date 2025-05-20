@@ -19,7 +19,14 @@ import { FormField } from "../page";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import styled from "styled-components";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.AssignHeader.en];
@@ -35,6 +42,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 export default function AssignHeader({ imei, formData: formDataProps }: Props) {

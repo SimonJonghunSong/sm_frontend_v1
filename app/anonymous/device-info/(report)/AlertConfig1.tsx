@@ -7,17 +7,23 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import useLangStore from "@/utils/useLangStore";
 import { filterFormDataFields } from "../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
+import EditDot from "../(components)/EditDot";
 
 interface Props {
   formData: {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string, alertId?: string) => void;
+  isDirtyFields: string[];
 }
 
 export const ALERT_CONFIG_1 = INCLUDE_FIELDS[SECTIONS.AlertConfig1.en];
 
-export default function AlertConfig1({ formData, onChange }: Props) {
+export default function AlertConfig1({
+  formData,
+  onChange,
+  isDirtyFields,
+}: Props) {
   const { lang } = useLangStore();
 
   const existingFields = filterFormDataFields(
@@ -95,6 +101,7 @@ export default function AlertConfig1({ formData, onChange }: Props) {
               </InputBox.Title>
 
               <InputBox.Number>{field}</InputBox.Number>
+              {isDirtyFields.includes(field) && <EditDot />}
             </Stack>
           </Stack>
         ))}

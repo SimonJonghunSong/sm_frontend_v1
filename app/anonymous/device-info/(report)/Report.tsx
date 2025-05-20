@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -21,13 +21,23 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const Report = ({ formData, onChange }: Props) => {
+const Report = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -87,7 +97,7 @@ const Report = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -101,6 +111,7 @@ const Report = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1055")}
           />
           <DualCheckboxField
             id="1058"
@@ -117,18 +128,21 @@ const Report = ({ formData, onChange }: Props) => {
               es: t("configuration.report.sms"),
               pt: t("configuration.report.sms"),
             }}
+            isDirty={isDirtyFields.includes("1058")}
           />
           <SwitchField
             id="1064"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1064")}
           />
           <SwitchField
             id="1069"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1069")}
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
@@ -139,6 +153,7 @@ const Report = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("1072")}
               />
               {formData["1072"]?.realValue === "01" && (
                 <TextInputField
@@ -152,6 +167,7 @@ const Report = ({ formData, onChange }: Props) => {
                   }
                   onChange={handleChange}
                   style={{ width: "100%" }}
+                  isDirty={isDirtyFields.includes("1073")}
                 />
               )}
             </Stack>
@@ -162,6 +178,7 @@ const Report = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1074")}
           />
 
           <SelectField
@@ -169,6 +186,7 @@ const Report = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1075")}
           />
 
           <SwitchField
@@ -176,18 +194,21 @@ const Report = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1079")}
           />
           <SwitchField
             id="1097"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1097")}
           />
           <SwitchField
             id="1099"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("1099")}
           />
         </Stack>
       </Stack>
@@ -197,7 +218,7 @@ const Report = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>

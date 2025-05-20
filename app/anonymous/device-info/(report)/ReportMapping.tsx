@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -126,13 +126,23 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
-const ReportMapping = ({ formData, onChange }: Props) => {
+const ReportMapping = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -190,7 +200,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -209,6 +219,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1080"].optionString}
               labelString={checkboxOptions["1080"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1080")}
             />
           )}
           {!!formData["1082"] && (
@@ -219,6 +230,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1082"].optionString}
               labelString={checkboxOptions["1082"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1082")}
             />
           )}
         </Stack>
@@ -231,6 +243,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1084"].optionString}
               labelString={checkboxOptions["1084"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1084")}
             />
           )}
           {!!formData["1086"] && (
@@ -238,6 +251,8 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               id="1086"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1086")}
             />
           )}
           {!!formData["1087"] && Number(formData["1086"].realValue) !== 0 && (
@@ -248,6 +263,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1087"].optionString}
               labelString={checkboxOptions["1087"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1087")}
             />
           )}
           {!!formData["1088"] && (
@@ -255,6 +271,8 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               id="1088"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1088")}
             />
           )}
 
@@ -266,6 +284,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1089"].optionString}
               labelString={checkboxOptions["1089"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1089")}
             />
           )}
           {!!formData["1090"] && (
@@ -273,6 +292,8 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               id="1090"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1090")}
             />
           )}
           {!!formData["1091"] && Number(formData["1090"].realValue) !== 0 && (
@@ -283,6 +304,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1091"].optionString}
               labelString={checkboxOptions["1091"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1091")}
             />
           )}
           {!!formData["1092"] && (
@@ -293,6 +315,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1092"].optionString}
               labelString={checkboxOptions["1092"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1092")}
             />
           )}
 
@@ -301,6 +324,8 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               id="1093"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1093")}
             />
           )}
 
@@ -312,6 +337,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1094"].optionString}
               labelString={checkboxOptions["1094"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1094")}
             />
           )}
           {!!formData["1095"] && (
@@ -319,6 +345,8 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               id="1095"
               formData={formData}
               onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1095")}
             />
           )}
           {!!formData["1096"] && Number(formData["1095"].realValue) !== 0 && (
@@ -329,6 +357,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
               optionString={checkboxOptions["1096"].optionString}
               labelString={checkboxOptions["1096"].labelString}
               hasAllCheckbox
+              isDirty={isDirtyFields.includes("1096")}
             />
           )}
         </Stack>
@@ -339,7 +368,7 @@ const ReportMapping = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>
