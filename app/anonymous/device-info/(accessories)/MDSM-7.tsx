@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { SetStateAction, Dispatch, useRef, useMemo } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -19,6 +19,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const tooltips = {
@@ -27,11 +28,20 @@ const tooltips = {
   es: "Configuraciones de MDSM-7.\n* Cuando la línea de Activado de MDSM-7 está conectada, se apagará automáticamente durante el estacionamiento y se encenderá al iniciar la conducción.\n* Al arrancar, MDSM-7 envía todos los parámetros al dispositivo conectado.\n* Si MDSM-7 se desconecta o el dispositivo no recibe todos los parámetros al arrancar, los parámetros se almacenan en el dispositivo y se aplicarán en el siguiente arranque de MDSM-7.\n* Si se conecta un MDSM-7 diferente, el dispositivo cambiará los parámetros del nuevo MDSM-7.\n* Si el dispositivo está configurado como sin afectar, no cambiará las configuraciones de MDSM-7.",
 };
 
-const MDSM7 = ({ formData, onChange }: Props) => {
+const MDSM7 = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const isDirtyFields = useMemo(() => {
+    return Object.keys(formData).filter((key) => {
+      return (
+        fieldIds.includes(key) &&
+        formData[key].beforeValue !== formData[key].realValue
+      );
+    });
+  }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
@@ -89,7 +99,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
         }, {});
 
         // 필드 값들을 사용하여 수행할 작업
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
 
         // 여기에 데이터 제출 로직 추가
       }}
@@ -112,6 +122,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isSwitch
+            isDirty={isDirtyFields.includes("2350")}
           />
 
           <SwitchField
@@ -119,6 +130,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2351")}
           />
 
           <SpecialRangeNumericField
@@ -130,6 +142,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             max={200}
             isSwitch
             specialValues={[255]}
+            isDirty={isDirtyFields.includes("2352")}
           />
 
           <SwitchField
@@ -137,6 +150,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2353")}
           />
           {formData["2353"]?.realValue === "01" && (
             <>
@@ -146,6 +160,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 isSwitch
+                isDirty={isDirtyFields.includes("2355")}
               />
 
               <SwitchField
@@ -153,6 +168,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2354")}
               />
 
               <SelectField
@@ -160,6 +176,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2356")}
               />
             </>
           )}
@@ -169,6 +186,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2357")}
           />
 
           {formData["2357"]?.realValue === "01" && (
@@ -179,6 +197,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 isSwitch
+                isDirty={isDirtyFields.includes("2359")}
               />
 
               <SwitchField
@@ -186,6 +205,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2358")}
               />
 
               <SelectField
@@ -193,6 +213,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2360")}
               />
             </>
           )}
@@ -204,6 +225,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2361")}
           />
 
           {formData["2361"]?.realValue === "01" && (
@@ -214,6 +236,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 isSwitch
+                isDirty={isDirtyFields.includes("2363")}
               />
 
               <SwitchField
@@ -221,6 +244,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2362")}
               />
 
               <SelectField
@@ -228,6 +252,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2364")}
               />
             </>
           )}
@@ -237,6 +262,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2365")}
           />
 
           {formData["2365"]?.realValue === "01" && (
@@ -247,6 +273,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 isSwitch
+                isDirty={isDirtyFields.includes("2367")}
               />
 
               <SwitchField
@@ -254,6 +281,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2366")}
               />
 
               <SelectField
@@ -261,6 +289,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2368")}
               />
             </>
           )}
@@ -270,6 +299,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2369")}
           />
 
           {formData["2369"]?.realValue === "01" && (
@@ -280,6 +310,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 onChange={handleChange}
                 style={{ width: "100%" }}
                 isSwitch
+                isDirty={isDirtyFields.includes("2371")}
               />
 
               <SwitchField
@@ -287,6 +318,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2370")}
               />
 
               <SelectField
@@ -294,6 +326,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 style={{ width: "100%" }}
+                isDirty={isDirtyFields.includes("2372")}
               />
             </>
           )}
@@ -305,7 +338,7 @@ const MDSM7 = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>
