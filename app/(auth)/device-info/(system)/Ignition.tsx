@@ -122,7 +122,7 @@ const Ignition = ({ formData, onChange, setFormData }: Props) => {
       <Stack direction="row" justifyContent="space-between" alignItems="center">
         <Stack direction="row" gap={"4px"}>
           <h1 data-section-id={SECTIONS.Ignition.en}>
-            {SECTIONS.Ignition[lang]}22
+            {SECTIONS.Ignition[lang]}
           </h1>
           <InputBox.Info
             tooltipText={
@@ -341,7 +341,7 @@ const Form = styled.form`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 `;

@@ -119,6 +119,11 @@ const NumericInputField = ({
             value={formData[id].realValue}
             type="number"
             error={hasError}
+            onKeyDown={(e) => {
+              if (e.key === "e" || e.key === "E") {
+                e.preventDefault();
+              }
+            }}
             helperText={errorMessage}
             inputProps={
               typeof FIELD_VALIDATIONS[realId].min === "number" &&

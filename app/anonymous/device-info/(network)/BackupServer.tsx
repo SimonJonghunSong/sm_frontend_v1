@@ -148,34 +148,6 @@ const BackupServer = ({ formData, onChange, setFormData }: Props) => {
             isDirty={isDirtyFields.includes("1010")}
           />
 
-          <Stack gap={"16px"}>
-            <SwitchField
-              id="1011"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              customChecked={
-                formData["1011"]?.realValue !== "0" &&
-                formData["1011"]?.realValue !== "00"
-              }
-              isDirty={isDirtyFields.includes("1011")}
-            />
-
-            {formData["1011"]?.realValue !== "0" &&
-              formData["1011"]?.realValue !== "00" && (
-                <CheckboxComp
-                  value={formData["1011"]?.realValue}
-                  optionsString={optionsString}
-                  labelsString={labelsString}
-                  hasAllCheckbox={false}
-                  lang={lang}
-                  onChange={(newValue) => {
-                    handleChange("1011", newValue);
-                  }}
-                />
-              )}
-          </Stack>
-
           <NumericInputField
             id="1012"
             formData={formData}
@@ -237,7 +209,7 @@ const Form = styled.form`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 `;

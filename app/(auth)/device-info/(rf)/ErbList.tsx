@@ -621,8 +621,8 @@ const Form = styled.form`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 
   h3 {

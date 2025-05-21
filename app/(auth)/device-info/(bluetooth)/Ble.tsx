@@ -12,25 +12,10 @@ import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
-import CheckboxField from "../(components)/CheckboxField";
 import SelectField from "../(components)/SelectField";
 import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Ble.en];
-
-const checkboxOptions = {
-  "4028": {
-    optionString: "b0, b2, b4, b7, b8, b9, b10",
-    labelString: {
-      TEXT_EN_ITEM_CONTENT:
-        "ELA, ConMet, ELA+ConMet, Otodata, ELA+Otodata, ConMet+Otodata, ELA+ConMet+Otodata",
-      TEXT_PT_ITEM_CONTENT:
-        "ELA, ConMet, ELA+ConMet, Otodata, ELA+Otodata, ConMet+Otodata, ELA+ConMet+Otodata",
-      TEXT_ES_ITEM_CONTENT:
-        "ELA, ConMet, ELA+ConMet, Otodata, ELA+Otodata, ConMet+Otodata, ELA+ConMet+Otodata",
-    },
-  },
-};
 
 interface Props {
   formData: {
@@ -53,7 +38,7 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
     );
   });
 
-  if (!formData["4021"] || !hasFormDataFields(formData, fieldIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -125,17 +110,18 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
               </span>
             }
           />
-          <InputBox.Number>4021</InputBox.Number>
+          {formData["4021"] && <InputBox.Number>4021</InputBox.Number>}
           {isDirtyFields.includes("4021") && <EditDot />}
         </Stack>
-
-        <SwitchPrimary
-          checked={formData["4021"]?.realValue === "01"}
-          onChange={(e) => onChange("4021", e.target.checked ? "01" : "00")}
-        />
+        {formData["4021"] && (
+          <SwitchPrimary
+            checked={formData["4021"]?.realValue === "01"}
+            onChange={(e) => onChange("4021", e.target.checked ? "01" : "00")}
+          />
+        )}
       </Stack>
 
-      {formData["4021"]?.realValue === "01" && (
+      {(formData["4021"]?.realValue === "01" || !formData["4021"]) && (
         <Stack direction={"row"} gap={"24px"}>
           <Stack gap={"24px"} flex={1}>
             <NumericInputField
@@ -261,7 +247,7 @@ const Form = styled.form`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 `;

@@ -17,27 +17,27 @@ export default function CellularInformation() {
       <Stack direction="column" flex={1}>
         <FieldItem>
           <FieldLabel>Modem Status</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Network Status</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Current Operator</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Signal Level</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Socket Type</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Socket</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
       </Stack>
     </Container>
@@ -55,8 +55,8 @@ const Container = styled.div`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 `;
 

@@ -54,11 +54,11 @@ export default function GNSSInformation({ lat, lng }: Props) {
         </FieldItem>
         <FieldItem>
           <FieldLabel>Angle</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
           <FieldLabel>Speed</FieldLabel>
-          <FieldValue>NA</FieldValue>
+          <FieldValue>N/A</FieldValue>
         </FieldItem>
       </Stack>
     </Container>
@@ -76,8 +76,8 @@ const Container = styled.div`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 `;
 

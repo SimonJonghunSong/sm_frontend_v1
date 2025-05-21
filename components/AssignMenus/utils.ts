@@ -14,7 +14,7 @@ export function parseAssigns(input: string): AssignResult {
   for (const line of lines) {
     console.log("line :::", line);
 
-    const parts = line.split(",");
+    const parts = line.replaceAll("$PST;CSV;", "").split(",");
 
     const [
       s_id,

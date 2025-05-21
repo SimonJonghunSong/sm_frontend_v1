@@ -202,9 +202,9 @@ export const SECTIONS = {
     pt: "RS232",
   },
   WireSettings: {
-    en: "Wire Settings",
-    es: "Configuración de Cable",
-    pt: "Configuração de Cabo",
+    en: "1-Wire Settings",
+    es: "Configuración 1-Wire",
+    pt: "Configurações 1-Wire",
   },
 
   // Input/Output

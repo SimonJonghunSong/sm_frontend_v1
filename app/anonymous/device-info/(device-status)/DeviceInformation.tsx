@@ -21,10 +21,10 @@ export default function DeviceInformation({
   const { lang } = useLangStore();
 
   const renderVersion = (type: string) => {
-    const value = deviceVersionsObject?.[type] || "NA";
+    const value = deviceVersionsObject?.[type] || "N/A";
 
     if (value.includes("NotSupport")) {
-      return "NA";
+      return "N/A";
     }
 
     return value;
@@ -67,15 +67,15 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>RTC Time</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>Operating Time</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>Battery Activation Time</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
         </Stack>
         <Stack direction="column" flex={1}>
@@ -85,7 +85,7 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>ESN</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>GNSS Version</FieldLabel>
@@ -93,19 +93,19 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>Backup Battery Level</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>Battery Activation Log</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>GNSS State</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>WWAN State</FieldLabel>
-            <FieldValue>NA</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>Reboot</FieldLabel>
@@ -145,8 +145,8 @@ const Container = styled.div`
   h1 {
     padding: 16px 0;
     font-weight: 700;
-    font-size: 16px;
-    line-height: 14px;
+    font-size: 20px;
+    line-height: 100%;
   }
 `;
 
