@@ -130,11 +130,11 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
   const { getProfileData } = useTransformedConfigData({
-    data: currentPort.packageToJson.synctrak,
+    data: currentPort?.packageToJson.synctrak,
     blacklist: ["info", "Circular Geofence", "Polygon Geofence"],
   });
 
-  const geofenceMaxCount = currentPort.packageToJson.synctrak?.reduce(
+  const geofenceMaxCount = currentPort?.packageToJson.synctrak?.reduce(
     (acc, tab) => {
       const tabsValue = Object.values(tab);
 

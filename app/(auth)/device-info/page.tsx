@@ -214,7 +214,7 @@ export default function DeviceInfoPage() {
   const [isFechedPackage, setIsFechedPackage] = useState(false);
   const packageCountRef = useRef(0);
 
-  const { getCurrentImei } = useSerialConfigurationStore();
+  const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
   const imei = getCurrentImei();
 
@@ -224,8 +224,6 @@ export default function DeviceInfoPage() {
 
   const originData = portList.find(({ port }) => port.imei === imei)
     ?.packageToJson.synctrak;
-
-  console.log("originData ::", originData);
 
   const navigate = useRouter();
 
@@ -243,8 +241,6 @@ export default function DeviceInfoPage() {
   const [formData, setFormData] = useState<{
     [key: string]: FormField | null;
   }>(null);
-
-  console.log("formData :::", formData);
 
   const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
@@ -459,8 +455,6 @@ export default function DeviceInfoPage() {
 
   useEffect(() => {
     if (originData) {
-      console.log("여기 타나요~~?????");
-
       const formDataValues = transformOriginData(originData);
 
       setFormData(formDataValues);
@@ -476,7 +470,7 @@ export default function DeviceInfoPage() {
     }
   }, [currentPort?.port?.readable, currentPort?.port?.writable]);
 
-  const { setPackageFetchingStart } = useSerialStore();
+  const { setPackageFetchingStart, deleteSerialPort } = useSerialStore();
 
   const handleRefreshJsonPacket = async () => {
     setIsLoading(true);
@@ -522,10 +516,11 @@ export default function DeviceInfoPage() {
   useEffect(() => {
     if (!originData) {
       navigate.replace("/device");
+      resetImei();
+      resetTab();
+      deleteSerialPort({ imei });
     }
   }, [originData]);
-
-  console.log(originData);
 
   return (
     <>

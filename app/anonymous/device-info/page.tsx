@@ -217,16 +217,15 @@ export default function DeviceInfoPage() {
 
   const [isCmdModalWide, setIsCmdModalWide] = useState(false);
 
-  const { getCurrentImei } = useSerialConfigurationStore();
+  const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
   const { isOpen: cmdModal, toggleOpen: cmdModalToggle } = useCmdStore();
   const imei = getCurrentImei();
 
   const { lang } = useLangStore();
 
-  const currentPort = portList.find(({ port }) => port.imei === imei);
+  const currentPort = portList.find(({ port }) => port.imei === imei) || null;
 
-  const originData = portList.find(({ port }) => port.imei === imei)
-    ?.packageToJson.synctrak;
+  const originData = currentPort?.packageToJson?.synctrak;
 
   console.log("originData ::", originData);
 
@@ -263,6 +262,8 @@ export default function DeviceInfoPage() {
   const toggleSearchModal = isOpen ? onClose : onOpen;
 
   const handleReboot = () => {
+    if (!currentPort) return;
+
     write({
       data: `${AT_CMD}${imei};03;03`,
       port: currentPort.port,
@@ -271,6 +272,8 @@ export default function DeviceInfoPage() {
   };
 
   const renderContent = () => {
+    if (!currentPort) return null;
+
     switch (tab) {
       case "DeviceStatus":
         return (
@@ -360,6 +363,8 @@ export default function DeviceInfoPage() {
   };
 
   const handleApply = async () => {
+    if (!currentPort) return;
+
     setIsLoading(true);
     const profileLines = profile.split("\n");
 
@@ -392,9 +397,11 @@ export default function DeviceInfoPage() {
     }
   }, [currentPort?.port?.readable, currentPort?.port?.writable]);
 
-  const { setPackageFetchingStart } = useSerialStore();
+  const { setPackageFetchingStart, deleteSerialPort } = useSerialStore();
 
   const handleRefreshJsonPacket = async () => {
+    if (!currentPort) return;
+
     setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
     setPackageFetchingStart({ imei: currentPort.port.imei });
@@ -413,7 +420,7 @@ export default function DeviceInfoPage() {
       }
     };
     for (const command of commands) {
-      await delayPromise(300); // 300ms 지연
+      await delayPromise(300);
 
       write({
         data: command,
@@ -438,6 +445,9 @@ export default function DeviceInfoPage() {
   useEffect(() => {
     if (!originData) {
       navigate.replace("/device");
+      resetImei();
+      resetTab();
+      deleteSerialPort({ imei });
     }
   }, [originData]);
 

@@ -60,15 +60,16 @@ export default function ModelInfoController({
     state: { portList },
     func: { setIsDisconnected, setIsConnected, write },
   } = useSerial();
-  const currentPort = portList.find(({ port }) => port.imei === modelNameState);
+  const currentPort =
+    portList.find(({ port }) => port.imei === modelNameState) || null;
 
   const {
     state: { isDownloading, percentage },
     func: { getProfileAllData },
   } = useProfile({
-    port: currentPort.port,
-    writer: currentPort.writer,
-    imei,
+    port: currentPort?.port || null,
+    writer: currentPort?.writer || null,
+    imei: imei || "",
     writeSerial: write,
   });
   const {
@@ -164,6 +165,9 @@ export default function ModelInfoController({
     const targetProt = portList.find(
       ({ port }) => port.imei === event.target.value
     );
+
+    if (!targetProt) return;
+
     const targetModelName = targetProt.modelVersion?.split("_")[0];
     const targetFwVer =
       targetProt.modelVersion?.split("_")[
@@ -311,6 +315,7 @@ export default function ModelInfoController({
         <Stack direction="row" gap="8px" alignItems="center">
           <IconButton
             disabled={
+              !currentPort ||
               (!currentPort.port.readable && !currentPort.port.writable) ||
               currentPort.isDisconnected
             }
@@ -319,6 +324,7 @@ export default function ModelInfoController({
             <RefreshOutlinedIcon
               sx={{
                 color:
+                  !currentPort ||
                   (!currentPort.port.readable && !currentPort.port.writable) ||
                   currentPort.isDisconnected
                     ? "var(--grey4)"
@@ -339,7 +345,7 @@ export default function ModelInfoController({
               );
             })}
           </Select>
-          {!currentPort.isDisconnected ? (
+          {currentPort && !currentPort.isDisconnected ? (
             <Button
               variant="outlined"
               color="secondary"
@@ -357,10 +363,13 @@ export default function ModelInfoController({
               variant="contained"
               color="secondary"
               disabled={
-                !currentPort.port.readable && !currentPort.port.writable
+                !currentPort ||
+                (!currentPort.port.readable && !currentPort.port.writable)
               }
               onClick={() => {
-                setIsConnected({ imei: currentPort.port.imei });
+                if (currentPort) {
+                  setIsConnected({ imei: currentPort.port.imei });
+                }
               }}
             >
               {t("configuration.profile_menu.connect")}
