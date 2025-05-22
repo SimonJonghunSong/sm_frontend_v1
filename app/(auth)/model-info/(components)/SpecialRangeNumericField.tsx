@@ -165,6 +165,11 @@ const SpecialRangeNumericField = ({
             required={isRequired}
             value={formData[id].realValue}
             type="number"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             error={hasError}
             size="small"
             inputProps={{

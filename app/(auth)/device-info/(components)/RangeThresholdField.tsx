@@ -206,6 +206,11 @@ const RangeThresholdField = ({
             required={isRequired}
             value={minValue}
             type="number"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             error={isError}
             size="small"
             inputProps={{
@@ -223,6 +228,11 @@ const RangeThresholdField = ({
             required={isRequired}
             value={maxValue}
             type="number"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             error={isError}
             size="small"
             style={{ flex: 1 }}
