@@ -464,6 +464,8 @@ export default function DeviceInfoPage() {
     }
   }, [originData]);
 
+  console.log(originData, "originData");
+
   useEffect(() => {
     if (currentPort?.port?.readable && currentPort?.port?.writable) {
       setIsReady(true);

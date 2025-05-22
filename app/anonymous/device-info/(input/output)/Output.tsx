@@ -188,9 +188,13 @@ export default function Output({ formData, onChange }: Props) {
             value={formData?.[value.id]?.realValue}
             onChange={(e) => onChange(value.id, e.target.value as string)}
           >
-            {FIELD_VALIDATIONS?.[value.id]?.list?.map((item) => (
-              <MenuItem value={item.value}>{item.label[lang]}</MenuItem>
-            ))}
+            {FIELD_VALIDATIONS?.[value.id]?.list
+              ?.filter((typeId) =>
+                formData[value.id].list.includes(typeId.value)
+              )
+              ?.map((item) => (
+                <MenuItem value={item.value}>{item.label[lang]}</MenuItem>
+              ))}
           </Select>
         </Stack>
       ),
