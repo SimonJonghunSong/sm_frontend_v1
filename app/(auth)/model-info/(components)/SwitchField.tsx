@@ -16,6 +16,7 @@ interface SwitchFieldProps {
   customChecked?: boolean;
   isRequired?: boolean;
   isDirty?: boolean;
+  isUnderbarId?: boolean;
 }
 
 const SwitchField = ({
@@ -26,9 +27,11 @@ const SwitchField = ({
   customChecked,
   isRequired,
   isDirty = false,
+  isUnderbarId = false,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
+  const realId = isUnderbarId ? `${id}_${1}` : id;
   if (!formData[id]) return null;
 
   return (
@@ -41,7 +44,7 @@ const SwitchField = ({
     >
       <Stack direction="row" gap="4px" alignItems="center">
         <InputBox.Title>
-          {FIELD_VALIDATIONS[id].title[lang]}
+          {FIELD_VALIDATIONS[realId].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
           )}
@@ -49,7 +52,7 @@ const SwitchField = ({
         <InputBox.Info
           tooltipText={
             <span style={{ whiteSpace: "pre-wrap" }}>
-              {FIELD_VALIDATIONS[id].tooltip[lang]}
+              {FIELD_VALIDATIONS[realId].tooltip[lang]}
             </span>
           }
         />

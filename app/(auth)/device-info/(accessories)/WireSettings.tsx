@@ -161,29 +161,31 @@ const WireSettings = ({ formData, onChange, setFormData }: Props) => {
             isDirty={isDirtyFields.includes("1973")}
           />
 
-          <TextInputField
-            id="1974"
-            formData={formData}
-            onChange={handleChange}
-            error={
-              formData["1974"]?.value &&
-              (new TextEncoder().encode(formData["1974"].value).length > 16 ||
-                (formData["1975"]?.value &&
-                  formData["1974"].value === formData["1975"].value))
-            }
-            style={{ width: "100%" }}
-            helperText={
-              formData["1974"]?.value
-                ? new TextEncoder().encode(formData["1974"].value).length > 16
-                  ? errorMessages.longBytes[lang]
-                  : formData["1975"]?.value &&
-                    formData["1974"].value === formData["1975"].value
-                  ? errorMessages.duplicateValues[lang]
+          {formData["1974"].key.includes("I-Button Add Master") && (
+            <TextInputField
+              id="1974"
+              formData={formData}
+              onChange={handleChange}
+              error={
+                formData["1974"]?.value &&
+                (new TextEncoder().encode(formData["1974"].value).length > 16 ||
+                  (formData["1975"]?.value &&
+                    formData["1974"].value === formData["1975"].value))
+              }
+              style={{ width: "100%" }}
+              helperText={
+                formData["1974"]?.value
+                  ? new TextEncoder().encode(formData["1974"].value).length > 16
+                    ? errorMessages.longBytes[lang]
+                    : formData["1975"]?.value &&
+                      formData["1974"].value === formData["1975"].value
+                    ? errorMessages.duplicateValues[lang]
+                    : undefined
                   : undefined
-                : undefined
-            }
-            isDirty={isDirtyFields.includes("1974")}
-          />
+              }
+              isDirty={isDirtyFields.includes("1974")}
+            />
+          )}
 
           <TextInputField
             id="1975"

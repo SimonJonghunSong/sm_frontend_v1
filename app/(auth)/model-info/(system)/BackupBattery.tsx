@@ -164,13 +164,16 @@ const BackupBattery = ({ formData, onChange, setFormData }: Props) => {
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("1973")}
           />
-          <SwitchField
-            id="1974"
-            formData={formData}
-            onChange={handleChange}
-            style={{ width: "100%" }}
-            isDirty={isDirtyFields.includes("1974")}
-          />
+          {formData["1974"].key.includes("I-Button Add Master") && (
+            <SwitchField
+              id="1974"
+              isUnderbarId
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1974")}
+            />
+          )}
         </Stack>
       </Stack>
 

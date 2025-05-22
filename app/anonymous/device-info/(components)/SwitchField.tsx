@@ -14,6 +14,7 @@ interface SwitchFieldProps {
   style?: React.CSSProperties;
   customChecked?: boolean;
   isDirty?: boolean;
+  isUnderbarId?: boolean;
 }
 
 const SwitchField = ({
@@ -23,8 +24,11 @@ const SwitchField = ({
   style,
   customChecked,
   isDirty,
+  isUnderbarId,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
+
+  const realId = isUnderbarId ? `${id}_${1}` : id;
 
   if (!formData[id]) return null;
 
@@ -37,11 +41,11 @@ const SwitchField = ({
       style={style}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>{FIELD_VALIDATIONS[id].title[lang]}</InputBox.Title>
+        <InputBox.Title>{FIELD_VALIDATIONS[realId].title[lang]}</InputBox.Title>
         <InputBox.Info
           tooltipText={
             <span style={{ whiteSpace: "pre-wrap" }}>
-              {FIELD_VALIDATIONS[id].tooltip[lang]}
+              {FIELD_VALIDATIONS[realId].tooltip[lang]}
             </span>
           }
         />

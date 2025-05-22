@@ -9306,6 +9306,21 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "1974_1": {
+    title: {
+      en: "Prevent Shutdown by Magnet",
+      pt: "Prevenir Desligamento por Ímã",
+      es: "Prevenir Desactivado por Imán",
+    },
+    tooltip: {
+      en: "Prevent turning off the device using a magnet (button).\r\n• Default : Off",
+      es: "Evitar apagar el dispositivo usando un imán (botón).\r\n• Predeterminado: Desactivado",
+      pt: "Prevenir o desligamento do dispositivo usando um ímã (botão).\r\n• Padrão  : Desativado",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
   "1975": {
     title: {
       en: "I-Button Remove Master",
