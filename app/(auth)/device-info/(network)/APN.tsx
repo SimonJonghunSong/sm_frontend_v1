@@ -112,7 +112,7 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
             id="1001"
             formData={formData}
             onChange={handleChange}
-            isRequired
+            // isRequired
             style={{ width: "100%" }}
             error={!/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)}
             helperText={

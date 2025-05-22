@@ -121,7 +121,7 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
-            isRequired
+            // isRequired
             isDirty={isDirtyFields.includes("1001")}
           />
         </Stack>
