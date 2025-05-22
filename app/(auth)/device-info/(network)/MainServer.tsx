@@ -21,11 +21,11 @@ const optionsString =
   "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b29, b30, b31";
 const labelsString = {
   TEXT_EN_ITEM_CONTENT:
-    "Status, Alert, Travel, External Serial, OBDII Travel, OBDII, RFA, PID, OVD, CAM, BLE, TWS, TIC, TIS, TRQ, TPR, Sensor (ASNB), Sensor (ASNE), BSA, EMD, CID, JID",
+    "ASTT, AALT, ATRV, AUEX, AOTR, AOBD, ARFA, APID, AOVD, ACAM, ABLE, ATWS, ATIC, ATIS, ATRQ, ATPR, ASNB, ASNE, ABSA, AEMD, ACID, AJID",
   TEXT_ES_ITEM_CONTENT:
-    "Estado, Alerta, Viaje, Serial Externo, Viaje OBDII, OBDII, RFA, PID, OVD, CAM, BLE, TWS, TIC, TIS, TRQ, TPR, Sensor (ASNB), Sensor (ASNE), BSA, EMD, CID, JID",
+    "ASTT, AALT, ATRV, AUEX, AOTR, AOBD, ARFA, APID, AOVD, ACAM, ABLE, ATWS, ATIC, ATIS, ATRQ, ATPR, ASNB, ASNE, ABSA, AEMD, ACID, AJID",
   TEXT_PT_ITEM_CONTENT:
-    "Status, Alerta, Viagem, Serial Externo, Viagem OBDII, OBDII, RFA, PID, OVD, CAM, BLE, TWS, TIC, TIS, TRQ, TPR, Sensor (ASNB), Sensor (ASNE), BSA, EMD, CID, JID",
+    "ASTT, AALT, ATRV, AUEX, AOTR, AOBD, ARFA, APID, AOVD, ACAM, ABLE, ATWS, ATIC, ATIS, ATRQ, ATPR, ASNB, ASNE, ABSA, AEMD, ACID, AJID",
 };
 interface Props {
   formData: {

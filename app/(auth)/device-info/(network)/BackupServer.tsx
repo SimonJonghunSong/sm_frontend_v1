@@ -147,14 +147,6 @@ const BackupServer = ({ formData, onChange, setFormData }: Props) => {
           />
 
           <NumericInputField
-            id="1012"
-            formData={formData}
-            onChange={handleChange}
-            style={{ width: "100%" }}
-            isDirty={isDirtyFields.includes("1012")}
-          />
-
-          <NumericInputField
             id="1017"
             formData={formData}
             onChange={handleChange}
