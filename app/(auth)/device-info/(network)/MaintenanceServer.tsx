@@ -14,6 +14,7 @@ import TimeHMA from "../(components)/TimeHMA";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import useParameterStore from "@/utils/useParameterStore";
 
 interface Props {
   formData: {
@@ -36,6 +37,7 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+  const { hiddenParameter } = useParameterStore();
 
   const isDirtyFields = Object.keys(formData).filter((key) => {
     return (
@@ -44,7 +46,7 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
     );
   });
 
-  if (!hasFormDataFields(formData, fieldsId)) return null;
+  if (!hasFormDataFields(formData, fieldsId) || hiddenParameter) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -179,9 +181,6 @@ export default MaintenanceServer;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 0px #0000001a;
-  border-radius: 8px;
-  padding: 24px;
   gap: 16px;
 
   h1 {

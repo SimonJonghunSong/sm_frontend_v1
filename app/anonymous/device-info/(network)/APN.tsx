@@ -130,7 +130,6 @@ const APN = ({ formData, onChange, setFormData }: Props) => {
             id="1002"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
             error={!/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)}
             helperText={
@@ -145,7 +144,6 @@ const APN = ({ formData, onChange, setFormData }: Props) => {
             id="1003"
             formData={formData}
             onChange={handleChange}
-            isRequired
             style={{ width: "100%" }}
             error={!/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)}
             helperText={
@@ -185,9 +183,6 @@ export default APN;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 0px #0000001a;
-  border-radius: 8px;
-  padding: 24px;
   gap: 16px;
 
   h1 {

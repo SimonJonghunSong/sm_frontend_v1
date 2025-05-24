@@ -53,11 +53,24 @@
     padding: 24px;
     background-color: #f4f4f4;
     border-radius: 8px;
-    .galleryTitle {
-      font-size: 18px;
-      font-weight: 500;
+    .galleryTitleWrap {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      align-items: center;
+      .galleryTitle {
+        font-size: 18px;
+        font-weight: 500;
+      }
+      .galleryDescription {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--grey5);
+      }
     }
     .galleryThumbnail {
+      width: 100%;
+      aspect-ratio: 1/1;
       height: auto;
       img {
         // TODO: mix-blend-mode 불필요 할 수도 있음.

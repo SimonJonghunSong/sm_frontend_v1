@@ -42,6 +42,13 @@ export default function SearchModal({
   const [searchParamResults, setSearchParamResults] = useState<SearchResult[]>(
     []
   );
+
+  const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowAllParamResult(false);
+    setShowAllSectionResult(false);
+    setSearchTerm(e.target.value);
+  };
+
   const renderSearchResults = () => {
     if (searchSectionResults.length === 0 && searchParamResults.length === 0)
       return <EmptyResults />;
@@ -184,7 +191,7 @@ export default function SearchModal({
         <TextField
           autoFocus
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchTermChange}
           fullWidth
           placeholder={t("gnb.pw_set.search")}
           InputProps={{
@@ -193,8 +200,9 @@ export default function SearchModal({
                 {searchTerm && (
                   <IconButton
                     onClick={() => {
-                      setSearchTerm("");
-                      setShowAllParamResult(false);
+                      handleSearchTermChange({
+                        target: { value: "" },
+                      } as React.ChangeEvent<HTMLInputElement>);
                     }}
                     sx={{ width: 28, height: 28 }}
                   >

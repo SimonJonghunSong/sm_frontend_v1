@@ -10,8 +10,8 @@ import TextInputField from "../(components)/TextInputField";
 import { hasFormDataFields } from "../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
+import useParameterStore from "@/utils/useParameterStore";
 
-// TODO 진행중
 interface Props {
   formData: {
     [key: string]: FormField;
@@ -27,6 +27,7 @@ const NTPServer = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+  const { hiddenParameter } = useParameterStore();
 
   const isDirtyFields = Object.keys(formData).filter((key) => {
     return (
@@ -35,7 +36,7 @@ const NTPServer = ({ formData, onChange, setFormData }: Props) => {
     );
   });
 
-  if (!hasFormDataFields(formData, fieldIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds) || hiddenParameter) return null;
 
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
@@ -141,9 +142,6 @@ export default NTPServer;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 0px #0000001a;
-  border-radius: 8px;
-  padding: 24px;
   gap: 16px;
 
   h1 {

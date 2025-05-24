@@ -6,6 +6,8 @@ import useLangStore from "@/utils/useLangStore";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import EditDot from "./EditDot";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 // Constants
 const DEFAULT_HOUR_VALUE = "01";
 const DEFAULT_MIN_VALUE = "00";
@@ -126,7 +128,9 @@ export default function TimeHMA({
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(!!formData[id]?.realValue);
 
-  if (!formData[id]) return null;
+  const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+  if (!formData[id] || (isHiddenParameter && hiddenParameter)) return null;
 
   const hour = value?.slice(0, 2) || DEFAULT_HOUR_VALUE;
   const min = value?.slice(2, 4) || DEFAULT_MIN_VALUE;
@@ -164,7 +168,9 @@ export default function TimeHMA({
       }}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>
+        <InputBox.Title
+          style={isHiddenParameter ? { color: "#FF0000" } : undefined}
+        >
           {FIELD_VALIDATIONS[id].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>

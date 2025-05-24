@@ -68,9 +68,6 @@ export default function GNSSInformation({ lat, lng }: Props) {
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 0px #0000001a;
-  border-radius: 8px;
-  padding: 24px;
   gap: 16px;
 
   h1 {
