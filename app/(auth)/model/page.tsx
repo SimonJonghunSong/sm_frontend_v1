@@ -612,19 +612,20 @@ function GalleryView({ rows, onNetworkError }: DataTableProps) {
           {paginatedRows.map((item, index) => (
             <li key={item.id}>
               <div className={styles.galleryThumbnail}>
-                <Box>
-                  <img
-                    src={item.col1}
-                    alt="model"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                    }}
-                  />
-                </Box>
+                <img
+                  src={item.col1}
+                  alt="model"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }}
+                />
               </div>
-              <div className={styles.galleryTitle}>{item.col2}</div>
+              <div className={styles.galleryTitleWrap}>
+                <div className={styles.galleryTitle}>{item.col2}</div>
+                <div className={styles.galleryDescription}>v.{item.col3}</div>
+              </div>
               <ModelButton
                 style={{ padding: "8px 0px" }}
                 model={item.col2}
