@@ -7,6 +7,8 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditDot from "./EditDot";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 interface TextInputFieldProps {
   id: string;
   formData: {
@@ -33,15 +35,19 @@ const TextInputField = ({
   isDirty = false,
 }: TextInputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
+  const { hiddenParameter } = useParameterStore();
 
   const [showPassword, setShowPassword] = useState(false);
+  const isHiddenParameter = hiddenParameterId.includes(id);
 
-  if (!formData[id]) return null;
+  if (!formData[id] || (isHiddenParameter && hiddenParameter)) return null;
 
   return (
     <Stack width={"calc(50% - 8px)"} gap={"8px"} style={style}>
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>
+        <InputBox.Title
+          style={isHiddenParameter ? { color: "#FF0000" } : undefined}
+        >
           {FIELD_VALIDATIONS[id].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>

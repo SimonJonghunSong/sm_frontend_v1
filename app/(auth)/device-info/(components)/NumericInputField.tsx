@@ -80,7 +80,9 @@ const NumericInputField = ({
       style={{ ...(isSwitch && { position: "relative" }), ...style }}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title style={{ color: isHiddenParameter && "#FF0000" }}>
+        <InputBox.Title
+          style={{ color: isHiddenParameter ? "#FF0000" : undefined }}
+        >
           {FIELD_VALIDATIONS[realId].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
