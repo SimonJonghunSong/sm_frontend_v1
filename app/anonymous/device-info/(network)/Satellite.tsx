@@ -180,9 +180,6 @@ export default Satellite;
 const Form = styled.form`
   display: flex;
   flex-direction: column;
-  box-shadow: 0px 1px 5px 0px #0000001a;
-  border-radius: 8px;
-  padding: 24px;
   gap: 16px;
 
   h1 {
