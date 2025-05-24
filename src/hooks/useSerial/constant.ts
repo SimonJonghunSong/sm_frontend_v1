@@ -119,6 +119,7 @@ export const AT_GET_CIRCULAR_GEOFENCE_999_LIST = (imei: string) => [
 export const STX = String.fromCharCode(0x02); // Start of Text
 export const ETX = String.fromCharCode(0x03); // End of Text
 export const CR = String.fromCharCode(0x0d); // End of Text
+export const ESC = String.fromCharCode(0x1b); // End of Text
 
 export const EXCLUDE_STRING = [
   "AT+CFUN=4",

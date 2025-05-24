@@ -128,30 +128,35 @@ const PresenceDevice = ({ formData, onChange, setFormData }: Props) => {
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2571")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2572"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2572")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2573"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2573")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2574"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2574")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2575"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2575")}
+            style={{ width: "100%" }}
           />
         </Stack>
         <Stack direction="column" gap={"16px"} flex={1}>
@@ -160,30 +165,35 @@ const PresenceDevice = ({ formData, onChange, setFormData }: Props) => {
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2576")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2577"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2577")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2578"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2578")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2579"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2579")}
+            style={{ width: "100%" }}
           />
           <TextInputField
             id="2580"
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("2580")}
+            style={{ width: "100%" }}
           />
         </Stack>
       </Stack>

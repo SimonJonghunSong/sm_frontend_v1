@@ -155,6 +155,7 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                     : undefined
                 }
                 isDirty={isDirtyFields.includes("2582")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2583"
@@ -162,6 +163,7 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2583")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2584"
@@ -169,6 +171,7 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2584")}
+                style={{ width: "100%" }}
               />
               <TextInputField
                 id="2585"
@@ -181,6 +184,7 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                     : undefined
                 }
                 isDirty={isDirtyFields.includes("2585")}
+                style={{ width: "100%" }}
               />
               <TextInputField
                 id="2586"
@@ -193,6 +197,7 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                     : undefined
                 }
                 isDirty={isDirtyFields.includes("2586")}
+                style={{ width: "100%" }}
               />
               <TextInputField
                 id="2587"
@@ -205,6 +210,7 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                     : undefined
                 }
                 isDirty={isDirtyFields.includes("2587")}
+                style={{ width: "100%" }}
               />
             </Stack>
             <Stack direction="column" gap={"16px"} flex={1}>
@@ -214,66 +220,77 @@ const LoRaWAN = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2588")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2589"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2589")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2590"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2590")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2591"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2591")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2592"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2592")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2593"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2593")}
+                style={{ width: "100%" }}
               />
               <SelectField
                 id="2594"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2594")}
+                style={{ width: "100%" }}
               />
               <SelectField
                 id="2570"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2570")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2595"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2595")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2596"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2596")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2597"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2597")}
+                style={{ width: "100%" }}
               />
             </Stack>
           </Stack>

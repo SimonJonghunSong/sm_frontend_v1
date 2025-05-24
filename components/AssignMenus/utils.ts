@@ -1,15 +1,17 @@
+import { ESC } from "@/src/hooks/useSerial/constant";
+
 type AssignResult = {
   s_assigns: { id: string; title: string; description: string }[];
   m_assigns: { id: string; title: string; description: string }[];
   l_assigns: { id: string; title: string; description: string }[];
 };
 
-export function parseAssigns(input: string): AssignResult {
+export function parseAssigns(input: string, isQuecModel?: boolean): AssignResult {
   const s_assigns: { id: string; title: string; description: string }[] = [];
   const m_assigns: { id: string; title: string; description: string }[] = [];
   const l_assigns: { id: string; title: string; description: string }[] = [];
 
-  const lines = input.trim().split("\n");
+  const lines = input.trim().split(isQuecModel ? ESC : "\n");
 
   for (const line of lines) {
     console.log("line :::", line);

@@ -35,7 +35,7 @@ const SelectField = ({
   );
 
   if (!formData[id]) return null;
-  const hardwareList = formData[id].list;
+  const hardwareList = formData[id]?.list || [];
 
   return (
     <Stack
@@ -88,7 +88,7 @@ const SelectField = ({
             onChange={(e) => onChange(id, e.target.value)}
           >
             {FIELD_VALIDATIONS[id].list
-              .filter((listItem) => hardwareList.includes(listItem.value))
+              ?.filter((listItem) => hardwareList.includes(listItem.value))
               .map((item) => (
                 <MenuItem key={item.value} value={item.value}>
                   {item.label[lang]}

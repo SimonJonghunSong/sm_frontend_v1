@@ -137,13 +137,22 @@ const useSerialStore = create(
             .split(ETX)
             .filter((buffer) => !!buffer);
 
+          console.log("jsonPkgArray ::::", jsonPkgArray);
+
           const json = parse(
             jsonPkgArray
               .join("")
+              .replaceAll("r\nOK\r\n", "")
+              .replaceAll("\nOK\n", "")
+              .replaceAll("\rOK\r", "")
               .replace(/\$PST;JSON_PK;\d{2};[0-9a-fA-F]{2};/g, "")
+              .replace(/\AT+ST="AT^$ReqJsonPk;No;\d{1,2}"/g, "")
               .replace(/,\s*([\]}])/g, "$1")
               .replace(/\0/g, "")
           );
+
+          console.log("json ::::", json);
+          
 
           return {
             portList: getState.portList.map((prevPort) =>

@@ -142,6 +142,7 @@ const PresenceFunction = ({ formData, onChange, setFormData }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2561")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2563"
@@ -149,24 +150,28 @@ const PresenceFunction = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2563")}
+                style={{ width: "100%" }}
               />
               <SelectField
                 id="2562"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2562")}
+                style={{ width: "100%" }}
               />
               <SwitchField
                 id="2564"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2564")}
+                style={{ width: "100%" }}
               />
               <SelectField
                 id="2565"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2565")}
+                style={{ width: "100%" }}
               />
             </Stack>
             <Stack direction="column" gap={"16px"} flex={1}>
@@ -176,6 +181,7 @@ const PresenceFunction = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2566")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2567"
@@ -183,6 +189,7 @@ const PresenceFunction = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2567")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2568"
@@ -196,12 +203,14 @@ const PresenceFunction = ({ formData, onChange, setFormData }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2569")}
+                style={{ width: "100%" }}
               />
               <SwitchField
                 id="1642"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("1642")}
+                style={{ width: "100%" }}
               />
             </Stack>
           </Stack>
