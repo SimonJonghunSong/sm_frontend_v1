@@ -137,7 +137,6 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
-            isRequired
             isDirty={isDirtyFields.includes("1002")}
           />
 
@@ -152,7 +151,6 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }
-            isRequired
             isDirty={isDirtyFields.includes("1003")}
           />
           <TextInputField
