@@ -68,6 +68,8 @@ export const initDB = () => {
 
 export const updateJsonDataToIDB = async (
   modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
   updateDatas: any,
   geofence?: IDBGeofence
 ) => {
@@ -77,11 +79,23 @@ export const updateJsonDataToIDB = async (
     const db = (await initDB()) as IDBDatabase;
     return new Promise(async (resolve, reject) => {
       // 1. 현재 저장된 데이터 가져오기
-      const currentData = (await getModelDataFromIDB(modelName)) as any;
+      const currentData = (await getModelDataFromIDB(
+        modelName,
+        fwVersion,
+        targetCountry
+      )) as any;
+      console.log("currentData ::::", currentData);
+
       const currentJsonData = currentData?.jsonData?.synctrak;
 
       if (!currentData || !currentJsonData) {
-        reject(new Error(`No data found for model: ${modelName}`));
+        reject(
+          new Error(
+            `No data found for model: ${modelName}_${fwVersion}${
+              targetCountry ? `_${targetCountry.join("_")}` : ""
+            }`
+          )
+        );
         return;
       }
 
@@ -140,7 +154,9 @@ export const updateJsonDataToIDB = async (
       const store = transaction.objectStore(STORE_NAME);
 
       const request = store.put({
-        modelName,
+        modelName: `${modelName}_${fwVersion}${
+          targetCountry ? `_${targetCountry.join("_")}` : ""
+        }`,
         jsonData: currentData.jsonData,
         csvData: currentData.csvData,
         geofence: geofence ||
@@ -159,14 +175,14 @@ export const updateJsonDataToIDB = async (
 
 export const saveJsonDataToIDB = async (
   modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
   data: {
     jsonData: any;
     csvData: CsvData[];
     geofence?: IDBGeofence;
   }
 ) => {
-  console.log("data :::", data);
-
   try {
     const db = (await initDB()) as IDBDatabase;
     return new Promise((resolve, reject) => {
@@ -174,7 +190,9 @@ export const saveJsonDataToIDB = async (
       const store = transaction.objectStore(STORE_NAME);
 
       const request = store.put({
-        modelName,
+        modelName: `${modelName}_${fwVersion}${
+          targetCountry ? `_${targetCountry.join("_")}` : ""
+        }`,
         jsonData: data?.jsonData,
         csvData: data?.csvData,
         geofence: data?.geofence || { circular: [], polygon: [] },
@@ -189,14 +207,22 @@ export const saveJsonDataToIDB = async (
   }
 };
 
-export const getJsonDataFromIDB = async (modelName: string) => {
+export const getJsonDataFromIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[]
+) => {
   try {
     const db = (await initDB()) as IDBDatabase;
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([STORE_NAME], "readonly");
       const store = transaction.objectStore(STORE_NAME);
 
-      const request = store.get(modelName);
+      const request = store.get(
+        `${modelName}_${fwVersion}${
+          targetCountry ? `_${targetCountry.join("_")}` : ""
+        }`
+      );
 
       request.onsuccess = () => resolve(request.result?.jsonData || null);
       request.onerror = () => reject(request.error);
@@ -208,7 +234,9 @@ export const getJsonDataFromIDB = async (modelName: string) => {
 };
 
 export const getModelDataFromIDB = async (
-  modelName: string
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[]
 ): Promise<IDBModelData | null> => {
   try {
     const db = (await initDB()) as IDBDatabase;
@@ -216,7 +244,11 @@ export const getModelDataFromIDB = async (
       const transaction = db.transaction([STORE_NAME], "readonly");
       const store = transaction.objectStore(STORE_NAME);
 
-      const request = store.get(modelName);
+      const request = store.get(
+        `${modelName}_${fwVersion}${
+          targetCountry ? `_${targetCountry.join("_")}` : ""
+        }`
+      );
 
       request.onsuccess = () => resolve(request.result || null);
       request.onerror = () => reject(request.error);
@@ -227,14 +259,22 @@ export const getModelDataFromIDB = async (
   }
 };
 
-export const deleteJsonDataFromIDB = async (modelName: string) => {
+export const deleteJsonDataFromIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[]
+) => {
   try {
     const db = (await initDB()) as IDBDatabase;
     return new Promise((resolve, reject) => {
       const transaction = db.transaction([STORE_NAME], "readwrite");
       const store = transaction.objectStore(STORE_NAME);
 
-      const request = store.delete(modelName);
+      const request = store.delete(
+        `${modelName}_${fwVersion}${
+          targetCountry ? `_${targetCountry.join("_")}` : ""
+        }`
+      );
 
       request.onsuccess = () => resolve(true);
       request.onerror = () => reject(request.error);
@@ -246,7 +286,9 @@ export const deleteJsonDataFromIDB = async (modelName: string) => {
 };
 
 export const checkModelDataExists = async (
-  modelName: string
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[]
 ): Promise<boolean> => {
   try {
     const db = (await initDB()) as IDBDatabase;
@@ -254,7 +296,11 @@ export const checkModelDataExists = async (
       const transaction = db.transaction([STORE_NAME], "readonly");
       const store = transaction.objectStore(STORE_NAME);
 
-      const request = store.get(modelName);
+      const request = store.get(
+        `${modelName}_${fwVersion}${
+          targetCountry ? `_${targetCountry.join("_")}` : ""
+        }`
+      );
 
       request.onsuccess = () => {
         const data = request.result;

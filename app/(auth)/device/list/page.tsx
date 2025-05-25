@@ -76,7 +76,7 @@ export default function DeviceList() {
     func: { requestPort, forget, write, setIsDisconnected, setIsConnected },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
-  const { setModelName, setFwVer } = useModelInfoStore();
+  const { setModelName, setFwVer, setTargetCountry } = useModelInfoStore();
 
   const columns: GridColDef[] = [
     {
@@ -237,6 +237,7 @@ export default function DeviceList() {
                       params.value.port.port.modelinfo.split("_").length - 1
                     ]
                   );
+                  setTargetCountry([]);
                   router.push(`/device-info`);
                 }}
               >
@@ -303,6 +304,7 @@ export default function DeviceList() {
               currentPort.port.modelinfo.split("_").length - 1
             ]
           );
+          setTargetCountry([]);
           router.push(`/device-info`);
         }
 

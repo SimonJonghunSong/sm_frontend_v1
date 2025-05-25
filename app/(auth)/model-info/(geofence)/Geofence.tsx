@@ -126,9 +126,11 @@ const Geofence = ({
   onAdd,
   onEdit,
 }: Props) => {
-  const { getModelName, getFwVer } = useModelInfoStore();
+  const { getModelName, getFwVer, getTargetCountry } = useModelInfoStore();
 
   const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const targetCountry = useMemo(() => getTargetCountry(), [getTargetCountry]);
 
   const [typeFilter, setTypeFilter] = useState<"All" | "Polygon" | "Circular">(
     "All"
@@ -368,7 +370,9 @@ const Geofence = ({
   useEffect(() => {
     const loadGeofence = async () => {
       const modelData = (await getModelDataFromIDB(
-        modelName
+        modelName,
+        fwVer,
+        targetCountry
       )) as IDBModelData | null;
       if (modelData && modelData.geofence) {
         setCircularGeofences(modelData.geofence.circular || []);

@@ -50,7 +50,7 @@ function SearchModelInfoModal({ onClose }: { onClose: () => void }) {
   const searchRef = useRef<HTMLInputElement>();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const { modelName } = useModelInfoStore();
+  const { modelName, fw_ver, target_country } = useModelInfoStore();
   const { setTab } = useModelInfoTabStore();
   const [showAllResult, setShowAllResult] = useState(false);
   const [categorizedParams, setCategorizedParams] = useState<
@@ -60,11 +60,13 @@ function SearchModelInfoModal({ onClose }: { onClose: () => void }) {
   // IndexedDB에서 모델 데이터 가져오기
   useEffect(() => {
     const fetchModelData = async () => {
-      if (!modelName) return;
+      if (!modelName || !fw_ver) return;
 
       try {
         const modelData = (await getJsonDataFromIDB(
-          modelName
+          modelName,
+          fw_ver,
+          target_country
         )) as ModelConfigWithData[];
         if (!modelData || !Array.isArray(modelData)) return;
 

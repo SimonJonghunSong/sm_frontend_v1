@@ -187,6 +187,7 @@ export default function Model() {
             }}
             model={params.row.col2}
             model_version={params.row.col3}
+            target_country={params.row.target_country}
           />
         );
       },
@@ -365,7 +366,11 @@ export default function Model() {
         const loadedRows = await Promise.all(
           rows.map(async (item) => {
             try {
-              const jsonData = await getJsonDataFromIDB(item.col2);
+              const jsonData = await getJsonDataFromIDB(
+                item.col2,
+                item.col3,
+                item.target_country
+              );
               return jsonData
                 ? { ...item, idbData: jsonData, hide: false }
                 : null;
@@ -630,6 +635,7 @@ function GalleryView({ rows, onNetworkError }: DataTableProps) {
                 style={{ padding: "8px 0px" }}
                 model={item.col2}
                 model_version={item.col3}
+                target_country={item.target_country}
                 onNetworkError={onNetworkError}
               />
             </li>
@@ -699,9 +705,15 @@ function LinearDeterminate({ setEndLoaded }) {
   );
 }
 
-function ModelButton({ onNetworkError, model, model_version, style }) {
+function ModelButton({
+  onNetworkError,
+  model,
+  model_version,
+  target_country,
+  style,
+}) {
   const t = useTranslations("home");
-  const { setModelName, setFwVer } = useModelInfoStore();
+  const { setModelName, setFwVer, setTargetCountry } = useModelInfoStore();
   const router = useRouter();
   const { isOnline } = useNetworkMonitor();
   const [startLoaded, setStartLoaded] = useState<boolean>(false);
@@ -712,7 +724,7 @@ function ModelButton({ onNetworkError, model, model_version, style }) {
     onSuccess: async (res) => {
       try {
         // await saveJsonDataToIDB("ST4505", res.data.result.records);
-        await saveJsonDataToIDB(model, {
+        await saveJsonDataToIDB(model, model_version, target_country, {
           jsonData: res.data.result.records.json_data,
           csvData: res.data.result.records.csv_data,
         });
@@ -726,8 +738,11 @@ function ModelButton({ onNetworkError, model, model_version, style }) {
 
   const handleConfigurationClick = (e) => {
     e.stopPropagation();
+    console.log("target_country :::", target_country);
+
     setModelName(model);
     setFwVer(model_version);
+    setTargetCountry(target_country);
     router.push(`/model-info`);
   };
 
@@ -738,7 +753,11 @@ function ModelButton({ onNetworkError, model, model_version, style }) {
   useEffect(() => {
     const fetchJsonData = async () => {
       try {
-        const jsonData = await getJsonDataFromIDB(model);
+        const jsonData = await getJsonDataFromIDB(
+          model,
+          model_version,
+          target_country
+        );
         if (jsonData) {
           setIsLoaded(true);
         }

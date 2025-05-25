@@ -185,6 +185,7 @@ export const getAdminRows = (data?: Model[]) => {
     col9: { id: "1" },
     loaded: false,
     lang,
+    target_country: item.target_country,
   }));
 };
 
@@ -199,4 +200,5 @@ export const getRows = (data?: (Model & { loaded: boolean })[]) =>
     col7: dayjs(item.reg_date).format("MMM/DD/YYYY HH:mm"),
     loaded: item.loaded,
     hide: item.hide,
+    target_country: item.target_country,
   }));
