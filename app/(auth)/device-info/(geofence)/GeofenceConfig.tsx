@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Dispatch, SetStateAction, useRef } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -15,6 +15,7 @@ interface Props {
     [key: string]: FormField;
   };
   onChange: (id: string, value: string) => void;
+  setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
 }
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.GeofenceConfig.en];
@@ -25,7 +26,7 @@ const tooltipText = {
   pt: "Controle os itens de opção das configurações de Geofence.",
 };
 
-const GeofenceConfig = ({ formData, onChange }: Props) => {
+const GeofenceConfig = ({ formData, onChange, setFormData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
@@ -97,7 +98,7 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
         console.log("Form values:", fieldValues);
 
         // 여기에 데이터 제출 로직 추가
-        sendFormData(fieldValues);
+        sendFormData(fieldValues, setFormData);
       }}
     >
       <Stack direction="row" gap={"4px"} alignItems="center">
