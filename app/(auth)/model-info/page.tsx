@@ -633,6 +633,7 @@ export default function DeviceInfoPage() {
     modelName,
     modelVersion: fwVer,
     data: originData,
+    formData,
   });
 
   useEffect(() => {
@@ -661,6 +662,7 @@ export default function DeviceInfoPage() {
         />
         <Stack flex={1}>
           <Controller
+            formData={formData}
             data={originData}
             getOriginData={getOriginData}
             onLoadProfile={(profile) => {
