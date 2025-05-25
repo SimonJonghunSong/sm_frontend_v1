@@ -1,26 +1,36 @@
 import { ModelConfig } from "@/src/api/services/model/type";
 
+// enterAlert
+// exitAlert
+// showOutputActive
+// outputActive
+// outputKeepActive
+// outputActiveDelay
+// buzzerSpeedLimit
+// antiJamming
+
 export interface IDBCircularGeofence {
+  id?: number;
   latitude: number;
   longitude: number;
   distance: number; // radius
-  inAlert: boolean;
-  outAlert: boolean;
-  outAct: string;
-  outActDelay?: string;
-  speed?: string;
+  enterAlert: boolean;
+  exitAlert: boolean;
+  showOutputActive: boolean;
+  outputActive: string;
+  outputActiveDelay?: string;
+  outputKeepActive?: boolean;
   buzzerSpeedLimit?: boolean;
-  antiJam?: boolean;
-  speedLimitDebounce?: number;
-  id?: string;
+  antiJamming?: boolean;
 }
 
 export interface IDBPolygonGeofence {
-  coordinates: Array<[number, number]>;
-  inAlert: boolean;
-  outAlert: boolean;
-  speed?: string; // Polygon Speed limit
-  id?: string;
+  id: number;
+  coordinates: Array<{ lat: number; lng: number }>;
+  enterAlert: boolean;
+  exitAlert: boolean;
+  buzzerSpeedLimit?: string;
+  speedLimitDebounce?: string; // Polygon Speed limit
 }
 
 export interface IDBGeofence {
@@ -312,4 +322,166 @@ export const checkModelDataExists = async (
     console.error("Error checking data in IndexedDB:", error);
     return false;
   }
+};
+
+/**
+ * modelData에 polygon geofence만 추가(또는 갱신)하는 함수
+ * @param modelName 모델명
+ * @param polygons 추가/갱신할 polygon geofence 배열
+ */
+export const updatePolygonGeofenceToIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
+  polygons: IDBPolygonGeofence[]
+) => {
+  const modelData = (await getModelDataFromIDB(
+    modelName,
+    fwVersion,
+    targetCountry
+  )) as IDBModelData | null;
+
+  const newModelData: IDBModelData = {
+    jsonData: modelData?.jsonData ?? {},
+    csvData: modelData?.csvData ?? [],
+    geofence: {
+      circular: modelData?.geofence?.circular || [],
+      polygon: polygons,
+    },
+  };
+
+  await saveJsonDataToIDB(modelName, fwVersion, targetCountry, newModelData);
+};
+
+export const upsertCircularGeofencesToIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
+  newCirculars: IDBCircularGeofence[]
+) => {
+  // 1. 기존 데이터 불러오기
+  const modelData = (await getModelDataFromIDB(
+    modelName,
+    fwVersion,
+    targetCountry
+  )) as IDBModelData | null;
+
+  const oldCirculars = modelData?.geofence?.circular || [];
+
+  // 2. id 기준으로 merge
+  const merged = [...oldCirculars];
+  newCirculars.forEach((newItem) => {
+    const idx = merged.findIndex((item) => item.id === newItem.id);
+    if (idx !== -1) {
+      merged[idx] = { ...merged[idx], ...newItem }; // 업데이트
+    } else {
+      merged.push(newItem); // 새로 추가
+    }
+  });
+
+  // 3. 저장
+  const newModelData: IDBModelData = {
+    jsonData: modelData?.jsonData ?? {},
+    csvData: modelData?.csvData ?? [],
+    geofence: {
+      circular: merged,
+      polygon: modelData?.geofence?.polygon || [],
+    },
+  };
+
+  await saveJsonDataToIDB(modelName, fwVersion, targetCountry, newModelData);
+};
+
+export const upsertPolygonGeofencesToIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
+  newPolygons: IDBPolygonGeofence[]
+) => {
+  const modelData = (await getModelDataFromIDB(
+    modelName,
+    fwVersion,
+    targetCountry
+  )) as IDBModelData | null;
+
+  const oldPolygons = modelData?.geofence?.polygon || [];
+
+  const merged = [...oldPolygons];
+  newPolygons.forEach((newItem) => {
+    const idx = merged.findIndex((item) => item.id === newItem.id);
+    if (idx !== -1) {
+      merged[idx] = { ...merged[idx], ...newItem };
+    } else {
+      merged.push(newItem);
+    }
+  });
+
+  const newModelData: IDBModelData = {
+    jsonData: modelData?.jsonData ?? {},
+    csvData: modelData?.csvData ?? [],
+    geofence: {
+      circular: modelData?.geofence?.circular || [],
+      polygon: merged,
+    },
+  };
+
+  await saveJsonDataToIDB(modelName, fwVersion, targetCountry, newModelData);
+};
+
+export const deletePolygonGeofenceFromIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
+  id: number
+) => {
+  const modelData = await getModelDataFromIDB(
+    modelName,
+    fwVersion,
+    targetCountry
+  );
+  if (!modelData) return;
+
+  const newPolygons = (modelData.geofence?.polygon || []).filter(
+    (item) => item.id !== id
+  );
+
+  const newModelData: IDBModelData = {
+    jsonData: modelData.jsonData,
+    csvData: modelData.csvData,
+    geofence: {
+      circular: modelData.geofence?.circular || [],
+      polygon: newPolygons,
+    },
+  };
+
+  await saveJsonDataToIDB(modelName, fwVersion, targetCountry, newModelData);
+};
+
+export const deleteCircularGeofenceFromIDB = async (
+  modelName: string,
+  fwVersion: string,
+  targetCountry: string[],
+  id: number
+) => {
+  const modelData = await getModelDataFromIDB(
+    modelName,
+    fwVersion,
+    targetCountry
+  );
+  if (!modelData) return;
+
+  const newCirculars = (modelData.geofence?.circular || []).filter(
+    (item) => item.id !== id
+  );
+
+  const newModelData: IDBModelData = {
+    jsonData: modelData.jsonData,
+    csvData: modelData.csvData,
+    geofence: {
+      circular: newCirculars,
+      polygon: modelData.geofence?.polygon || [],
+    },
+  };
+
+  await saveJsonDataToIDB(modelName, fwVersion, targetCountry, newModelData);
 };

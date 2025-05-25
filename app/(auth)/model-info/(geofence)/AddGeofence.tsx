@@ -13,25 +13,17 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import Maps from "@/components/Map";
-import { useReducer, useRef, useState } from "react";
+import { useMemo, useReducer, useRef, useState } from "react";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import DataTable from "@/components/dataTable";
-import { getPolygonGeofenceData } from "@/src/hooks/useSerial/utils";
-import { SerialPortState } from "@/src/stores/useSerialStore";
 import { useTranslations } from "next-intl";
 import { SwitchPrimary } from "@/components/switches";
 import { FormField } from "../page";
-import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
 import {
-  convertCircleCoordinatesToHexString,
-  convertCoordinatesToHexString,
-} from "@/utils/coordinateToHex";
-import {
-  AT_EDIT_PREFIX,
-  POLYGON_GEOFENCE_POINTS,
-} from "@/src/hooks/useSerial/constant";
-import { chunkDataByNumberAndWrite } from "@/src/functions";
-import { delayPromise } from "@/src/hooks/useSerial";
+  upsertCircularGeofencesToIDB,
+  upsertPolygonGeofencesToIDB,
+} from "@/utils/idbModelUtil";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 interface Props {
   formData: {
@@ -40,6 +32,7 @@ interface Props {
   polygonGeofenceMax: number;
   circularGeofenceMax: number;
   circularGeofenceKeys: string[];
+  polygonGeofenceKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
 }
@@ -139,6 +132,8 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimitDebounce":
+      return { ...state, speedLimitDebounce: action.payload };
   }
 };
 
@@ -147,12 +142,19 @@ const AddGeofence = ({
   polygonGeofenceMax,
   circularGeofenceMax,
   circularGeofenceKeys,
+  polygonGeofenceKeys,
   onSuccess,
   onCancel,
 }: Props) => {
   const [typeFilter, setTypeFilter] = useState<"Polygon" | "Circular">(
     "Circular"
   );
+
+  const { getModelName, getFwVer, getTargetCountry } = useModelInfoStore();
+
+  const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const targetCountry = useMemo(() => getTargetCountry(), [getTargetCountry]);
 
   const [circleState, circleDispatch] = useReducer(circleReducer, {
     id: 1,
@@ -170,6 +172,7 @@ const AddGeofence = ({
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
+    speedLimitDebounce: 0,
   });
 
   const t = useTranslations();
@@ -178,125 +181,27 @@ const AddGeofence = ({
   const mapManager = useMapManager();
 
   /** Circular Geofence */
-  const handleAddCirGeo = () => {
-    const circleIndex = findCircleIndexByNumber(circleState.id - 1);
+  const handleAddCirGeo = async () => {
     const circle = mapManager.circles[0];
-    const coordinateToHexString = convertCircleCoordinatesToHexString({
-      lat: circle.center.lat,
-      lng: circle.center.lng,
-      radius: circle.radius,
-    });
 
-    const enterAlertHexString = circleState.enterAlert ? "01" : "00";
-    const exitAlertHexString = circleState.exitAlert ? "01" : "00";
+    await upsertCircularGeofencesToIDB(modelName, fwVer, targetCountry, [
+      {
+        id: circleState.id,
+        latitude: circle.center.lat,
+        longitude: circle.center.lng,
+        distance: circle.radius,
+        enterAlert: circleState.enterAlert,
+        exitAlert: circleState.exitAlert,
+        showOutputActive: circleState.showOutputActive,
+        outputActive: circleState.outputActive,
+        outputActiveDelay: circleState.outputActiveDelay,
+        outputKeepActive: circleState.outputKeepActive,
+        buzzerSpeedLimit: circleState.buzzerSpeedLimit,
+        antiJamming: circleState.antiJamming,
+      },
+    ]);
 
-    const getOutputActiveHexString = () => {
-      if (
-        !formData["9001"] ||
-        formData["9001"].realValue === "00" ||
-        !circularGeofenceKeys.includes("OUT_ACT")
-      )
-        return "";
-
-      if (circleState.outputActive === "00") return "00";
-
-      if (circleState.outputKeepActive) {
-        if (circleState.outputActive === "01") return "06";
-        if (circleState.outputActive === "02") return "07";
-        if (circleState.outputActive === "03") return "08";
-        if (circleState.outputActive === "04") return "09";
-        if (circleState.outputActive === "05") return "0A";
-      }
-
-      return circleState.outputActive;
-    };
-
-    const getOutputActiveDelayHexString = () => {
-      if (
-        !formData["9001"] ||
-        formData["9001"].realValue === "00" ||
-        !circularGeofenceKeys.includes("OUT_ACT_DELAY")
-      )
-        return "";
-      return Math.floor(circleState.outputActiveDelay * 1000000)
-        .toString(16)
-        .padStart(8, "0")
-        .toUpperCase();
-    };
-
-    const getBuzzerSpeedLimitHexString = () => {
-      if (
-        !formData["9002"] ||
-        formData["9002"].realValue === "00" ||
-        !circularGeofenceKeys.includes("BUZZER_SPEED_LIMIT")
-      )
-        return "";
-
-      if (
-        circularGeofenceKeys.includes("SPEED_2") &&
-        circularGeofenceKeys.includes("SPEED_1")
-      ) {
-        return (
-          Math.floor(circleState.buzzerSpeedLimit * 1000000)
-            .toString(16)
-            .padStart(8, "0")
-            .toUpperCase() +
-          Math.floor(circleState.buzzerSpeedLimit * 1000000)
-            .toString(16)
-            .padStart(8, "0")
-            .toUpperCase() +
-          "00" // 01로 하면 무조건 에러 남
-        );
-      }
-
-      return (
-        Math.floor(circleState.buzzerSpeedLimit * 1000000)
-          .toString(16)
-          .padStart(8, "0")
-          .toUpperCase() + "00" // 01로 하면 무조건 에러 남
-      );
-    };
-
-    const getSpeedLimitDebounceHexString = () => {
-      if (
-        !formData["9002"] ||
-        formData["9002"].realValue === "00" ||
-        !circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")
-      )
-        return "";
-
-      return "0000"; // 01로 하면 무조건 에러 남
-    };
-
-    const getAntiJammingHexString = () => {
-      if (
-        !circularGeofenceKeys.includes("ANTI_JAM") ||
-        !formData["9002"] ||
-        formData["9002"].realValue === "00"
-      )
-        return "";
-      return circleState.antiJamming ? "01" : "00";
-    };
-
-    const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
-    const outputActiveHexString = getOutputActiveHexString();
-    const outputActiveDelayHexString = getOutputActiveDelayHexString();
-    const buzzerSpeedLimitHexString = getBuzzerSpeedLimitHexString();
-    const antiJammingHexString = getAntiJammingHexString();
-    const speedLimitDebounceHexString = getSpeedLimitDebounceHexString();
-
-    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
-
-    // currentPort.port.oneditsuccess = () => {
-    //   onSuccess();
-    //   onCancel();
-    // };
-
-    // write({
-    //   data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
-    //   port: currentPort,
-    //   writer: currentPort.writer,
-    // });
+    onCancel();
   };
 
   const renderOutputActive = () => {
@@ -770,67 +675,26 @@ const AddGeofence = ({
   };
 
   /** Polygon Geofence */
-  const handleAddPolygonGeo = () => {
-    // const imei = currentPort.port.imei;
-
-    const pointId = POLYGON_GEOFENCE_POINTS[polygonState.id - 1];
-    const coordinateToHexString = convertCoordinatesToHexString(
-      mapManager.polygons[0].path
-    );
-
-    // currentPort.port.oneditsuccess = async () => {
-    //   await delayPromise(200);
-
-    //   const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
-    //   const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
-    //   const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
-
-    //   const isPolygonSpeedLimitDisabled =
-    //     !formData["9000"] || formData["9000"]?.realValue === "00";
-
-    //   const buzzerSpeedLimitHex = Math.floor(
-    //     polygonState.buzzerSpeedLimit * 1000000
-    //   )
-    //     .toString(16)
-    //     .padStart(8, "0")
-    //     .toUpperCase();
-
-    //   const getPolygonSpeedLimitHex = isPolygonSpeedLimitDisabled
-    //     ? ""
-    //     : buzzerSpeedLimitHex;
-
-    //   currentPort.port.oneditsuccess = () => {
-    //     onSuccess();
-    //     onCancel();
-    //   };
-
-    //   write({
-    //     data: `${AT_EDIT_PREFIX}${imei};53;${String(
-    //       polygonState.id - 1
-    //     ).padStart(2, "0")}#${mapManager.polygons[0].path.length
-    //       .toString(16)
-    //       .padStart(2, "0")}${enterExitHexString}${getPolygonSpeedLimitHex}`,
-    //     port: currentPort,
-    //     writer: currentPort.writer,
-    //   });
-    // };
-
-    // 20개 이상이면 쪼개서 보내는 로직
-    // chunkDataByNumberAndWrite(
-    //   {
-    //     write: write as any,
-    //     port: currentPort.port,
-    //     writer: currentPort.writer,
-    //   },
-    //   {
-    //     prefix: `${AT_EDIT_PREFIX}${imei};${pointId};`,
-    //     target: coordinateToHexString,
-    //   }
-    // );
+  const handleAddPolygonGeo = async () => {
+    await upsertPolygonGeofencesToIDB(modelName, fwVer, targetCountry, [
+      {
+        id: polygonState.id,
+        coordinates: mapManager.polygons[0].path,
+        enterAlert: polygonState.enterAlert,
+        exitAlert: polygonState.exitAlert,
+        buzzerSpeedLimit: polygonState.buzzerSpeedLimit,
+        speedLimitDebounce: polygonState.speedLimitDebounce,
+      },
+    ]);
   };
 
   const renderPolygonSpeedLimit = () => {
-    if (!formData["9000"] || formData["9000"].realValue === "00") return null;
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Polygon Speed Limit")
+    )
+      return null;
     return (
       <Stack gap="8px">
         <Stack direction="row" gap="4px" alignItems="center">
@@ -866,6 +730,52 @@ const AddGeofence = ({
           inputProps={{
             min: 0,
             max: 300,
+          }}
+        />
+      </Stack>
+    );
+  };
+
+  const renderSpeedLimitDebounce = () => {
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Speed Limit Debounce")
+    )
+      return null;
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>Speed Limit Debounce</InputBox.Title>
+        </Stack>
+
+        <TextField
+          type="number"
+          value={polygonState.speedLimitDebounce}
+          onChange={(e) =>
+            polygonDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (polygonState.speedLimitDebounce > 1800 ||
+              polygonState.speedLimitDebounce < 0) &&
+            polygonState.speedLimitDebounce !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 1,800`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 1,800`
+                : `Entrada solo entre 0 ~ 1,800`
+              : ""
+          }
+          error={
+            polygonState.speedLimitDebounce > 1800 ||
+            polygonState.speedLimitDebounce < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 1800,
           }}
         />
       </Stack>
@@ -1018,6 +928,7 @@ const AddGeofence = ({
           </Stack>
 
           {renderPolygonSpeedLimit()}
+          {renderSpeedLimitDebounce()}
         </Stack>
 
         <Stack gap={"24px"} flex={1}>

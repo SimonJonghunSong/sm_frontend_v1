@@ -13,17 +13,16 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import Maps from "@/components/Map";
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef } from "react";
 import { useMapManager } from "@/src/hooks/useMapManager";
-import { SerialPortState } from "@/src/stores/useSerialStore";
 import { useTranslations } from "next-intl";
 import { SwitchPrimary } from "@/components/switches";
 import { FormField } from "../page";
-import { findCircleIndexByNumber } from "@/utils/generateFormattedIndexes";
-import { convertCircleCoordinatesToHexString } from "@/utils/coordinateToHex";
-import { AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
-import { parseLatLngRadius } from "app/(auth)/configuration/geofence/utils";
-import FullLoading from "@/components/FullLoading";
+import {
+  getModelDataFromIDB,
+  upsertCircularGeofencesToIDB,
+} from "@/utils/idbModelUtil";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 interface Props {
   id: number;
@@ -127,10 +126,14 @@ const EditCircularGeofence = ({
   id,
   formData,
   circularGeofenceKeys,
-  onSuccess,
   onCancel,
 }: Props) => {
-  const [isFullLoading, setIsFullLoading] = useState(false);
+  const { getModelName, getFwVer, getTargetCountry } = useModelInfoStore();
+
+  const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const targetCountry = useMemo(() => getTargetCountry(), [getTargetCountry]);
+
   const [circleState, circleDispatch] = useReducer(circleReducer, {
     id: 1,
     enterAlert: false,
@@ -143,122 +146,33 @@ const EditCircularGeofence = ({
     antiJamming: false,
   });
 
-  const infoRef = useRef<string>("");
-
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
 
   /** Circular Geofence */
-  const handleEditCirGeo = () => {
-    const circleIndex = findCircleIndexByNumber(circleState.id - 1);
+  const handleEditCirGeo = async () => {
     const circle = mapManager.circles[0];
-    const coordinateToHexString = convertCircleCoordinatesToHexString({
-      lat: circle.center.lat,
-      lng: circle.center.lng,
-      radius: circle.radius,
-    });
 
-    const enterAlertHexString = circleState.enterAlert ? "01" : "00";
-    const exitAlertHexString = circleState.exitAlert ? "01" : "00";
+    await upsertCircularGeofencesToIDB(modelName, fwVer, targetCountry, [
+      {
+        id: circleState.id,
+        latitude: circle.center.lat,
+        longitude: circle.center.lng,
+        distance: circle.radius,
+        enterAlert: circleState.enterAlert,
+        exitAlert: circleState.exitAlert,
+        showOutputActive: circleState.showOutputActive,
+        outputActive: circleState.outputActive,
+        outputActiveDelay: circleState.outputActiveDelay,
+        outputKeepActive: circleState.outputKeepActive,
+        buzzerSpeedLimit: circleState.buzzerSpeedLimit,
+        antiJamming: circleState.antiJamming,
+      },
+    ]);
 
-    const getOutputActiveHexString = () => {
-      if (
-        !formData["9001"] ||
-        formData["9001"].realValue === "00" ||
-        !circularGeofenceKeys.includes("OUT_ACT")
-      )
-        return "";
-
-      if (circleState.outputActive === "00") return "00";
-
-      if (circleState.outputKeepActive) {
-        if (circleState.outputActive === "01") return "06";
-        if (circleState.outputActive === "02") return "07";
-        if (circleState.outputActive === "03") return "08";
-        if (circleState.outputActive === "04") return "09";
-        if (circleState.outputActive === "05") return "0A";
-      }
-
-      return circleState.outputActive;
-    };
-
-    const getOutputActiveDelayHexString = () => {
-      if (
-        !formData["9001"] ||
-        formData["9001"].realValue === "00" ||
-        !circularGeofenceKeys.includes("OUT_ACT_DELAY")
-      )
-        return "";
-      return Math.floor(circleState.outputActiveDelay * 1000000)
-        .toString(16)
-        .padStart(8, "0")
-        .toUpperCase();
-    };
-
-    const getBuzzerSpeedLimitHexString = () => {
-      if (
-        !formData["9002"] ||
-        formData["9002"].realValue === "00" ||
-        !circularGeofenceKeys.includes("BUZZER_SPEED_LIMIT")
-      )
-        return "";
-
-      if (
-        circularGeofenceKeys.includes("SPEED_2") &&
-        circularGeofenceKeys.includes("SPEED_1")
-      ) {
-        return (
-          Math.floor(circleState.buzzerSpeedLimit * 1000000)
-            .toString(16)
-            .padStart(8, "0")
-            .toUpperCase() +
-          Math.floor(circleState.buzzerSpeedLimit * 1000000)
-            .toString(16)
-            .padStart(8, "0")
-            .toUpperCase() +
-          "00" // 01로 하면 무조건 에러 남
-        );
-      }
-
-      return (
-        Math.floor(circleState.buzzerSpeedLimit * 1000000)
-          .toString(16)
-          .padStart(8, "0")
-          .toUpperCase() + "00" // 01로 하면 무조건 에러 남
-      );
-    };
-
-    const getAntiJammingHexString = () => {
-      if (
-        !circularGeofenceKeys.includes("ANTI_JAM") ||
-        !formData["9002"] ||
-        formData["9002"].realValue === "00"
-      )
-        return "";
-
-      return circleState.antiJamming ? "01" : "00";
-    };
-
-    const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
-    const outputActiveHexString = getOutputActiveHexString();
-    const outputActiveDelayHexString = getOutputActiveDelayHexString();
-    const buzzerSpeedLimitHexString = getBuzzerSpeedLimitHexString();
-    const antiJammingHexString = getAntiJammingHexString();
-
-    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}`;
-
-    // currentPort.port.oneditsuccess = () => {
-    //   onSuccess();
-    //   onCancel();
-    // };
-
-    // write({
-    //   data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
-    //   port: currentPort,
-    //   writer: currentPort.writer,
-    // });
+    onCancel();
   };
 
   const renderOutputActive = () => {
@@ -671,144 +585,82 @@ const EditCircularGeofence = ({
     );
   };
 
-  // useEffect(() => {
-  //   setIsFullLoading(true);
+  useEffect(() => {
+    const fetchCircularGeofenceById = async (id: number) => {
+      const modelData = await getModelDataFromIDB(
+        modelName,
+        fwVer,
+        targetCountry
+      );
+      return modelData?.geofence?.circular.find((item) => item.id === id);
+    };
 
-  //   // if (!currentPort.port.readable && !currentPort.port.writable) return;
+    fetchCircularGeofenceById(id).then((data) => {
+      const newCircle = new google.maps.Circle({
+        center: {
+          lat: data?.latitude,
+          lng: data?.longitude,
+        },
+        radius: data?.distance,
+        map: mapRef.current, // mapRef에 담긴 지도 객체에 폴리곤 추가
+        editable: true, // 필요에 따라 편집 가능 여부 설정
+      });
+      mapManager.shapesRef.current.push({
+        overlay: newCircle,
+        type: google.maps.drawing.OverlayType.CIRCLE,
+      });
 
-  //   const circleIndex = findCircleIndexByNumber(Number(id) - 1);
-  //   // // currentPort.port.iscircularpointfetching = true;
-  //   // currentPort.port.circlehandler = (value) => {
-  //   //   infoRef.current += value;
-  //   //   if (value.includes(CR)) {
-  //   //     const circleData = parseLatLngRadius(infoRef.current);
+      mapManager.addCircle({
+        id: 0,
+        radius: data?.distance,
+        center: {
+          lat: data?.latitude,
+          lng: data?.longitude,
+        },
+      });
+      mapManager.registerEditableHandlers();
 
-  //   //     const newCircle = new google.maps.Circle({
-  //   //       center: circleData.center,
-  //   //       radius: circleData.radius,
-  //   //       map: mapRef.current, // mapRef에 담긴 지도 객체에 폴리곤 추가
-  //   //       editable: true, // 필요에 따라 편집 가능 여부 설정
-  //   //     });
-  //   //     mapManager.shapesRef.current.push({
-  //   //       overlay: newCircle,
-  //   //       type: google.maps.drawing.OverlayType.CIRCLE,
-  //   //     });
+      if (mapRef.current) {
+        mapRef.current.setCenter({
+          lat: data?.latitude,
+          lng: data?.longitude,
+        });
+      }
 
-  //   //     mapManager.addCircle({
-  //   //       id: 0,
-  //   //       radius: circleData.radius,
-  //   //       center: circleData.center,
-  //   //     });
-  //   //     mapManager.registerEditableHandlers();
-
-  //   //     if (mapRef.current) {
-  //   //       mapRef.current.setCenter({
-  //   //         lat: circleData.center.lat,
-  //   //         lng: circleData.center.lng,
-  //   //       });
-  //   //     }
-
-  //   //     circleDispatch({
-  //   //       type: "setEnterAlert",
-  //   //       payload: circleData.enterAlert,
-  //   //     });
-  //   //     circleDispatch({
-  //   //       type: "setExitAlert",
-  //   //       payload: circleData.exitAlert,
-  //   //     });
-
-  //   //     if (
-  //   //       !!formData["9001"] &&
-  //   //       formData["9001"].realValue === "01" &&
-  //   //       circularGeofenceKeys.includes("OUT_ACT")
-  //   //     ) {
-  //   //       const valueHex = infoRef.current.split("#")[1];
-  //   //       const outputActiveHex = valueHex.slice(24, 26);
-  //   //       const outputActiveDelayHex = valueHex.slice(26, 34);
-
-  //   //       circleDispatch({
-  //   //         type: "setOutputActiveDelay",
-  //   //         payload: parseInt(outputActiveDelayHex, 16) / 1000000,
-  //   //       });
-
-  //   //       let outputActive = outputActiveHex;
-
-  //   //       if (outputActiveHex === "06") {
-  //   //         outputActive = "01";
-  //   //         circleDispatch({
-  //   //           type: "setOutputKeepActive",
-  //   //           payload: true,
-  //   //         });
-  //   //       }
-  //   //       if (outputActiveHex === "07") {
-  //   //         outputActive = "02";
-  //   //         circleDispatch({
-  //   //           type: "setOutputKeepActive",
-  //   //           payload: true,
-  //   //         });
-  //   //       }
-  //   //       if (outputActiveHex === "08") {
-  //   //         outputActive = "03";
-  //   //         circleDispatch({
-  //   //           type: "setOutputKeepActive",
-  //   //           payload: true,
-  //   //         });
-  //   //       }
-  //   //       if (outputActiveHex === "09") {
-  //   //         outputActive = "04";
-  //   //         circleDispatch({
-  //   //           type: "setOutputKeepActive",
-  //   //           payload: true,
-  //   //         });
-  //   //       }
-  //   //       if (outputActiveHex === "0A") {
-  //   //         outputActive = "05";
-  //   //         circleDispatch({
-  //   //           type: "setOutputKeepActive",
-  //   //           payload: true,
-  //   //         });
-  //   //       }
-
-  //   //       circleDispatch({
-  //   //         type: "setOutputActive",
-  //   //         payload: outputActive,
-  //   //       });
-
-  //   //       if (outputActive === "00") {
-  //   //         circleDispatch({
-  //   //           type: "setShowOutputActive",
-  //   //           payload: false,
-  //   //         });
-  //   //       } else {
-  //   //         circleDispatch({
-  //   //           type: "setShowOutputActive",
-  //   //           payload: true,
-  //   //         });
-  //   //       }
-  //   //     }
-
-  //   //     if (circularGeofenceKeys.includes("ANTI_JAM")) {
-  //   //       const valueHex = infoRef.current.split("#")[1];
-  //   //       const antiJammingHex = valueHex.trim().slice(-2);
-
-  //   //       circleDispatch({
-  //   //         type: "setAntiJamming",
-  //   //         payload: antiJammingHex === "01",
-  //   //       });
-  //   //     }
-
-  //   //     setIsFullLoading(false);
-  //   //     infoRef.current = "";
-  //   //     currentPort.port.iscircularpointfetching = false;
-  //   //   }
-  //   // };
-
-  //   // write({
-  //   //   data: `AT^REQ;${currentPort.imei};${circleIndex}`,
-  //   //   port: currentPort,
-  //   //   writer: currentPort.writer,
-  //   // });
-  // }, [currentPort.port.readable, currentPort.port.writable]);
+      circleDispatch({
+        type: "setEnterAlert",
+        payload: data?.enterAlert,
+      });
+      circleDispatch({
+        type: "setExitAlert",
+        payload: data?.exitAlert,
+      });
+      circleDispatch({
+        type: "setOutputActive",
+        payload: data?.outputActive,
+      });
+      circleDispatch({
+        type: "setShowOutputActive",
+        payload: data?.showOutputActive,
+      });
+      circleDispatch({
+        type: "setOutputActiveDelay",
+        payload: data?.outputActiveDelay,
+      });
+      circleDispatch({
+        type: "setOutputKeepActive",
+        payload: data?.outputKeepActive,
+      });
+      circleDispatch({
+        type: "setBuzzerSpeedLimit",
+        payload: data?.buzzerSpeedLimit,
+      });
+      circleDispatch({
+        type: "setAntiJamming",
+        payload: data?.antiJamming,
+      });
+    });
+  }, [id, modelName, fwVer, targetCountry]);
 
   return (
     <Form
@@ -817,7 +669,6 @@ const EditCircularGeofence = ({
         handleEditCirGeo();
       }}
     >
-      {isFullLoading && <FullLoading />}
       <h1 data-section-id={SECTIONS.GeofenceConfig.en}>
         {t("configuration.geofence.add_geofence_(circular)")}
       </h1>
