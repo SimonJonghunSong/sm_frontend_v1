@@ -92,7 +92,6 @@ const useProfileWithoutDevice = ({
         distance,
         enterAlert,
         exitAlert,
-        showOutputActive,
         outputActive,
         outputActiveDelay,
         outputKeepActive,
