@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { fileDownload } from "@/utils/fileDownload";
 import { useTransformConfigDataWithOutDevice } from "@/src/hooks/useTransformConfigDataWithOutDevice";
+import { generateFilename } from "@/src/utils/profileUtil";
 
 interface UseProfileType {
   modelName: string;
@@ -41,7 +42,12 @@ const useProfileWithoutDevice = ({
     });
 
     if (isDownload) {
-      fileDownload(blob, `${modelName}_${modelVersion}.profile`);
+      const downloadFileName = await generateFilename(
+        new File([blob], `${modelName}_${modelVersion}.profile`),
+        modelName,
+        modelVersion
+      );
+      fileDownload(blob, downloadFileName);
     }
 
     setPercentage(100);
