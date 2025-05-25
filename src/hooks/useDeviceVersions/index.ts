@@ -100,6 +100,10 @@ export default function useDeviceVersions({
   >({});
 
   useEffect(() => {
+    deviceVersionsObjectRef.current = {};
+    setDeviceVersionsObject({});
+  }, [currentPort?.port?.imei])
+  useEffect(() => {
     if (!currentPort?.port?.writable || !currentPort?.port?.readable) {
       return;
     }
@@ -139,7 +143,8 @@ export default function useDeviceVersions({
 
                 setIsFetched(true);
                 setIsLoading(false);
-                setDeviceVersionsObject(deviceVersionsObjectRef.current);
+                
+                setDeviceVersionsObject({...deviceVersionsObjectRef.current});
               }
             };
 
