@@ -370,7 +370,6 @@ const Geofence = ({
       const modelData = (await getModelDataFromIDB(
         modelName
       )) as IDBModelData | null;
-      console.log("modelName :::", modelData);
       if (modelData && modelData.geofence) {
         setCircularGeofences(modelData.geofence.circular || []);
         setPolygonGeofences(modelData.geofence.polygon || []);

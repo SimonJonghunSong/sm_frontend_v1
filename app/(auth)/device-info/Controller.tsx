@@ -27,7 +27,6 @@ import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import { checkModelDataExists } from "@/utils/idbModelUtil";
 import { useRouter } from "next/navigation";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationTabStore";
