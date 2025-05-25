@@ -39,6 +39,12 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+  const [defaultAckChecked, setDefaultAckChecked] = useState(
+    !(
+      formData["1011"]?.realValue === "0" ||
+      formData["1011"]?.realValue === "00"
+    )
+  );
 
   const isDirtyFields = useMemo(() => {
     return Object.keys(formData).filter((key) => {
@@ -155,28 +161,27 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
             <SwitchField
               id="1011"
               formData={formData}
-              onChange={handleChange}
+              onChange={(_id, value) => {
+                handleChange("1011", "0");
+                setDefaultAckChecked(value === "01");
+              }}
               style={{ width: "100%" }}
-              customChecked={
-                formData["1011"]?.realValue !== "0" &&
-                formData["1011"]?.realValue !== "00"
-              }
+              customChecked={defaultAckChecked}
               isDirty={isDirtyFields.includes("1011")}
             />
 
-            {formData["1011"]?.realValue !== "0" &&
-              formData["1011"]?.realValue !== "00" && (
-                <CheckboxComp
-                  value={formData["1011"]?.realValue}
-                  optionsString={optionsString}
-                  labelsString={labelsString}
-                  hasAllCheckbox={false}
-                  lang={lang}
-                  onChange={(newValue) => {
-                    handleChange("1011", newValue);
-                  }}
-                />
-              )}
+            {defaultAckChecked && (
+              <CheckboxComp
+                value={Number(formData["1011"]?.realValue || "0").toString(16)}
+                optionsString={optionsString}
+                labelsString={labelsString}
+                hasAllCheckbox={false}
+                lang={lang}
+                onChange={(newValue) => {
+                  handleChange("1011", String(parseInt(newValue, 16)));
+                }}
+              />
+            )}
           </Stack>
 
           <NumericInputField
