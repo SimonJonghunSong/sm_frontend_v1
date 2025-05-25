@@ -209,7 +209,7 @@ export default function DeviceInfoPage() {
   }>(null);
   const {
     state: { portList },
-    func: { write },
+    func: { write, getPorts },
   } = useSerial();
   const [isFechedPackage, setIsFechedPackage] = useState(false);
   const packageCountRef = useRef(0);
@@ -601,7 +601,10 @@ export default function DeviceInfoPage() {
 
               setFormData(newFormData);
             }}
-            onRefreshJsonPacket={handleRefreshJsonPacket}
+            onRefreshJsonPacket={() => {
+              handleRefreshJsonPacket();
+              getPorts();
+            }}
           />
           {renderContent()}
         </Stack>
