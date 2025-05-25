@@ -31,6 +31,14 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
 
+  const isDirtyFields = Object.keys(formData).filter((key) => {
+    return (
+      fieldIds.includes(key) &&
+      formData[key].beforeValue !== formData[key].realValue
+    );
+  });
+
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -107,12 +115,14 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("9000")}
           />
           <SwitchField
             id="9001"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("9001")}
           />
         </Stack>
 
@@ -122,6 +132,7 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("9002")}
           />
         </Stack>
       </Stack>
@@ -132,7 +143,7 @@ const GeofenceConfig = ({ formData, onChange }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || !isDirtyFields.length}
         >
           {t("notify.send")}
         </Button>
