@@ -30,16 +30,6 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  currentPort: SerialPortState;
-  write: ({
-    data,
-    port,
-    writer,
-  }: {
-    data: string;
-    port: SerialPortState;
-    writer: WritableStreamDefaultWriter<string>;
-  }) => Promise<Boolean>;
   circularGeofenceKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
@@ -136,8 +126,6 @@ const circleReducer = (state: any, action: any) => {
 const EditCircularGeofence = ({
   id,
   formData,
-  currentPort,
-  write,
   circularGeofenceKeys,
   onSuccess,
   onCancel,
@@ -261,16 +249,16 @@ const EditCircularGeofence = ({
 
     const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}`;
 
-    currentPort.port.oneditsuccess = () => {
-      onSuccess();
-      onCancel();
-    };
+    // currentPort.port.oneditsuccess = () => {
+    //   onSuccess();
+    //   onCancel();
+    // };
 
-    write({
-      data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
-      port: currentPort,
-      writer: currentPort.writer,
-    });
+    // write({
+    //   data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
+    //   port: currentPort,
+    //   writer: currentPort.writer,
+    // });
   };
 
   const renderOutputActive = () => {
@@ -683,144 +671,144 @@ const EditCircularGeofence = ({
     );
   };
 
-  useEffect(() => {
-    setIsFullLoading(true);
+  // useEffect(() => {
+  //   setIsFullLoading(true);
 
-    if (!currentPort.port.readable && !currentPort.port.writable) return;
+  //   // if (!currentPort.port.readable && !currentPort.port.writable) return;
 
-    const circleIndex = findCircleIndexByNumber(Number(id) - 1);
-    currentPort.port.iscircularpointfetching = true;
-    currentPort.port.circlehandler = (value) => {
-      infoRef.current += value;
-      if (value.includes(CR)) {
-        const circleData = parseLatLngRadius(infoRef.current);
+  //   const circleIndex = findCircleIndexByNumber(Number(id) - 1);
+  //   // // currentPort.port.iscircularpointfetching = true;
+  //   // currentPort.port.circlehandler = (value) => {
+  //   //   infoRef.current += value;
+  //   //   if (value.includes(CR)) {
+  //   //     const circleData = parseLatLngRadius(infoRef.current);
 
-        const newCircle = new google.maps.Circle({
-          center: circleData.center,
-          radius: circleData.radius,
-          map: mapRef.current, // mapRef에 담긴 지도 객체에 폴리곤 추가
-          editable: true, // 필요에 따라 편집 가능 여부 설정
-        });
-        mapManager.shapesRef.current.push({
-          overlay: newCircle,
-          type: google.maps.drawing.OverlayType.CIRCLE,
-        });
+  //   //     const newCircle = new google.maps.Circle({
+  //   //       center: circleData.center,
+  //   //       radius: circleData.radius,
+  //   //       map: mapRef.current, // mapRef에 담긴 지도 객체에 폴리곤 추가
+  //   //       editable: true, // 필요에 따라 편집 가능 여부 설정
+  //   //     });
+  //   //     mapManager.shapesRef.current.push({
+  //   //       overlay: newCircle,
+  //   //       type: google.maps.drawing.OverlayType.CIRCLE,
+  //   //     });
 
-        mapManager.addCircle({
-          id: 0,
-          radius: circleData.radius,
-          center: circleData.center,
-        });
-        mapManager.registerEditableHandlers();
+  //   //     mapManager.addCircle({
+  //   //       id: 0,
+  //   //       radius: circleData.radius,
+  //   //       center: circleData.center,
+  //   //     });
+  //   //     mapManager.registerEditableHandlers();
 
-        if (mapRef.current) {
-          mapRef.current.setCenter({
-            lat: circleData.center.lat,
-            lng: circleData.center.lng,
-          });
-        }
+  //   //     if (mapRef.current) {
+  //   //       mapRef.current.setCenter({
+  //   //         lat: circleData.center.lat,
+  //   //         lng: circleData.center.lng,
+  //   //       });
+  //   //     }
 
-        circleDispatch({
-          type: "setEnterAlert",
-          payload: circleData.enterAlert,
-        });
-        circleDispatch({
-          type: "setExitAlert",
-          payload: circleData.exitAlert,
-        });
+  //   //     circleDispatch({
+  //   //       type: "setEnterAlert",
+  //   //       payload: circleData.enterAlert,
+  //   //     });
+  //   //     circleDispatch({
+  //   //       type: "setExitAlert",
+  //   //       payload: circleData.exitAlert,
+  //   //     });
 
-        if (
-          !!formData["9001"] &&
-          formData["9001"].realValue === "01" &&
-          circularGeofenceKeys.includes("OUT_ACT")
-        ) {
-          const valueHex = infoRef.current.split("#")[1];
-          const outputActiveHex = valueHex.slice(24, 26);
-          const outputActiveDelayHex = valueHex.slice(26, 34);
+  //   //     if (
+  //   //       !!formData["9001"] &&
+  //   //       formData["9001"].realValue === "01" &&
+  //   //       circularGeofenceKeys.includes("OUT_ACT")
+  //   //     ) {
+  //   //       const valueHex = infoRef.current.split("#")[1];
+  //   //       const outputActiveHex = valueHex.slice(24, 26);
+  //   //       const outputActiveDelayHex = valueHex.slice(26, 34);
 
-          circleDispatch({
-            type: "setOutputActiveDelay",
-            payload: parseInt(outputActiveDelayHex, 16) / 1000000,
-          });
+  //   //       circleDispatch({
+  //   //         type: "setOutputActiveDelay",
+  //   //         payload: parseInt(outputActiveDelayHex, 16) / 1000000,
+  //   //       });
 
-          let outputActive = outputActiveHex;
+  //   //       let outputActive = outputActiveHex;
 
-          if (outputActiveHex === "06") {
-            outputActive = "01";
-            circleDispatch({
-              type: "setOutputKeepActive",
-              payload: true,
-            });
-          }
-          if (outputActiveHex === "07") {
-            outputActive = "02";
-            circleDispatch({
-              type: "setOutputKeepActive",
-              payload: true,
-            });
-          }
-          if (outputActiveHex === "08") {
-            outputActive = "03";
-            circleDispatch({
-              type: "setOutputKeepActive",
-              payload: true,
-            });
-          }
-          if (outputActiveHex === "09") {
-            outputActive = "04";
-            circleDispatch({
-              type: "setOutputKeepActive",
-              payload: true,
-            });
-          }
-          if (outputActiveHex === "0A") {
-            outputActive = "05";
-            circleDispatch({
-              type: "setOutputKeepActive",
-              payload: true,
-            });
-          }
+  //   //       if (outputActiveHex === "06") {
+  //   //         outputActive = "01";
+  //   //         circleDispatch({
+  //   //           type: "setOutputKeepActive",
+  //   //           payload: true,
+  //   //         });
+  //   //       }
+  //   //       if (outputActiveHex === "07") {
+  //   //         outputActive = "02";
+  //   //         circleDispatch({
+  //   //           type: "setOutputKeepActive",
+  //   //           payload: true,
+  //   //         });
+  //   //       }
+  //   //       if (outputActiveHex === "08") {
+  //   //         outputActive = "03";
+  //   //         circleDispatch({
+  //   //           type: "setOutputKeepActive",
+  //   //           payload: true,
+  //   //         });
+  //   //       }
+  //   //       if (outputActiveHex === "09") {
+  //   //         outputActive = "04";
+  //   //         circleDispatch({
+  //   //           type: "setOutputKeepActive",
+  //   //           payload: true,
+  //   //         });
+  //   //       }
+  //   //       if (outputActiveHex === "0A") {
+  //   //         outputActive = "05";
+  //   //         circleDispatch({
+  //   //           type: "setOutputKeepActive",
+  //   //           payload: true,
+  //   //         });
+  //   //       }
 
-          circleDispatch({
-            type: "setOutputActive",
-            payload: outputActive,
-          });
+  //   //       circleDispatch({
+  //   //         type: "setOutputActive",
+  //   //         payload: outputActive,
+  //   //       });
 
-          if (outputActive === "00") {
-            circleDispatch({
-              type: "setShowOutputActive",
-              payload: false,
-            });
-          } else {
-            circleDispatch({
-              type: "setShowOutputActive",
-              payload: true,
-            });
-          }
-        }
+  //   //       if (outputActive === "00") {
+  //   //         circleDispatch({
+  //   //           type: "setShowOutputActive",
+  //   //           payload: false,
+  //   //         });
+  //   //       } else {
+  //   //         circleDispatch({
+  //   //           type: "setShowOutputActive",
+  //   //           payload: true,
+  //   //         });
+  //   //       }
+  //   //     }
 
-        if (circularGeofenceKeys.includes("ANTI_JAM")) {
-          const valueHex = infoRef.current.split("#")[1];
-          const antiJammingHex = valueHex.trim().slice(-2);
+  //   //     if (circularGeofenceKeys.includes("ANTI_JAM")) {
+  //   //       const valueHex = infoRef.current.split("#")[1];
+  //   //       const antiJammingHex = valueHex.trim().slice(-2);
 
-          circleDispatch({
-            type: "setAntiJamming",
-            payload: antiJammingHex === "01",
-          });
-        }
+  //   //       circleDispatch({
+  //   //         type: "setAntiJamming",
+  //   //         payload: antiJammingHex === "01",
+  //   //       });
+  //   //     }
 
-        setIsFullLoading(false);
-        infoRef.current = "";
-        currentPort.port.iscircularpointfetching = false;
-      }
-    };
+  //   //     setIsFullLoading(false);
+  //   //     infoRef.current = "";
+  //   //     currentPort.port.iscircularpointfetching = false;
+  //   //   }
+  //   // };
 
-    write({
-      data: `AT^REQ;${currentPort.imei};${circleIndex}`,
-      port: currentPort,
-      writer: currentPort.writer,
-    });
-  }, [currentPort.port.readable, currentPort.port.writable]);
+  //   // write({
+  //   //   data: `AT^REQ;${currentPort.imei};${circleIndex}`,
+  //   //   port: currentPort,
+  //   //   writer: currentPort.writer,
+  //   // });
+  // }, [currentPort.port.readable, currentPort.port.writable]);
 
   return (
     <Form

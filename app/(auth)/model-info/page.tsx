@@ -39,6 +39,7 @@ import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
 import { uploadProfile } from "@/src/api/services/profile";
 import { useMutation } from "@tanstack/react-query";
 import EditProfileTab from "app/(auth)/model-info/(tabs)/EditProfileTab";
+import GeofenceTab from "./(tabs)/GeofenceTab";
 const SCROLL_TOP_OFFSET = 140;
 
 export type AssignItem = {
@@ -461,23 +462,14 @@ export default function DeviceInfoPage() {
             setFormData={setFormData}
           />
         );
-      // case "Geofence":
-      //   return (
-      //     <GeofenceTab
-      //       originData={originData}
-      //       formData={formData}
-      //       setFormData={setFormData}
-      //       isReady={isReady}
-      //       port={currentPort}
-      //       write={({ data, port, writer }) =>
-      //         write({
-      //           data,
-      //           port: currentPort.port,
-      //           writer: currentPort.writer,
-      //         })
-      //       }
-      //     />
-      //   );
+      case "Geofence":
+        return (
+          <GeofenceTab
+            originData={originData}
+            formData={formData}
+            setFormData={setFormData}
+          />
+        );
       default:
         return null;
     }

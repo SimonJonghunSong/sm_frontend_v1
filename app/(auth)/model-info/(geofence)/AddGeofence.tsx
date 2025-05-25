@@ -37,16 +37,6 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
-  currentPort: SerialPortState;
-  write: ({
-    data,
-    port,
-    writer,
-  }: {
-    data: string;
-    port: SerialPortState;
-    writer: WritableStreamDefaultWriter<string>;
-  }) => Promise<Boolean>;
   polygonGeofenceMax: number;
   circularGeofenceMax: number;
   circularGeofenceKeys: string[];
@@ -154,8 +144,6 @@ const polygonReducer = (state: any, action: any) => {
 
 const AddGeofence = ({
   formData,
-  currentPort,
-  write,
   polygonGeofenceMax,
   circularGeofenceMax,
   circularGeofenceKeys,
@@ -299,16 +287,16 @@ const AddGeofence = ({
 
     const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
 
-    currentPort.port.oneditsuccess = () => {
-      onSuccess();
-      onCancel();
-    };
+    // currentPort.port.oneditsuccess = () => {
+    //   onSuccess();
+    //   onCancel();
+    // };
 
-    write({
-      data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
-      port: currentPort,
-      writer: currentPort.writer,
-    });
+    // write({
+    //   data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
+    //   port: currentPort,
+    //   writer: currentPort.writer,
+    // });
   };
 
   const renderOutputActive = () => {
@@ -783,62 +771,62 @@ const AddGeofence = ({
 
   /** Polygon Geofence */
   const handleAddPolygonGeo = () => {
-    const imei = currentPort.port.imei;
+    // const imei = currentPort.port.imei;
 
     const pointId = POLYGON_GEOFENCE_POINTS[polygonState.id - 1];
     const coordinateToHexString = convertCoordinatesToHexString(
       mapManager.polygons[0].path
     );
 
-    currentPort.port.oneditsuccess = async () => {
-      await delayPromise(200);
+    // currentPort.port.oneditsuccess = async () => {
+    //   await delayPromise(200);
 
-      const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
-      const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
-      const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
+    //   const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
+    //   const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
+    //   const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
 
-      const isPolygonSpeedLimitDisabled =
-        !formData["9000"] || formData["9000"]?.realValue === "00";
+    //   const isPolygonSpeedLimitDisabled =
+    //     !formData["9000"] || formData["9000"]?.realValue === "00";
 
-      const buzzerSpeedLimitHex = Math.floor(
-        polygonState.buzzerSpeedLimit * 1000000
-      )
-        .toString(16)
-        .padStart(8, "0")
-        .toUpperCase();
+    //   const buzzerSpeedLimitHex = Math.floor(
+    //     polygonState.buzzerSpeedLimit * 1000000
+    //   )
+    //     .toString(16)
+    //     .padStart(8, "0")
+    //     .toUpperCase();
 
-      const getPolygonSpeedLimitHex = isPolygonSpeedLimitDisabled
-        ? ""
-        : buzzerSpeedLimitHex;
+    //   const getPolygonSpeedLimitHex = isPolygonSpeedLimitDisabled
+    //     ? ""
+    //     : buzzerSpeedLimitHex;
 
-      currentPort.port.oneditsuccess = () => {
-        onSuccess();
-        onCancel();
-      };
+    //   currentPort.port.oneditsuccess = () => {
+    //     onSuccess();
+    //     onCancel();
+    //   };
 
-      write({
-        data: `${AT_EDIT_PREFIX}${imei};53;${String(
-          polygonState.id - 1
-        ).padStart(2, "0")}#${mapManager.polygons[0].path.length
-          .toString(16)
-          .padStart(2, "0")}${enterExitHexString}${getPolygonSpeedLimitHex}`,
-        port: currentPort,
-        writer: currentPort.writer,
-      });
-    };
+    //   write({
+    //     data: `${AT_EDIT_PREFIX}${imei};53;${String(
+    //       polygonState.id - 1
+    //     ).padStart(2, "0")}#${mapManager.polygons[0].path.length
+    //       .toString(16)
+    //       .padStart(2, "0")}${enterExitHexString}${getPolygonSpeedLimitHex}`,
+    //     port: currentPort,
+    //     writer: currentPort.writer,
+    //   });
+    // };
 
     // 20개 이상이면 쪼개서 보내는 로직
-    chunkDataByNumberAndWrite(
-      {
-        write: write as any,
-        port: currentPort.port,
-        writer: currentPort.writer,
-      },
-      {
-        prefix: `${AT_EDIT_PREFIX}${imei};${pointId};`,
-        target: coordinateToHexString,
-      }
-    );
+    // chunkDataByNumberAndWrite(
+    //   {
+    //     write: write as any,
+    //     port: currentPort.port,
+    //     writer: currentPort.writer,
+    //   },
+    //   {
+    //     prefix: `${AT_EDIT_PREFIX}${imei};${pointId};`,
+    //     target: coordinateToHexString,
+    //   }
+    // );
   };
 
   const renderPolygonSpeedLimit = () => {

@@ -7,7 +7,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import Maps from "@/components/Map";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useMapManager } from "@/src/hooks/useMapManager";
 import DataTable from "@/components/dataTable";
 import {
@@ -34,22 +34,19 @@ import { CircleType, PolygonType } from "@/components/Map/type";
 import { useTranslations } from "next-intl";
 import FullLoading from "@/components/FullLoading";
 import { FormField } from "../page";
+import {
+  getModelDataFromIDB,
+  IDBGeofence,
+  IDBCircularGeofence,
+  IDBPolygonGeofence,
+  IDBModelData,
+} from "@/utils/idbModelUtil";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 interface Props {
   formData: {
     [key: string]: FormField;
   };
-  currentPort: SerialPortState;
-  isReady: boolean;
-  write: ({
-    data,
-    port,
-    writer,
-  }: {
-    data: string;
-    port: SerialPortState;
-    writer: WritableStreamDefaultWriter<string>;
-  }) => Promise<Boolean>;
 
   polygonGeofenceMax: number;
   circularGeofenceMax: number;
@@ -123,15 +120,16 @@ const tooltipText = {
 };
 
 const Geofence = ({
-  currentPort,
-  isReady,
-  write,
   polygonGeofenceMax,
   circularGeofenceMax,
   onAfterFetch,
   onAdd,
   onEdit,
 }: Props) => {
+  const { getModelName, getFwVer } = useModelInfoStore();
+
+  const modelName = useMemo(() => getModelName(), [getModelName]);
+
   const [typeFilter, setTypeFilter] = useState<"All" | "Polygon" | "Circular">(
     "All"
   );
@@ -145,28 +143,31 @@ const Geofence = ({
   const { setPolygonGeofence, setCircularGeofence } = useSerialStore(
     (state) => state
   );
-
-  const isConnectedHardware =
-    !!currentPort.port.writable && !!currentPort.port.readable;
+  const [circularGeofences, setCircularGeofences] = useState<
+    IDBCircularGeofence[]
+  >([]);
+  const [polygonGeofences, setPolygonGeofences] = useState<
+    IDBPolygonGeofence[]
+  >([]);
 
   const polygonPointRef = useRef("");
   const circlePointRef = useRef("");
 
-  const { isFetching } = useGefence({
-    port: currentPort,
-    isReady,
-    write,
-    polygonGeofenceMax,
-    circularGeofenceMax,
-    imei: currentPort.imei,
-    onAfterFetch,
-  });
+  // const { isFetching } = useGefence({
+  //   port: currentPort,
+  //   isReady,
+  //   write,
+  //   polygonGeofenceMax,
+  //   circularGeofenceMax,
+  //   imei: currentPort.imei,
+  //   onAfterFetch,
+  // });
 
-  const polygonList = currentPort.polygonGeofenceData;
-  const circularList = currentPort.circularGeofenceData;
+  // const polygonList = currentPort.polygonGeofenceData;
+  // const circularList = currentPort.circularGeofenceData;
 
-  const polygonData = getPolygonGeofenceData(polygonList);
-  const circularData = getCircularGeofenceData(circularList);
+  // const polygonData = getPolygonGeofenceData(polygonList);
+  // const circularData = getCircularGeofenceData(circularList);
 
   const syncGeofenceConfig = () => {
     const submitButton = document.getElementById("geofence-config-submit");
@@ -176,8 +177,8 @@ const Geofence = ({
   };
 
   const rows = [
-    ...(typeFilter === "Circular" ? [] : polygonData),
-    ...(typeFilter === "Polygon" ? [] : circularData),
+    // ...(typeFilter === "Circular" ? [] : polygonData),
+    // ...(typeFilter === "Polygon" ? [] : circularData),
   ].map(({ type, groupId }, index) => {
     return {
       id: index + 1,
@@ -187,7 +188,7 @@ const Geofence = ({
       edit: {
         id: groupId,
         onEdit: () => {
-          if (!isConnectedHardware) return;
+          // if (!isConnectedHardware) return;
 
           syncGeofenceConfig();
 
@@ -201,76 +202,74 @@ const Geofence = ({
       delete: {
         id: groupId,
         onDelete: () => {
-          const imei = currentPort.port.imei;
+          // const imei = currentPort.port.imei;
           if (type === "polygon") {
-            const isPolygonSpeedLimitDisabled =
-              polygonList[groupId - 1].split("#")[1].length === 6;
-
-            currentPort.port.oneditsuccess = () => {
-              setPolygonGeofence({
-                imei,
-                payload: polygonList.map((value, index) =>
-                  index === groupId - 1
-                    ? `${groupId}#${
-                        isPolygonSpeedLimitDisabled
-                          ? "000000"
-                          : "00000000000000"
-                      }`
-                    : value
-                ),
-              });
-            };
-
-            write({
-              data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
-                2,
-                "0"
-              )}#${isPolygonSpeedLimitDisabled ? "000000" : "00000000000000"}`,
-              port: currentPort,
-              writer: currentPort.writer,
-            });
+            // const isPolygonSpeedLimitDisabled =
+            //   polygonList[groupId - 1].split("#")[1].length === 6;
+            // currentPort.port.oneditsuccess = () => {
+            //   setPolygonGeofence({
+            //     imei,
+            //     payload: polygonList.map((value, index) =>
+            //       index === groupId - 1
+            //         ? `${groupId}#${
+            //             isPolygonSpeedLimitDisabled
+            //               ? "000000"
+            //               : "00000000000000"
+            //           }`
+            //         : value
+            //     ),
+            //   });
+            // };
+            // write({
+            //   data: `${AT_EDIT_PREFIX}${imei};53;${String(groupId - 1).padStart(
+            //     2,
+            //     "0"
+            //   )}#${isPolygonSpeedLimitDisabled ? "000000" : "00000000000000"}`,
+            //   port: currentPort,
+            //   writer: currentPort.writer,
+            // });
           } else {
             const circleIndex = findCircleIndexByNumber(groupId - 1);
 
-            currentPort.port.iscircularpointfetching = true;
-            currentPort.port.circlehandler = (value) => {
-              circlePointRef.current += value;
-              if (value.includes(CR)) {
-                currentPort.port.iscircularpointfetching = false;
+            // currentPort.port.iscircularpointfetching = true;
+            // currentPort.port.circlehandler = (value) => {
+            //   circlePointRef.current += value;
+            //   if (value.includes(CR)) {
+            //     currentPort.port.iscircularpointfetching = false;
 
-                const [id, circleInfo] = circlePointRef.current.split("#");
+            //     const [id, circleInfo] = circlePointRef.current.split("#");
 
-                const removedCircleInfo =
-                  circleInfo.slice(0, 20) + "0000" + circleInfo.slice(24);
+            //     const removedCircleInfo =
+            //       circleInfo.slice(0, 20) + "0000" + circleInfo.slice(24);
 
-                currentPort.port.oneditsuccess = () => {
-                  setCircularGeofence({
-                    imei,
-                    payload: circularList.map((value, index) =>
-                      index === groupId - 1 ? `${id}#NoData` : value
-                    ),
-                  });
-                };
+            //     currentPort.port.oneditsuccess = () => {
+            //       setCircularGeofence({
+            //         imei,
+            //         payload: circularList.map((value, index) =>
+            //           index === groupId - 1 ? `${id}#NoData` : value
+            //         ),
+            //       });
+            //     };
 
-                circlePointRef.current = "";
+            //     circlePointRef.current = "";
 
-                write({
-                  data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${removedCircleInfo}`,
-                  port: currentPort,
-                  writer: currentPort.writer,
-                });
-              }
-            };
-            currentPort.port.onprev = () => {
-              currentPort.port.circlehandler = null;
-              currentPort.port.iscircularpointfetching = false;
-            };
+            //     // write({
+            //     //   data: `${AT_EDIT_PREFIX}${imei};${circleIndex}#${removedCircleInfo}`,
+            //     //   port: currentPort,
+            //     //   writer: currentPort.writer,
+            //     // });
+            //   }
+            // };
+            // currentPort.port.onprev = () => {
+            //   currentPort.port.circlehandler = null;
+            //   currentPort.port.iscircularpointfetching = false;
+            // };
 
-            write({
-              data: `AT^REQ;${imei};${circleIndex}`,
-              port: currentPort,
-              writer: currentPort.writer,
-            });
+            // write({
+            //   data: `AT^REQ;${imei};${circleIndex}`,
+            //   port: currentPort,
+            //   writer: currentPort.writer,
+            // });
           }
         },
       },
@@ -278,104 +277,108 @@ const Geofence = ({
   });
 
   const handleRowClick = (data: GridRowParams<any>) => {
-    const imei = currentPort.port.imei;
+    // const imei = currentPort.port.imei;
 
     if (data.row.type === "Polygon") {
-      setFetchedCircleData(undefined);
-      const polyCount = polygonData.find(
-        ({ groupId }) => groupId === data.row.groupId
-      ).polygonCount;
-      currentPort.port.ispolygonpointfetching = true;
-      currentPort.port.polygonhandler = (value) => {
-        polygonPointRef.current += value;
-        if (
-          polygonPointRef.current.split(CR).length - 1 ===
-          Math.ceil(polyCount / 20)
-        ) {
-          currentPort.port.ispolygonpointfetching = false;
-          const polygonPoint = polygonPointRef.current
-            .split(CR)
-            .filter((item) => item !== "");
-          const header = polygonPoint[0].split(";").slice(0, 3).join(";") + ";";
-          const combinedData = polygonPoint
-            .map((item) => item.split(";").slice(3).join(";"))
-            .join(";");
-          const polygonAllData = header + combinedData;
-
-          const polygonData = parseResponseToPolygonData(polygonAllData, () => {
-            polygonPointRef.current = "";
-            setFetchedPolygonData(undefined);
-          });
-
-          if (polygonData) {
-            setFetchedPolygonData({ paths: polygonData.path });
-            if (mapRef.current) {
-              mapRef.current.setCenter({
-                lat: polygonData.path[0].lat,
-                lng: polygonData.path[0].lng,
-              });
-            }
-          }
-          polygonPointRef.current = "";
-        }
-      };
-      currentPort.port.onprev = () => {
-        currentPort.port.polygonhandler = null;
-        currentPort.port.ispolygonpointfetching = false;
-      };
-
-      chunkDataByNumberAndWrite(
-        {
-          write: write as any,
-          port: currentPort.port,
-          writer: currentPort.writer,
-        },
-
-        {
-          chuckString: ",",
-          prefix: `AT^REQ;${imei};${
-            POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
-          };`,
-          target: generateFormattedIndexes(polyCount).join(),
-        }
-      );
+      // setFetchedCircleData(undefined);
+      // const polyCount = polygonData.find(
+      //   ({ groupId }) => groupId === data.row.groupId
+      // ).polygonCount;
+      // currentPort.port.ispolygonpointfetching = true;
+      // currentPort.port.polygonhandler = (value) => {
+      //   polygonPointRef.current += value;
+      //   if (
+      //     polygonPointRef.current.split(CR).length - 1 ===
+      //     Math.ceil(polyCount / 20)
+      //   ) {
+      //     currentPort.port.ispolygonpointfetching = false;
+      //     const polygonPoint = polygonPointRef.current
+      //       .split(CR)
+      //       .filter((item) => item !== "");
+      //     const header = polygonPoint[0].split(";").slice(0, 3).join(";") + ";";
+      //     const combinedData = polygonPoint
+      //       .map((item) => item.split(";").slice(3).join(";"))
+      //       .join(";");
+      //     const polygonAllData = header + combinedData;
+      //     const polygonData = parseResponseToPolygonData(polygonAllData, () => {
+      //       polygonPointRef.current = "";
+      //       setFetchedPolygonData(undefined);
+      //     });
+      //     if (polygonData) {
+      //       setFetchedPolygonData({ paths: polygonData.path });
+      //       if (mapRef.current) {
+      //         mapRef.current.setCenter({
+      //           lat: polygonData.path[0].lat,
+      //           lng: polygonData.path[0].lng,
+      //         });
+      //       }
+      //     }
+      //     polygonPointRef.current = "";
+      //   }
+      // };
+      // currentPort.port.onprev = () => {
+      //   currentPort.port.polygonhandler = null;
+      //   currentPort.port.ispolygonpointfetching = false;
+      // };
+      // chunkDataByNumberAndWrite(
+      //   {
+      //     write: write as any,
+      //     port: currentPort.port,
+      //     writer: currentPort.writer,
+      //   },
+      //   {
+      //     chuckString: ",",
+      //     prefix: `AT^REQ;${imei};${
+      //       POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
+      //     };`,
+      //     target: generateFormattedIndexes(polyCount).join(),
+      //   }
+      // );
     } else {
-      setFetchedPolygonData(undefined);
-      const circleIndex = findCircleIndexByNumber(data.row.groupId - 1);
-      currentPort.port.iscircularpointfetching = true;
-      currentPort.port.circlehandler = (value) => {
-        circlePointRef.current += value;
-        if (value.includes(CR)) {
-          const circleData = parseLatLngRadius(circlePointRef.current);
-          if (mapRef.current) {
-            mapRef.current.setCenter({
-              lat: circleData.center.lat,
-              lng: circleData.center.lng,
-            });
-
-            circlePointRef.current = "";
-          }
-          setFetchedCircleData(circleData);
-          currentPort.port.iscircularpointfetching = false;
-        }
-      };
-      currentPort.port.onprev = () => {
-        currentPort.port.circlehandler = null;
-        currentPort.port.iscircularpointfetching = false;
-      };
-
-      write({
-        data: `AT^REQ;${imei};${circleIndex}`,
-        port: currentPort,
-        writer: currentPort.writer,
-      });
+      // setFetchedPolygonData(undefined);
+      // const circleIndex = findCircleIndexByNumber(data.row.groupId - 1);
+      // currentPort.port.iscircularpointfetching = true;
+      // currentPort.port.circlehandler = (value) => {
+      //   circlePointRef.current += value;
+      //   if (value.includes(CR)) {
+      //     const circleData = parseLatLngRadius(circlePointRef.current);
+      //     if (mapRef.current) {
+      //       mapRef.current.setCenter({
+      //         lat: circleData.center.lat,
+      //         lng: circleData.center.lng,
+      //       });
+      //       circlePointRef.current = "";
+      //     }
+      //     setFetchedCircleData(circleData);
+      //     currentPort.port.iscircularpointfetching = false;
+      //   }
+      // };
+      // currentPort.port.onprev = () => {
+      //   currentPort.port.circlehandler = null;
+      //   currentPort.port.iscircularpointfetching = false;
+      // };
+      // write({
+      //   data: `AT^REQ;${imei};${circleIndex}`,
+      //   port: currentPort,
+      //   writer: currentPort.writer,
+      // });
     }
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsFullLoading(false);
-    }, 15000);
+    const loadGeofence = async () => {
+      const modelData = (await getModelDataFromIDB(
+        modelName
+      )) as IDBModelData | null;
+      if (modelData && modelData.geofence) {
+        setCircularGeofences(modelData.geofence.circular || []);
+        setPolygonGeofences(modelData.geofence.polygon || []);
+      } else {
+        setCircularGeofences([]);
+        setPolygonGeofences([]);
+      }
+    };
+    loadGeofence();
   }, []);
 
   return (
@@ -384,7 +387,7 @@ const Geofence = ({
         e.preventDefault();
       }}
     >
-      {isFetching && isFullLoading && <FullLoading />}
+      {/* {isFetching && isFullLoading && <FullLoading />} */}
       <Stack direction="row" gap={"4px"} alignItems="center">
         <h1 data-section-id={SECTIONS.GeofenceConfig.en}>
           {t("configuration.geofence.geofence")}
@@ -416,9 +419,8 @@ const Geofence = ({
             <Button
               variant="contained"
               color="secondary"
-              disabled={!isConnectedHardware}
+              // disabled={!isConnectedHardware}
               onClick={() => {
-                if (!isConnectedHardware) return;
                 syncGeofenceConfig();
                 onAdd?.();
               }}
@@ -430,7 +432,6 @@ const Geofence = ({
           <DataTable
             noDataMessage={t("configuration.geofence.no_registered_geofence")}
             onRowClick={handleRowClick}
-            disableRowClick={!isConnectedHardware}
             rows={rows}
             columns={columns}
           />

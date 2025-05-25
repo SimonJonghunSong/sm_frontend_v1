@@ -161,7 +161,7 @@ const WireSettings = ({ formData, onChange, setFormData }: Props) => {
             isDirty={isDirtyFields.includes("1973")}
           />
 
-          {formData["1974"].key.includes("I-Button Add Master") && (
+          {formData["1974"]?.key.includes("I-Button Add Master") && (
             <TextInputField
               id="1974"
               formData={formData}

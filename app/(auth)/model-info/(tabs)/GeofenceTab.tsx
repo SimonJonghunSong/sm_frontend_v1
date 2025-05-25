@@ -7,7 +7,6 @@ import {
   Geofence,
   GeofenceConfig,
 } from "../(geofence)/@index";
-import { SerialPortState } from "@/src/stores/useSerialStore";
 import EditPolygonGeofence from "../(geofence)/EditPolygonGefence";
 
 interface Props {
@@ -20,26 +19,12 @@ interface Props {
     }>
   >;
   originData: any;
-  isReady: boolean;
-  write?: ({
-    data,
-    port,
-    writer,
-  }: {
-    data: string;
-    port: SerialPortState;
-    writer: WritableStreamDefaultWriter<string>;
-  }) => Promise<Boolean>;
-  port?: SerialPortState;
 }
 
 export default function GeofenceTab({
   formData,
   setFormData,
   originData,
-  isReady,
-  write,
-  port,
 }: Props) {
   const [mustFetch, setMustFetch] = useState(true);
   const [type, setType] = useState<"list" | "add" | "edit">("list");
@@ -50,10 +35,9 @@ export default function GeofenceTab({
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
@@ -62,7 +46,6 @@ export default function GeofenceTab({
   const infoFields = originData.map(
     (shit) => Object.values(shit)[0][0].info?.[0]
   );
-
   const circularGeofenceMax =
     infoFields.find((shit) => shit?.tab_id === "50")?.max * 1 || 0;
   const polygonGeofenceMax =
@@ -81,13 +64,10 @@ export default function GeofenceTab({
     if (type === "list") {
       return (
         <>
-          <GeofenceConfig formData={formData} onChange={handleValueChange} />
+          <GeofenceConfig formData={formData} setFormData={setFormData} onChange={handleValueChange} />
 
           <Geofence
             formData={formData}
-            currentPort={port}
-            isReady={isReady && mustFetch}
-            write={write}
             polygonGeofenceMax={polygonGeofenceMax}
             circularGeofenceMax={circularGeofenceMax}
             onAfterFetch={() => setMustFetch(false)}
@@ -106,8 +86,6 @@ export default function GeofenceTab({
       return (
         <AddGeofence
           formData={formData}
-          currentPort={port}
-          write={write}
           polygonGeofenceMax={polygonGeofenceMax}
           circularGeofenceMax={circularGeofenceMax}
           onSuccess={() => setMustFetch(true)}
@@ -123,8 +101,6 @@ export default function GeofenceTab({
           <EditPolygonGeofence
             id={editId}
             formData={formData}
-            currentPort={port}
-            write={write}
             onSuccess={() => setMustFetch(true)}
             onCancel={() => setType("list")}
           />
@@ -137,8 +113,6 @@ export default function GeofenceTab({
             <EditCircularGeofence
               id={editId}
               formData={formData}
-              currentPort={port}
-              write={write}
               circularGeofenceKeys={circularGeofenceKeys}
               onSuccess={() => setMustFetch(true)}
               onCancel={() => setType("list")}

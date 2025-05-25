@@ -50,10 +50,9 @@ export default function GeofenceTab({
     setFormData((prev) => ({
       ...prev,
       [name]: {
+        ...prev[name],
         value,
-        key: prev[name].key,
         realValue: value,
-        list: prev[name].list,
         alert_id: alertId,
       },
     }));
@@ -96,7 +95,7 @@ export default function GeofenceTab({
     if (type === "list") {
       return (
         <>
-          <GeofenceConfig formData={formData} onChange={handleValueChange} />
+          <GeofenceConfig formData={formData} setFormData={setFormData} onChange={handleValueChange} />
 
           <Geofence
             formData={formData}
