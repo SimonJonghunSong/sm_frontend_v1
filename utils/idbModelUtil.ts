@@ -1,5 +1,39 @@
 import { ModelConfig } from "@/src/api/services/model/type";
 
+export interface IDBCircularGeofence {
+  latitude: number;
+  longitude: number;
+  distance: number; // radius
+  inAlert: boolean;
+  outAlert: boolean;
+  outAct: string;
+  outActDelay?: string;
+  speed?: string;
+  buzzerSpeedLimit?: boolean;
+  antiJam?: boolean;
+  speedLimitDebounce?: number;
+  id?: string;
+}
+
+export interface IDBPolygonGeofence {
+  coordinates: Array<[number, number]>;
+  inAlert: boolean;
+  outAlert: boolean;
+  speed?: string; // Polygon Speed limit
+  id?: string;
+}
+
+export interface IDBGeofence {
+  circular: IDBCircularGeofence[];
+  polygon: IDBPolygonGeofence[];
+}
+
+export interface IDBModelData {
+  jsonData: any;
+  csvData: CsvData[];
+  geofence?: IDBGeofence;
+}
+
 export interface CsvData {
   p1: string;
   p2: string;
@@ -34,7 +68,8 @@ export const initDB = () => {
 
 export const updateJsonDataToIDB = async (
   modelName: string,
-  updateDatas: any
+  updateDatas: any,
+  geofence?: IDBGeofence
 ) => {
   try {
     console.log("updateDatas  ::::", updateDatas);
@@ -108,6 +143,8 @@ export const updateJsonDataToIDB = async (
         modelName,
         jsonData: currentData.jsonData,
         csvData: currentData.csvData,
+        geofence: geofence ||
+          currentData.geofence || { circular: [], polygon: [] },
         updatedAt: new Date(),
       });
 
@@ -125,10 +162,10 @@ export const saveJsonDataToIDB = async (
   data: {
     jsonData: any;
     csvData: CsvData[];
+    geofence?: IDBGeofence;
   }
 ) => {
   console.log("data :::", data);
-  // return;
 
   try {
     const db = (await initDB()) as IDBDatabase;
@@ -140,6 +177,7 @@ export const saveJsonDataToIDB = async (
         modelName,
         jsonData: data?.jsonData,
         csvData: data?.csvData,
+        geofence: data?.geofence || { circular: [], polygon: [] },
         updatedAt: new Date(),
       });
       request.onsuccess = () => resolve(request.result);
@@ -169,7 +207,9 @@ export const getJsonDataFromIDB = async (modelName: string) => {
   }
 };
 
-export const getModelDataFromIDB = async (modelName: string) => {
+export const getModelDataFromIDB = async (
+  modelName: string
+): Promise<IDBModelData | null> => {
   try {
     const db = (await initDB()) as IDBDatabase;
     return new Promise((resolve, reject) => {
