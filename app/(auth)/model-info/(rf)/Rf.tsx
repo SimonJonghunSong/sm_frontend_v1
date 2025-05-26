@@ -292,6 +292,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;
