@@ -199,6 +199,10 @@ const AddGeofence = ({
 
   /** Circular Geofence */
   const handleAddCirGeo = () => {
+    console.log(
+      currentPort.port.oneditsuccess,
+      "currentPort.port.oneditsuccess"
+    );
     currentPort.port.oneditsuccess = () => {
       onSuccess();
       onCancel();
