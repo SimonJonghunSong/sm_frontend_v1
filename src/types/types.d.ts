@@ -78,6 +78,9 @@ interface SerialPort {
   onEndDeviceVersionsFetched?: (data: string) => void;
 
   isDeviceCommandSend?: boolean;
+  isFirstLoad?: boolean;
+  isQuecModel?: boolean;
+  isHealthCheck?: boolean;
 }
 
 interface SerialOptions {

@@ -57,6 +57,11 @@ export const MENUS = {
     es: "Comandos",
     pt: "Comandos",
   },
+  Geofence: {
+    en: "Geofence",
+    es: "Geocerca",
+    pt: "Geofence",
+  },
 };
 
 export const SECTIONS = {

@@ -250,7 +250,10 @@ export default function DeviceList() {
     },
   ];
 
+  
   const rows = portList?.map((port, index) => {
+    console.log("port ::::", port);
+    
     return {
       id: index,
       col1: port.modelVersion?.split("_")[0],
@@ -266,7 +269,7 @@ export default function DeviceList() {
         configure:
           port.isReadyUp &&
           !port.isPackageFetching &&
-          port.jsonPackage?.length === port.jsonPackageCount,
+          (port.jsonPackage || []).filter(item => item.trim()).length === port.jsonPackageCount,
         isPackageFetching: port.isPackageFetching,
         isPackageError: port.isPackageError,
         port,
@@ -319,6 +322,9 @@ export default function DeviceList() {
       port: currentPort.port,
     });
   };
+
+  console.log("rows ::::", rows);
+  
 
   return (
     <div className="pageWrap">
