@@ -103,3 +103,42 @@ export const convertModelConfigToProfile = (
   const header = `MODEL=${modelName}\nVERSION=${version}\n`;
   return header + profileLines.join("\n");
 };
+
+function getFormattedTimestamp() {
+  const now = new Date();
+  const pad = (n: number) => n.toString().padStart(2, "0");
+  return (
+    now.getFullYear().toString() +
+    pad(now.getMonth() + 1) +
+    pad(now.getDate()) +
+    pad(now.getHours()) +
+    pad(now.getMinutes()) +
+    pad(now.getSeconds())
+  );
+}
+
+function calculateCRC16(buffer: Uint8Array): string {
+  let crc = 0xffff;
+  for (let i = 0; i < buffer.length; i++) {
+    crc ^= buffer[i] << 8;
+    for (let j = 0; j < 8; j++) {
+      crc = crc & 0x8000 ? (crc << 1) ^ 0x1021 : crc << 1;
+      crc &= 0xffff;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, "0");
+}
+
+export async function generateFilename(
+  file: File,
+  model: string,
+  version: string
+) {
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = new Uint8Array(arrayBuffer);
+
+  const timestamp = getFormattedTimestamp();
+  const crc16 = calculateCRC16(buffer);
+
+  return `${model}_${version}_${timestamp}_${crc16}.profile`;
+}

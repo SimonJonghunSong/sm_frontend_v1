@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useMemo, useRef } from "react";
+import { Dispatch, SetStateAction, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -39,6 +39,13 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+  const [defaultAckChecked] = useState(
+    !(
+      formData["1011"]?.realValue === "0" ||
+      formData["1011"]?.realValue === "00"
+    )
+  );
+  const [ackChecked, setAckChecked] = useState(defaultAckChecked);
 
   const isDirtyFields = useMemo(() => {
     return Object.keys(formData).filter((key) => {
@@ -154,28 +161,28 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
             <SwitchField
               id="1011"
               formData={formData}
-              onChange={handleChange}
+              onChange={(_id, value) => {
+                setAckChecked(value === "01");
+              }}
               style={{ width: "100%" }}
-              customChecked={
-                formData["1011"]?.realValue !== "0" &&
-                formData["1011"]?.realValue !== "00"
+              customChecked={ackChecked}
+              isDirty={
+                isDirtyFields.includes("1011") || ackChecked !== ackChecked
               }
-              isDirty={isDirtyFields.includes("1011")}
             />
 
-            {formData["1011"]?.realValue !== "0" &&
-              formData["1011"]?.realValue !== "00" && (
-                <CheckboxComp
-                  value={formData["1011"]?.realValue}
-                  optionsString={optionsString}
-                  labelsString={labelsString}
-                  hasAllCheckbox={false}
-                  lang={lang}
-                  onChange={(newValue) => {
-                    handleChange("1011", newValue);
-                  }}
-                />
-              )}
+            {ackChecked && (
+              <CheckboxComp
+                value={Number(formData["1011"]?.realValue || "0").toString(16)}
+                optionsString={optionsString}
+                labelsString={labelsString}
+                hasAllCheckbox={false}
+                lang={lang}
+                onChange={(newValue) => {
+                  handleChange("1011", String(parseInt(newValue, 16)));
+                }}
+              />
+            )}
           </Stack>
 
           <NumericInputField
@@ -217,7 +224,10 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading || !isDirtyFields.length}
+          disabled={
+            ackChecked === ackChecked &&
+            (isLoading || isDirtyFields.length === 0)
+          }
         >
           {t("notify.send")}
         </Button>
@@ -232,6 +242,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;

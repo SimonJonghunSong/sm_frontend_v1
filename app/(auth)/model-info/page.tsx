@@ -286,10 +286,11 @@ export default function DeviceInfoPage() {
   const [csvData, setCsvData] = useState<any>({});
   const navigate = useRouter();
 
-  const { getModelName, getFwVer } = useModelInfoStore();
+  const { getModelName, getFwVer, getTargetCountry } = useModelInfoStore();
 
   const modelName = useMemo(() => getModelName(), [getModelName]);
   const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const targetCountry = useMemo(() => getTargetCountry(), [getTargetCountry]);
 
   const [tab, setTab] = useState("DeviceStatus");
   const [formData, setFormData] = useState<{
@@ -597,7 +598,9 @@ export default function DeviceInfoPage() {
   }, [originData]);
 
   const fetchJsonData = useCallback(async () => {
-    const data = ((await getModelDataFromIDB(modelName)) as any) || [];
+    const data =
+      ((await getModelDataFromIDB(modelName, fwVer, targetCountry)) as any) ||
+      [];
 
     const jsonData = data?.jsonData?.synctrak || [];
     const csvData = data?.csvData;
@@ -611,7 +614,9 @@ export default function DeviceInfoPage() {
   }, [modelName, navigate]);
 
   const getOriginData = useCallback(async () => {
-    const data = ((await getModelDataFromIDB(modelName)) as any) || [];
+    const data =
+      ((await getModelDataFromIDB(modelName, fwVer, targetCountry)) as any) ||
+      [];
 
     const jsonData = data?.jsonData?.synctrak || [];
 
@@ -628,6 +633,7 @@ export default function DeviceInfoPage() {
     modelName,
     modelVersion: fwVer,
     data: originData,
+    formData,
   });
 
   useEffect(() => {
@@ -656,6 +662,7 @@ export default function DeviceInfoPage() {
         />
         <Stack flex={1}>
           <Controller
+            formData={formData}
             data={originData}
             getOriginData={getOriginData}
             onLoadProfile={(profile) => {

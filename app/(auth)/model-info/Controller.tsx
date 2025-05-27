@@ -15,17 +15,22 @@ import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 import useProfileWithoutDevice from "@/src/hooks/useProfileWithoutDevice";
+import { FormField } from "./page";
 
 interface ModelInfoControllerProps {
   onLoadProfile: (profile: string) => void;
   data: Record<string, any>[];
   getOriginData: () => Promise<Record<string, any>[]>;
+  formData: {
+    [key: string]: FormField;
+  };
 }
 
 export default function ModelInfoController({
   onLoadProfile,
   data,
   getOriginData,
+  formData,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
@@ -42,6 +47,7 @@ export default function ModelInfoController({
     modelName,
     modelVersion: fw_ver,
     data,
+    formData,
   });
 
   const [saveModal, saveModalToggle] = useModal();

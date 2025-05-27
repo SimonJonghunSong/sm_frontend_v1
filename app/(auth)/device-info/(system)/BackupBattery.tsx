@@ -166,7 +166,7 @@ const BackupBattery = ({ formData, onChange, setFormData }: Props) => {
             isDirty={isDirtyFields.includes("1973")}
           />
 
-          {!formData["1974"].key.includes("I-Button Add Master") && (
+          {!formData["1974"]?.key.includes("I-Button Add Master") && (
             <SwitchField
               id="1974"
               isUnderbarId
@@ -199,6 +199,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;

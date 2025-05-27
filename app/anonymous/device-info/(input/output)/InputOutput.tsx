@@ -11,6 +11,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "../../(utils)/useSendFormData";
 import EditDot from "../../(components)/EditDot";
+import SelectField from "../../(components)/SelectField";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
@@ -125,7 +126,18 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
 
       <TabContent>
         {tab === "input" && <Input formData={formData} onChange={onChange} />}
-        {tab === "output" && <Output formData={formData} onChange={onChange} />}
+        {tab === "output" && (
+          <Stack gap={"32px"}>
+            <Output formData={formData} onChange={onChange} />
+            <SelectField
+              id="1786"
+              formData={formData}
+              onChange={onChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("1786")}
+            />
+          </Stack>
+        )}
       </TabContent>
 
       <Stack direction="row" justifyContent="flex-end">
@@ -175,6 +187,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;

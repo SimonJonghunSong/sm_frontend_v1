@@ -13,6 +13,7 @@ import {
 import { useTransformedConfigData } from "./useTransformConfigData";
 import { chunkDataByNumber } from "../functions";
 import { fileDownload } from "@/utils/fileDownload";
+import { generateFilename } from "@/src/utils/profileUtil";
 
 interface UseProfileType {
   port: SerialPort;
@@ -391,12 +392,16 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     });
 
     if (isDownload) {
-      fileDownload(
-        blob,
-        `${port.modelinfo.split("_")[0]}_${
-          port.modelinfo.split("_")[port.modelinfo.split("_").length - 1]
-        }.profile`
+      const modelName = port.modelinfo.split("_")[0];
+      const modelVersion =
+        port.modelinfo.split("_")[port.modelinfo.split("_").length - 1];
+
+      const downloadFileName = await generateFilename(
+        new File([blob], `${modelName}_${modelVersion}.profile`),
+        modelName,
+        modelVersion
       );
+      fileDownload(blob, downloadFileName);
     }
 
     setIsDownloading(false);

@@ -24,7 +24,8 @@ type CommandsUIType =
   | "PIN-Unlock" // 0
   | "Main-Server" // 0
   | "LTE-Band" // 0
-  | "Detection-Control-Speed";
+  | "Detection-Control-Speed"
+  | "Q-Type";
 
 export type Command = {
   id: string;
@@ -195,8 +196,11 @@ export const commands: Record<CommandsSection, Command[]> = {
     },
   ],
   systemCommands: [
+    // TODO: type 파악필요
+    // { id: "0304", uiType: "text-input" },
     { id: "0721", uiType: "normal" },
     { id: "0302", uiType: "normal" },
+    { id: "0303", uiType: "normal" },
     { id: "0731", uiType: "select" },
     { id: "0732", uiType: "normal" },
     { id: "0771", uiType: "select" },
@@ -234,8 +238,8 @@ export const commands: Record<CommandsSection, Command[]> = {
     { id: "0743", uiType: "number-input" },
     { id: "0744", uiType: "number-input" },
     { id: "0745", uiType: "number-input" },
-    { id: "0746", uiType: "number-input" },
-    { id: "0769", uiType: "number-input" },
+    { id: "0746", uiType: "Q-Type" },
+    { id: "0769", uiType: "Q-Type" },
     { id: "0906", uiType: "normal" },
     { id: "0777", uiType: "number-input" },
     { id: "0779", uiType: "select" },
@@ -299,7 +303,7 @@ export const commands: Record<CommandsSection, Command[]> = {
     { id: "1049", uiType: "number-input" },
   ],
   geofenceCommands: [
-    { id: "0596", uiType: "normal" },
+    { id: "0506", uiType: "normal" },
     { id: "0517", uiType: "normal" },
     { id: "0519", uiType: "text-input" },
     { id: "0518", uiType: "text-input" },

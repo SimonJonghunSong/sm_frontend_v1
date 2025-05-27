@@ -567,16 +567,7 @@ const INCLUDE_FIELDS_NETWORK = {
     "1019",
     "1011",
   ],
-  [SECTIONS.BackupServer.en]: [
-    "1008",
-    "1009",
-    "1010",
-    "1011",
-    "1012",
-    "1017",
-    "1018",
-    "1019",
-  ],
+  [SECTIONS.BackupServer.en]: ["1008", "1009", "1010", "1017", "1018", "1019"],
   [SECTIONS.AGPSMode.en]: ["1014", "1015"],
   [SECTIONS.MaintenanceServer.en]: ["1020", "1022", "1021", "1023"],
   [SECTIONS.NTPServer.en]: ["1076", "1077"],
@@ -920,6 +911,7 @@ const INCLUDE_FIELDS_INPUT_OUTPUT = {
     "1783", // Pulse 3 Number
     "1784", // Pulse 3 On
     "1785", // Pulse 3 Off
+    "1786",
   ],
 };
 

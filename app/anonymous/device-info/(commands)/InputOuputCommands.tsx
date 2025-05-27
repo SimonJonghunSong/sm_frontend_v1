@@ -8,12 +8,19 @@ import { FIELD_VALIDATIONS } from "constants/field";
 
 interface Props {
   renderCommand: (command: Command) => React.ReactNode;
+  commandData: string[];
 }
 
-const InputOutputCommands = ({ renderCommand }: Props) => {
+const InputOutputCommands = ({ renderCommand, commandData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
+  const comandList = commands.ioCommands.filter((item) =>
+    commandData.includes(item.id)
+  );
 
+  if (comandList.length === 0) {
+    return null;
+  }
   return (
     <Container>
       <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -26,15 +33,15 @@ const InputOutputCommands = ({ renderCommand }: Props) => {
 
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
-          {commands.ioCommands
-            .slice(0, 11)
+          {comandList
+            .slice(0, Math.ceil(comandList.length / 2))
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
-          {commands.ioCommands
-            .slice(11)
+          {comandList
+            .slice(Math.ceil(comandList.length / 2))
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}

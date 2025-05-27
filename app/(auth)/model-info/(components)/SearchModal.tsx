@@ -27,9 +27,6 @@ export default function SearchModal({
   paramData,
   onClose,
 }: Props) {
-  console.log("sectionData :::", sectionData);
-  console.log("searchParamData :::", paramData);
-
   // uitls
   const t = useTranslations();
 
@@ -160,17 +157,20 @@ export default function SearchModal({
       const paramResults = [];
       const paramResultsEntries = Object.entries(paramData).filter(
         ([key, value]) => {
-          return key
-            .toLowerCase()
-            .replaceAll(" ", "")
-            .includes(searchTerm.toLowerCase().replaceAll(" ", ""));
+          return (
+            key
+              .toLowerCase()
+              .replaceAll(" ", "")
+              .includes(searchTerm.toLowerCase().replaceAll(" ", "")) ||
+            value.field.includes(searchTerm)
+          );
         }
       );
 
       paramResultsEntries.forEach(([key, value]) => {
         paramResults.push({
           key: value.field,
-          searchText: value.searchText,
+          searchText: `${value.searchText} (${value.field})`,
           tab: value.tab,
         });
       });

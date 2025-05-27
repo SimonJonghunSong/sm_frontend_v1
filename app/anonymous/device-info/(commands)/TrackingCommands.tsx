@@ -8,11 +8,20 @@ import { FIELD_VALIDATIONS } from "constants/field";
 
 interface Props {
   renderCommand: (command: Command) => React.ReactNode;
+  commandData: string[];
 }
 
-const TrackingCommands = ({ renderCommand }: Props) => {
+const TrackingCommands = ({ renderCommand, commandData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
+
+  const comandList = commands.trackingCommands.filter((item) =>
+    commandData.includes(item.id)
+  );
+
+  if (comandList.length === 0) {
+    return null;
+  }
 
   return (
     <Container>
@@ -26,15 +35,15 @@ const TrackingCommands = ({ renderCommand }: Props) => {
 
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
-          {commands.trackingCommands
-            .slice(0, 3)
+          {comandList
+            .slice(0, Math.ceil(comandList.length / 2))
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
-          {commands.trackingCommands
-            .slice(3)
+          {comandList
+            .slice(Math.ceil(comandList.length / 2))
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}

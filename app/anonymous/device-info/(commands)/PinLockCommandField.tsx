@@ -55,7 +55,7 @@ export default function PinLockCommandField({
 
   return (
     <Container>
-      <Title isHiddenParameter={isHiddenParameter}>
+      <Title $isHiddenParameter={isHiddenParameter}>
         <div>
           <h3>{FIELD_VALIDATIONS[id].title[lang]}</h3>
           <Tooltip
@@ -143,7 +143,7 @@ const InputWithButton = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div<{ isHiddenParameter: boolean }>`
+const Title = styled.div<{ $isHiddenParameter: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -152,7 +152,7 @@ const Title = styled.div<{ isHiddenParameter: boolean }>`
 
   h3 {
     width: fit-content;
-    color: ${(props) => (props.isHiddenParameter ? "#FF0000" : "#6f6f6f")};
+    color: ${(props) => (props.$isHiddenParameter ? "#FF0000" : "#6f6f6f")};
   }
 
   & > div {

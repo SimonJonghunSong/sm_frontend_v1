@@ -6,13 +6,17 @@ import { Dispatch, SetStateAction, useState } from "react";
 export default function useSendFormData() {
   const [isLoading] = useState(false);
   const getModelName = useModelInfoStore((state) => state.getModelName);
+  const getFwVer = useModelInfoStore((state) => state.getFwVer);
+  const getTargetCountry = useModelInfoStore((state) => state.getTargetCountry);
   const modelName = getModelName();
+  const fwVer = getFwVer();
+  const targetCountry = getTargetCountry();
 
   const sendFormData = async (
     formData: { [key: string]: FormField },
     setFormData?: Dispatch<SetStateAction<{ [key: string]: FormField }>>
   ) => {
-    updateJsonDataToIDB(modelName, formData);
+    updateJsonDataToIDB(modelName, fwVer, targetCountry, formData);
 
     if (setFormData) {
       setFormData((prev) =>

@@ -221,6 +221,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1670"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1670")}
@@ -228,6 +229,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1671"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1671")}
@@ -235,6 +237,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1672"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1672")}
@@ -253,6 +256,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1673"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1673")}
@@ -260,6 +264,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1674"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1674")}
@@ -267,6 +272,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1675"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1675")}
@@ -285,6 +291,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1676"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1676")}
@@ -292,6 +299,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1677"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1677")}
@@ -299,6 +307,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1678"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1678")}
@@ -313,6 +322,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1679"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1679")}
@@ -320,6 +330,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1680"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1680")}
@@ -327,6 +338,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1681"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1681")}
@@ -345,6 +357,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1682"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1682")}
@@ -352,6 +365,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1683"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1683")}
@@ -359,6 +373,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1684"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1684")}
@@ -377,6 +392,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1685"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1685")}
@@ -384,6 +400,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1686"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1686")}
@@ -391,6 +408,7 @@ const ModeSettings = ({ formData, onChange, setFormData }: Props) => {
                   <NumericInputField
                     id="1687"
                     formData={formData}
+                    isSwitch
                     onChange={handleChange}
                     style={{ width: "100%" }}
                     isDirty={isDirtyFields.includes("1687")}
@@ -436,6 +454,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;

@@ -37,7 +37,7 @@ export default function NumberCommandField({
 
   return (
     <Container>
-      <Title isHiddenParameter={isHiddenParameter}>
+      <Title $isHiddenParameter={isHiddenParameter}>
         <h3>{FIELD_VALIDATIONS[id].title[lang]}</h3>
         <Tooltip
           title={FIELD_VALIDATIONS[id].tooltip[lang]}
@@ -66,6 +66,11 @@ export default function NumberCommandField({
           type="number"
           sx={{ flex: 1 }}
           value={value}
+          onKeyDown={(e) => {
+            if (["e", "E", "+", "-"].includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
           onChange={(e) => setValue(e.target.value)}
           error={
             value.length > 0 &&
@@ -110,7 +115,7 @@ const InputWithButton = styled.div`
   width: 100%;
 `;
 
-const Title = styled.div<{ isHiddenParameter: boolean }>`
+const Title = styled.div<{ $isHiddenParameter: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -118,7 +123,7 @@ const Title = styled.div<{ isHiddenParameter: boolean }>`
 
   h3 {
     width: fit-content;
-    color: ${(props) => (props.isHiddenParameter ? "#FF0000" : "#6f6f6f")};
+    color: ${(props) => (props.$isHiddenParameter ? "#FF0000" : "#6f6f6f")};
   }
 `;
 

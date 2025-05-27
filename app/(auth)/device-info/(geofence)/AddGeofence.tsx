@@ -52,6 +52,8 @@ interface Props {
   polygonGeofenceKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
+  polygonMinId: number;
+  circularMinId: number;
 }
 
 const tooltipText = {
@@ -164,13 +166,15 @@ const AddGeofence = ({
   polygonGeofenceKeys,
   onSuccess,
   onCancel,
+  polygonMinId,
+  circularMinId,
 }: Props) => {
   const [typeFilter, setTypeFilter] = useState<"Polygon" | "Circular">(
     circularGeofenceMax === 0 ? "Polygon" : "Circular"
   );
 
   const [circleState, circleDispatch] = useReducer(circleReducer, {
-    id: 1,
+    id: circularMinId,
     enterAlert: false,
     exitAlert: false,
     showOutputActive: false,
@@ -181,7 +185,7 @@ const AddGeofence = ({
     antiJamming: false,
   });
   const [polygonState, polygonDispatch] = useReducer(polygonReducer, {
-    id: 1,
+    id: polygonMinId,
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
@@ -1189,6 +1193,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;
