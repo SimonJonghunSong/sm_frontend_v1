@@ -195,8 +195,11 @@ export const commands: Record<CommandsSection, Command[]> = {
     },
   ],
   systemCommands: [
+    // TODO: type 파악필요
+    // { id: "0304", uiType: "text-input" },
     { id: "0721", uiType: "normal" },
     { id: "0302", uiType: "normal" },
+    { id: "0303", uiType: "normal" },
     { id: "0731", uiType: "select" },
     { id: "0732", uiType: "normal" },
     { id: "0771", uiType: "select" },
@@ -299,7 +302,7 @@ export const commands: Record<CommandsSection, Command[]> = {
     { id: "1049", uiType: "number-input" },
   ],
   geofenceCommands: [
-    { id: "0596", uiType: "normal" },
+    { id: "0506", uiType: "normal" },
     { id: "0517", uiType: "normal" },
     { id: "0519", uiType: "text-input" },
     { id: "0518", uiType: "text-input" },
