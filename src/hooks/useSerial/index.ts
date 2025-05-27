@@ -101,9 +101,6 @@ const useSerial = () => {
           await port.open(options);
           await addPortToState(port);
         } catch (error) {
-          console.log("error ?:::", error);
-          console.log("port :::", port);
-          
           return;
         }
       });
@@ -140,7 +137,7 @@ const useSerial = () => {
       const writableStreamClosed = textEncoder.readable.pipeTo(port.writable);
       const writer = textEncoder.writable.getWriter();
 
-      port.ondisconnect = async () => {   
+      port.ondisconnect = async () => {
         deleteSerialPort(port);
         // window.location.reload();
         await getPorts();
@@ -219,7 +216,6 @@ const useSerial = () => {
           "---------------- 기기에서 넘어오는 value end ----------------"
         );
 
-        
         console.log("port :::::", port);
 
         if (port.isHealthCheck) {
@@ -243,15 +239,15 @@ const useSerial = () => {
           }
         } else {
           if (port.isQuecModel) {
-            value = value.replaceAll("OK", "");     
-            
+            value = value.replaceAll("OK", "");
+
             if (port.isDeviceCommandSend) {
               if (deviceCommandLogRef.current) {
                 deviceCommandLogRef.current += value;
               } else {
                 deviceCommandLogRef.current = value;
               }
-    
+
               if (isEndOfMessage(value)) {
                 deviceCommandBroadcastChannel.postMessage({
                   type: "RESPONSE",
@@ -262,26 +258,26 @@ const useSerial = () => {
                 port.isDeviceCommandSend = false;
               }
             }
-    
+
             if (port.isAlertSend) {
               if (alertCommandRef.current) {
                 alertCommandRef.current += value;
               } else {
                 alertCommandRef.current = value;
               }
-    
+
               if (value.includes("ERR")) {
                 port.isAlertSend = false;
                 alertBroadcastRef.current.postMessage(alertCommandRef.current);
                 alertCommandRef.current = null;
               }
             }
-    
+
             if (valueProp) {
               if (port?.onbuffervalue) {
                 port?.onbuffervalue(value);
               }
-    
+
               if (value.includes("RPR")) {
                 await updateIndexedDB(
                   port.imei,
@@ -292,7 +288,7 @@ const useSerial = () => {
                 port.oneditsuccess?.();
                 port.oneditsuccess = null;
               }
-    
+
               if (value.includes("ERR") || port.iserrorvalue) {
                 await updateIndexedDB(
                   port.imei,
@@ -300,7 +296,7 @@ const useSerial = () => {
                   indexeddbRef,
                   broadcastChannel
                 );
-    
+
                 if (valueProp.includes("OK")) {
                   port.iserrorvalue = false;
                   port.onprev?.();
@@ -309,8 +305,6 @@ const useSerial = () => {
                   port.iserrorvalue = true;
                 }
               }
-    
-              
 
               if (
                 port.isReadyToUse &&
@@ -323,18 +317,23 @@ const useSerial = () => {
                     (modelVersionBufferRef.current.get(port.injectedId) || "") +
                       value
                   );
-                  
+
                   if (valueProp.includes("OK")) {
-                    const modelVersionBuffer = modelVersionBufferRef.current.get(
-                      port.injectedId
-                    );
-                    const modelVersion = modelVersionBuffer.trim().split(";")[2];
-                    const isLock = modelVersionBuffer.trim().split(";")[9] === "1";
-    
+                    const modelVersionBuffer =
+                      modelVersionBufferRef.current.get(port.injectedId);
+                    const modelVersion = modelVersionBuffer
+                      .trim()
+                      .split(";")[2];
+                    const isLock =
+                      modelVersionBuffer.trim().split(";")[9] === "1";
+
                     port.isLock = isLock;
                     port.modelinfo = modelVersion;
                     port.ismodelinfofetching = false;
-                    modelVersionBufferRef.current.set(port.injectedId, undefined);
+                    modelVersionBufferRef.current.set(
+                      port.injectedId,
+                      undefined
+                    );
                     port.isimeifetching = true;
                     write({
                       data: AT_GET_IMEI,
@@ -343,20 +342,21 @@ const useSerial = () => {
                     });
                   }
                 } else if (port.isimeifetching) {
-                  
                   imeiBufferRef.current.set(
                     port.injectedId,
                     (imeiBufferRef.current.get(port.injectedId) || "") + value
                   );
-                
 
                   if (valueProp.includes("OK")) {
-                    const imeiBuffer = imeiBufferRef.current.get(port.injectedId);
-                    const currentImei = imeiBuffer.match(/"I"\s*:\s*"(\d+)"/)[1];
+                    const imeiBuffer = imeiBufferRef.current.get(
+                      port.injectedId
+                    );
+                    const currentImei =
+                      imeiBuffer.match(/"I"\s*:\s*"(\d+)"/)[1];
                     const alreadyInGlobalData = getPortList().some(
                       ({ imei }) => imei === currentImei
                     );
-    
+
                     port.isimeifetching = false;
                     if (currentImei) {
                       port.imei = currentImei;
@@ -381,7 +381,7 @@ const useSerial = () => {
                           },
                           imei: currentImei,
                         });
-    
+
                         port.grpNo = getPortList().find(
                           ({ imei }) => imei === currentImei
                         ).jsonPackageCount;
@@ -420,9 +420,9 @@ const useSerial = () => {
                 } else if (port.ispackagecountfetching) {
                   totalGrpNoBufferRef.current.set(
                     port.injectedId,
-                    (totalGrpNoBufferRef.current.get(port.injectedId) || "") + value
+                    (totalGrpNoBufferRef.current.get(port.injectedId) || "") +
+                      value
                   );
-    
 
                   if (valueProp.includes("OK")) {
                     const dataField = totalGrpNoBufferRef.current
@@ -442,7 +442,7 @@ const useSerial = () => {
                       },
                       imei: port.imei,
                     });
-    
+
                     const commands = Array.from(
                       { length: Number(dataField) },
                       (_, i) => `${AT_GET_JSON}${i + 1}`
@@ -451,8 +451,6 @@ const useSerial = () => {
                     totalGrpNoBufferRef.current.set(port.injectedId, undefined);
                     port.isjsonpackagefetching = true;
                     setPackageFetchingStart({ imei: port.imei });
-    
-                    
 
                     // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
                     commands.forEach((command, index) => {
@@ -480,29 +478,28 @@ const useSerial = () => {
                       window.location.reload();
                     }, 10000);
                   }
-    
+
                   const csv = csvBufferRef.current.get(port.imei);
                   csvBufferRef.current.set(
                     port.imei,
                     (csv || "") + value.replace("$PST;CSV;", "")
                   );
-    
+
                   await updateIndexedDB(
                     port.imei,
                     value,
                     indexeddbRef,
                     broadcastChannel
                   );
-    
-                  port?.onCsvDataFetched?.(value);
-                  
 
-                  if (valueProp.includes("OK")) { 
+                  port?.onCsvDataFetched?.(value);
+
+                  if (valueProp.includes("OK")) {
                     if (fetchTimeoutRef.current) {
                       clearTimeout(fetchTimeoutRef.current);
                       fetchTimeoutRef.current = null;
                     }
-    
+
                     port.isCsvFetching = false;
                     port.onEndCsvDataFetched?.();
                     csvBufferRef.current.set(port.imei, "");
@@ -538,13 +535,13 @@ const useSerial = () => {
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   if (value.includes("#")) {
                     const hashCount = value.split("#").length - 1;
                     port.polygonfetchcount =
                       (port.polygonfetchcount ?? 0) + hashCount;
                   }
-    
+
                   if (
                     port.polygonfetchcount === port.polygonmax &&
                     valueProp.includes("OK")
@@ -557,20 +554,20 @@ const useSerial = () => {
                   }
                 } else if (port.iscircularfetching) {
                   port.circulargeofence = (port.circulargeofence || "") + value;
-    
+
                   await updateIndexedDB(
                     port.imei,
                     value,
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   if (value.includes("#")) {
                     const hashCount = value.split("#").length - 1;
                     port.circularfetchcount =
                       (port.circularfetchcount ?? 0) + hashCount;
                   }
-    
+
                   if (
                     port.circularfetchcount === port.circlemax &&
                     valueProp.includes("OK")
@@ -596,7 +593,7 @@ const useSerial = () => {
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   port.circlehandler(value);
                 } else if (port.iscircleoutputactivefetching) {
                   await updateIndexedDB(
@@ -607,15 +604,18 @@ const useSerial = () => {
                   );
                   port.circleoutputactivehandler(value);
                 } else if (port.isjsonpackagefetching) {
-                  const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
-    
+                  const excludePattern = new RegExp(
+                    EXCLUDE_STRING.join("|"),
+                    "g"
+                  );
+
                   await updateIndexedDB(
                     port.imei,
                     value,
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   // '\u0003'에 매치되는 부분을 찾고, 패킷 버퍼 카운트를 업데이트
                   const matches = value.match(/\u0003/g);
                   const currentImei = port.imei;
@@ -623,7 +623,6 @@ const useSerial = () => {
                     jsonPacketBufferCountRef.current.get(currentImei) || 0;
                   const currentBuffer =
                     jsonPacketBufferRef.current.get(currentImei) || "";
-    
 
                   // 매치된 문자열이 있는 경우 카운트 증가
                   if (matches) {
@@ -633,8 +632,7 @@ const useSerial = () => {
                     );
                     port.onjsonpacketcountup?.(matches.length);
                   }
-                  
-    
+
                   // 값에서 특정 문자를 제거하고 버퍼 업데이트
                   const cleanedValue = value
                     .replaceAll("\u0002", "")
@@ -643,12 +641,12 @@ const useSerial = () => {
                     currentImei,
                     currentBuffer + cleanedValue
                   );
-    
+
                   // 패킷을 처리할 조건을 확인하고 처리
                   const shouldProcessPacket =
                     jsonPacketBufferCountRef.current.get(currentImei) ===
                     port.grpNo;
-    
+
                   if (shouldProcessPacket) {
                     setJsonPackageOfSerialPort({
                       imei: currentImei,
@@ -657,7 +655,7 @@ const useSerial = () => {
                     if (port.onafterjsonpacket) {
                       port.onafterjsonpacket();
                       port.onafterjsonpacket = null;
-                    }                  
+                    }
 
                     // 버퍼와 카운트 재설정
                     jsonPacketBufferRef.current.set(currentImei, "");
@@ -666,7 +664,7 @@ const useSerial = () => {
                   }
                 }
               }
-    
+
               if (value.includes("PST;Rdy") && !port.isReadyToUse) {
                 const dataField = value.trim().split(";")[2];
                 if (dataField === "UP") {
@@ -683,14 +681,13 @@ const useSerial = () => {
               }
             }
           } else {
-            
             if (port.isDeviceCommandSend) {
               if (deviceCommandLogRef.current) {
                 deviceCommandLogRef.current += value;
               } else {
                 deviceCommandLogRef.current = value;
               }
-    
+
               if (isEndOfMessage(value)) {
                 deviceCommandBroadcastChannel.postMessage({
                   type: "RESPONSE",
@@ -701,26 +698,26 @@ const useSerial = () => {
                 port.isDeviceCommandSend = false;
               }
             }
-    
+
             if (port.isAlertSend) {
               if (alertCommandRef.current) {
                 alertCommandRef.current += value;
               } else {
                 alertCommandRef.current = value;
               }
-    
+
               if (value.includes("ERR")) {
                 port.isAlertSend = false;
                 alertBroadcastRef.current.postMessage(alertCommandRef.current);
                 alertCommandRef.current = null;
               }
             }
-    
+
             if (value) {
               if (port?.onbuffervalue) {
                 port?.onbuffervalue(value);
               }
-    
+
               if (value.includes("RPR")) {
                 await updateIndexedDB(
                   port.imei,
@@ -731,7 +728,7 @@ const useSerial = () => {
                 port.oneditsuccess?.();
                 port.oneditsuccess = null;
               }
-    
+
               if (value.includes("ERR") || port.iserrorvalue) {
                 await updateIndexedDB(
                   port.imei,
@@ -739,7 +736,7 @@ const useSerial = () => {
                   indexeddbRef,
                   broadcastChannel
                 );
-    
+
                 if (value.includes(CR)) {
                   port.iserrorvalue = false;
                   port.onprev?.();
@@ -748,7 +745,7 @@ const useSerial = () => {
                   port.iserrorvalue = true;
                 }
               }
-    
+
               if (
                 port.isReadyToUse &&
                 (!value.includes("PST;Rdy") || !value.includes("Rdy;UP"))
@@ -761,16 +758,21 @@ const useSerial = () => {
                       value
                   );
                   if (value.includes(CR)) {
-                    const modelVersionBuffer = modelVersionBufferRef.current.get(
-                      port.injectedId
-                    );
-                    const modelVersion = modelVersionBuffer.trim().split(";")[2];
-                    const isLock = modelVersionBuffer.trim().split(";")[9] === "1";
-    
+                    const modelVersionBuffer =
+                      modelVersionBufferRef.current.get(port.injectedId);
+                    const modelVersion = modelVersionBuffer
+                      .trim()
+                      .split(";")[2];
+                    const isLock =
+                      modelVersionBuffer.trim().split(";")[9] === "1";
+
                     port.isLock = isLock;
                     port.modelinfo = modelVersion;
                     port.ismodelinfofetching = false;
-                    modelVersionBufferRef.current.set(port.injectedId, undefined);
+                    modelVersionBufferRef.current.set(
+                      port.injectedId,
+                      undefined
+                    );
                     port.isimeifetching = true;
                     write({
                       data: AT_GET_IMEI,
@@ -783,14 +785,17 @@ const useSerial = () => {
                     port.injectedId,
                     (imeiBufferRef.current.get(port.injectedId) || "") + value
                   );
-    
+
                   if (value.includes(CR)) {
-                    const imeiBuffer = imeiBufferRef.current.get(port.injectedId);
-                    const currentImei = imeiBuffer.match(/"I"\s*:\s*"(\d+)"/)[1];
+                    const imeiBuffer = imeiBufferRef.current.get(
+                      port.injectedId
+                    );
+                    const currentImei =
+                      imeiBuffer.match(/"I"\s*:\s*"(\d+)"/)[1];
                     const alreadyInGlobalData = getPortList().some(
                       ({ imei }) => imei === currentImei
                     );
-    
+
                     port.isimeifetching = false;
                     if (currentImei) {
                       port.imei = currentImei;
@@ -815,7 +820,7 @@ const useSerial = () => {
                           },
                           imei: currentImei,
                         });
-    
+
                         port.grpNo = getPortList().find(
                           ({ imei }) => imei === currentImei
                         ).jsonPackageCount;
@@ -854,9 +859,10 @@ const useSerial = () => {
                 } else if (port.ispackagecountfetching) {
                   totalGrpNoBufferRef.current.set(
                     port.injectedId,
-                    (totalGrpNoBufferRef.current.get(port.injectedId) || "") + value
+                    (totalGrpNoBufferRef.current.get(port.injectedId) || "") +
+                      value
                   );
-    
+
                   if (value.includes(CR)) {
                     const dataField = totalGrpNoBufferRef.current
                       .get(port.injectedId)
@@ -875,7 +881,7 @@ const useSerial = () => {
                       },
                       imei: port.imei,
                     });
-    
+
                     const commands = Array.from(
                       { length: Number(dataField) },
                       (_, i) => `${AT_GET_JSON}${i + 1}`
@@ -884,7 +890,7 @@ const useSerial = () => {
                     totalGrpNoBufferRef.current.set(port.injectedId, undefined);
                     port.isjsonpackagefetching = true;
                     setPackageFetchingStart({ imei: port.imei });
-    
+
                     // json package를 가지고 올 때 생기는 병목현상을 위한 의도적인 지연입니다.
                     commands.forEach((command, index) => {
                       setTimeout(async () => {
@@ -911,28 +917,28 @@ const useSerial = () => {
                       window.location.reload();
                     }, 10000);
                   }
-    
+
                   const csv = csvBufferRef.current.get(port.imei);
                   csvBufferRef.current.set(
                     port.imei,
                     (csv || "") + value.replace("$PST;CSV;", "")
                   );
-    
+
                   await updateIndexedDB(
                     port.imei,
                     value,
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   port?.onCsvDataFetched?.(value);
-    
+
                   if (isEndOfMessage(value)) {
                     if (fetchTimeoutRef.current) {
                       clearTimeout(fetchTimeoutRef.current);
                       fetchTimeoutRef.current = null;
                     }
-    
+
                     port.isCsvFetching = false;
                     port.onEndCsvDataFetched?.();
                     csvBufferRef.current.set(port.imei, "");
@@ -947,7 +953,7 @@ const useSerial = () => {
                   }
                 } else if (port.isAltDataFetching) {
                   altDataBufferRef.current += value;
-    
+
                   if (isEndOfMessage(value)) {
                     port.onEndCurrentAltDataFetched?.(altDataBufferRef.current);
                     altDataBufferRef.current = "";
@@ -969,13 +975,13 @@ const useSerial = () => {
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   if (value.includes("#")) {
                     const hashCount = value.split("#").length - 1;
                     port.polygonfetchcount =
                       (port.polygonfetchcount ?? 0) + hashCount;
                   }
-    
+
                   if (
                     port.polygonfetchcount === port.polygonmax &&
                     value.includes(CR)
@@ -988,20 +994,20 @@ const useSerial = () => {
                   }
                 } else if (port.iscircularfetching) {
                   port.circulargeofence = (port.circulargeofence || "") + value;
-    
+
                   await updateIndexedDB(
                     port.imei,
                     value,
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   if (value.includes("#")) {
                     const hashCount = value.split("#").length - 1;
                     port.circularfetchcount =
                       (port.circularfetchcount ?? 0) + hashCount;
                   }
-    
+
                   if (
                     port.circularfetchcount === port.circlemax &&
                     value.includes(CR)
@@ -1027,7 +1033,7 @@ const useSerial = () => {
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   port.circlehandler(value);
                 } else if (port.iscircleoutputactivefetching) {
                   await updateIndexedDB(
@@ -1038,15 +1044,18 @@ const useSerial = () => {
                   );
                   port.circleoutputactivehandler(value);
                 } else if (port.isjsonpackagefetching) {
-                  const excludePattern = new RegExp(EXCLUDE_STRING.join("|"), "g");
-    
+                  const excludePattern = new RegExp(
+                    EXCLUDE_STRING.join("|"),
+                    "g"
+                  );
+
                   await updateIndexedDB(
                     port.imei,
                     value,
                     indexeddbRef,
                     broadcastChannel
                   );
-    
+
                   // '\u0003'에 매치되는 부분을 찾고, 패킷 버퍼 카운트를 업데이트
                   const matches = value.match(/\u0003/g);
                   const currentImei = port.imei;
@@ -1054,7 +1063,7 @@ const useSerial = () => {
                     jsonPacketBufferCountRef.current.get(currentImei) || 0;
                   const currentBuffer =
                     jsonPacketBufferRef.current.get(currentImei) || "";
-    
+
                   // 매치된 문자열이 있는 경우 카운트 증가
                   if (matches) {
                     jsonPacketBufferCountRef.current.set(
@@ -1063,7 +1072,7 @@ const useSerial = () => {
                     );
                     port.onjsonpacketcountup?.(matches.length);
                   }
-    
+
                   // 값에서 특정 문자를 제거하고 버퍼 업데이트
                   const cleanedValue = value
                     .replaceAll("\u0002", "")
@@ -1072,12 +1081,12 @@ const useSerial = () => {
                     currentImei,
                     currentBuffer + cleanedValue
                   );
-    
+
                   // 패킷을 처리할 조건을 확인하고 처리
                   const shouldProcessPacket =
                     jsonPacketBufferCountRef.current.get(currentImei) ===
                     port.grpNo;
-    
+
                   if (shouldProcessPacket) {
                     setJsonPackageOfSerialPort({
                       imei: currentImei,
@@ -1094,7 +1103,7 @@ const useSerial = () => {
                   }
                 }
               }
-    
+
               if (value.includes("PST;Rdy") && !port.isReadyToUse) {
                 const dataField = value.trim().split(";")[2];
                 if (dataField === "UP") {
@@ -1121,17 +1130,17 @@ const useSerial = () => {
       // toast(error, { type: "error" });
       console.log("error ::::");
       if (port.isQuecModel) {
-          console.log("port ::::", port);
-          console.log("reader ::::", reader);
-          console.log("writer ::::", writer);
-          deleteSerialPort(port);
+        console.log("port ::::", port);
+        console.log("reader ::::", reader);
+        console.log("writer ::::", writer);
+        deleteSerialPort(port);
 
-          reader.cancel();
-          reader.releaseLock();
-          writer.close();
-          writer.releaseLock();
-          port.close();
-       }
+        reader.cancel();
+        reader.releaseLock();
+        writer.close();
+        writer.releaseLock();
+        port.close();
+      }
       console.log(error);
     } finally {
       reader.releaseLock();
@@ -1163,7 +1172,6 @@ const useSerial = () => {
         }
 
         console.log("port ::::", port);
-        
 
         if (port.isFirstLoad) {
           await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
@@ -1172,7 +1180,7 @@ const useSerial = () => {
             await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
           } else {
             console.log("test :::::::::", data);
-            
+
             await writer.write(data + SUFFIX); // Uint8Array 전송
           }
         }
