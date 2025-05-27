@@ -199,6 +199,11 @@ const AddGeofence = ({
 
   /** Circular Geofence */
   const handleAddCirGeo = () => {
+    currentPort.port.oneditsuccess = () => {
+      onSuccess();
+      onCancel();
+    };
+
     const circleIndex = findCircleIndexByNumber(circleState.id - 1);
     const circle = mapManager.circles[0];
     const coordinateToHexString = convertCircleCoordinatesToHexString({
@@ -306,11 +311,6 @@ const AddGeofence = ({
     const speedLimitDebounceHexString = getSpeedLimitDebounceHexString();
 
     const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
-
-    currentPort.port.oneditsuccess = () => {
-      onSuccess();
-      onCancel();
-    };
 
     write({
       data: `${AT_EDIT_PREFIX}${currentPort.imei};${circleIndex}#${coordinateToHexString}${restString}`,
