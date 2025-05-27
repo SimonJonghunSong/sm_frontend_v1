@@ -7925,18 +7925,35 @@ export const FIELD_VALIDATIONS = {
   },
   "1786": {
     title: {
-      en: "Pulse 4 No",
-      pt: "Pulso 4 Não",
-      es: "Pulso 4 No",
+      en: "Output Status Report Type",
+      pt: "Tipo de Relatório de Status da Saída",
+      es: "Tipo de Relatorio de Estado de Salida",
     },
     tooltip: {
-      en: "Number of pulses for the output.\r\n• Range : 0~9,999\r\n• Default : 0",
-      es: "Número de pulsos para la salida.\r\n• Rango : 0~9,999\r\n• Predeterminado: 0",
-      pt: "Número de pulsos para a saída.\r\n• Intervalo : 0~9,999\r\n• Padrão : 0",
+      en: "• Output Status field is reported as physical status of outputs\r\n• Output Status field is reported as activation status of outputs",
+      es: `• El campo "Output Status" indica el estado físico de las salidas\r\n• El campo "Output Status" indica el estado de activación de las salidas`,
+      pt: `• O campo "Output Status" indica o estado físico das saídas\r\n• O campo "Output Status" indica o estado de ativação das saídas`,
     },
-    min: 0,
-    max: 9999,
-    list: null,
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Physical status",
+          es: "Estado físico",
+          pt: "Estado físico",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Activation status",
+          es: "Estado de ativação",
+          pt: "Estado de ativação",
+        },
+      },
+    ],
   },
   "1787": {
     title: {

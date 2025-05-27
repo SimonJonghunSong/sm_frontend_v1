@@ -911,6 +911,7 @@ const INCLUDE_FIELDS_INPUT_OUTPUT = {
     "1783", // Pulse 3 Number
     "1784", // Pulse 3 On
     "1785", // Pulse 3 Off
+    "1786",
   ],
 };
 
