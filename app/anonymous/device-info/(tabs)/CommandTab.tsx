@@ -27,6 +27,7 @@ import SystemCommands from "../(commands)/SystemCommands";
 import TextCommandField from "../(commands)/TextCommandField";
 import TimeRangeCommandField from "../(commands)/TimeRangeCommandField";
 import TrackingCommands from "../(commands)/TrackingCommands";
+import QTypeCommandField from "app/anonymous/device-info/(commands)/QTypeCommandField";
 
 interface Props {
   imei: string;
@@ -205,6 +206,16 @@ export default function CommandTab({ imei, commandData }: Props) {
       case "Detection-Control-Speed":
         return (
           <DetectionControlSpeedCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+      case "Q-Type":
+        return (
+          <QTypeCommandField
             id={command.id}
             imei={imei}
             handleSendCommand={handleSendCommand}

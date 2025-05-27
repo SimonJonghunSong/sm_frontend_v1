@@ -24,7 +24,8 @@ type CommandsUIType =
   | "PIN-Unlock" // 0
   | "Main-Server" // 0
   | "LTE-Band" // 0
-  | "Detection-Control-Speed";
+  | "Detection-Control-Speed"
+  | "Q-Type";
 
 export type Command = {
   id: string;
@@ -237,8 +238,8 @@ export const commands: Record<CommandsSection, Command[]> = {
     { id: "0743", uiType: "number-input" },
     { id: "0744", uiType: "number-input" },
     { id: "0745", uiType: "number-input" },
-    { id: "0746", uiType: "number-input" },
-    { id: "0769", uiType: "number-input" },
+    { id: "0746", uiType: "Q-Type" },
+    { id: "0769", uiType: "Q-Type" },
     { id: "0906", uiType: "normal" },
     { id: "0777", uiType: "number-input" },
     { id: "0779", uiType: "select" },

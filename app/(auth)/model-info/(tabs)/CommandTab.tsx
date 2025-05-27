@@ -27,6 +27,7 @@ import PinUnlockCommandField from "../(commands)/PinUnlockCommandField";
 import LteBandCommandField from "../(commands)/LteBandCommandField";
 import MainServerCommandField from "../(commands)/MainServerCommandField";
 import DetectionControlSpeedCommandField from "../(commands)/DetectionControlSpeedCommandField";
+import QTypeCommandField from "app/(auth)/model-info/(commands)/QTypeCommandField";
 
 interface Props {
   imei: string;
@@ -211,6 +212,17 @@ export default function CommandTab({ imei }: Props) {
             isLoading={isLoading}
           />
         );
+      case "Q-Type":
+        return (
+          <QTypeCommandField
+            id={command.id}
+            imei={imei}
+            handleSendCommand={handleSendCommand}
+            buttonText={t("configuration.commands.send")}
+            isLoading={isLoading}
+          />
+        );
+
       default:
         return null;
     }

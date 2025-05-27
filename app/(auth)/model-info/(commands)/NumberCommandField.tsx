@@ -69,6 +69,11 @@ export default function NumberCommandField({
           type="number"
           sx={{ flex: 1 }}
           value={value}
+          onKeyDown={(e) => {
+            if (["e", "E", "+", "-"].includes(e.key)) {
+              e.preventDefault();
+            }
+          }}
           onChange={(e) => setValue(e.target.value)}
           error={
             value.length > 0 &&
