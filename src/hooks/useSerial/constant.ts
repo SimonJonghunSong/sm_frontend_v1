@@ -33,7 +33,7 @@ export const parsePolygonInfo = (response: string) => {
   }
   // For 14-character response like "05 01 01 001e8480"
   else if (response.length === 14) {
-    const speedLimitHex = response.substring(7, 15);
+    const speedLimitHex = response.substring(6, 14);
     // Convert hex to decimal and divide by 1000000 to get speed in km/h
     const speedLimit = parseInt(speedLimitHex, 16) / 1000000;
 
@@ -41,6 +41,19 @@ export const parsePolygonInfo = (response: string) => {
       enterAlert: response.substring(2, 4) === "01",
       exitAlert: response.substring(4, 6) === "01",
       buzzerSpeedLimit: speedLimit.toFixed(2), // Format to 2 decimal places
+    };
+  } else if (response.length === 18) {
+    const speedLimitHex = response.substring(6, 14);
+    const speedLimitDebounceHex = response.substring(14, 18);
+    // Convert hex to decimal and divide by 1000000 to get speed in km/h
+    const speedLimit = parseInt(speedLimitHex, 16) / 1000000;
+    const speedLimitDebounce = parseInt(speedLimitDebounceHex, 16);
+
+    return {
+      enterAlert: response.substring(2, 4) === "01",
+      exitAlert: response.substring(4, 6) === "01",
+      buzzerSpeedLimit: speedLimit.toFixed(2), // Format to 2 decimal places
+      speedLimitDebounce: speedLimitDebounce.toFixed(2), // Format to 2 decimal places
     };
   }
 

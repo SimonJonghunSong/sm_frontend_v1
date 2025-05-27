@@ -45,6 +45,7 @@ interface Props {
   }) => Promise<Boolean>;
   onSuccess?: () => void;
   onCancel: () => void;
+  polygonGeofenceKeys: string[];
 }
 
 const tooltipText = {
@@ -120,6 +121,8 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimitDebounce":
+      return { ...state, speedLimitDebounce: action.payload };
   }
 };
 
@@ -130,6 +133,7 @@ const EditPolygonGeofence = ({
   write,
   onSuccess,
   onCancel,
+  polygonGeofenceKeys,
 }: Props) => {
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [polygonInfoFetched, setPolygonInfoFetched] = useState(false);
@@ -138,6 +142,7 @@ const EditPolygonGeofence = ({
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
+    speedLimitDebounce: 0,
   });
 
   const polygonPointRef = useRef("");
@@ -176,9 +181,22 @@ const EditPolygonGeofence = ({
         .padStart(8, "0")
         .toUpperCase();
 
-      const getPolygonSpeedLimitHex = isPolygonSpeedLimitDisabled
-        ? ""
-        : buzzerSpeedLimitHex;
+      const speedLimitDebounceHex = Math.floor(polygonState.speedLimitDebounce)
+        .toString(16)
+        .padStart(4, "0")
+        .toUpperCase();
+
+      const getPolygonSpeedLimitHex =
+        !isPolygonSpeedLimitDisabled &&
+        polygonGeofenceKeys.includes("Polygon Speed Limit")
+          ? buzzerSpeedLimitHex
+          : "";
+
+      const getSpeedLimitDebounceHex =
+        !isPolygonSpeedLimitDisabled &&
+        polygonGeofenceKeys.includes("Speed Limit Debounce")
+          ? speedLimitDebounceHex
+          : "";
 
       currentPort.port.oneditsuccess = () => {
         onSuccess();
@@ -190,7 +208,10 @@ const EditPolygonGeofence = ({
           polygonState.id - 1
         ).padStart(2, "0")}#${mapManager.polygons[0].path.length
           .toString(16)
-          .padStart(2, "0")}${enterExitHexString}${getPolygonSpeedLimitHex}`,
+          .padStart(
+            2,
+            "0"
+          )}${enterExitHexString}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
         port: currentPort,
         writer: currentPort.writer,
       });
@@ -247,6 +268,52 @@ const EditPolygonGeofence = ({
           inputProps={{
             min: 0,
             max: 300,
+          }}
+        />
+      </Stack>
+    );
+  };
+
+  const renderSpeedLimitDebounce = () => {
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Speed Limit Debounce")
+    )
+      return null;
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>Speed Limit Debounce</InputBox.Title>
+        </Stack>
+
+        <TextField
+          type="number"
+          value={polygonState.speedLimitDebounce}
+          onChange={(e) =>
+            polygonDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (polygonState.speedLimitDebounce > 1800 ||
+              polygonState.speedLimitDebounce < 0) &&
+            polygonState.speedLimitDebounce !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 1,800`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 1,800`
+                : `Entrada solo entre 0 ~ 1,800`
+              : ""
+          }
+          error={
+            polygonState.speedLimitDebounce > 1800 ||
+            polygonState.speedLimitDebounce < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 1800,
           }}
         />
       </Stack>
@@ -338,6 +405,7 @@ const EditPolygonGeofence = ({
           </Stack>
 
           {renderPolygonSpeedLimit()}
+          {renderSpeedLimitDebounce()}
         </Stack>
 
         <Stack gap={"24px"} flex={1}>
@@ -404,6 +472,10 @@ const EditPolygonGeofence = ({
             polygonDispatch({
               type: "setBuzzerSpeedLimit",
               payload: polygonInfoData?.buzzerSpeedLimit || 0,
+            });
+            polygonDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: polygonInfoData?.speedLimitDebounce || 0,
             });
           }
 

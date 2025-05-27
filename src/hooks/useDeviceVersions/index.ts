@@ -28,10 +28,9 @@ function getBackupBatteryVoltage(value: string) {
 
 const getDeviceVersionsForString = (data: string) => {
   const resSplit = data.split(";");
-  const resNumber = resSplit[resSplit.length - 2];
+  // 6자리보다 적으면 데이터가 부족한 것이므로 null 처리
+  const resNumber = resSplit.length < 6 ? null : resSplit[resSplit.length - 2];
   let resData = resSplit[resSplit.length - 1];
-
-  console.log("data :::::::@@::", data);
 
   let key = "";
 
@@ -102,7 +101,7 @@ export default function useDeviceVersions({
   useEffect(() => {
     deviceVersionsObjectRef.current = {};
     setDeviceVersionsObject({});
-  }, [currentPort?.port?.imei])
+  }, [currentPort?.port?.imei]);
   useEffect(() => {
     if (!currentPort?.port?.writable || !currentPort?.port?.readable) {
       return;
@@ -143,8 +142,8 @@ export default function useDeviceVersions({
 
                 setIsFetched(true);
                 setIsLoading(false);
-                
-                setDeviceVersionsObject({...deviceVersionsObjectRef.current});
+
+                setDeviceVersionsObject({ ...deviceVersionsObjectRef.current });
               }
             };
 

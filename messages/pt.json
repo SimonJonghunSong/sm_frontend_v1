@@ -23,7 +23,9 @@
     "table-message": {
       "no-operation-logs-yet": "Ainda não há registros de operação."
     },
-    "save": "Salvar"
+    "save": "Salvar",
+    "send_success": "Enviado com sucesso!",
+    "save_success": "Salvo com sucesso!"
   },
   "login": {
     "login": {

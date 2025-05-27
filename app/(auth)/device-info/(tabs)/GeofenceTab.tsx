@@ -71,8 +71,8 @@ export default function GeofenceTab({
     }));
   };
 
-  const polygonList = port.polygonGeofenceData;
-  const circularList = port.circularGeofenceData;
+  const polygonList = port?.polygonGeofenceData || [];
+  const circularList = port?.circularGeofenceData || [];
 
   const polygonData = getPolygonGeofenceData(polygonList);
   const circularData = getCircularGeofenceData(circularList);
@@ -171,6 +171,7 @@ export default function GeofenceTab({
             write={write}
             onSuccess={() => setMustFetch(true)}
             onCancel={() => setType("list")}
+            polygonGeofenceKeys={polygonGeofenceKeys}
           />
         );
       }

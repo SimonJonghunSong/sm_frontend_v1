@@ -1,5 +1,7 @@
 {
   "common": {
+    "send_success": "Successfully sent!",
+    "save_success": "Successfully saved!",
     "save": "Save",
     "country": {
       "select,_나라명": "Select, 나라명"
