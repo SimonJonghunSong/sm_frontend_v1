@@ -245,6 +245,10 @@ export default function DeviceInfoPage() {
   const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
 
+  const handleResetTab = () => {
+    setTab("DeviceStatus");
+  };
+
   const handleTabChange = (tab: string) => {
     if (tab === "CMD Tool") {
       toggleOpen();
@@ -533,6 +537,7 @@ export default function DeviceInfoPage() {
         />
         <Stack flex={1}>
           <Controller
+            onModelChange={handleResetTab}
             onApply={() => {
               handleApply();
             }}

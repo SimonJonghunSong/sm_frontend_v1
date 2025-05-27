@@ -38,12 +38,14 @@ interface ModelInfoControllerProps {
   onRefreshJsonPacket: () => void;
   onLoadProfile: (profile: string) => void;
   onApply: () => void;
+  onModelChange: () => void;
 }
 
 export default function ModelInfoController({
   onRefreshJsonPacket,
   onLoadProfile,
   onApply,
+  onModelChange,
 }: ModelInfoControllerProps) {
   const t = useTranslations();
 
@@ -167,6 +169,7 @@ export default function ModelInfoController({
 
     if (!targetProt) return;
 
+    onModelChange();
     const targetModelName = targetProt.modelVersion?.split("_")[0];
     const targetFwVer =
       targetProt.modelVersion?.split("_")[
