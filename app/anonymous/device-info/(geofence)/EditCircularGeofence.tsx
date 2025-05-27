@@ -142,6 +142,7 @@ const EditCircularGeofence = ({
   onSuccess,
   onCancel,
 }: Props) => {
+  const buffervalueRef = useRef<string>("");
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [circleState, circleDispatch] = useReducer(circleReducer, {
     id: 1,
@@ -164,6 +165,7 @@ const EditCircularGeofence = ({
 
   /** Circular Geofence */
   const handleEditCirGeo = () => {
+    buffervalueRef.current = "";
     const circleIndex = findCircleIndexByNumber(circleState.id - 1);
     const circle = mapManager.circles[0];
     const coordinateToHexString = convertCircleCoordinatesToHexString({
@@ -261,9 +263,17 @@ const EditCircularGeofence = ({
 
     const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}`;
 
-    currentPort.port.oneditsuccess = () => {
-      onSuccess();
-      onCancel();
+    currentPort.port.onbuffervalue = (value) => {
+      buffervalueRef.current += value;
+
+      if (value.includes(CR)) {
+        if (buffervalueRef.current.includes("OK")) {
+          onSuccess();
+          onCancel();
+        }
+        buffervalueRef.current = "";
+        currentPort.port.onbuffervalue = null;
+      }
     };
 
     write({

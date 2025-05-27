@@ -147,6 +147,7 @@ export default function GeofenceTab({
             write={write}
             onSuccess={() => setMustFetch(true)}
             onCancel={() => setType("list")}
+            polygonGeofenceKeys={polygonGeofenceKeys}
           />
         );
       }
