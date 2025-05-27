@@ -9,6 +9,19 @@ import {
 } from "../(geofence)/@index";
 import { SerialPortState } from "@/src/stores/useSerialStore";
 import EditPolygonGeofence from "../(geofence)/EditPolygonGefence";
+import {
+  getCircularGeofenceData,
+  getPolygonGeofenceData,
+} from "@/src/hooks/useSerial/utils";
+
+function getMinMissingGroupId(array: { groupId: number }[]): number {
+  const ids = new Set(array.map((item) => item.groupId));
+  let i = 1;
+  while (ids.has(i)) {
+    i++;
+  }
+  return i;
+}
 
 interface Props {
   formData: {
@@ -58,6 +71,15 @@ export default function GeofenceTab({
     }));
   };
 
+  const polygonList = port.polygonGeofenceData;
+  const circularList = port.circularGeofenceData;
+
+  const polygonData = getPolygonGeofenceData(polygonList);
+  const circularData = getCircularGeofenceData(circularList);
+
+  const polygonMinId = getMinMissingGroupId(polygonData);
+  const circularMinId = getMinMissingGroupId(circularData);
+
   const infoFields = originData.map(
     (shit) => Object.values(shit)[0][0].info?.[0]
   );
@@ -102,7 +124,11 @@ export default function GeofenceTab({
     if (type === "list") {
       return (
         <>
-          <GeofenceConfig formData={formData} setFormData={setFormData} onChange={handleValueChange} />
+          <GeofenceConfig
+            formData={formData}
+            setFormData={setFormData}
+            onChange={handleValueChange}
+          />
 
           <Geofence
             formData={formData}
@@ -135,6 +161,8 @@ export default function GeofenceTab({
           circularGeofenceKeys={circularGeofenceKeys}
           polygonGeofenceKeys={polygonGeofenceKeys}
           onCancel={() => setType("list")}
+          polygonMinId={polygonMinId}
+          circularMinId={circularMinId}
         />
       );
     }

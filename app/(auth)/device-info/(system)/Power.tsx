@@ -9,6 +9,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import { hasFormDataFields } from "../(utils)/@index";
+import SelectField from "../(components)/SelectField";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Power.en];
 
@@ -97,8 +98,9 @@ const Power = ({ formData, onChange, setFormData }: Props) => {
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>
-          <SwitchField
+          <SelectField
             id="1930"
+            isSwitch
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
@@ -296,6 +298,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;

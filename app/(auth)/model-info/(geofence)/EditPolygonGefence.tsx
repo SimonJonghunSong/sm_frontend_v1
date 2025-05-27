@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useMemo, useReducer, useRef, useState } from "react";
 import { Button, IconButton, Stack, TextField } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
@@ -7,32 +7,23 @@ import InputBox from "@/components/inputbox/InputBox";
 import Maps from "@/components/Map";
 import DataTable from "@/components/dataTable";
 import { SwitchPrimary } from "@/components/switches";
-import FullLoading from "@/components/FullLoading";
 import { SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import { useMapManager } from "@/src/hooks/useMapManager";
-import { getPolygonGeofenceData } from "@/src/hooks/useSerial/utils";
 import { useTranslations } from "next-intl";
-import { generateFormattedIndexes } from "@/utils/generateFormattedIndexes";
-import { convertCoordinatesToHexString } from "@/utils/coordinateToHex";
-import {
-  AT_EDIT_PREFIX,
-  AT_GET_POLYGON_INFO,
-  CR,
-  parsePolygonInfo,
-  POLYGON_GEOFENCE_POINTS,
-} from "@/src/hooks/useSerial/constant";
-import { chunkDataByNumberAndWrite } from "@/src/functions";
-import { delayPromise } from "@/src/hooks/useSerial";
-import { parseResponseToPolygonData } from "app/(auth)/configuration/geofence/utils";
-import { SerialPortState } from "@/src/stores/useSerialStore";
 import { FormField } from "../page";
+import useModelInfoStore from "@/src/stores/useModelInfo";
+import {
+  getModelDataFromIDB,
+  upsertPolygonGeofencesToIDB,
+} from "@/utils/idbModelUtil";
 
 interface Props {
   id: number;
   formData: {
     [key: string]: FormField;
   };
+  polygonGeofenceKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
 }
@@ -110,91 +101,59 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimitDebounce":
+      return { ...state, speedLimitDebounce: action.payload };
   }
 };
 
-const EditPolygonGeofence = ({ id, formData, onSuccess, onCancel }: Props) => {
-  const [isFullLoading, setIsFullLoading] = useState(false);
-  const [polygonInfoFetched, setPolygonInfoFetched] = useState(false);
+const EditPolygonGeofence = ({
+  id,
+  formData,
+  polygonGeofenceKeys,
+  onCancel,
+}: Props) => {
+  const { getModelName, getFwVer, getTargetCountry } = useModelInfoStore();
+
+  const modelName = useMemo(() => getModelName(), [getModelName]);
+  const fwVer = useMemo(() => getFwVer(), [getFwVer]);
+  const targetCountry = useMemo(() => getTargetCountry(), [getTargetCountry]);
+
   const [polygonState, polygonDispatch] = useReducer(polygonReducer, {
     id: 1,
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
+    speedLimitDebounce: 0,
   });
-
-  const polygonPointRef = useRef("");
 
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
-  const polygonInfoRef = useRef("");
-  // const polygonList = currentPort.polygonGeofenceData;
-  // const polygonData = getPolygonGeofenceData(polygonList);
 
   /** Polygon Geofence */
-  const handleEditPolygonGeo = () => {
-    // const imei = currentPort.port.imei;
+  const handleEditPolygonGeo = async () => {
+    await upsertPolygonGeofencesToIDB(modelName, fwVer, targetCountry, [
+      {
+        id: polygonState.id,
+        coordinates: mapManager.polygons[0].path,
+        enterAlert: polygonState.enterAlert,
+        exitAlert: polygonState.exitAlert,
+        buzzerSpeedLimit: polygonState.buzzerSpeedLimit,
+        speedLimitDebounce: polygonState.speedLimitDebounce,
+      },
+    ]);
 
-    const pointId = POLYGON_GEOFENCE_POINTS[polygonState.id - 1];
-    const coordinateToHexString = convertCoordinatesToHexString(
-      mapManager.polygons[0].path
-    );
-
-    // currentPort.port.oneditsuccess = async () => {
-    //   await delayPromise(200);
-
-    //   const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
-    //   const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
-    //   const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
-
-    //   const isPolygonSpeedLimitDisabled =
-    //     !formData["9000"] || formData["9000"]?.realValue === "00";
-
-    //   const buzzerSpeedLimitHex = Math.floor(
-    //     polygonState.buzzerSpeedLimit * 1000000
-    //   )
-    //     .toString(16)
-    //     .padStart(8, "0")
-    //     .toUpperCase();
-
-    //   const getPolygonSpeedLimitHex = isPolygonSpeedLimitDisabled
-    //     ? ""
-    //     : buzzerSpeedLimitHex;
-
-    //   currentPort.port.oneditsuccess = () => {
-    //     onSuccess();
-    //     onCancel();
-    //   };
-
-    //   write({
-    //     data: `${AT_EDIT_PREFIX}${imei};53;${String(
-    //       polygonState.id - 1
-    //     ).padStart(2, "0")}#${mapManager.polygons[0].path.length
-    //       .toString(16)
-    //       .padStart(2, "0")}${enterExitHexString}${getPolygonSpeedLimitHex}`,
-    //     port: currentPort,
-    //     writer: currentPort.writer,
-    //   });
-    // };
-
-    // // 20개 이상이면 쪼개서 보내는 로직
-    // chunkDataByNumberAndWrite(
-    //   {
-    //     write: write as any,
-    //     port: currentPort.port,
-    //     writer: currentPort.writer,
-    //   },
-    //   {
-    //     prefix: `${AT_EDIT_PREFIX}${imei};${pointId};`,
-    //     target: coordinateToHexString,
-    //   }
-    // );
+    onCancel();
   };
 
   const renderPolygonSpeedLimit = () => {
-    if (!formData["9000"] || formData["9000"].realValue === "00") return null;
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Polygon Speed Limit")
+    )
+      return null;
     return (
       <Stack gap="8px">
         <Stack direction="row" gap="4px" alignItems="center">
@@ -230,6 +189,52 @@ const EditPolygonGeofence = ({ id, formData, onSuccess, onCancel }: Props) => {
           inputProps={{
             min: 0,
             max: 300,
+          }}
+        />
+      </Stack>
+    );
+  };
+
+  const renderSpeedLimitDebounce = () => {
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Speed Limit Debounce")
+    )
+      return null;
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>Speed Limit Debounce</InputBox.Title>
+        </Stack>
+
+        <TextField
+          type="number"
+          value={polygonState.speedLimitDebounce}
+          onChange={(e) =>
+            polygonDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (polygonState.speedLimitDebounce > 1800 ||
+              polygonState.speedLimitDebounce < 0) &&
+            polygonState.speedLimitDebounce !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 1,800`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 1,800`
+                : `Entrada solo entre 0 ~ 1,800`
+              : ""
+          }
+          error={
+            polygonState.speedLimitDebounce > 1800 ||
+            polygonState.speedLimitDebounce < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 1800,
           }}
         />
       </Stack>
@@ -321,6 +326,7 @@ const EditPolygonGeofence = ({ id, formData, onSuccess, onCancel }: Props) => {
           </Stack>
 
           {renderPolygonSpeedLimit()}
+          {renderSpeedLimitDebounce()}
         </Stack>
 
         <Stack gap={"24px"} flex={1}>
@@ -350,159 +356,55 @@ const EditPolygonGeofence = ({ id, formData, onSuccess, onCancel }: Props) => {
     );
   };
 
-  // useEffect(() => {
-  //   if (!currentPort.port.readable && !currentPort.port.writable) return;
-
-  //   // 원래 핸들러 백업
-  //   const originalBufferValueHandler = currentPort.port.onbuffervalue;
-
-  //   // 폴리곤 정보 핸들러
-  //   const handlePolygonInfo = (value: string) => {
-  //     polygonInfoRef.current += value;
-
-  //     if (value.includes(CR)) {
-  //       const responseParts = polygonInfoRef.current.split(CR);
-  //       const validResponse = responseParts.find(
-  //         (part) => part.includes("RRE;") && part.includes(";53;")
-  //       );
-
-  //       if (validResponse) {
-  //         // #을 기준으로 분리하여 오른쪽 부분이 폴리곤 정보
-  //         const responseSections = validResponse.split("#");
-  //         const responseData =
-  //           responseSections.length > 1 ? responseSections[1] : "";
-
-  //         // 폴리곤 정보 파싱
-  //         const polygonInfoData = parsePolygonInfo(responseData);
-
-  //         if (polygonInfoData) {
-  //           polygonDispatch({
-  //             type: "setEnterAlert",
-  //             payload: polygonInfoData.enterAlert,
-  //           });
-  //           polygonDispatch({
-  //             type: "setExitAlert",
-  //             payload: polygonInfoData.exitAlert,
-  //           });
-  //           polygonDispatch({
-  //             type: "setBuzzerSpeedLimit",
-  //             payload: polygonInfoData?.buzzerSpeedLimit || 0,
-  //           });
-  //         }
-
-  //         // 정보 요청 완료 표시 - 포인트 요청 효과 트리거
-  //         setPolygonInfoFetched(true);
-
-  //         // 핸들러 정리
-  //         currentPort.port.onbuffervalue = originalBufferValueHandler;
-  //       } else {
-  //       }
-
-  //       polygonInfoRef.current = "";
-  //     }
-  //   };
-
-  //   // 핸들러 설정
-  //   currentPort.port.onbuffervalue = handlePolygonInfo;
-
-  //   setIsFullLoading(true);
-  //   // 폴리곤 정보 요청
-  //   write({
-  //     data: AT_GET_POLYGON_INFO(currentPort.port.imei, Number(id) - 1),
-  //     port: currentPort,
-  //     writer: currentPort.writer,
-  //   });
-  // }, [currentPort.port.readable, currentPort.port.writable]);
-
-  // useEffect(() => {
-  //   if (
-  //     (!currentPort.port.readable && !currentPort.port.writable) ||
-  //     !polygonInfoFetched
-  //   )
-  //     return;
-
-  //   setIsFullLoading(true);
-
-  //   const poly = polygonData.find(({ groupId }) => groupId === Number(id));
-  //   const polyCount = poly.polygonCount;
-
-  //   currentPort.port.ispolygonpointfetching = true;
-  //   currentPort.port.polygonhandler = (value) => {
-  //     polygonPointRef.current += value;
-  //     if (
-  //       polygonPointRef.current.split(CR).length - 1 ===
-  //       Math.ceil(polyCount / 20)
-  //     ) {
-  //       currentPort.port.ispolygonpointfetching = false;
-  //       const polygonPoint = polygonPointRef.current
-  //         .split(CR)
-  //         .filter((item) => item !== "");
-  //       const header = polygonPoint[0].split(";").slice(0, 3).join(";") + ";";
-  //       const combinedData = polygonPoint
-  //         .map((item) => item.split(";").slice(3).join(";"))
-  //         .join(";");
-  //       const polygonAllData = header + combinedData;
-  //       const polygonData = parseResponseToPolygonData(polygonAllData, () => {
-  //         polygonPointRef.current = "";
-  //       });
-
-  //       if (polygonData) {
-  //         // setFetchedPolygonData({ paths: polygonData.path });
-  //         const newPolygon = new google.maps.Polygon({
-  //           paths: polygonData.path,
-  //           map: mapRef.current, // mapRef에 담긴 지도 객체에 폴리곤 추가
-  //           editable: true, // 필요에 따라 편집 가능 여부 설정
-  //         });
-
-  //         mapManager.shapesRef.current.push({
-  //           overlay: newPolygon,
-  //           type: google.maps.drawing.OverlayType.POLYGON,
-  //         });
-  //         mapManager.addPolygon({ id: 0, path: polygonData.path });
-  //         mapManager.registerEditableHandlers();
-
-  //         if (mapRef.current) {
-  //           mapRef.current.setCenter({
-  //             lat: polygonData.path[0].lat,
-  //             lng: polygonData.path[0].lng,
-  //           });
-  //         }
-  //         setIsFullLoading(false);
-  //       }
-  //       polygonPointRef.current = "";
-  //     }
-  //   };
-  //   currentPort.port.onprev = () => {
-  //     currentPort.port.polygonhandler = null;
-  //     currentPort.port.ispolygonpointfetching = false;
-  //   };
-  //   // 20개 이상이면 쪼개서 보내는 로직
-  //   chunkDataByNumberAndWrite(
-  //     {
-  //       write: write as any,
-  //       port: currentPort.port,
-  //       writer: currentPort.writer,
-  //     },
-  //     {
-  //       chuckString: ",",
-  //       prefix: `AT^REQ;${currentPort.port.imei};${
-  //         POLYGON_GEOFENCE_POINTS[(Number(id) - 1) as number]
-  //       };`,
-  //       target: generateFormattedIndexes(polyCount).join(),
-  //     }
-  //   );
-  // }, [
-  //   currentPort.port.readable,
-  //   currentPort.port.writable,
-  //   polygonInfoFetched,
-  // ]);
-
   useEffect(() => {
-    // 폴리곤 정보 요청 후 8초 뒤에 로딩 해제
-    setTimeout(() => {
-      setIsFullLoading(false);
-    }, 8000);
-  }, []);
+    const fetchPolygonGeofenceById = async (id: number) => {
+      const modelData = await getModelDataFromIDB(
+        modelName,
+        fwVer,
+        targetCountry
+      );
+      return modelData?.geofence?.polygon.find((item) => item.id === id);
+    };
+
+    fetchPolygonGeofenceById(id).then((data) => {
+      const newPolygon = new google.maps.Polygon({
+        paths: data.coordinates,
+        map: mapRef.current, // mapRef에 담긴 지도 객체에 폴리곤 추가
+        editable: true, // 필요에 따라 편집 가능 여부 설정
+      });
+
+      mapManager.shapesRef.current.push({
+        overlay: newPolygon,
+        type: google.maps.drawing.OverlayType.POLYGON,
+      });
+      mapManager.addPolygon({ id: 0, path: data.coordinates });
+      mapManager.registerEditableHandlers();
+
+      if (mapRef.current) {
+        mapRef.current.setCenter({
+          lat: data.coordinates[0].lat,
+          lng: data.coordinates[0].lng,
+        });
+      }
+
+      polygonDispatch({
+        type: "setEnterAlert",
+        payload: data.enterAlert,
+      });
+      polygonDispatch({
+        type: "setExitAlert",
+        payload: data.exitAlert,
+      });
+      polygonDispatch({
+        type: "setBuzzerSpeedLimit",
+        payload: data?.buzzerSpeedLimit || 0,
+      });
+      polygonDispatch({
+        type: "setSpeedLimitDebounce",
+        payload: data?.speedLimitDebounce || 0,
+      });
+    });
+  }, [id, modelName, fwVer, targetCountry]);
 
   return (
     <Form
@@ -511,7 +413,6 @@ const EditPolygonGeofence = ({ id, formData, onSuccess, onCancel }: Props) => {
         handleEditPolygonGeo();
       }}
     >
-      {isFullLoading && <FullLoading />}
       <h1 data-section-id={SECTIONS.GeofenceConfig.en}>
         {t("configuration.geofence.edit_geofence_(polygon)")}
       </h1>
@@ -541,6 +442,8 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   gap: 16px;
+  border-bottom: 1px solid #d7d8dc;
+  padding-bottom: 36px;
 
   h1 {
     padding: 16px 0;

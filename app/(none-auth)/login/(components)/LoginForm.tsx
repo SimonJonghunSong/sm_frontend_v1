@@ -53,7 +53,13 @@ export default function LoginForm({
   const t = useTranslations("login");
   const { lang, setLang } = useLangStore();
   const { setData } = useModelPkgStore();
-  const { setUserId, setUserRole, setToken, setRefreshToken } = useAuthStore();
+  const {
+    setUserId,
+    setUserRole,
+    setToken,
+    setRefreshToken,
+    setTargetCountry,
+  } = useAuthStore();
 
   const [isUndefinedCountry, setIsUndefinedCountry] = useState(true);
   const [selectCountry, setSelectCountry] = useState("");
@@ -76,6 +82,7 @@ export default function LoginForm({
       setRefreshToken(response.data.parameter.refreshToken);
       setUserRole(response.data.parameter.role);
       setUserId(response.data.parameter.email);
+      setTargetCountry(response.data.parameter.target_svr_country);
 
       getModels();
       getNoti();

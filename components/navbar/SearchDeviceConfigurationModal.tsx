@@ -54,7 +54,7 @@ function SearchDeviceConfigurationModal({ onClose }: { onClose: () => void }) {
   const searchRef = useRef<HTMLInputElement>();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
-  const { modelName } = useModelInfoStore();
+  const { modelName, fw_ver, target_country } = useModelInfoStore();
   const { setTab } = useDeviceConfigurationTabStore();
   const [showAllResult, setShowAllResult] = useState(false);
   const [categorizedParams, setCategorizedParams] = useState<
@@ -84,7 +84,9 @@ function SearchDeviceConfigurationModal({ onClose }: { onClose: () => void }) {
 
       try {
         const data = (await getJsonDataFromIDB(
-          modelName
+          modelName,
+          fw_ver,
+          target_country
         )) as ModelConfigWithData[];
         if (!data || !Array.isArray(data)) return;
 

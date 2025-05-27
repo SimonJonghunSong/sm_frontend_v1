@@ -7,10 +7,18 @@ import { FIELD_VALIDATIONS } from "constants/field";
 
 interface Props {
   renderCommand: (command: Command) => React.ReactNode;
+  commandData: string[];
 }
 
-const NetworkCommands = ({ renderCommand }: Props) => {
+const NetworkCommands = ({ renderCommand, commandData }: Props) => {
   const lang = useLangStore((state) => state.lang);
+  const comandList = commands.networkCommands.filter((item) =>
+    commandData.includes(item.id)
+  );
+
+  if (comandList.length === 0) {
+    return null;
+  }
 
   return (
     <Container>
@@ -24,15 +32,15 @@ const NetworkCommands = ({ renderCommand }: Props) => {
 
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
-          {commands.networkCommands
-            .slice(0, 22)
+          {comandList
+            .slice(0, Math.ceil(comandList.length / 2))
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
-          {commands.networkCommands
-            .slice(22)
+          {comandList
+            .slice(Math.ceil(comandList.length / 2))
             .map((item) =>
               FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
             )}

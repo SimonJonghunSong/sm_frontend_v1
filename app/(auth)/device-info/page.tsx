@@ -209,7 +209,7 @@ export default function DeviceInfoPage() {
   }>(null);
   const {
     state: { portList },
-    func: { write },
+    func: { write, getPorts },
   } = useSerial();
   const [isFechedPackage, setIsFechedPackage] = useState(false);
   const packageCountRef = useRef(0);
@@ -417,7 +417,7 @@ export default function DeviceInfoPage() {
           />
         );
       case "Commands":
-        return <CommandTab imei={imei} />;
+        return <CommandTab imei={imei} commandData={commandData} />;
       case "Geofence":
         return (
           <GeofenceTab
@@ -604,7 +604,10 @@ export default function DeviceInfoPage() {
 
               setFormData(newFormData);
             }}
-            onRefreshJsonPacket={handleRefreshJsonPacket}
+            onRefreshJsonPacket={() => {
+              handleRefreshJsonPacket();
+              getPorts();
+            }}
           />
           {renderContent()}
         </Stack>

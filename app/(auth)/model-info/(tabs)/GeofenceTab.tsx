@@ -54,17 +54,37 @@ export default function GeofenceTab({
   const circularGeofenceObj = originData.find(
     (item) => item["Circular Geofence"]
   );
+  const polygonGeofenceObj = originData.find(
+    (item) => item["Polygon Geofence"]
+  );
+
   const circularGeofenceArray = circularGeofenceObj?.["Circular Geofence"];
+  const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"];
 
   const circularGeofenceKeys: string[] = circularGeofenceArray.map(
     (item) => Object.keys(item)[0]
+  );
+
+  const polygonGeofenceInfo: { [key: string]: { [key: string]: string[] } }[] =
+    polygonGeofenceArray
+      .find((item) => Object.keys(item)[0] === "Set Geofence Parameter")
+      ?.["Set Geofence Parameter"].find(
+        (item) => Object.keys(item)[0] === "sub"
+      )?.["sub"];
+
+  const polygonGeofenceKeys = (polygonGeofenceInfo || []).map(
+    (object) => Object.keys(object)[0]
   );
 
   const renderGeofence = () => {
     if (type === "list") {
       return (
         <>
-          <GeofenceConfig formData={formData} setFormData={setFormData} onChange={handleValueChange} />
+          <GeofenceConfig
+            formData={formData}
+            setFormData={setFormData}
+            onChange={handleValueChange}
+          />
 
           <Geofence
             formData={formData}
@@ -90,6 +110,7 @@ export default function GeofenceTab({
           circularGeofenceMax={circularGeofenceMax}
           onSuccess={() => setMustFetch(true)}
           circularGeofenceKeys={circularGeofenceKeys}
+          polygonGeofenceKeys={polygonGeofenceKeys}
           onCancel={() => setType("list")}
         />
       );
@@ -101,6 +122,7 @@ export default function GeofenceTab({
           <EditPolygonGeofence
             id={editId}
             formData={formData}
+            polygonGeofenceKeys={polygonGeofenceKeys}
             onSuccess={() => setMustFetch(true)}
             onCancel={() => setType("list")}
           />
