@@ -1,7 +1,7 @@
 import AssignMenus from "@/components/AssignMenus";
 import { parseAssigns } from "@/components/AssignMenus/utils";
 import FullLoading from "@/components/FullLoading";
-import useSerial from "@/src/hooks/useSerial";
+import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import {
   AT_GET_ASSIGN_MAP_ALT,
   AT_SET_ASSIGN_ALT,
@@ -28,6 +28,8 @@ import {
   useState,
 } from "react";
 import styled from "styled-components";
+
+const DELAY_MS = 100;
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.AssignHeader.en];
 
@@ -143,16 +145,22 @@ export default function AssignHeader({
       return;
     }
 
+    (async function () {
     if (currentPort.port.isReadyToUse) {
       setIsFullLoading(true);
       currentPort.port.isCsvFetching = true;
       currentPort.port.onCsvDataFetched = (data) => {
+        console.log("data ::::", data);
+        
         csvDataRef.current += data;
       };
-      currentPort.port.onEndCsvDataFetched = () => {
+      currentPort.port.onEndCsvDataFetched = async () => {
         currentPort.port.isSttDataFetching = true;
-        currentPort.port.onEndCurrentSttDataFetched = (data) => {
+        currentPort.port.onEndCurrentSttDataFetched = async (data) => {
+          console.log("data ::::", data);
+          
           const currentCsvData = data.split(`RES;${imei};05;07;`)[1];
+          console.log("currentCsvData :::", currentCsvData);
           const currentCsvValuesArray = currentCsvData
             .replaceAll("\r", "")
             .split(";");
@@ -164,7 +172,7 @@ export default function AssignHeader({
           const mItemsArray = mItems.split(",");
           const lItemsArray = lItems.split(",");
 
-          const parseData = parseAssigns(csvDataRef.current);
+          const parseData = parseAssigns(csvDataRef.current, currentPort.port.isQuecModel);
 
           console.log("parseData :::", parseData);
           console.log("sItemsArray :::", sItemsArray);
@@ -214,7 +222,10 @@ export default function AssignHeader({
             const mItemsArray = mItems.split(",");
             const lItemsArray = lItems.split(",");
 
-            const parseData = parseAssigns(csvDataRef.current);
+            console.log("csvDataRef.current :::", csvDataRef.current);
+            
+
+            const parseData = parseAssigns(csvDataRef.current, currentPort.port.isQuecModel);
 
             setAltData({
               s_assigns: parseData.s_assigns.map((item) =>
@@ -243,6 +254,7 @@ export default function AssignHeader({
             setIsFullLoading(false);
           };
 
+          await delayPromise(DELAY_MS);
           write({
             data: AT_GET_ASSIGN_MAP_ALT,
             port: currentPort.port,
@@ -250,6 +262,7 @@ export default function AssignHeader({
           });
         };
 
+        await delayPromise(DELAY_MS);
         write({
           data: AT_GET_ASSIGN_MAP_STT,
           port: currentPort.port,
@@ -257,12 +270,14 @@ export default function AssignHeader({
         });
       };
 
+      await delayPromise(DELAY_MS);
       write({
         data: AT_GET_CSV,
         port: currentPort.port,
         writer: currentPort.writer,
       });
     }
+  })()
   }, [
     currentPort.port.writable,
     currentPort.port.readable,

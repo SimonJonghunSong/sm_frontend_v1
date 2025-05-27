@@ -192,6 +192,14 @@ export default function AssignMenus({
     );
   }, [smallDataIndexes, mediumDataIndexes, largeDataIndexes]);
 
+  console.log("smallDataIndexes :::", smallDataIndexes);
+  console.log("mediumDataIndexes :::", mediumDataIndexes);
+  console.log("largeDataIndexes :::", largeDataIndexes);
+
+  console.log("smallItems :::", smallItems);
+  console.log("mediumItems :::", mediumItems);
+  console.log("largeItems :::", largeItems);
+
   return (
     <Stack width={"100%"}>
       <div className={styles.assignHeaderWrap}>
@@ -245,7 +253,9 @@ export default function AssignMenus({
               className={styles.listWrap}
             >
               {smallDataIndexes.map((item) => {
-                const target = smallItems[item];
+                const target = smallItems.find(
+                  (innerItem) => Number(innerItem.id) === Number(item)
+                );
 
                 console.log("target :::", target);
 
@@ -348,7 +358,9 @@ export default function AssignMenus({
             <p>Large Data (8Byte)</p>
             <div className={styles.listWrap}>
               {largeDataIndexes.map((item) => {
-                const target = largeItems[item];
+                const target = largeItems.find(
+                  (innerItem) => Number(innerItem.id) === Number(item)
+                );
 
                 if (!target) return null;
 

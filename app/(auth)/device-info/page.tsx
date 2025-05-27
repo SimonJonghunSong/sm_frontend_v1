@@ -336,6 +336,9 @@ export default function DeviceInfoPage() {
       if (hasRf === -1) {
         excludeMenus.push(MENUS.RF.en);
       }
+      if (!originData.find((item) => Object.keys(item)[0] === "Circular Geofence") && !originData.find((item) => Object.keys(item)[0] === "Polygon Geofence")) {
+        excludeMenus.push(MENUS.Geofence.en);
+      }
 
       setExcludeMenus(excludeMenus);
     }

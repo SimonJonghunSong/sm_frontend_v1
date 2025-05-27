@@ -137,7 +137,7 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
 
         <SwitchPrimary
           onChange={(e) => handleChange("2500", e.target.checked ? "01" : "00")}
-          checked={formData["2500"].realValue === "01"}
+          checked={formData["2500"]?.realValue === "01"}
         />
       </Stack>
 
@@ -149,6 +149,7 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                 id="2501"
                 formData={formData}
                 onChange={handleChange}
+                style={{ width: "100%" }}
                 isDirty={isDirtyFields.includes("2501")}
               />
               <NumericInputField
@@ -156,6 +157,7 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isSwitch
+                style={{ width: "100%" }}
                 isDirty={isDirtyFields.includes("2502")}
               />
               <NumericInputField
@@ -169,47 +171,55 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                   max: 10,
                 })}
                 isDirty={isDirtyFields.includes("2505")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2503"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2503")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2504"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2504")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2800"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2800")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2801"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2801")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2802"
                 formData={formData}
                 onChange={handleChange}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2803"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2803")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2804"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2804")}
+                style={{ width: "100%" }}
               />
             </Stack>
             <Stack direction="column" gap={"16px"} flex={1}>
@@ -218,12 +228,14 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2805")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2806"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2806")}
+                style={{ width: "100%" }}
               />
               {/* 체크박스 필요 */}
               <SelectField
@@ -231,12 +243,14 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2808")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2809"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2809")}
+                style={{ width: "100%" }}
               />
 
               <TextInputField
@@ -250,6 +264,7 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                     : undefined
                 }
                 isDirty={isDirtyFields.includes("2810")}
+                style={{ width: "100%" }}
               />
 
               <NumericInputField
@@ -258,24 +273,28 @@ const Rf = ({ formData, onChange, setFormData }: Props) => {
                 onChange={handleChange}
                 isSwitch
                 isDirty={isDirtyFields.includes("2506")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2507"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2507")}
+                style={{ width: "100%" }}
               />
               <NumericInputField
                 id="2508"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2508")}
+                style={{ width: "100%" }}
               />
               <SwitchField
                 id="2510"
                 formData={formData}
                 onChange={handleChange}
                 isDirty={isDirtyFields.includes("2510")}
+                style={{ width: "100%" }}
               />
             </Stack>
           </Stack>
