@@ -18558,6 +18558,21 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "0303": {
+    title: {
+      en: "Device Reboot",
+      pt: "Reiniciar Dispositivo",
+      es: "Reiniciar Dispositivo",
+    },
+    tooltip: {
+      en: "Reboots the device.",
+      es: "Reinicia el dispositivo.",
+      pt: "Reinicia o dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
   "0731": {
     title: {
       en: "LED Off",

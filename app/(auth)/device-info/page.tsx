@@ -414,7 +414,7 @@ export default function DeviceInfoPage() {
           />
         );
       case "Commands":
-        return <CommandTab imei={imei} />;
+        return <CommandTab imei={imei} commandData={commandData} />;
       case "Geofence":
         return (
           <GeofenceTab
