@@ -259,11 +259,8 @@ export default function DeviceInfoPage() {
   const toggleSearchModal = isOpen ? onClose : onOpen;
 
   const [excludeMenus, setExcludeMenus] = useState<string[]>([]);
-  const isReadyMenusRef = useRef(false);
 
   useEffect(() => {
-    if (isReadyMenusRef.current) return;
-
     if (formData && Object.keys(formData)?.length > 0) {
       const excludeMenus = [];
 
@@ -336,9 +333,8 @@ export default function DeviceInfoPage() {
       }
 
       setExcludeMenus(excludeMenus);
-      isReadyMenusRef.current = true;
     }
-  }, [formData]);
+  }, [currentPort]);
 
   const handleReboot = () => {
     write({

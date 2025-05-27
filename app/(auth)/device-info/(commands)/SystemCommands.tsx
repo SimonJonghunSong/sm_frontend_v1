@@ -72,6 +72,5 @@ const Container = styled.div`
     font-weight: 500;
     font-size: 15px;
     line-height: 14px;
-    color: #6f6f6f;
   }
 `;
