@@ -30,9 +30,10 @@ import TrackingCommands from "../(commands)/TrackingCommands";
 
 interface Props {
   imei: string;
+  commandData: string[];
 }
 
-export default function CommandTab({ imei }: Props) {
+export default function CommandTab({ imei, commandData }: Props) {
   const t = useTranslations();
 
   const [logs, setLogs] = useState<any[]>([]);
@@ -367,16 +368,40 @@ export default function CommandTab({ imei }: Props) {
           padding: "20px",
         }}
       >
-        <NetworkCommands renderCommand={renderCommand} />
-        <SystemCommands renderCommand={renderCommand} />
-        <JammingDetectionCommands renderCommand={renderCommand} />
-        <ReportCommands renderCommand={renderCommand} />
-        <TrackingCommands renderCommand={renderCommand} />
-        <InputOutputCommands renderCommand={renderCommand} />
-        <GeofenceCommands renderCommand={renderCommand} />
-        <BleCommands renderCommand={renderCommand} />
-        <AccessoryCommands renderCommand={renderCommand} />
-        <RfCommands renderCommand={renderCommand} />
+        <NetworkCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <SystemCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <JammingDetectionCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <ReportCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <TrackingCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <InputOutputCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <GeofenceCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <BleCommands renderCommand={renderCommand} commandData={commandData} />
+        <AccessoryCommands
+          renderCommand={renderCommand}
+          commandData={commandData}
+        />
+        <RfCommands renderCommand={renderCommand} commandData={commandData} />
       </div>
     </Stack>
   );
