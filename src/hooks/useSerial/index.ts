@@ -101,6 +101,9 @@ const useSerial = () => {
           await port.open(options);
           await addPortToState(port);
         } catch (error) {
+          console.log("error ?:::", error);
+          console.log("port :::", port);
+          
           return;
         }
       });
@@ -172,6 +175,7 @@ const useSerial = () => {
             window.location.reload();
           }
         }, 8000);
+        port.isFirstLoad = false;
         await write({
           data: HEALTH_CHECK,
           writer,
@@ -230,17 +234,16 @@ const useSerial = () => {
             // Quec 모델인 경우
             if (value.includes("OK")) {
               port.isQuecModel = true;
-              port.isFirstLoad = false;
             }
             // Quec 모델이 아닌 경우
             if (value.includes("ERROR")) {
               port.isQuecModel = false;
-              port.isFirstLoad = false;
             }
+            port.isFirstLoad = false;
           }
         } else {
           if (port.isQuecModel) {
-            value = value.split("OK")[0];     
+            value = value.replaceAll("OK", "");     
             
             if (port.isDeviceCommandSend) {
               if (deviceCommandLogRef.current) {
@@ -1118,18 +1121,16 @@ const useSerial = () => {
       // toast(error, { type: "error" });
       console.log("error ::::");
       if (port.isQuecModel) {
-        port.isHealthCheck = true;
-        write({
-          data: HEALTH_CHECK,
-          port,
-          writer,
-        });
-        setTimeout(() => {
-          if (port.isHealthCheck) {
-            deleteSerialPort(port);
-            port.isHealthCheck = false;
-          }
-        }, 500)
+          console.log("port ::::", port);
+          console.log("reader ::::", reader);
+          console.log("writer ::::", writer);
+          deleteSerialPort(port);
+
+          reader.cancel();
+          reader.releaseLock();
+          writer.close();
+          writer.releaseLock();
+          port.close();
        }
       console.log(error);
     } finally {
@@ -1161,12 +1162,17 @@ const useSerial = () => {
           broadcastChannel.postMessage({ status: "updated", imei: port.imei });
         }
 
+        console.log("port ::::", port);
+        
+
         if (port.isFirstLoad) {
           await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
         } else {
           if (port.isQuecModel) {
             await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
           } else {
+            console.log("test :::::::::", data);
+            
             await writer.write(data + SUFFIX); // Uint8Array 전송
           }
         }
