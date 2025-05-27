@@ -119,7 +119,7 @@ export default function SideMenu({
                   key={link.name}
                   className={link?.isActive ? styles.active : undefined}
                   style={
-                    link.name === "CMD Tool" || link.name === "Edit Profile"
+                    link.name === "CMD Tool"
                       ? {
                           borderTop: "1px solid var(--grey7)",
                           paddingTop: "8px",
