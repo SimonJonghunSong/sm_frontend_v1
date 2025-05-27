@@ -2,8 +2,12 @@ import useModelInfoStore from "@/src/stores/useModelInfo";
 import { updateJsonDataToIDB } from "@/utils/idbModelUtil";
 import { FormField } from "../page";
 import { Dispatch, SetStateAction, useState } from "react";
+import { useTranslations } from "next-intl";
+import { toast } from "react-toastify";
 
 export default function useSendFormData() {
+  const t = useTranslations();
+
   const [isLoading] = useState(false);
   const getModelName = useModelInfoStore((state) => state.getModelName);
   const getFwVer = useModelInfoStore((state) => state.getFwVer);
@@ -19,6 +23,7 @@ export default function useSendFormData() {
     updateJsonDataToIDB(modelName, fwVer, targetCountry, formData);
 
     if (setFormData) {
+      toast.success(t("common.save_success"));
       setFormData((prev) =>
         Object.entries(prev).reduce((acc, [key, value]) => {
           acc[key] = {

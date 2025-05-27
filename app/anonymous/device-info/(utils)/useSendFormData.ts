@@ -4,10 +4,13 @@ import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStor
 import useLangStore from "@/utils/useLangStore";
 import { FormField } from "app/(auth)/device-info/page";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { useTranslations } from "next-intl";
 import { SetStateAction, Dispatch, useRef, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function useSendFormData() {
+  const t = useTranslations();
+
   const {
     state: { portList },
     func: { write },
@@ -136,6 +139,7 @@ export default function useSendFormData() {
     setTimeout(() => {
       if (setFormData) {
         if (!hasErrorRef.current) {
+          toast.success(t("common.send_success"));
           setFormData((prev) =>
             Object.entries(prev).reduce((acc, [key, value]) => {
               acc[key] = {
