@@ -6719,6 +6719,38 @@ export const FIELD_VALIDATIONS = {
           pt: "Borda do Reboque",
         },
       },
+      {
+        value: "20",
+        label: {
+          en: "Rain Sensor GND",
+          es: "Sensor de lluvia GND",
+          pt: "Sensor de Chuva GND",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "Rain Sensor OPEN",
+          es: "Sensor de lluvia OPEN",
+          pt: "Sensor de Chuva OPEN",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "Rain Sensor PULSE",
+          es: "Sensor de lluvia PULSE",
+          pt: "Sensor de Chuva PULSE",
+        },
+      },
+      {
+        value: "23",
+        label: {
+          en: "Disable Immobilizer by keyboard",
+          es: "Desactivar Inmovilizador por teclado",
+          pt: "Desativar Inmobilizador por teclado",
+        },
+      },
     ],
   },
   "1721": {
@@ -6860,6 +6892,38 @@ export const FIELD_VALIDATIONS = {
           en: "Trailer Edge",
           es: "Borde del Remolque",
           pt: "Borda do Reboque",
+        },
+      },
+      {
+        value: "20",
+        label: {
+          en: "Rain Sensor GND",
+          es: "Sensor de lluvia GND",
+          pt: "Sensor de Chuva GND",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "Rain Sensor OPEN",
+          es: "Sensor de lluvia OPEN",
+          pt: "Sensor de Chuva OPEN",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "Rain Sensor PULSE",
+          es: "Sensor de lluvia PULSE",
+          pt: "Sensor de Chuva PULSE",
+        },
+      },
+      {
+        value: "23",
+        label: {
+          en: "Disable Immobilizer by keyboard",
+          es: "Desactivar Inmovilizador por teclado",
+          pt: "Desativar Inmobilizador por teclado",
         },
       },
     ],
@@ -7005,6 +7069,38 @@ export const FIELD_VALIDATIONS = {
           pt: "Borda do Reboque",
         },
       },
+      {
+        value: "20",
+        label: {
+          en: "Rain Sensor GND",
+          es: "Sensor de lluvia GND",
+          pt: "Sensor de Chuva GND",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "Rain Sensor OPEN",
+          es: "Sensor de lluvia OPEN",
+          pt: "Sensor de Chuva OPEN",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "Rain Sensor PULSE",
+          es: "Sensor de lluvia PULSE",
+          pt: "Sensor de Chuva PULSE",
+        },
+      },
+      {
+        value: "23",
+        label: {
+          en: "Disable Immobilizer by keyboard",
+          es: "Desactivar Inmovilizador por teclado",
+          pt: "Desativar Inmobilizador por teclado",
+        },
+      },
     ],
   },
   "1725": {
@@ -7148,6 +7244,38 @@ export const FIELD_VALIDATIONS = {
           pt: "Borda do Reboque",
         },
       },
+      {
+        value: "20",
+        label: {
+          en: "Rain Sensor GND",
+          es: "Sensor de lluvia GND",
+          pt: "Sensor de Chuva GND",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "Rain Sensor OPEN",
+          es: "Sensor de lluvia OPEN",
+          pt: "Sensor de Chuva OPEN",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "Rain Sensor PULSE",
+          es: "Sensor de lluvia PULSE",
+          pt: "Sensor de Chuva PULSE",
+        },
+      },
+      {
+        value: "23",
+        label: {
+          en: "Disable Immobilizer by keyboard",
+          es: "Desactivar Inmovilizador por teclado",
+          pt: "Desativar Inmobilizador por teclado",
+        },
+      },
     ],
   },
   "1727": {
@@ -7289,6 +7417,38 @@ export const FIELD_VALIDATIONS = {
           en: "Trailer Edge",
           es: "Borde del Remolque",
           pt: "Borda do Reboque",
+        },
+      },
+      {
+        value: "20",
+        label: {
+          en: "Rain Sensor GND",
+          es: "Sensor de lluvia GND",
+          pt: "Sensor de Chuva GND",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "Rain Sensor OPEN",
+          es: "Sensor de lluvia OPEN",
+          pt: "Sensor de Chuva OPEN",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "Rain Sensor PULSE",
+          es: "Sensor de lluvia PULSE",
+          pt: "Sensor de Chuva PULSE",
+        },
+      },
+      {
+        value: "23",
+        label: {
+          en: "Disable Immobilizer by keyboard",
+          es: "Desactivar Inmovilizador por teclado",
+          pt: "Desativar Inmobilizador por teclado",
         },
       },
     ],
