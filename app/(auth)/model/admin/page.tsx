@@ -204,7 +204,7 @@ export default function Model() {
   const [selectedData, setSelectedData] = useState<ModelType | null>(null);
 
   const router = useRouter();
-  const { userRole } = useAuthStore();
+  const { userRole, targetCountry } = useAuthStore();
 
   useEffect(() => {
     if (userRole !== "ADMIN") {
@@ -466,6 +466,23 @@ export default function Model() {
             <DataTable
               noDataMessage={t("account.account.no_results_found")}
               rows={rowData
+                .filter(({ target_country }) => {
+                  if (targetCountry === "usa") {
+                    return target_country.includes("USA");
+                  }
+
+                  if (targetCountry === "brasil") {
+                    return target_country.includes("Brazil");
+                  }
+
+                  if (targetCountry === "méxico") {
+                    return target_country.includes("Mexico");
+                  }
+
+                  if (targetCountry === "europe") {
+                    return target_country.includes("Europe");
+                  }
+                })
                 .filter((item) => {
                   if (selectedTab) {
                     const features = item.col4.split(",");

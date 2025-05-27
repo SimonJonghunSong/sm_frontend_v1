@@ -12,6 +12,8 @@ interface authState {
   setToken: (newUserId: string) => void;
   refreshToken: string;
   setRefreshToken: (newUserId: string) => void;
+  targetCountry: string;
+  setTargetCountry: (newTargetCountry: string) => void;
 }
 
 const useAuthStore = create(
@@ -25,6 +27,8 @@ const useAuthStore = create(
       setToken: (token) => set({ token }),
       refreshToken: null,
       setRefreshToken: (refreshToken) => set({ refreshToken }),
+      targetCountry: null,
+      setTargetCountry: (targetCountry) => set({ targetCountry }),
     }),
     {
       name: "syncMasterAuthStore",

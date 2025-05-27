@@ -8,6 +8,7 @@ const login = (body: AuthLoginBody) => {
       email: string;
       refreshToken: string;
       role: string;
+      target_svr_country: string;
     }>,
     AuthLoginBody
   >("/api/v1/auth/login_scuti", body);

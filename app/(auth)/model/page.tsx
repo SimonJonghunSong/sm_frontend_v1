@@ -84,7 +84,7 @@ export default function Model() {
       "popup.home.mqtt_server.are_you_sure_you_want_to_load_all_the_models?_the_app_may_become_heavy"
     ),
   });
-  const { userId } = useAuthStore();
+  const { userId, targetCountry } = useAuthStore();
 
   const [offlineErrorDialog, setOfflineErrorDialog] = useState(false);
   const [search, setSearch] = useState("");
@@ -106,8 +106,6 @@ export default function Model() {
       };
     },
   });
-
-  console.log("data :::", data);
 
   const getColumns: () => GridColDef[] = () => [
     {
@@ -209,6 +207,23 @@ export default function Model() {
   const [rowData, setRowData] = useState(getRows(data?.data?.records));
 
   const filteredRowData = rowData
+    .filter(({ target_country }) => {
+      if (targetCountry === "usa") {
+        return target_country.includes("USA");
+      }
+
+      if (targetCountry === "brasil") {
+        return target_country.includes("Brazil");
+      }
+
+      if (targetCountry === "méxico") {
+        return target_country.includes("Mexico");
+      }
+
+      if (targetCountry === "europe") {
+        return target_country.includes("Europe");
+      }
+    })
     // text field search 필터 추가
     .filter((item) => {
       return item.col2.toLowerCase().includes(filterSearch.toLowerCase());
