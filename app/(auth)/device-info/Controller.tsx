@@ -10,7 +10,6 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import React, { useRef, useState } from "react";
-import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { GridColDef } from "@mui/x-data-grid";
@@ -29,7 +28,6 @@ import useSerial from "@/src/hooks/useSerial";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import { useRouter } from "next/navigation";
 import useModelInfoStore from "@/src/stores/useModelInfo";
-import useDeviceConfigurationTabStore from "@/src/stores/useDeviceConfigurationTabStore";
 import useProfile from "@/src/hooks/useProfile";
 import FullLoading from "@/components/FullLoading";
 import useErrorDialog from "@/src/hooks/useErrorDialog";

@@ -331,7 +331,7 @@ const useProfile = ({ port, writer, writeSerial, imei }: UseProfileType) => {
     setIsDownloading(true);
     await getJsonPkg({});
     setPercentage(25);
-    await delayPromise(10000);
+    await delayPromise(7000);
 
     // Polygon 데이터 가져오기
     await getPolygonDataWithPromise();

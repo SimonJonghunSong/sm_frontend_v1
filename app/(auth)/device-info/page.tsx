@@ -44,6 +44,7 @@ import useDeviceVersions from "@/src/hooks/useDeviceVersions";
 import { ConstructionOutlined } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
+import EditProfileTab from "./(tabs)/EditProfileTab";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -428,6 +429,8 @@ export default function DeviceInfoPage() {
             }
           />
         );
+      case "EditProfile":
+        return <EditProfileTab currentPort={currentPort} write={write} />;
       default:
         return null;
     }

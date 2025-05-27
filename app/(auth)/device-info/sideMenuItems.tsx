@@ -12,6 +12,7 @@ import BluetoothOutlinedIcon from "@mui/icons-material/BluetoothOutlined";
 import PodcastsOutlinedIcon from "@mui/icons-material/PodcastsOutlined";
 import KeyboardCommandKeyOutlinedIcon from "@mui/icons-material/KeyboardCommandKeyOutlined";
 import TerminalOutlinedIcon from "@mui/icons-material/TerminalOutlined";
+import EditOutlined from "@mui/icons-material/EditOutlined";
 
 export const sideMenuItems = ({
   onClick,
@@ -113,6 +114,13 @@ export const sideMenuItems = ({
       isActive: tab === "CMD Tool",
       icon: () => <TerminalOutlinedIcon />,
       onClick: () => onClick("CMD Tool"),
+    },
+    {
+      name: "Edit Profile",
+      href: "#",
+      isActive: tab === "EditProfile",
+      icon: () => <EditOutlined />,
+      onClick: () => onClick("EditProfile"),
     },
     {
       name: "Show Hidden Parameters",
