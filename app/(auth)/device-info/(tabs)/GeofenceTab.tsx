@@ -96,15 +96,9 @@ export default function GeofenceTab({
     (item) => item["Polygon Geofence"]
   );
 
-  console.log("circularGeofenceObj :::", circularGeofenceObj);
-  console.log("polygonGeofenceObj :::", polygonGeofenceObj);
+  const circularGeofenceArray = circularGeofenceObj?.["Circular Geofence"] || [];
+  const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"] || [];
   
-  const circularGeofenceArray = circularGeofenceObj?.["Circular Geofence"];
-  const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"];
-
-  console.log("circularGeofenceArray :::", circularGeofenceArray);
-  
-
   const circularGeofenceKeys: string[] = (circularGeofenceArray || [])?.map(
     (item) => Object.keys(item)[0]
   );

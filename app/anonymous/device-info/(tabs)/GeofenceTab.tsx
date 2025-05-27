@@ -73,8 +73,9 @@ export default function GeofenceTab({
   const polygonGeofenceObj = originData.find(
     (item) => item["Polygon Geofence"]
   );
-  const circularGeofenceArray = circularGeofenceObj?.["Circular Geofence"];
-  const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"];
+  const circularGeofenceArray =
+    circularGeofenceObj?.["Circular Geofence"] || [];
+  const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"] || [];
 
   const circularGeofenceKeys: string[] = circularGeofenceArray.map(
     (item) => Object.keys(item)[0]
@@ -95,7 +96,11 @@ export default function GeofenceTab({
     if (type === "list") {
       return (
         <>
-          <GeofenceConfig formData={formData} setFormData={setFormData} onChange={handleValueChange} />
+          <GeofenceConfig
+            formData={formData}
+            setFormData={setFormData}
+            onChange={handleValueChange}
+          />
 
           <Geofence
             formData={formData}
