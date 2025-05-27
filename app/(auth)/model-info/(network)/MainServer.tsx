@@ -39,12 +39,13 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
-  const [defaultAckChecked, setDefaultAckChecked] = useState(
+  const [defaultAckChecked] = useState(
     !(
       formData["1011"]?.realValue === "0" ||
       formData["1011"]?.realValue === "00"
     )
   );
+  const [ackChecked, setAckChecked] = useState(defaultAckChecked);
 
   const isDirtyFields = useMemo(() => {
     return Object.keys(formData).filter((key) => {
@@ -110,6 +111,14 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
           return acc;
         }, {});
 
+        if (fieldValues["1011"] && !ackChecked) {
+          fieldValues["1011"] = {
+            id: "1011",
+            value: "0",
+            realValue: "0",
+          };
+        }
+
         // 필드 값들을 사용하여 수행할 작업
         sendFormData(fieldValues, setFormData);
 
@@ -162,15 +171,17 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
               id="1011"
               formData={formData}
               onChange={(_id, value) => {
-                handleChange("1011", "0");
-                setDefaultAckChecked(value === "01");
+                setAckChecked(value === "01");
               }}
               style={{ width: "100%" }}
-              customChecked={defaultAckChecked}
-              isDirty={isDirtyFields.includes("1011")}
+              customChecked={ackChecked}
+              isDirty={
+                isDirtyFields.includes("1011") ||
+                defaultAckChecked !== ackChecked
+              }
             />
 
-            {defaultAckChecked && (
+            {ackChecked && (
               <CheckboxComp
                 value={Number(formData["1011"]?.realValue || "0").toString(16)}
                 optionsString={optionsString}
@@ -223,7 +234,10 @@ const MainServer = ({ formData, onChange, setFormData }: Props) => {
           color="secondary"
           variant="contained"
           type="submit"
-          disabled={isLoading || isDirtyFields.length === 0}
+          disabled={
+            defaultAckChecked === ackChecked &&
+            (isLoading || isDirtyFields.length === 0)
+          }
         >
           {t("common.save")}
         </Button>
