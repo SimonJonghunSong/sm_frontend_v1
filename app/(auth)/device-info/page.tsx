@@ -342,7 +342,7 @@ export default function DeviceInfoPage() {
 
       setExcludeMenus(excludeMenus);
     }
-  }, [currentPort]);
+  }, [formData]);
 
   const handleReboot = () => {
     write({
