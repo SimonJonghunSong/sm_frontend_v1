@@ -101,9 +101,6 @@ const useSerial = () => {
           await port.open(options);
           await addPortToState(port);
         } catch (error) {
-          console.log("error ?:::", error);
-          console.log("port :::", port);
-
           return;
         }
       });
