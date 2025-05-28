@@ -17,6 +17,7 @@ interface SelectFieldProps {
   isSwitch?: boolean;
   style?: React.CSSProperties;
   isDirty?: boolean;
+  isUnderbarId?: boolean;
 }
 
 const SelectField = ({
@@ -27,6 +28,7 @@ const SelectField = ({
   isSwitch,
   style,
   isDirty,
+  isUnderbarId = false,
 }: SelectFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
@@ -35,6 +37,9 @@ const SelectField = ({
   );
 
   if (!formData[id]) return null;
+
+  const realId = isUnderbarId ? `${id}_${1}` : id;
+
   const hardwareList = formData[id].list;
 
   return (
@@ -45,7 +50,7 @@ const SelectField = ({
     >
       <Stack direction="row" gap="4px" alignItems="center">
         <InputBox.Title>
-          {FIELD_VALIDATIONS[id].title[lang]}
+          {FIELD_VALIDATIONS[realId].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
           )}
@@ -53,7 +58,7 @@ const SelectField = ({
         <InputBox.Info
           tooltipText={
             <span style={{ whiteSpace: "pre-wrap" }}>
-              {FIELD_VALIDATIONS[id].tooltip[lang]}
+              {FIELD_VALIDATIONS[realId].tooltip[lang]}
             </span>
           }
         />
@@ -70,7 +75,7 @@ const SelectField = ({
               onChange(
                 id,
                 e.target.checked
-                  ? FIELD_VALIDATIONS[id].list.filter((listItem) =>
+                  ? FIELD_VALIDATIONS[realId].list.filter((listItem) =>
                       hardwareList.includes(listItem.value)
                     )[0].value
                   : "00"
@@ -87,7 +92,7 @@ const SelectField = ({
             style={{ width: "100%" }}
             onChange={(e) => onChange(id, e.target.value)}
           >
-            {FIELD_VALIDATIONS[id].list
+            {FIELD_VALIDATIONS[realId].list
               .filter((listItem) => hardwareList.includes(listItem.value))
               .map((item) => (
                 <MenuItem key={item.value} value={item.value}>

@@ -296,6 +296,7 @@ export default function DeviceInfoPage() {
             formData={formData}
             setFormData={setFormData}
             port={currentPort.port}
+            originData={originData}
           />
         );
       case "Report":

@@ -22,9 +22,14 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
+  originData: any;
 }
 
-export default function SystemTab({ formData, setFormData }: Props) {
+export default function SystemTab({
+  formData,
+  setFormData,
+  originData,
+}: Props) {
   const handleValueChange = (name, value, selectValue = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -59,6 +64,7 @@ export default function SystemTab({ formData, setFormData }: Props) {
         formData={formData}
         onChange={handleValueChange}
         setFormData={setFormData}
+        originData={originData}
       />
 
       <BackupBattery

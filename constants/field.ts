@@ -8634,6 +8634,46 @@ export const FIELD_VALIDATIONS = {
       },
     ],
   },
+  "1930_1": {
+    title: {
+      en: "Sleep Mode",
+      pt: "Modo de Suspensão",
+      es: "Modo sleep",
+    },
+    tooltip: {
+      en: "Sleep Mode Settings.\r\n• Option(On)\r\n- Deep Sleep Mode : GPS and Cell are both turned off during sleep\r\n- Sleep Mode : Only GPS is turned off during sleep\r\n- PSM Pref : Prefer the PSM of the modem\r\n- Modem Sleep Mode : Only Cell is turned off during sleep (GPS is always on)\r\n• Default : Off\r\n* If this is Off, GPS and Cell will be on all the time.",
+      es: "Configuraciones del modo sleep\r\n• Opción( Activado)\r\n- Modo de deep sleep: GPS y celular están Desactivados durante el sueño\r\n- Modo de Suspensión: Solo el GPS está Desactivado durante el sueño\r\n- PSM Pref: Prefiere el PSM del módem\r\n- Modo sleep del Módem: Solo celular está Desactivado durante el sueño (GPS siempre está Activado)\r\n• Predeterminado: Desactivado\r\n* Si esto está Desactivado, el GPS y celular estarán Activados todo el tiempo.",
+      pt: "Configurações do Modo de Sono.\r\n• Opção(Ligado)\r\n- Modo de Sono Profundo: GPS e Celular são ambos desligados durante o sono\r\n- Modo de Sono: Apenas o GPS é desligado durante o sono\r\n- PSM Pref: Preferir o PSM do modem\r\n- Modo de Sono do Modem: Apenas o Celular é desligado durante o sono (GPS está sempre ligado)\r\n• Padrão  : Desativado\r\n* Se esta opção estiver desligada, GPS e Celular estarão ligados o tempo todo.",
+    },
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Deep Sleep Mode",
+          es: "Modo de deep sleep",
+          pt: "Modo de Sono Profundo",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Sleep Mode",
+          es: "Modo sleep",
+          pt: "Modo de Suspensão",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "PSM Sleep Mode",
+          es: "Modo sleep PSM",
+          pt: "Modo de Suspensão PSM",
+        },
+      },
+    ],
+  },
   "1931": {
     title: {
       en: "Main Power Check",
