@@ -4,6 +4,7 @@ import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
 import { Command, commands } from "./@index";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 
 interface Props {
   renderCommand: (command: Command) => React.ReactNode;
@@ -12,8 +13,9 @@ interface Props {
 
 const NetworkCommands = ({ renderCommand, commandData }: Props) => {
   const lang = useLangStore((state) => state.lang);
-  const comandList = commands.networkCommands.filter((item) =>
-    commandData.includes(item.id)
+  const comandList = commands.networkCommands.filter(
+    (item) =>
+      commandData.includes(item.id) || hiddenParameterId.includes(item.id)
   );
 
   if (comandList.length === 0) {
