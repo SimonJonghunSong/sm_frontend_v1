@@ -17710,9 +17710,9 @@ export const FIELD_VALIDATIONS = {
       {
         value: "04",
         label: {
-          en: "ELA+ConMet",
-          es: "ELA+ConMet",
-          pt: "ELA+ConMet",
+          en: "ELA + ConMet",
+          es: "ELA + ConMet",
+          pt: "ELA + ConMet",
         },
       },
       {
@@ -17726,25 +17726,113 @@ export const FIELD_VALIDATIONS = {
       {
         value: "08",
         label: {
-          en: "ELA+Otodata",
-          es: "ELA+Otodata",
-          pt: "ELA+Otodata",
+          en: "ELA + Otodata",
+          es: "ELA + Otodata",
+          pt: "ELA + Otodata",
         },
       },
       {
         value: "09",
         label: {
-          en: "ConMet+Otodata",
-          es: "ConMet+Otodata",
-          pt: "ConMet+Otodata",
+          en: "ConMet + Otodata",
+          es: "ConMet + Otodata",
+          pt: "ConMet + Otodata",
         },
       },
       {
         value: "10",
         label: {
-          en: "ELA+ConMet+Otodata",
-          es: "ELA+ConMet+Otodata",
-          pt: "ELA+ConMet+Otodata",
+          en: "ELA + ConMet + Otodata",
+          es: "ELA + ConMet + Otodata",
+          pt: "ELA + ConMet + Otodata",
+        },
+      },
+      {
+        value: "11",
+        label: {
+          en: "BlueCharm",
+          es: "BlueCharm",
+          pt: "BlueCharm",
+        },
+      },
+      {
+        value: "12",
+        label: {
+          en: "Eddystone",
+          es: "Eddystone",
+          pt: "Eddystone",
+        },
+      },
+      {
+        value: "13",
+        label: {
+          en: "iBeacon",
+          es: "iBeacon",
+          pt: "iBeacon",
+        },
+      },
+      {
+        value: "14",
+        label: {
+          en: "BlueCharm + iBeacon",
+          es: "BlueCharm + iBeacon",
+          pt: "BlueCharm + iBeacon",
+        },
+      },
+      {
+        value: "15",
+        label: {
+          en: "ELA + Eddystone",
+          es: "ELA + Eddystone",
+          pt: "ELA + Eddystone",
+        },
+      },
+      {
+        value: "16",
+        label: {
+          en: "ELA + iBeacon",
+          es: "ELA + iBeacon",
+          pt: "ELA + iBeacon",
+        },
+      },
+      {
+        value: "17",
+        label: {
+          en: "iBeacon + Eddystone",
+          es: "iBeacon + Eddystone",
+          pt: "iBeacon + Eddystone",
+        },
+      },
+      {
+        value: "18",
+        label: {
+          en: "ELA + iBeacon + Eddystone",
+          es: "ELA + iBeacon + Eddystone",
+          pt: "ELA + iBeacon + Eddystone",
+        },
+      },
+      {
+        value: "20",
+        label: {
+          en: "Minew",
+          es: "Minew",
+          pt: "Minew",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "ELA + Minew",
+          es: "ELA + Minew",
+          pt: "ELA + Minew",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "ELA + Minew + Eddystone",
+          es: "ELA + Minew + Eddystone",
+          pt: "ELA + Minew + Eddystone",
         },
       },
     ],
