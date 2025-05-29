@@ -81,11 +81,11 @@ export default function DeviceInformation({
         <Stack direction="column" flex={1}>
           <FieldItem>
             <FieldLabel>IMEI</FieldLabel>
-            <FieldValue>{modelImei}</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>ESN</FieldLabel>
-            <FieldValue>N/A</FieldValue>
+            <FieldValue>{modelImei}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>GNSS Version</FieldLabel>
