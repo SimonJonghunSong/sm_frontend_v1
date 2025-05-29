@@ -788,10 +788,7 @@ const useSerial = () => {
                     (imeiBufferRef.current.get(port.injectedId) || "") + value
                   );
 
-                  if (
-                    value.includes(CR) &&
-                    !!imeiBufferRef.current.get(port.injectedId)
-                  ) {
+                  if (value.includes(CR)) {
                     const imeiBuffer = imeiBufferRef.current.get(
                       port.injectedId
                     );
@@ -901,10 +898,7 @@ const useSerial = () => {
                       value
                   );
 
-                  if (
-                    value.includes(CR) &&
-                    !!totalGrpNoBufferRef.current.get(port.injectedId)
-                  ) {
+                  if (value.includes(CR)) {
                     const dataField = totalGrpNoBufferRef.current
                       .get(port.injectedId)
                       .trim()
@@ -987,7 +981,7 @@ const useSerial = () => {
                   }
                 } else if (port.isSttDataFetching) {
                   sttDataBufferRef.current += value;
-                  if (isEndOfMessage(value) && !!sttDataBufferRef.current) {
+                  if (isEndOfMessage(value)) {
                     port.onEndCurrentSttDataFetched?.(sttDataBufferRef.current);
                     sttDataBufferRef.current = "";
                     port.isSttDataFetching = false;
@@ -995,17 +989,14 @@ const useSerial = () => {
                 } else if (port.isAltDataFetching) {
                   altDataBufferRef.current += value;
 
-                  if (isEndOfMessage(value) && !!altDataBufferRef.current) {
+                  if (isEndOfMessage(value)) {
                     port.onEndCurrentAltDataFetched?.(altDataBufferRef.current);
                     altDataBufferRef.current = "";
                     port.isAltDataFetching = false;
                   }
                 } else if (port.isDeviceVersionsFetching) {
                   deviceVersionsBufferRef.current += value;
-                  if (
-                    isEndOfMessage(value) &&
-                    !!deviceVersionsBufferRef.current
-                  ) {
+                  if (isEndOfMessage(value)) {
                     port.onEndDeviceVersionsFetched?.(
                       deviceVersionsBufferRef.current
                     );
