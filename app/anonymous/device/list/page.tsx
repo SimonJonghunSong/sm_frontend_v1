@@ -280,9 +280,6 @@ export default function DeviceList() {
             </IconButton>
           </Stack>
           <Stack direction="row" alignItems="center" gap="12px">
-            <span className="text-grey-5" style={{ fontSize: 14 }}>
-              {portList.length + "/" + portList.length}
-            </span>
             <Button
               variant="contained"
               color="secondary"
@@ -293,6 +290,9 @@ export default function DeviceList() {
             >
               {t("device.device_list.configure_multi-device")}
             </Button>
+            <span className="text-grey-5" style={{ fontSize: 14 }}>
+              {portList.length + "/" + portList.length}
+            </span>
           </Stack>
         </div>
         <Stack>
