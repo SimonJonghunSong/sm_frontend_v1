@@ -76,7 +76,8 @@ interface SerialPort {
   isAltDataFetching?: boolean;
   isDeviceVersionsFetching?: boolean;
   onEndDeviceVersionsFetched?: (data: string) => void;
-
+  ismodemversionfetching?: boolean;
+  modemversion?: string;
   isDeviceCommandSend?: boolean;
   isFirstLoad?: boolean;
   isQuecModel?: boolean;

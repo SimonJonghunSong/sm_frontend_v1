@@ -9,6 +9,7 @@ import {
   EXCLUDE_STRING,
   CR,
   ETX,
+  AT_GET_DEVICE_VERSIONS,
 } from "./constant";
 import useSerialStore from "../../stores/useSerialStore";
 import { fileDownload } from "@/utils/fileDownload";
@@ -50,6 +51,7 @@ const useSerial = () => {
   const sttDataBufferRef = useRef("");
   const deviceVersionsBufferRef = useRef("");
   const modelVersionBufferRef = useRef(new Map());
+  const modemVersionBufferRef = useRef(new Map());
   const imeiBufferRef = useRef(new Map());
   const totalGrpNoBufferRef = useRef(new Map());
   const jsonPacketBufferRef = useRef(new Map());
@@ -850,14 +852,47 @@ const useSerial = () => {
                           circularGeofenceData: [],
                           isDisconnected: false,
                         });
-                        port.ispackagecountfetching = true;
+                        port.ismodemversionfetching = true;
                         write({
-                          data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
+                          data: AT_GET_DEVICE_VERSIONS + "04",
                           port,
                           writer,
                         });
                       }
                     }
+                  }
+                } else if (port.ismodemversionfetching) {
+                  modemVersionBufferRef.current.set(
+                    port.injectedId,
+                    (modemVersionBufferRef.current.get(port.injectedId) || "") +
+                      value
+                  );
+
+                  if (
+                    value.includes(CR) &&
+                    !!modemVersionBufferRef.current.get(port.injectedId)
+                  ) {
+                    // RES;0000000000;03;04;04;EG915ULAABR03A06M08_01.200.01.200
+
+                    const modemVersionBuffer =
+                      modemVersionBufferRef.current.get(port.injectedId);
+                    const modemVersion =
+                      modemVersionBuffer?.trim().split(";")?.[5] || "";
+                    port.ismodemversionfetching = false;
+                    port.modemversion = modemVersion;
+
+                    console.log("modemVersion :::", port);
+
+                    modemVersionBufferRef.current.set(
+                      port.injectedId,
+                      undefined
+                    );
+                    port.ispackagecountfetching = true;
+                    write({
+                      data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
+                      port,
+                      writer,
+                    });
                   }
                 } else if (port.ispackagecountfetching) {
                   totalGrpNoBufferRef.current.set(

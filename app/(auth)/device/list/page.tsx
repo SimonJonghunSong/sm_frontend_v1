@@ -250,10 +250,9 @@ export default function DeviceList() {
     },
   ];
 
-  
   const rows = portList?.map((port, index) => {
     console.log("port ::::", port);
-    
+
     return {
       id: index,
       col1: port.modelVersion?.split("_")[0],
@@ -261,15 +260,14 @@ export default function DeviceList() {
       col3: port.modelVersion?.split("_")[
         port.modelVersion?.split("_").length - 1
       ],
-      col4: port.modelVersion?.split("_")[
-        port.modelVersion?.split("_").length - 1
-      ],
+      col4: port.port.modemversion || "N/A",
       col5: { connected: !!port.reader.read && !!port.writer.write, port },
       col6: {
         configure:
           port.isReadyUp &&
           !port.isPackageFetching &&
-          (port.jsonPackage || []).filter(item => item.trim()).length === port.jsonPackageCount,
+          (port.jsonPackage || []).filter((item) => item.trim()).length ===
+            port.jsonPackageCount,
         isPackageFetching: port.isPackageFetching,
         isPackageError: port.isPackageError,
         port,
@@ -322,9 +320,6 @@ export default function DeviceList() {
       port: currentPort.port,
     });
   };
-
-  console.log("rows ::::", rows);
-  
 
   return (
     <div className="pageWrap">
