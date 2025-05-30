@@ -41,7 +41,7 @@ export default function Footer() {
                 src={"/icons/footer_logo.png"}
                 alt="synctrack"
               />
-              <p>Copyright © 2024. ST SUNLAB Ltd. All rights reserved.</p>
+              <p>Copyright © 2025. ST SUNLAB Ltd. All rights reserved.</p>
             </div>
             <ul className={styles.navContainer}>
               <li>

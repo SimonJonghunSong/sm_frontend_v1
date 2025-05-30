@@ -119,11 +119,11 @@ export const commands: Record<CommandsSection, Command[]> = {
       uiType: "normal",
     },
     {
-      id: "0113",
+      id: "0112",
       uiType: "PIN-Lock",
     },
     {
-      id: "0114-01",
+      id: "0113",
       uiType: "PIN-Unlock",
     },
     {

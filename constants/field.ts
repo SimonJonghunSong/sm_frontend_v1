@@ -18448,7 +18448,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
-  "0113": {
+  "0112": {
     title: {
       en: "PIN Lock",
       pt: "Bloqueio de PIN",
@@ -18458,6 +18458,21 @@ export const FIELD_VALIDATIONS = {
       en: "The server sends a command for PIN lock to the device. \r\n* The new PIN is optional.\r\n* If a new PIN is entered, the PIN password is changed, and the SIM is locked.",
       es: "El servidor envía un comando de bloqueo del PIN al dispositivo.\r\n* El nuevo PIN es opcional.\r\n* Si se ingresa un nuevo PIN, la contraseña del PIN se cambia y la SIM se bloquea.",
       pt: "O servidor envia um comando de bloqueio de PIN para o dispositivo.\r\n* O novo PIN é opcional.\r\n* Se um novo PIN for inserido, a senha do PIN é alterada e o SIM é bloqueado.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0113": {
+    title: {
+      en: "PIN Unlock",
+      pt: "Desbloqueio de PIN",
+      es: "Desbloqueo de PIN",
+    },
+    tooltip: {
+      en: "The server sends a command for PIN unlock to the device. \r\n* When the SIM is PUK-locked, you need to enter the PUK password to reset the PIN on the device.",
+      es: "El servidor envía un comando de desbloqueo del PIN al dispositivo.\r\n* Cuando la SIM está bloqueada por PUK, necesita ingresar la contraseña PUK para restablecer el PIN en el dispositivo.",
+      pt: "O servidor envia um comando de desbloqueio de PIN para o dispositivo.\r\n* Quando o SIM estiver bloqueado por PUK, você precisará inserir a senha PUK para redefinir o PIN no dispositivo.",
     },
     min: null,
     max: null,
@@ -18473,21 +18488,6 @@ export const FIELD_VALIDATIONS = {
       en: "Get the PIN lock status.",
       es: "Obtener el estado de bloqueo del PIN.",
       pt: "Obtenha o status de bloqueio do PIN.",
-    },
-    min: null,
-    max: null,
-    list: null,
-  },
-  "0114-01": {
-    title: {
-      en: "PIN Unlock",
-      pt: "Desbloqueio de PIN",
-      es: "Desbloqueo de PIN",
-    },
-    tooltip: {
-      en: "The server sends a command for PIN unlock to the device. \r\n* When the SIM is PUK-locked, you need to enter the PUK password to reset the PIN on the device.",
-      es: "El servidor envía un comando de desbloqueo del PIN al dispositivo.\r\n* Cuando la SIM está bloqueada por PUK, necesita ingresar la contraseña PUK para restablecer el PIN en el dispositivo.",
-      pt: "O servidor envia um comando de desbloqueio de PIN para o dispositivo.\r\n* Quando o SIM estiver bloqueado por PUK, você precisará inserir a senha PUK para redefinir o PIN no dispositivo.",
     },
     min: null,
     max: null,
