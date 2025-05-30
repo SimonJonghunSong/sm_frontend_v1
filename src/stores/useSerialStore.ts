@@ -21,6 +21,7 @@ export type SerialPortState = {
   circularGeofenceData: string[];
   polygonGeofenceData: string[];
   isDisconnected: boolean;
+  modemVersion: string;
 };
 
 type SerialPortAction = {
