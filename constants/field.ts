@@ -8634,6 +8634,46 @@ export const FIELD_VALIDATIONS = {
       },
     ],
   },
+  "1930_1": {
+    title: {
+      en: "Sleep Mode",
+      pt: "Modo de Suspensão",
+      es: "Modo sleep",
+    },
+    tooltip: {
+      en: "Sleep Mode Settings.\r\n• Option(On)\r\n- Deep Sleep Mode : GPS and Cell are both turned off during sleep\r\n- Sleep Mode : Only GPS is turned off during sleep\r\n- PSM Pref : Prefer the PSM of the modem\r\n- Modem Sleep Mode : Only Cell is turned off during sleep (GPS is always on)\r\n• Default : Off\r\n* If this is Off, GPS and Cell will be on all the time.",
+      es: "Configuraciones del modo sleep\r\n• Opción( Activado)\r\n- Modo de deep sleep: GPS y celular están Desactivados durante el sueño\r\n- Modo de Suspensión: Solo el GPS está Desactivado durante el sueño\r\n- PSM Pref: Prefiere el PSM del módem\r\n- Modo sleep del Módem: Solo celular está Desactivado durante el sueño (GPS siempre está Activado)\r\n• Predeterminado: Desactivado\r\n* Si esto está Desactivado, el GPS y celular estarán Activados todo el tiempo.",
+      pt: "Configurações do Modo de Sono.\r\n• Opção(Ligado)\r\n- Modo de Sono Profundo: GPS e Celular são ambos desligados durante o sono\r\n- Modo de Sono: Apenas o GPS é desligado durante o sono\r\n- PSM Pref: Preferir o PSM do modem\r\n- Modo de Sono do Modem: Apenas o Celular é desligado durante o sono (GPS está sempre ligado)\r\n• Padrão  : Desativado\r\n* Se esta opção estiver desligada, GPS e Celular estarão ligados o tempo todo.",
+    },
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Deep Sleep Mode",
+          es: "Modo de deep sleep",
+          pt: "Modo de Sono Profundo",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Sleep Mode",
+          es: "Modo sleep",
+          pt: "Modo de Suspensão",
+        },
+      },
+      {
+        value: "02",
+        label: {
+          en: "PSM Sleep Mode",
+          es: "Modo sleep PSM",
+          pt: "Modo de Suspensão PSM",
+        },
+      },
+    ],
+  },
   "1931": {
     title: {
       en: "Main Power Check",
@@ -17670,9 +17710,9 @@ export const FIELD_VALIDATIONS = {
       {
         value: "04",
         label: {
-          en: "ELA+ConMet",
-          es: "ELA+ConMet",
-          pt: "ELA+ConMet",
+          en: "ELA + ConMet",
+          es: "ELA + ConMet",
+          pt: "ELA + ConMet",
         },
       },
       {
@@ -17686,25 +17726,113 @@ export const FIELD_VALIDATIONS = {
       {
         value: "08",
         label: {
-          en: "ELA+Otodata",
-          es: "ELA+Otodata",
-          pt: "ELA+Otodata",
+          en: "ELA + Otodata",
+          es: "ELA + Otodata",
+          pt: "ELA + Otodata",
         },
       },
       {
         value: "09",
         label: {
-          en: "ConMet+Otodata",
-          es: "ConMet+Otodata",
-          pt: "ConMet+Otodata",
+          en: "ConMet + Otodata",
+          es: "ConMet + Otodata",
+          pt: "ConMet + Otodata",
         },
       },
       {
         value: "10",
         label: {
-          en: "ELA+ConMet+Otodata",
-          es: "ELA+ConMet+Otodata",
-          pt: "ELA+ConMet+Otodata",
+          en: "ELA + ConMet + Otodata",
+          es: "ELA + ConMet + Otodata",
+          pt: "ELA + ConMet + Otodata",
+        },
+      },
+      {
+        value: "11",
+        label: {
+          en: "BlueCharm",
+          es: "BlueCharm",
+          pt: "BlueCharm",
+        },
+      },
+      {
+        value: "12",
+        label: {
+          en: "Eddystone",
+          es: "Eddystone",
+          pt: "Eddystone",
+        },
+      },
+      {
+        value: "13",
+        label: {
+          en: "iBeacon",
+          es: "iBeacon",
+          pt: "iBeacon",
+        },
+      },
+      {
+        value: "14",
+        label: {
+          en: "BlueCharm + iBeacon",
+          es: "BlueCharm + iBeacon",
+          pt: "BlueCharm + iBeacon",
+        },
+      },
+      {
+        value: "15",
+        label: {
+          en: "ELA + Eddystone",
+          es: "ELA + Eddystone",
+          pt: "ELA + Eddystone",
+        },
+      },
+      {
+        value: "16",
+        label: {
+          en: "ELA + iBeacon",
+          es: "ELA + iBeacon",
+          pt: "ELA + iBeacon",
+        },
+      },
+      {
+        value: "17",
+        label: {
+          en: "iBeacon + Eddystone",
+          es: "iBeacon + Eddystone",
+          pt: "iBeacon + Eddystone",
+        },
+      },
+      {
+        value: "18",
+        label: {
+          en: "ELA + iBeacon + Eddystone",
+          es: "ELA + iBeacon + Eddystone",
+          pt: "ELA + iBeacon + Eddystone",
+        },
+      },
+      {
+        value: "20",
+        label: {
+          en: "Minew",
+          es: "Minew",
+          pt: "Minew",
+        },
+      },
+      {
+        value: "21",
+        label: {
+          en: "ELA + Minew",
+          es: "ELA + Minew",
+          pt: "ELA + Minew",
+        },
+      },
+      {
+        value: "22",
+        label: {
+          en: "ELA + Minew + Eddystone",
+          es: "ELA + Minew + Eddystone",
+          pt: "ELA + Minew + Eddystone",
         },
       },
     ],
@@ -18320,7 +18448,7 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
-  "0113": {
+  "0112": {
     title: {
       en: "PIN Lock",
       pt: "Bloqueio de PIN",
@@ -18330,6 +18458,21 @@ export const FIELD_VALIDATIONS = {
       en: "The server sends a command for PIN lock to the device. \r\n* The new PIN is optional.\r\n* If a new PIN is entered, the PIN password is changed, and the SIM is locked.",
       es: "El servidor envía un comando de bloqueo del PIN al dispositivo.\r\n* El nuevo PIN es opcional.\r\n* Si se ingresa un nuevo PIN, la contraseña del PIN se cambia y la SIM se bloquea.",
       pt: "O servidor envia um comando de bloqueio de PIN para o dispositivo.\r\n* O novo PIN é opcional.\r\n* Se um novo PIN for inserido, a senha do PIN é alterada e o SIM é bloqueado.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0113": {
+    title: {
+      en: "PIN Unlock",
+      pt: "Desbloqueio de PIN",
+      es: "Desbloqueo de PIN",
+    },
+    tooltip: {
+      en: "The server sends a command for PIN unlock to the device. \r\n* When the SIM is PUK-locked, you need to enter the PUK password to reset the PIN on the device.",
+      es: "El servidor envía un comando de desbloqueo del PIN al dispositivo.\r\n* Cuando la SIM está bloqueada por PUK, necesita ingresar la contraseña PUK para restablecer el PIN en el dispositivo.",
+      pt: "O servidor envia um comando de desbloqueio de PIN para o dispositivo.\r\n* Quando o SIM estiver bloqueado por PUK, você precisará inserir a senha PUK para redefinir o PIN no dispositivo.",
     },
     min: null,
     max: null,
@@ -18345,21 +18488,6 @@ export const FIELD_VALIDATIONS = {
       en: "Get the PIN lock status.",
       es: "Obtener el estado de bloqueo del PIN.",
       pt: "Obtenha o status de bloqueio do PIN.",
-    },
-    min: null,
-    max: null,
-    list: null,
-  },
-  "0114-01": {
-    title: {
-      en: "PIN Unlock",
-      pt: "Desbloqueio de PIN",
-      es: "Desbloqueo de PIN",
-    },
-    tooltip: {
-      en: "The server sends a command for PIN unlock to the device. \r\n* When the SIM is PUK-locked, you need to enter the PUK password to reset the PIN on the device.",
-      es: "El servidor envía un comando de desbloqueo del PIN al dispositivo.\r\n* Cuando la SIM está bloqueada por PUK, necesita ingresar la contraseña PUK para restablecer el PIN en el dispositivo.",
-      pt: "O servidor envia um comando de desbloqueio de PIN para o dispositivo.\r\n* Quando o SIM estiver bloqueado por PUK, você precisará inserir a senha PUK para redefinir o PIN no dispositivo.",
     },
     min: null,
     max: null,

@@ -23,9 +23,15 @@ interface Props {
     }>
   >;
   port: SerialPort;
+  originData: any;
 }
 
-export default function SystemTab({ formData, setFormData, port }: Props) {
+export default function SystemTab({
+  formData,
+  setFormData,
+  port,
+  originData,
+}: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -61,6 +67,7 @@ export default function SystemTab({ formData, setFormData, port }: Props) {
         formData={formData}
         onChange={handleValueChange}
         setFormData={setFormData}
+        originData={originData}
       />
 
       <BackupBattery

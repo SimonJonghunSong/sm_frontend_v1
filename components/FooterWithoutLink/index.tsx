@@ -23,7 +23,7 @@ export default function FooterWithoutLink() {
           />
           <p style={{ display: "flex", alignItems: "center" }}>
             {t(
-              "footer.pw_set.copyright_©_2024_st_sunlab_ltd_all_rights_reserved"
+              "footer.pw_set.copyright_©_2025_st_sunlab_ltd_all_rights_reserved"
             )}
           </p>
         </Stack>

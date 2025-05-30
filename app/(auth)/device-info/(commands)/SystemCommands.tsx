@@ -5,6 +5,7 @@ import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
 import { Command, commands } from "app/(auth)/device-info/(commands)/@index";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 
 interface Props {
   renderCommand: (command: Command) => React.ReactNode;
@@ -14,8 +15,9 @@ interface Props {
 const SystemCommands = ({ renderCommand, commandData }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
-  const comandList = commands.systemCommands.filter((item) =>
-    commandData.includes(item.id)
+  const comandList = commands.systemCommands.filter(
+    (item) =>
+      commandData.includes(item.id) || hiddenParameterId.includes(item.id)
   );
 
   console.log("comandList :::", comandList);

@@ -250,10 +250,9 @@ export default function DeviceList() {
     },
   ];
 
-  
   const rows = portList?.map((port, index) => {
     console.log("port ::::", port);
-    
+
     return {
       id: index,
       col1: port.modelVersion?.split("_")[0],
@@ -261,15 +260,14 @@ export default function DeviceList() {
       col3: port.modelVersion?.split("_")[
         port.modelVersion?.split("_").length - 1
       ],
-      col4: port.modelVersion?.split("_")[
-        port.modelVersion?.split("_").length - 1
-      ],
+      col4: port.modemVersion || "N/A",
       col5: { connected: !!port.reader.read && !!port.writer.write, port },
       col6: {
         configure:
           port.isReadyUp &&
           !port.isPackageFetching &&
-          (port.jsonPackage || []).filter(item => item.trim()).length === port.jsonPackageCount,
+          (port.jsonPackage || []).filter((item) => item.trim()).length ===
+            port.jsonPackageCount,
         isPackageFetching: port.isPackageFetching,
         isPackageError: port.isPackageError,
         port,
@@ -323,9 +321,6 @@ export default function DeviceList() {
     });
   };
 
-  console.log("rows ::::", rows);
-  
-
   return (
     <div className="pageWrap">
       <article className="contentWrap">
@@ -336,9 +331,21 @@ export default function DeviceList() {
               <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
             </IconButton>
           </Stack>
-          <span className="text-grey-5" style={{ fontSize: 14 }}>
-            {portList.length + "/" + portList.length}
-          </span>
+          <Stack direction="row" alignItems="center" gap="12px">
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ maxWidth: 300 }}
+              onClick={modalToggle}
+              style={{ flexShrink: 0 }}
+              disabled={portList.length === 0}
+            >
+              {t("device.device_list.configure_multi-device")}
+            </Button>
+            <span className="text-grey-5" style={{ fontSize: 14 }}>
+              {portList.length + "/" + portList.length}
+            </span>
+          </Stack>
         </div>
         <Stack>
           <DataTable
@@ -360,19 +367,9 @@ export default function DeviceList() {
             flexDirection={"row"}
             width={"100%"}
             alignItems={"center"}
-            justifyContent={"space-between"}
+            justifyContent={"flex-end"}
             style={{ marginTop: "40px" }}
           >
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ maxWidth: 300 }}
-              onClick={modalToggle}
-              style={{ flexShrink: 0 }}
-              disabled={portList.length === 0}
-            >
-              {t("device.device_list.configure_multi-device")}
-            </Button>
             <div
               style={{
                 display: "inline-flex",

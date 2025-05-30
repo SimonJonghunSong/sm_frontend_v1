@@ -109,7 +109,7 @@
   },
   "footer": {
     "pw_set": {
-      "copyright_©_2024_st_sunlab_ltd_all_rights_reserved": "Copyright © 2024. ST SUNLAB Ltd. Todos los derechos reservados.",
+      "copyright_©_2025_st_sunlab_ltd_all_rights_reserved": "Copyright © 2025. ST SUNLAB Ltd. Todos los derechos reservados.",
       "syncmaster_supports_4g_or_higher_models_only_for_the_2g_and_3g_models_please_download_and_use_synctrak": "SyncMaster solo admite modelos 4G o superiores. Para los modelos 2G y 3G, por favor descarga y usa",
       "support": "Soporte",
       "synctrack": "Synctrack",
@@ -262,10 +262,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",
@@ -342,10 +339,7 @@
       "network_*": "Red",
       "2g": "2G",
       "3g": "3G",
-      "lte_cat": [
-        null,
-        "LTE Cat.1"
-      ],
+      "lte_cat": [null, "LTE Cat.1"],
       "5g": "5G",
       "features": "Características",
       "wi-fi": "Wi-Fi",

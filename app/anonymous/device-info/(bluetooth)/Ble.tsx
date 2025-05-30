@@ -17,20 +17,6 @@ import EditDot from "../(components)/EditDot";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Ble.en];
 
-const checkboxOptions = {
-  "4028": {
-    optionString: "b0, b2, b4, b7, b8, b9, b10",
-    labelString: {
-      TEXT_EN_ITEM_CONTENT:
-        "ELA, ConMet, ELA+ConMet, Otodata, ELA+Otodata, ConMet+Otodata, ELA+ConMet+Otodata",
-      TEXT_PT_ITEM_CONTENT:
-        "ELA, ConMet, ELA+ConMet, Otodata, ELA+Otodata, ConMet+Otodata, ELA+ConMet+Otodata",
-      TEXT_ES_ITEM_CONTENT:
-        "ELA, ConMet, ELA+ConMet, Otodata, ELA+Otodata, ConMet+Otodata, ELA+ConMet+Otodata",
-    },
-  },
-};
-
 interface Props {
   formData: {
     [key: string]: FormField;

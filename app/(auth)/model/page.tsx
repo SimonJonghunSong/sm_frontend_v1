@@ -329,7 +329,24 @@ export default function Model() {
   };
 
   const renderTabs = () => {
-    const records = data?.data?.records || [];
+    const records =
+      data?.data?.records.filter(({ target_country }) => {
+        if (targetCountry === "usa") {
+          return target_country.includes("USA");
+        }
+
+        if (targetCountry === "brasil") {
+          return target_country.includes("Brazil");
+        }
+
+        if (targetCountry === "méxico") {
+          return target_country.includes("Mexico");
+        }
+
+        if (targetCountry === "europe") {
+          return target_country.includes("Europe");
+        }
+      }) || [];
 
     const tabs = records.reduce((acc, cur) => {
       const supportedFeatures = cur.supported_features;

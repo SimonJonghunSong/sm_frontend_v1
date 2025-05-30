@@ -21,6 +21,7 @@ export type SerialPortState = {
   circularGeofenceData: string[];
   polygonGeofenceData: string[];
   isDisconnected: boolean;
+  modemVersion: string;
 };
 
 type SerialPortAction = {
@@ -120,6 +121,7 @@ const useSerialStore = create(
                 ? {
                     ...portInGlobalState,
                     isPackageFetching: true,
+                    isPackageError: false,
                   }
                 : port
             ),
@@ -139,14 +141,16 @@ const useSerialStore = create(
 
           console.log("jsonPkgArray ::::", jsonPkgArray);
 
-          console.log("test :::::",  jsonPkgArray
-            .join("")
-            .replaceAll("OK", "")
-            .replace(/\$PST;JSON_PK;\d{2};[0-9a-fA-F]{2};/g, "")
-            .replace(/\AT+ST="AT^$ReqJsonPk;No;\d{1,2}"/g, "")
-            .replace(/,\s*([\]}])/g, "$1")
-            .replace(/\0/g, ""));
-          
+          console.log(
+            "test :::::",
+            jsonPkgArray
+              .join("")
+              .replaceAll("OK", "")
+              .replace(/\$PST;JSON_PK;\d{2};[0-9a-fA-F]{2};/g, "")
+              .replace(/\AT+ST="AT^$ReqJsonPk;No;\d{1,2}"/g, "")
+              .replace(/,\s*([\]}])/g, "$1")
+              .replace(/\0/g, "")
+          );
 
           const json = parse(
             jsonPkgArray
@@ -159,7 +163,6 @@ const useSerialStore = create(
           );
 
           console.log("json ::::", json);
-          
 
           return {
             portList: getState.portList.map((prevPort) =>

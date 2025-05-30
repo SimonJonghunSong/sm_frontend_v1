@@ -19,9 +19,28 @@ interface Props {
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
   setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
+  originData: any;
 }
 
-const Power = ({ formData, onChange, setFormData }: Props) => {
+function findDeepSleepValue(data: any[]): boolean {
+  let isPossibleDisable = true;
+  for (const item of data) {
+    if (!item.Power) continue;
+
+    for (const powerEntry of item.Power) {
+      const pd = powerEntry?.["Power Down Type(1930)"];
+      if (!pd) continue;
+
+      const list = pd[0]?.list;
+      if (list?.[0]?.[0]?.includes("Deep Sleep")) {
+        isPossibleDisable = false;
+      }
+    }
+  }
+  return isPossibleDisable;
+}
+
+const Power = ({ formData, onChange, setFormData, originData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
@@ -37,6 +56,8 @@ const Power = ({ formData, onChange, setFormData }: Props) => {
   }, [formData]);
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
+
+  const isPossibleDisable = findDeepSleepValue(originData);
 
   const handleChange = (id: string, value: string, selectValue?: string) => {
     onChange(id, value, selectValue);
@@ -106,6 +127,7 @@ const Power = ({ formData, onChange, setFormData }: Props) => {
             isSwitch
             onChange={handleChange}
             style={{ width: "100%" }}
+            isUnderbarId={!isPossibleDisable}
             isDirty={isDirtyFields.includes("1930")}
           />
           <SwitchField
