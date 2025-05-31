@@ -27,6 +27,8 @@ function getBackupBatteryVoltage(value: string) {
 }
 
 const getDeviceVersionsForString = (data: string) => {
+  console.log("data ::::", data);
+
   const resSplit = data.split(";");
   // 6자리보다 적으면 데이터가 부족한 것이므로 null 처리
   const resNumber = resSplit.length < 6 ? null : resSplit[resSplit.length - 2];
@@ -94,9 +96,12 @@ export default function useDeviceVersions({
   const [isFetched, setIsFetched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const deviceVersionsObjectRef = useRef<Record<string, string>>({});
+  const deviceVersionsCount = useRef(0);
   const [deviceVersionsObject, setDeviceVersionsObject] = useState<
     Record<string, string>
   >({});
+
+  console.log("deviceVersionsObject ::::", deviceVersionsObject);
 
   useEffect(() => {
     deviceVersionsObjectRef.current = {};
@@ -135,8 +140,14 @@ export default function useDeviceVersions({
             currentPort.port.onEndDeviceVersionsFetched = (data) => {
               const { key, value } = getDeviceVersionsForString(data);
               deviceVersionsObjectRef.current[key] = value;
+              deviceVersionsCount.current += 1;
 
-              if (Object.keys(deviceVersionsObjectRef.current).length === 10) {
+              console.log(
+                "deviceVersionsObjectRef.current :::",
+                deviceVersionsObjectRef.current
+              );
+
+              if (deviceVersionsCount.current === 10) {
                 currentPort.port.isDeviceVersionsFetching = false;
                 currentPort.port.onEndDeviceVersionsFetched = null;
 

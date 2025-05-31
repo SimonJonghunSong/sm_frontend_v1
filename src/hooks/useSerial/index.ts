@@ -218,7 +218,10 @@ const useSerial = () => {
           "---------------- 기기에서 넘어오는 value end ----------------"
         );
 
-        console.log("port :::::", port);
+        console.log("value ::::", value.trim() === "");
+        if (value.trim() === "") {
+          continue;
+        }
 
         if (port.isHealthCheck) {
           console.log("health check ::::");
@@ -1165,7 +1168,6 @@ const useSerial = () => {
       // toast(error, { type: "error" });
       console.log("error ::::");
       if (port.isQuecModel) {
-        console.log("port ::::", port);
         console.log("reader ::::", reader);
         console.log("writer ::::", writer);
         deleteSerialPort(port);
@@ -1205,8 +1207,6 @@ const useSerial = () => {
           await addWriteLog(port.imei, data);
           broadcastChannel.postMessage({ status: "updated", imei: port.imei });
         }
-
-        console.log("port ::::", port);
 
         if (port.isFirstLoad) {
           await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
