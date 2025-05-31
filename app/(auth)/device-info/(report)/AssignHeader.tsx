@@ -72,6 +72,8 @@ export default function AssignHeader({
   const [isFullLoading, setIsFullLoading] = useState(false);
   const csvDataRef = useRef("");
   const { lang } = useLangStore();
+  const [isSttUnknown, setIsSttUnknown] = useState(false);
+  const [isAltUnknown, setIsAltUnknown] = useState(false);
 
   if (!hasFormDataFields(formDataProps, fieldIds)) return null;
 
@@ -146,117 +148,140 @@ export default function AssignHeader({
     }
 
     (async function () {
-    if (currentPort.port.isReadyToUse) {
-      setIsFullLoading(true);
-      currentPort.port.isCsvFetching = true;
-      currentPort.port.onCsvDataFetched = (data) => {
-        console.log("data ::::", data);
-        
-        csvDataRef.current += data;
-      };
-      currentPort.port.onEndCsvDataFetched = async () => {
-        currentPort.port.isSttDataFetching = true;
-        currentPort.port.onEndCurrentSttDataFetched = async (data) => {
+      if (currentPort.port.isReadyToUse) {
+        setIsFullLoading(true);
+        currentPort.port.isCsvFetching = true;
+        currentPort.port.onCsvDataFetched = (data) => {
           console.log("data ::::", data);
-          
-          const currentCsvData = data.split(`RES;${imei};05;07;`)[1];
-          console.log("currentCsvData :::", currentCsvData);
-          const currentCsvValuesArray = currentCsvData
-            .replaceAll("\r", "")
-            .split(";");
 
-          const [currentChecked, sItems, mItems, lItems] =
-            currentCsvValuesArray;
+          csvDataRef.current += data;
+        };
+        currentPort.port.onEndCsvDataFetched = async () => {
+          currentPort.port.isSttDataFetching = true;
+          currentPort.port.onEndCurrentSttDataFetched = async (data) => {
+            console.log("data ::::", data);
 
-          const sItemsArray = sItems.split(",");
-          const mItemsArray = mItems.split(",");
-          const lItemsArray = lItems.split(",");
+            const currentCsvData = data.split(`RES;${imei};05;07;`)[1];
+            console.log("currentCsvData :::", currentCsvData);
 
-          const parseData = parseAssigns(csvDataRef.current, currentPort.port.isQuecModel);
+            if (currentCsvData.includes("Unknown CMD")) {
+              setIsSttUnknown(true);
+            } else {
+              const currentCsvValuesArray = currentCsvData
+                .replaceAll("\r", "")
+                .split(";");
 
-          console.log("parseData :::", parseData);
-          console.log("sItemsArray :::", sItemsArray);
-          console.log("mItemsArray :::", mItemsArray);
-          console.log("lItemsArray :::", lItemsArray);
+              const [currentChecked, sItems, mItems, lItems] =
+                currentCsvValuesArray;
 
-          setSttData({
-            s_assigns: parseData.s_assigns.map((item) =>
-              sItemsArray.includes(renderNumber(item.id))
-                ? { ...item, value: "1" }
-                : item
-            ),
-            m_assigns: parseData.m_assigns.map((item) =>
-              mItemsArray.includes(renderNumber(item.id))
-                ? { ...item, value: "1" }
-                : item
-            ),
-            l_assigns: parseData.l_assigns.map((item) =>
-              lItemsArray.includes(renderNumber(item.id))
-                ? { ...item, value: "1" }
-                : item
-            ),
-          });
+              const sItemsArray = sItems.split(",");
+              const mItemsArray = mItems.split(",");
+              const lItemsArray = lItems.split(",");
 
-          setDefaultSttIndexes({
-            s_assigns: sItemsArray.map((item) => parseInt(item)),
-            m_assigns: mItemsArray.map((item) => parseInt(item)),
-            l_assigns: lItemsArray.map((item) => parseInt(item)),
-          });
+              const parseData = parseAssigns(
+                csvDataRef.current,
+                currentPort.port.isQuecModel
+              );
 
-          currentPort.port.isAltDataFetching = true;
-          currentPort.port.onEndCurrentAltDataFetched = (data) => {
-            const currentCsvData = data.split(`RES;${imei};05;08;`)[1];
-            const currentCsvValuesArray = currentCsvData
-              .replaceAll("\r", "")
-              .split(";");
+              console.log("parseData :::", parseData);
+              console.log("sItemsArray :::", sItemsArray);
+              console.log("mItemsArray :::", mItemsArray);
+              console.log("lItemsArray :::", lItemsArray);
 
-            const [currentChecked, sItems, mItems, lItems] =
-              currentCsvValuesArray;
+              setSttData({
+                s_assigns: parseData.s_assigns.map((item) =>
+                  sItemsArray.includes(renderNumber(item.id))
+                    ? { ...item, value: "1" }
+                    : item
+                ),
+                m_assigns: parseData.m_assigns.map((item) =>
+                  mItemsArray.includes(renderNumber(item.id))
+                    ? { ...item, value: "1" }
+                    : item
+                ),
+                l_assigns: parseData.l_assigns.map((item) =>
+                  lItemsArray.includes(renderNumber(item.id))
+                    ? { ...item, value: "1" }
+                    : item
+                ),
+              });
 
-            console.log("currentCsvValuesArray :::", currentCsvValuesArray);
-            console.log("sItems :::", sItems);
-            console.log("mItems :::", mItems);
-            console.log("lItems :::", lItems);
+              setDefaultSttIndexes({
+                s_assigns: sItemsArray.map((item) => parseInt(item)),
+                m_assigns: mItemsArray.map((item) => parseInt(item)),
+                l_assigns: lItemsArray.map((item) => parseInt(item)),
+              });
+            }
 
-            const sItemsArray = sItems.split(",");
-            const mItemsArray = mItems.split(",");
-            const lItemsArray = lItems.split(",");
+            currentPort.port.isAltDataFetching = true;
+            currentPort.port.onEndCurrentAltDataFetched = (data) => {
+              const currentCsvData = data.split(`RES;${imei};05;08;`)[1];
 
-            console.log("csvDataRef.current :::", csvDataRef.current);
-            
+              if (currentCsvData.includes("Unknown CMD")) {
+                setIsAltUnknown(true);
+              } else {
+                const currentCsvValuesArray = currentCsvData
+                  .replaceAll("\r", "")
+                  .split(";");
 
-            const parseData = parseAssigns(csvDataRef.current, currentPort.port.isQuecModel);
+                const [currentChecked, sItems, mItems, lItems] =
+                  currentCsvValuesArray;
 
-            setAltData({
-              s_assigns: parseData.s_assigns.map((item) =>
-                sItemsArray.includes(renderNumber(item.id))
-                  ? { ...item, value: "1" }
-                  : item
-              ),
-              m_assigns: parseData.m_assigns.map((item) =>
-                mItemsArray.includes(renderNumber(item.id))
-                  ? { ...item, value: "1" }
-                  : item
-              ),
-              l_assigns: parseData.l_assigns.map((item) =>
-                lItemsArray.includes(renderNumber(item.id))
-                  ? { ...item, value: "1" }
-                  : item
-              ),
+                console.log("currentCsvValuesArray :::", currentCsvValuesArray);
+                console.log("sItems :::", sItems);
+                console.log("mItems :::", mItems);
+                console.log("lItems :::", lItems);
+
+                const sItemsArray = sItems.split(",");
+                const mItemsArray = mItems.split(",");
+                const lItemsArray = lItems.split(",");
+
+                console.log("csvDataRef.current :::", csvDataRef.current);
+
+                const parseData = parseAssigns(
+                  csvDataRef.current,
+                  currentPort.port.isQuecModel
+                );
+
+                setAltData({
+                  s_assigns: parseData.s_assigns.map((item) =>
+                    sItemsArray.includes(renderNumber(item.id))
+                      ? { ...item, value: "1" }
+                      : item
+                  ),
+                  m_assigns: parseData.m_assigns.map((item) =>
+                    mItemsArray.includes(renderNumber(item.id))
+                      ? { ...item, value: "1" }
+                      : item
+                  ),
+                  l_assigns: parseData.l_assigns.map((item) =>
+                    lItemsArray.includes(renderNumber(item.id))
+                      ? { ...item, value: "1" }
+                      : item
+                  ),
+                });
+
+                setDefaultAltIndexes({
+                  s_assigns: sItemsArray.map((item) => parseInt(item)),
+                  m_assigns: mItemsArray.map((item) => parseInt(item)),
+                  l_assigns: lItemsArray.map((item) => parseInt(item)),
+                });
+              }
+
+              setIsFullLoading(false);
+            };
+
+            await delayPromise(DELAY_MS);
+            write({
+              data: AT_GET_ASSIGN_MAP_ALT,
+              port: currentPort.port,
+              writer: currentPort.writer,
             });
-
-            setDefaultAltIndexes({
-              s_assigns: sItemsArray.map((item) => parseInt(item)),
-              m_assigns: mItemsArray.map((item) => parseInt(item)),
-              l_assigns: lItemsArray.map((item) => parseInt(item)),
-            });
-
-            setIsFullLoading(false);
           };
 
           await delayPromise(DELAY_MS);
           write({
-            data: AT_GET_ASSIGN_MAP_ALT,
+            data: AT_GET_ASSIGN_MAP_STT,
             port: currentPort.port,
             writer: currentPort.writer,
           });
@@ -264,20 +289,12 @@ export default function AssignHeader({
 
         await delayPromise(DELAY_MS);
         write({
-          data: AT_GET_ASSIGN_MAP_STT,
+          data: AT_GET_CSV,
           port: currentPort.port,
           writer: currentPort.writer,
         });
-      };
-
-      await delayPromise(DELAY_MS);
-      write({
-        data: AT_GET_CSV,
-        port: currentPort.port,
-        writer: currentPort.writer,
-      });
-    }
-  })()
+      }
+    })();
   }, [
     currentPort.port.writable,
     currentPort.port.readable,
@@ -574,6 +591,10 @@ export default function AssignHeader({
     }, 500);
   };
 
+  if (isSttUnknown || isAltUnknown) {
+    return null;
+  }
+
   return (
     <Container>
       {isFullLoading && <FullLoading />}
@@ -588,15 +609,19 @@ export default function AssignHeader({
           }}
           variant="fullWidth"
         >
-          <Tab
-            value="stt"
-            label={FIELD_VALIDATIONS["1075"].list[0].label[lang]}
-            sx={{ flex: 1 }}
-          />
-          <Tab
-            value="alt"
-            label={FIELD_VALIDATIONS["1075"].list[1].label[lang]}
-          />
+          {!isSttUnknown && (
+            <Tab
+              value="stt"
+              label={FIELD_VALIDATIONS["1075"].list[0].label[lang]}
+              sx={{ flex: 1 }}
+            />
+          )}
+          {!isAltUnknown && (
+            <Tab
+              value="alt"
+              label={FIELD_VALIDATIONS["1075"].list[1].label[lang]}
+            />
+          )}
         </StyledTabs>
         {tab === "stt" && (
           <div>
