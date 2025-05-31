@@ -18878,6 +18878,21 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "0304": {
+    title: {
+      en: "Device Version",
+      pt: "Versão do Dispositivo",
+      es: "Versión del Dispositivo",
+    },
+    tooltip: {
+      en: "Displays the version information of the device.",
+      pt: "Exibe as informações da versão do dispositivo.",
+      es: "Muestra la información de la versión del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
   "0731": {
     title: {
       en: "LED Off",
@@ -18920,6 +18935,53 @@ export const FIELD_VALIDATIONS = {
       en: "Get the value of the LED OFF setting.",
       es: "Obtener el valor de la configuración de LED Desactivado.",
       pt: "Obtenha o valor da configuração LED OFF.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0524": {
+    title: {
+      en: "Anti-Theft",
+      pt: "Antifurto",
+      es: "Antirrobo",
+    },
+    tooltip: {
+      en: "Enables or disables the anti-theft feature.",
+      pt: "Ativa ou desativa a função antifurto.",
+      es: "Activa o desactiva la función antirrobo.",
+    },
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "0",
+        label: {
+          en: "Enable",
+          es: "Activar",
+          pt: "Ativar",
+        },
+      },
+      {
+        value: "1",
+        label: {
+          en: "Disable",
+          es: "Desactivar",
+          pt: "Desativar",
+        },
+      },
+    ],
+  },
+  "0737": {
+    title: {
+      en: "Anti-Theft Status",
+      pt: "Status Antifurto",
+      es: "Estado Antirrobo",
+    },
+    tooltip: {
+      en: "Indicates whether the anti-theft feature is active.",
+      pt: "Indica se a função antifurto está ativa.",
+      es: "Indica si la función antirrobo está activa.",
     },
     min: null,
     max: null,
@@ -20025,6 +20087,96 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "0401": {
+    title: {
+      en: "Activate Output 1",
+      pt: "Ativar Saída 1",
+      es: "Activar Salida 1",
+    },
+    tooltip: {
+      en: "Activates the device's Output 1.",
+      pt: "Ativa a Saída 1 do dispositivo.",
+      es: "Activa la Salida 1 del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0402": {
+    title: {
+      en: "Deactivate Output 1",
+      pt: "Desativar Saída 1",
+      es: "Desactivar Salida 1",
+    },
+    tooltip: {
+      en: "Deactivates the device's Output 1.",
+      pt: "Desativa a Saída 1 do dispositivo.",
+      es: "Desactiva la Salida 1 del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0403": {
+    title: {
+      en: "Activate Output 2",
+      pt: "Ativar Saída 2",
+      es: "Activar Salida 2",
+    },
+    tooltip: {
+      en: "Activates the device's Output 2.",
+      pt: "Ativa a Saída 2 do dispositivo.",
+      es: "Activa la Salida 2 del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0404": {
+    title: {
+      en: "Deactivate Output 2",
+      pt: "Desativar Saída 2",
+      es: "Desactivar Salida 2",
+    },
+    tooltip: {
+      en: "Deactivates the device's Output 2.",
+      pt: "Desativa a Saída 2 do dispositivo.",
+      es: "Desactiva la Salida 2 del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0409": {
+    title: {
+      en: "Activate Output 3",
+      pt: "Ativar Saída 3",
+      es: "Activar Salida 3",
+    },
+    tooltip: {
+      en: "Activates the device's Output 3.",
+      pt: "Ativa a Saída 3 do dispositivo.",
+      es: "Activa la Salida 3 del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0410": {
+    title: {
+      en: "Deactivate Output 3",
+      pt: "Desativar Saída 3",
+      es: "Desactivar Salida 3",
+    },
+    tooltip: {
+      en: "Deactivates the device's Output 3.",
+      pt: "Desativa a Saída 3 do dispositivo.",
+      es: "Desactiva la Salida 3 del dispositivo.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
   "0411": {
     title: {
       en: "Enable Lease",
@@ -20103,6 +20255,21 @@ export const FIELD_VALIDATIONS = {
         },
       },
     ],
+  },
+  "0421": {
+    title: {
+      en: "Driver ID Output Status",
+      pt: "Status da Saída de Identificação do Motorista",
+      es: "Estado de la Salida de Identificación del Conductor",
+    },
+    tooltip: {
+      en: "Indicates the status of the output related to driver identification.",
+      pt: "Indica o status da saída relacionada à identificação do motorista.",
+      es: "Indica el estado de la salida relacionada con la identificación del conductor.",
+    },
+    min: null,
+    max: null,
+    list: null,
   },
   "0427": {
     title: {
@@ -20523,6 +20690,21 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "0520": {
+    title: {
+      en: "Circular Geofence Status",
+      pt: "Status da Geocerca Circular",
+      es: "Estado de la Geocerca Circular",
+    },
+    tooltip: {
+      en: "Shows whether the circular geofence is active or inactive.",
+      pt: "Mostra se a geocerca circular está ativa ou inativa.",
+      es: "Muestra si la geocerca circular está activa o inactiva.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
   "0519": {
     title: {
       en: "Reset Circular Geofence Specific ID",
@@ -20533,6 +20715,21 @@ export const FIELD_VALIDATIONS = {
       en: "Delete circular geofence setting data for a specific ID.",
       es: "Eliminar los datos de configuración de geocercas circulares para un ID específico.",
       pt: "Excluir os dados de configuração de geofence circular para um ID específico.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0515": {
+    title: {
+      en: "Polygon Geofence Status",
+      pt: "Status da Geocerca Poligonal",
+      es: "Estado de la Geocerca Poligonal",
+    },
+    tooltip: {
+      en: "Shows whether the polygon geofence is active or inactive.",
+      pt: "Mostra se a geocerca poligonal está ativa ou inativa.",
+      es: "Muestra si la geocerca poligonal está activa o inactiva.",
     },
     min: null,
     max: null,
@@ -20563,6 +20760,68 @@ export const FIELD_VALIDATIONS = {
       en: "Delete polygon geofence setting data for a specific ID.",
       es: "Eliminar los datos de configuración de geocercas poligonales para un ID específico.",
       pt: "Excluir os dados de configuração de geofence poligonal para um ID específico.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0725": {
+    title: {
+      en: "Geofence Area Jamming",
+      pt: "Bloqueio na Área de Geocerca",
+      es: "Interferencia en el Área de Geocerca",
+    },
+    tooltip: {
+      en: "Indicates signal jamming detected within the geofence area.",
+      pt: "Indica a detecção de bloqueio de sinal dentro da área de geocerca.",
+      es: "Indica la detección de interferencia de señal dentro del área de geocerca.",
+    },
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "0",
+        label: {
+          en: "Enable",
+          es: "Activar",
+          pt: "Ativar",
+        },
+      },
+      {
+        value: "1",
+        label: {
+          en: "Disable",
+          es: "Desactivar",
+          pt: "Desativar",
+        },
+      },
+    ],
+  },
+  "0726": {
+    title: {
+      en: "Geofence Area Jamming Status",
+      pt: "Status de Bloqueio da Área de Geocerca",
+      es: "Estado de Interferencia en el Área de Geocerca",
+    },
+    tooltip: {
+      en: "Indicates whether jamming is detected in the geofence area.",
+      pt: "Indica se há detecção de bloqueio (jamming) na área de geocerca.",
+      es: "Indica si se detecta interferencia (jamming) en el área de geocerca.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0526": {
+    title: {
+      en: "Circular Geofence ID",
+      pt: "ID da Geocerca Circular",
+      es: "ID de la Geocerca Circular",
+    },
+    tooltip: {
+      en: "Identifier for the circular geofence area.",
+      pt: "Identificador da área de geocerca circular.",
+      es: "Identificador del área de geocerca circular.",
     },
     min: null,
     max: null,
