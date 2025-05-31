@@ -27,7 +27,7 @@ function getBackupBatteryVoltage(value: string) {
 }
 
 const getDeviceVersionsForString = (data: string) => {
-  console.log("data ::::", data);
+  console.log("getDeviceVersionsForString@ ::::", data);
 
   const resSplit = data.split(";");
   // 6자리보다 적으면 데이터가 부족한 것이므로 null 처리
@@ -101,10 +101,9 @@ export default function useDeviceVersions({
     Record<string, string>
   >({});
 
-  console.log("deviceVersionsObject ::::", deviceVersionsObject);
-
   useEffect(() => {
     deviceVersionsObjectRef.current = {};
+    deviceVersionsCount.current = 0;
     setDeviceVersionsObject({});
   }, [currentPort?.port?.imei]);
   useEffect(() => {
@@ -120,9 +119,10 @@ export default function useDeviceVersions({
           setIsLoading(false);
           currentPort.port.isDeviceVersionsFetching = false;
           currentPort.port.onEndDeviceVersionsFetched = null;
+          setDeviceVersionsObject({ ...deviceVersionsObjectRef.current });
         }, 8000); // ??? 소닉 메롱
         console.log("ready~~!!!");
-        const DELAY_MS = 100;
+        const DELAY_MS = 200;
 
         const commands = [];
 
@@ -146,6 +146,9 @@ export default function useDeviceVersions({
                 "deviceVersionsObjectRef.current :::",
                 deviceVersionsObjectRef.current
               );
+
+              console.log("deviceVersionsCount.current :::", deviceVersionsCount.current);
+              
 
               if (deviceVersionsCount.current === 10) {
                 currentPort.port.isDeviceVersionsFetching = false;
