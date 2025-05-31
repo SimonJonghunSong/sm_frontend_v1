@@ -412,6 +412,7 @@ const useSerial = () => {
                           polygonGeofenceData: [],
                           circularGeofenceData: [],
                           isDisconnected: false,
+                          modemVersion: "",
                         });
                         port.ispackagecountfetching = true;
                         write({
@@ -851,13 +852,23 @@ const useSerial = () => {
                           polygonGeofenceData: [],
                           circularGeofenceData: [],
                           isDisconnected: false,
+                          modemVersion: "",
                         });
-                        port.ismodemversionfetching = true;
-                        write({
-                          data: AT_GET_DEVICE_VERSIONS + "04",
-                          port,
-                          writer,
-                        });
+                        if (port.isLock) {
+                          port.ispackagecountfetching = true;
+                          write({
+                            data: AT_GET_JSON_PACKAGE_COUNT_COMMAND,
+                            port,
+                            writer,
+                          });
+                        } else {
+                          port.ismodemversionfetching = true;
+                          write({
+                            data: AT_GET_DEVICE_VERSIONS + "04",
+                            port,
+                            writer,
+                          });
+                        }
                       }
                     }
                   }
@@ -880,6 +891,13 @@ const useSerial = () => {
                       modemVersionBuffer?.trim().split(";")?.[5] || "";
                     port.ismodemversionfetching = false;
                     port.modemversion = modemVersion;
+
+                    editSerialPort({
+                      imei: port.imei,
+                      payload: {
+                        modemVersion,
+                      },
+                    });
 
                     console.log("modemVersion :::", port);
 

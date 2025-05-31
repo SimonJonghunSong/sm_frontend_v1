@@ -260,7 +260,7 @@ export default function DeviceList() {
       col3: port.modelVersion?.split("_")[
         port.modelVersion?.split("_").length - 1
       ],
-      col4: port.port.modemversion || "N/A",
+      col4: port.modemVersion || "N/A",
       col5: { connected: !!port.reader.read && !!port.writer.write, port },
       col6: {
         configure:
