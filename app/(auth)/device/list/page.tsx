@@ -331,21 +331,9 @@ export default function DeviceList() {
               <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
             </IconButton>
           </Stack>
-          <Stack direction="row" alignItems="center" gap="12px">
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ maxWidth: 300 }}
-              onClick={modalToggle}
-              style={{ flexShrink: 0 }}
-              disabled={portList.length === 0}
-            >
-              {t("device.device_list.configure_multi-device")}
-            </Button>
-            <span className="text-grey-5" style={{ fontSize: 14 }}>
-              {portList.length + "/" + portList.length}
-            </span>
-          </Stack>
+          <span className="text-grey-5" style={{ fontSize: 14 }}>
+            {portList.length + "/" + portList.length}
+          </span>
         </div>
         <Stack>
           <DataTable
@@ -367,9 +355,19 @@ export default function DeviceList() {
             flexDirection={"row"}
             width={"100%"}
             alignItems={"center"}
-            justifyContent={"flex-end"}
+            justifyContent={"space-between"}
             style={{ marginTop: "40px" }}
           >
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ maxWidth: 300 }}
+              onClick={modalToggle}
+              style={{ flexShrink: 0 }}
+              disabled={portList.length === 0}
+            >
+              {t("device.device_list.configure_multi-device")}
+            </Button>
             <div
               style={{
                 display: "inline-flex",

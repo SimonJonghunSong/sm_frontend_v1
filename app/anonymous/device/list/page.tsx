@@ -250,9 +250,7 @@ export default function DeviceList() {
       col3: port.modelVersion?.split("_")[
         port.modelVersion?.split("_").length - 1
       ],
-      col4: port.modelVersion?.split("_")[
-        port.modelVersion?.split("_").length - 1
-      ],
+      col4: port.modemVersion || "N/A",
       col5: { connected: !!port.reader.read && !!port.writer.write, port },
       col6: {
         configure:
@@ -279,21 +277,9 @@ export default function DeviceList() {
               <RefreshOutlinedIcon sx={{ color: "var(--grey5)" }} />
             </IconButton>
           </Stack>
-          <Stack direction="row" alignItems="center" gap="12px">
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ maxWidth: 300 }}
-              onClick={modalToggle}
-              style={{ flexShrink: 0 }}
-              disabled={portList.length === 0}
-            >
-              {t("device.device_list.configure_multi-device")}
-            </Button>
-            <span className="text-grey-5" style={{ fontSize: 14 }}>
-              {portList.length + "/" + portList.length}
-            </span>
-          </Stack>
+          <span className="text-grey-5" style={{ fontSize: 14 }}>
+            {portList.length + "/" + portList.length}
+          </span>
         </div>
         <Stack>
           <DataTable
@@ -317,6 +303,16 @@ export default function DeviceList() {
             justifyContent={"space-between"}
             style={{ marginTop: "24px" }}
           >
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ maxWidth: 300 }}
+              onClick={modalToggle}
+              style={{ flexShrink: 0 }}
+              disabled={portList.length === 0}
+            >
+              {t("device.device_list.configure_multi-device")}
+            </Button>
             <div
               style={{
                 display: "inline-flex",
