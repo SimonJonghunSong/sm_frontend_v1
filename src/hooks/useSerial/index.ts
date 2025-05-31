@@ -219,7 +219,8 @@ const useSerial = () => {
         );
 
         console.log("value ::::", value.trim() === "");
-        if (value.trim() === "") {
+        if (value.trim() === "" || value === "$PST;PORT_OPEN") {
+          console.log("value ::::", value);
           continue;
         }
 
