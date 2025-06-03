@@ -6672,6 +6672,14 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "09",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
+        },
+      },
+      {
         value: "11",
         label: {
           en: "Door Sensor",
@@ -6844,6 +6852,14 @@ export const FIELD_VALIDATIONS = {
           en: "Anti-Theft Button",
           es: "Botón Antirrobo",
           pt: "Botão Anti-Roubo",
+        },
+      },
+      {
+        value: "09",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
         },
       },
       {
@@ -7022,6 +7038,14 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "09",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
+        },
+      },
+      {
         value: "11",
         label: {
           en: "Door Sensor",
@@ -7194,6 +7218,14 @@ export const FIELD_VALIDATIONS = {
           en: "Anti-Theft Button",
           es: "Botón Antirrobo",
           pt: "Botão Anti-Roubo",
+        },
+      },
+      {
+        value: "09",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
         },
       },
       {
@@ -7372,6 +7404,14 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "09",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
+        },
+      },
+      {
         value: "11",
         label: {
           en: "Door Sensor",
@@ -7531,6 +7571,14 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "16",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
+        },
+      },
+      {
         value: "17",
         label: {
           en: "Horn Pulse",
@@ -7648,6 +7696,14 @@ export const FIELD_VALIDATIONS = {
           en: "Buzzer",
           es: "Zumbador",
           pt: "Buzzer",
+        },
+      },
+      {
+        value: "16",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
         },
       },
       {
@@ -7771,6 +7827,14 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "16",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
+        },
+      },
+      {
         value: "17",
         label: {
           en: "Horn Pulse",
@@ -7888,6 +7952,14 @@ export const FIELD_VALIDATIONS = {
           en: "Buzzer",
           es: "Zumbador",
           pt: "Buzzer",
+        },
+      },
+      {
+        value: "16",
+        label: {
+          en: "No Use",
+          es: "No Use",
+          pt: "No Use",
         },
       },
       {
