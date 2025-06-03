@@ -116,10 +116,10 @@ const APN = ({ formData, onChange, setFormData }: Props) => {
             onChange={handleChange}
             // isRequired
             style={{ width: "100%" }}
-            error={!/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)}
+            error={!/^[A-Za-z0-9.]*$/.test(formData["1001"].realValue)}
             helperText={
-              !/^[A-Za-z0-9]*$/.test(formData["1001"].realValue)
-                ? FIELD_ERRORS["alphaNumericPattern"][lang]
+              !/^[A-Za-z0-9.]*$/.test(formData["1001"].realValue)
+                ? FIELD_ERRORS["alphaNumericPatternWithSymbols"][lang]
                 : undefined
             }
             isDirty={isDirtyFields.includes("1001")}
@@ -145,10 +145,10 @@ const APN = ({ formData, onChange, setFormData }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            error={!/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)}
+            error={!/^[A-Za-z0-9.]*$/.test(formData["1003"].realValue)}
             helperText={
-              !/^[A-Za-z0-9]*$/.test(formData["1003"].realValue)
-                ? FIELD_ERRORS["alphaNumericPattern"][lang]
+              !/^[A-Za-z0-9.]*$/.test(formData["1003"].realValue)
+                ? FIELD_ERRORS["alphaNumericPatternWithSymbols"][lang]
                 : undefined
             }
             isDirty={isDirtyFields.includes("1003")}
