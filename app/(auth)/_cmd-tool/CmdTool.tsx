@@ -32,15 +32,6 @@ export default function CmdTool({
 
   return (
     <div className={styles.cmdWrap} style={{ width: "100%" }}>
-      <div
-        className={styles.cmdTitle}
-        style={{
-          cursor: "move",
-          background: "white",
-        }}
-      >
-        {t("configuration.cmd_tool.command_tool")}
-      </div>
       <Tabs
         value={value}
         onChange={handleChange}

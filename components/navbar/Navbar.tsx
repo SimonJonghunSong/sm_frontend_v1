@@ -37,6 +37,7 @@ import SearchModelInfoModal from "./SearchModelInfoModal";
 import SearchDeviceConfigurationModal from "./SearchDeviceConfigurationModal";
 import useCmdStore from "@/src/stores/useCmdStore";
 import useDeviceSearchModalStore from "@/src/stores/useDeviceSearchModal";
+import DraggableModal from "../DraggableModal";
 
 const rootMenus = (lang: "en" | "pt" | "es") => [
   {
@@ -504,19 +505,14 @@ export default function Navbar() {
         {renderSearchModal()}
 
         {cmdModal && (
-          <Modal
-            isDraggable
-            hideBackdrop
-            hasMinimize
-            closeButton
+          <DraggableModal
+            title={t("configuration.cmd_tool.command_tool")}
             open
             toggleOpen={cmdModalToggle}
             width={isCmdModalWide ? "1240px" : "700px"}
-            hasFooter={false}
-            disableScrollLock
           >
             <CmdModal setIsCmdModalWide={setIsCmdModalWide} />
-          </Modal>
+          </DraggableModal>
         )}
 
         {notificationModal && (

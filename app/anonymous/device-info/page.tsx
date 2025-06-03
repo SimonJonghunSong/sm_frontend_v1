@@ -44,6 +44,8 @@ import SearchModal from "./(components)/SearchModal";
 import CommandTab from "./(tabs)/CommandTab";
 import useModal from "@/utils/useModal";
 import CmdTool from "app/(auth)/_cmd-tool/CmdTool";
+import DraggableModal from "@/components/DraggableModal";
+import { useTranslations } from "next-intl";
 
 const SCROLL_TOP_OFFSET = 140;
 
@@ -212,6 +214,7 @@ export default function DeviceInfoPage() {
     state: { portList },
     func: { write },
   } = useSerial();
+  const t = useTranslations();
   const [isFechedPackage, setIsFechedPackage] = useState(false);
   const packageCountRef = useRef(0);
 
@@ -619,21 +622,15 @@ export default function DeviceInfoPage() {
       </div>
 
       {cmdModal && (
-        <Modal
-          isDraggable
-          hideBackdrop
-          hasMinimize
-          closeButton
+        <DraggableModal
+          title={t("configuration.cmd_tool.command_tool")}
           open
           toggleOpen={cmdModalToggle}
           width={isCmdModalWide ? "1240px" : "700px"}
-          hasFooter={false}
-          disableScrollLock
         >
           <CmdModal setIsCmdModalWide={setIsCmdModalWide} />
-        </Modal>
+        </DraggableModal>
       )}
-
       {searchModal && (
         <Modal
           closeButton
