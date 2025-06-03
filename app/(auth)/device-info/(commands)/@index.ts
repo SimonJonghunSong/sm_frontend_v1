@@ -198,7 +198,7 @@ export const commands: Record<CommandsSection, Command[]> = {
   systemCommands: [
     // TODO: type 파악필요
     { id: "0303", uiType: "normal" },
-    { id: "0304", uiType: "normal" },
+    { id: "0304", uiType: "select" },
     { id: "0721", uiType: "normal" },
     { id: "0302", uiType: "normal" },
     { id: "0731", uiType: "select" },

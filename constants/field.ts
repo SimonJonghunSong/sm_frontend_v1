@@ -18891,7 +18891,88 @@ export const FIELD_VALIDATIONS = {
     },
     min: null,
     max: null,
-    list: null,
+    list: [
+      {
+        value: "1",
+        label: {
+          en: "Main firmware",
+          es: "Firmware principal",
+          pt: "Firmware principal",
+        },
+      },
+      {
+        value: "2",
+        label: {
+          en: "MCU firmware",
+          es: "Firmware del MCU",
+          pt: "Firmware do MCU",
+        },
+      },
+      {
+        value: "3",
+        label: {
+          en: "Accessory firmware",
+          es: "Firmware del accesorio",
+          pt: "Firmware do acessório",
+        },
+      },
+      {
+        value: "4",
+        label: {
+          en: "Modem firmware",
+          es: "Firmware del módem",
+          pt: "Firmware do modem",
+        },
+      },
+      {
+        value: "5",
+        label: {
+          en: "BLE Firmware",
+          es: "Firmware BLE",
+          pt: "Firmware BLE",
+        },
+      },
+      {
+        value: "6",
+        label: {
+          en: "WIFI Firmware",
+          es: "Firmware WIFI",
+          pt: "Firmware WIFI",
+        },
+      },
+      {
+        value: "7",
+        label: {
+          en: "RS232 Ext1 Dev",
+          es: "Dispositivo RS232 Ext1",
+          pt: "Dispositivo RS232 Ext1",
+        },
+      },
+      {
+        value: "8",
+        label: {
+          en: "RS232 Ext2 Dev",
+          es: "Dispositivo RS232 Ext2",
+          pt: "Dispositivo RS232 Ext2",
+        },
+      },
+      {
+        value: "9",
+        label: {
+          en: "Modem Bypass MCU",
+          es: "MCU de bypass del módem",
+          pt: "MCU de bypass do modem",
+        },
+      },
+      {
+        value: "10",
+        label: {
+          en: "GNSS Firmware",
+          es: "Firmware GNSS",
+          pt: "Firmware GNSS",
+        },
+      },
+    ],
   },
   "0731": {
     title: {
