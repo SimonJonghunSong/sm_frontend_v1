@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
@@ -226,6 +226,7 @@ export default function DeviceList() {
                   const isLock = params.value.port.port.isLock;
                   if (isLock) {
                     imeiRef.current = params.value.port.port.imei;
+                    setRemainingTime(15);
                     passwordModalToggle();
                     return;
                   }
@@ -277,6 +278,7 @@ export default function DeviceList() {
 
   const [password, setPassword] = useState("");
   const [passwordModal, passwordModalToggle] = useModal();
+  const [remainingTime, setRemainingTime] = useState(15);
   const imeiRef = useRef<string>();
   const [modal, modalToggle] = useModal();
   const router = useRouter();
@@ -320,6 +322,23 @@ export default function DeviceList() {
       port: currentPort.port,
     });
   };
+
+  useEffect(() => {
+    if (passwordModal) {
+      const interval = setInterval(() => {
+        setRemainingTime((prev) => prev - 1);
+      }, 1000);
+
+      if (remainingTime === 0) {
+        passwordModalToggle();
+        setPassword("");
+      }
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [passwordModal, remainingTime, passwordModalToggle, setPassword]);
 
   return (
     <div className="pageWrap">
@@ -416,6 +435,9 @@ export default function DeviceList() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <div style={{ color: "#FC6508", marginTop: 8, textAlign: "right" }}>
+            {remainingTime} seconds left
+          </div>
         </Stack>
       </Modal>
       {renderErrorModal()}
