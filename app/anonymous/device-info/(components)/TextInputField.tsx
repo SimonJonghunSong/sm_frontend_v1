@@ -7,6 +7,8 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined";
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditDot from "./EditDot";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "app/anonymous/device-info/(tabs)/CommandTab";
 interface TextInputFieldProps {
   id: string;
   formData: {
@@ -19,6 +21,7 @@ interface TextInputFieldProps {
   helperText?: string;
   type?: HTMLInputTypeAttribute;
   isDirty?: boolean;
+  isForceRender?: boolean;
 }
 
 const TextInputField = ({
@@ -31,17 +34,25 @@ const TextInputField = ({
   helperText,
   type = "text",
   isDirty = false,
+  isForceRender = false,
 }: TextInputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
   const [showPassword, setShowPassword] = useState(false);
 
-  if (!formData[id]) return null;
+  const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
+  if (!isForceRender && !formData?.[id]) return null;
+
+  if (isHiddenParameter && hiddenParameter) return null;
 
   return (
     <Stack width={"calc(50% - 8px)"} gap={"8px"} style={style}>
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>
+        <InputBox.Title
+          style={isHiddenParameter ? { color: "#FF0000" } : undefined}
+        >
           {FIELD_VALIDATIONS[id].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
@@ -60,7 +71,7 @@ const TextInputField = ({
         {isDirty && <EditDot />}
       </Stack>
       <TextField
-        value={formData[id].realValue}
+        value={formData?.[id]?.realValue}
         onChange={(e) => onChange(id, e.target.value)}
         error={error}
         helperText={helperText}

@@ -6,6 +6,8 @@ import useLangStore from "@/utils/useLangStore";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import EditDot from "./EditDot";
+import { hiddenParameterId } from "app/anonymous/device-info/(tabs)/CommandTab";
+import useParameterStore from "@/utils/useParameterStore";
 
 // Constants
 const DEFAULT_HOUR_VALUE = "01";
@@ -59,6 +61,7 @@ interface TimeHMAProps {
   hourType?: 12 | 24;
   isSwitch?: boolean;
   isDirty?: boolean;
+  isForceRender?: boolean;
 }
 
 // Utility functions
@@ -123,11 +126,15 @@ export default function TimeHMA({
   hourType = 12,
   isSwitch = false,
   isDirty = false,
+  isForceRender = false,
 }: TimeHMAProps) {
   const lang = useLangStore((state) => state.lang);
-  const [isChecked, setIsChecked] = useState(!!formData[id]?.realValue);
+  const [isChecked, setIsChecked] = useState(!!formData?.[id]?.realValue);
+  const isHiddenParameter = hiddenParameterId.includes(id);
+  const { hiddenParameter } = useParameterStore();
 
-  if (!formData[id]) return null;
+  if (!isForceRender && !formData?.[id]) return null;
+  if (isHiddenParameter && hiddenParameter) return null;
 
   const hour = value?.slice(0, 2) || DEFAULT_HOUR_VALUE;
   const min = value?.slice(2, 4) || DEFAULT_MIN_VALUE;
@@ -165,7 +172,9 @@ export default function TimeHMA({
       }}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title>
+        <InputBox.Title
+          style={isHiddenParameter ? { color: "#FF0000" } : undefined}
+        >
           {FIELD_VALIDATIONS[id].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>

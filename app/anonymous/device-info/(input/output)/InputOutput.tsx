@@ -12,6 +12,8 @@ import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "../../(utils)/useSendFormData";
 import EditDot from "../../(components)/EditDot";
 import SelectField from "../../(components)/SelectField";
+import InputOutputConfig from "app/anonymous/device-info/(input/output)/InputOutputConfig";
+import useParameterStore from "@/utils/useParameterStore";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
@@ -28,6 +30,7 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+  const { hiddenParameter } = useParameterStore();
 
   const [tab, setTab] = useState<"input" | "output">("input");
 
@@ -106,6 +109,14 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
           {isDirtyFields.length > 0 && <EditDot />}
         </Stack>
       </Stack>
+
+      {!hiddenParameter && (
+        <InputOutputConfig
+          formData={formData}
+          onChange={onChange}
+          setFormData={setFormData}
+        />
+      )}
 
       <StyledTabs
         value={tab}
