@@ -80,6 +80,7 @@ const useSerial = () => {
     removeAllPort,
     setIsDisconnected,
     setIsConnected,
+    setIsAlreadyUnlock,
   } = useSerialStore();
 
   const killAllPort = () => {
@@ -414,6 +415,7 @@ const useSerial = () => {
                           circularGeofenceData: [],
                           isDisconnected: false,
                           modemVersion: "",
+                          isAlreadyUnlock: false,
                         });
                         port.ispackagecountfetching = true;
                         write({
@@ -854,6 +856,7 @@ const useSerial = () => {
                           circularGeofenceData: [],
                           isDisconnected: false,
                           modemVersion: "",
+                          isAlreadyUnlock: false,
                         });
                         if (port.isLock) {
                           port.ispackagecountfetching = true;
@@ -1308,6 +1311,7 @@ const useSerial = () => {
       removePorts,
       setIsDisconnected,
       setIsConnected,
+      setIsAlreadyUnlock,
     },
   };
 };

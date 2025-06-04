@@ -21,6 +21,7 @@ interface SerialPortFilter {
 
 interface SerialPort {
   isLock: boolean;
+  isAlreadyUnlock?: boolean;
   password: string;
   isAlertSend?: boolean;
   onbuffervalue(value: string): unknown;

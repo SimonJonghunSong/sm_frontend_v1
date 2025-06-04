@@ -73,7 +73,14 @@ export default function DeviceList() {
   const t = useTranslations();
   const {
     state: { portList, connectingPortCount },
-    func: { requestPort, forget, write, setIsDisconnected, setIsConnected },
+    func: {
+      requestPort,
+      forget,
+      write,
+      setIsDisconnected,
+      setIsConnected,
+      setIsAlreadyUnlock,
+    },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
   const { setModelName, setFwVer, setTargetCountry } = useModelInfoStore();
@@ -224,7 +231,7 @@ export default function DeviceList() {
                 onClick={(e) => {
                   e.stopPropagation();
                   const isLock = params.value.port.port.isLock;
-                  if (isLock) {
+                  if (!params.value.port.isAlreadyUnlock && isLock) {
                     imeiRef.current = params.value.port.port.imei;
                     setRemainingTime(15);
                     passwordModalToggle();
@@ -308,7 +315,7 @@ export default function DeviceList() {
             ]
           );
           setTargetCountry([]);
-          currentPort.port.isLock = false;
+          setIsAlreadyUnlock({ imei: currentPort.port.imei });
           router.push(`/device-info`);
         }
 

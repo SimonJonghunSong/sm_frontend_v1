@@ -22,6 +22,7 @@ export type SerialPortState = {
   polygonGeofenceData: string[];
   isDisconnected: boolean;
   modemVersion: string;
+  isAlreadyUnlock: boolean;
 };
 
 type SerialPortAction = {
@@ -70,6 +71,7 @@ type SerialPortAction = {
   getCircularData: ({ imei }: { imei: string }) => string[];
   setIsDisconnected: ({ imei }: { imei: string }) => void;
   setIsConnected: ({ imei }: { imei: string }) => void;
+  setIsAlreadyUnlock: ({ imei }: { imei: string }) => void;
 };
 
 export const parse = (str) => {
@@ -250,6 +252,16 @@ const useSerialStore = create(
             portList: get().portList.map((item) => {
               return item.imei === imei
                 ? { ...item, isDisconnected: false }
+                : item;
+            }),
+          };
+        }),
+      setIsAlreadyUnlock: ({ imei }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, isAlreadyUnlock: true }
                 : item;
             }),
           };
