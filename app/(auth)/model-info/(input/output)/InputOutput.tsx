@@ -12,6 +12,7 @@ import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "../../(utils)/useSendFormData";
 import EditDot from "../../(components)/EditDot";
 import SelectField from "../../(components)/SelectField";
+import InputOutputConfig from "app/(auth)/model-info/(input/output)/InputOutputConfig";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
@@ -110,6 +111,12 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
           {isDirtyFields.length > 0 && <EditDot />}
         </Stack>
       </Stack>
+
+      <InputOutputConfig
+        formData={formData}
+        onChange={onChange}
+        setFormData={setFormData}
+      />
 
       <StyledTabs
         value={tab}

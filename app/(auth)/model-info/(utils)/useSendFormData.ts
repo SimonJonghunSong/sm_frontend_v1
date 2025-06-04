@@ -20,6 +20,8 @@ export default function useSendFormData() {
     formData: { [key: string]: FormField },
     setFormData?: Dispatch<SetStateAction<{ [key: string]: FormField }>>
   ) => {
+    console.log("formData :::", formData);
+
     updateJsonDataToIDB(modelName, fwVer, targetCountry, formData);
 
     if (setFormData) {

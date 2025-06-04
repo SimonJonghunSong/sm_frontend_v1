@@ -17,6 +17,7 @@ interface SwitchFieldProps {
   isRequired?: boolean;
   isDirty?: boolean;
   isUnderbarId?: boolean;
+  isForceRender?: boolean;
 }
 
 const SwitchField = ({
@@ -28,11 +29,12 @@ const SwitchField = ({
   isRequired,
   isDirty = false,
   isUnderbarId = false,
+  isForceRender = false,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
-  if (!formData[id]) return null;
+  if (!isForceRender && !formData?.[id]) return null;
 
   return (
     <Stack
@@ -64,7 +66,7 @@ const SwitchField = ({
         checked={
           typeof customChecked === "boolean"
             ? customChecked
-            : formData[id].realValue === "01"
+            : formData?.[id]?.realValue === "01"
         }
       />
     </Stack>

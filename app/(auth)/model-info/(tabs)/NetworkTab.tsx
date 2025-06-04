@@ -31,7 +31,7 @@ export default function NetworkTab({ formData, setFormData }: Props) {
     setFormData((prev) => ({
       ...prev,
       [name]: {
-        ...prev[name],
+        ...prev?.[name],
         value: selectValue || value,
         realValue: value,
       },

@@ -21,6 +21,7 @@ interface InputFieldProps {
   customErrorMessage?: string;
   isUnderbarId?: boolean; // 1670 같은 중복으로 인해서 추가된 속성
   isDirty?: boolean;
+  isForceRender?: boolean;
 }
 
 const NumericInputField = ({
@@ -35,23 +36,24 @@ const NumericInputField = ({
   customErrorMessage,
   isUnderbarId,
   isDirty = false,
+  isForceRender = false,
 }: InputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
     Number(formData[id]?.realValue) !== 0
   );
 
-  if (!formData[id]) return null;
+  if (!isForceRender && !formData[id]) return null;
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
 
   const isMinMaxError =
     typeof FIELD_VALIDATIONS[realId].min === "number" &&
     typeof FIELD_VALIDATIONS[realId].max === "number" &&
-    (Number(formData[id].realValue) < FIELD_VALIDATIONS[realId].min ||
-      Number(formData[id].realValue) > FIELD_VALIDATIONS[realId].max);
+    (Number(formData?.[id]?.realValue) < FIELD_VALIDATIONS[realId].min ||
+      Number(formData?.[id]?.realValue) > FIELD_VALIDATIONS[realId].max);
 
-  const isRequiredError = isRequired && !formData[id].realValue;
+  const isRequiredError = isRequired && !formData?.[id]?.realValue;
 
   const hasError = isRequiredError || customError || isMinMaxError;
 
@@ -110,7 +112,7 @@ const NumericInputField = ({
         <Stack>
           <TextField
             required={isRequired}
-            value={formData[id].realValue}
+            value={formData?.[id]?.realValue}
             type="number"
             onKeyDown={(e) => {
               if (["e", "E", "+", "-"].includes(e.key)) {

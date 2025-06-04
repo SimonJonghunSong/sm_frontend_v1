@@ -44,8 +44,6 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
     });
   }, [formData]);
 
-  if (!hasFormDataFields(formData, fieldsId)) return null;
-
   const handleChange = (id: string, value: string, selectValue?: string) => {
     onChange(id, value, selectValue);
   };
@@ -115,6 +113,7 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
         <Stack gap={"24px"} flex={1}>
           <TextInputField
             id="1020"
+            style={{ width: "100%" }}
             formData={formData}
             onChange={handleChange}
             error={!/^[A-Za-z0-9\-.]*$/.test(formData["1020"]?.realValue)}
@@ -124,23 +123,29 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
                 : undefined
             }
             isDirty={isDirtyFields.includes("1020")}
+            isForceRender
           />
           <NumericInputField
             id="1021"
+            style={{ width: "100%" }}
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("1021")}
+            isForceRender
           />
         </Stack>
         <Stack gap={"24px"} flex={1}>
           <NumericInputField
             id="1022"
+            style={{ width: "100%" }}
             formData={formData}
             onChange={handleChange}
             isDirty={isDirtyFields.includes("1022")}
+            isForceRender
           />
           <TimeHMA
             id="1023"
+            style={{ width: "100%" }}
             formData={formData}
             isSwitch
             value={
@@ -156,6 +161,7 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
               }
             }}
             isDirty={isDirtyFields.includes("1023")}
+            isForceRender
           />
         </Stack>
       </Stack>
