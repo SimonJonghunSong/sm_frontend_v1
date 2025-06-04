@@ -308,6 +308,7 @@ export default function DeviceList() {
             ]
           );
           setTargetCountry([]);
+          currentPort.port.isLock = false;
           router.push(`/device-info`);
         }
 
