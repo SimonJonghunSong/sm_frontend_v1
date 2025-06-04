@@ -21,6 +21,7 @@ interface TextInputFieldProps {
   helperText?: string;
   type?: HTMLInputTypeAttribute;
   isDirty?: boolean;
+  isForceRender?: boolean;
 }
 
 const TextInputField = ({
@@ -33,6 +34,7 @@ const TextInputField = ({
   helperText,
   type = "text",
   isDirty = false,
+  isForceRender = false,
 }: TextInputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const { hiddenParameter } = useParameterStore();
@@ -40,7 +42,12 @@ const TextInputField = ({
   const [showPassword, setShowPassword] = useState(false);
   const isHiddenParameter = hiddenParameterId.includes(id);
 
-  if (!formData[id] || (isHiddenParameter && hiddenParameter)) return null;
+  if (
+    isForceRender
+      ? isHiddenParameter && hiddenParameter
+      : !formData[id] || (isHiddenParameter && hiddenParameter)
+  )
+    return null;
 
   return (
     <Stack width={"calc(50% - 8px)"} gap={"8px"} style={style}>
@@ -66,7 +73,7 @@ const TextInputField = ({
         {isDirty && <EditDot />}
       </Stack>
       <TextField
-        value={formData[id].realValue}
+        value={formData?.[id]?.realValue}
         onChange={(e) => onChange(id, e.target.value)}
         error={error}
         helperText={helperText}

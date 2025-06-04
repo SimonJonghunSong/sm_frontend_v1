@@ -1,7 +1,7 @@
 import { SetStateAction, Dispatch, useRef, useState } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
-import { Button, Stack, Tab as MuiTab, Tabs } from "@mui/material";
+import { Button, Stack, Tab as MuiTab, Tabs, Divider } from "@mui/material";
 import InputBox from "@/components/inputbox/InputBox";
 import { FormField } from "app/(auth)/device-info/page";
 import Input from "app/(auth)/device-info/(input/output)/Input";
@@ -12,6 +12,10 @@ import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import EditDot from "../../(components)/EditDot";
 import SelectField from "../../(components)/SelectField";
+import SwitchField from "app/(auth)/device-info/(components)/SwitchField";
+import TextInputField from "app/(auth)/device-info/(components)/TextInputField";
+import InputOutputConfig from "app/(auth)/device-info/(input/output)/InputOutputConfig";
+import useParameterStore from "@/utils/useParameterStore";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Input/Output"].en];
 
@@ -32,6 +36,8 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+
+  const { hiddenParameter } = useParameterStore();
 
   const [tab, setTab] = useState<"input" | "output">("input");
 
@@ -108,6 +114,14 @@ const InputOutput = ({ formData, onChange, setFormData }: Props) => {
           {isDirtyFields.length > 0 && <EditDot />}
         </Stack>
       </Stack>
+
+      {!hiddenParameter && (
+        <InputOutputConfig
+          formData={formData}
+          onChange={onChange}
+          setFormData={setFormData}
+        />
+      )}
 
       <StyledTabs
         value={tab}

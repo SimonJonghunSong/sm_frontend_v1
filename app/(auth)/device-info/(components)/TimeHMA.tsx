@@ -60,6 +60,7 @@ interface TimeHMAProps {
   hourType?: 12 | 24;
   isSwitch?: boolean;
   isDirty?: boolean;
+  isForceRender?: boolean;
 }
 
 // Utility functions
@@ -124,13 +125,15 @@ export default function TimeHMA({
   hourType = 12,
   isSwitch = false,
   isDirty = false,
+  isForceRender = false,
 }: TimeHMAProps) {
   const lang = useLangStore((state) => state.lang);
-  const [isChecked, setIsChecked] = useState(!!formData[id]?.realValue);
+  const [isChecked, setIsChecked] = useState(!!formData?.[id]?.realValue);
 
   const { hiddenParameter } = useParameterStore();
   const isHiddenParameter = hiddenParameterId.includes(id);
-  if (!formData[id] || (isHiddenParameter && hiddenParameter)) return null;
+  if (!isForceRender && !formData[id]) return null;
+  if (isHiddenParameter && hiddenParameter) return null;
 
   const hour = value?.slice(0, 2) || DEFAULT_HOUR_VALUE;
   const min = value?.slice(2, 4) || DEFAULT_MIN_VALUE;

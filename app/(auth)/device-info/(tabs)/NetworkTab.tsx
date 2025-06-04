@@ -31,11 +31,11 @@ export default function NetworkTab({ formData, setFormData }: Props) {
     setFormData((prev) => ({
       ...prev,
       [name]: {
-        ...prev[name],
+        ...prev?.[name],
         value,
-        key: prev[name].key,
+        key: prev?.[name]?.key,
         realValue: value,
-        list: prev[name].list,
+        list: prev?.[name]?.list,
         alert_id: alertId,
       },
     }));
