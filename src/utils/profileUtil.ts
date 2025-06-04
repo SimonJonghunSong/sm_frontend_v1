@@ -140,5 +140,5 @@ export async function generateFilename(
   const timestamp = getFormattedTimestamp();
   const crc16 = calculateCRC16(buffer);
 
-  return `${model}_${version}_${timestamp}_${crc16}.profile`;
+  return `${model}_${timestamp}_${version}_${crc16}.profile`;
 }
