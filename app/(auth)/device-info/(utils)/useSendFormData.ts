@@ -30,7 +30,6 @@ export default function useSendFormData() {
     setFormData?: Dispatch<SetStateAction<{ [key: string]: FormField }>>
   ) => {
     setIsLoading(true);
-    console.log("Form values:", formData);
     const sortedFormData = Object.entries(formData)
       .sort((a, b) => {
         return a[0].localeCompare(b[0]);
@@ -97,6 +96,8 @@ export default function useSendFormData() {
       const handleAlert = (event: MessageEvent) => {
         const { data } = event;
 
+        console.log("handleAlert ::::", data);
+
         const errorMessage = (data as string)
           .trim()
           .split(CR)
@@ -133,7 +134,7 @@ export default function useSendFormData() {
       setTimeout(() => {
         alertBroadcastRef.current.removeEventListener("message", handleAlert);
         currentPort.port.isAlertSend = false;
-      }, 800);
+      }, 500);
     }
 
     setTimeout(() => {
@@ -157,7 +158,7 @@ export default function useSendFormData() {
       } else {
         setIsLoading(false);
       }
-    }, 100);
+    }, 500);
   };
 
   return { sendFormData, isLoading };

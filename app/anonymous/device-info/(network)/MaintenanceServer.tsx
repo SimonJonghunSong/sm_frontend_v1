@@ -14,6 +14,7 @@ import TimeHMA from "../(components)/TimeHMA";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import hasFormDataFields from "../(utils)/hasFormDataFields";
 import useSendFormData from "../(utils)/useSendFormData";
+import useParameterStore from "@/utils/useParameterStore";
 
 interface Props {
   formData: {
@@ -36,6 +37,7 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
+  const { hiddenParameter } = useParameterStore();
 
   const isDirtyFields = useMemo(() => {
     return Object.keys(formData).filter((key) => {
@@ -74,6 +76,8 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
 
     return true;
   };
+
+  if (hiddenParameter) return null;
 
   return (
     <Form

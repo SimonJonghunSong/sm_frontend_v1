@@ -129,9 +129,9 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            error={!/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)}
+            error={!/^[A-Za-z0-9.]*$/.test(formData["1002"].realValue)}
             helperText={
-              !/^[A-Za-z0-9]*$/.test(formData["1002"].realValue)
+              !/^[A-Za-z0-9.]*$/.test(formData["1002"].realValue)
                 ? FIELD_ERRORS["alphaNumericPattern"][lang]
                 : undefined
             }

@@ -7,6 +7,7 @@ import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import useParameterStore from "@/utils/useParameterStore";
 import EditDot from "./EditDot";
+import { hiddenParameterId } from "app/(auth)/device-info/(tabs)/CommandTab";
 
 interface InputFieldProps {
   id: string;
@@ -21,7 +22,6 @@ interface InputFieldProps {
   customError?: boolean;
   customErrorMessage?: string;
   isUnderbarId?: boolean; // 1670 같은 중복으로 인해서 추가된 속성
-  isHiddenParameter?: boolean;
   isDirty?: boolean;
   isForceRender?: boolean;
 }
@@ -37,7 +37,6 @@ const NumericInputField = ({
   customError,
   customErrorMessage,
   isUnderbarId,
-  isHiddenParameter,
   isDirty,
   isForceRender = false,
 }: InputFieldProps) => {
@@ -47,6 +46,8 @@ const NumericInputField = ({
   );
 
   const { hiddenParameter } = useParameterStore();
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
   if (!isForceRender && !formData[id]) return null;
 
   if (isHiddenParameter && hiddenParameter) return null;

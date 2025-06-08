@@ -133,7 +133,7 @@ export default function useSendFormData() {
       setTimeout(() => {
         alertBroadcastRef.current.removeEventListener("message", handleAlert);
         currentPort.port.isAlertSend = false;
-      }, 800);
+      }, 500);
     }
 
     setTimeout(() => {
@@ -157,7 +157,7 @@ export default function useSendFormData() {
       } else {
         setIsLoading(false);
       }
-    }, 100);
+    }, 500);
   };
 
   return { sendFormData, isLoading };
