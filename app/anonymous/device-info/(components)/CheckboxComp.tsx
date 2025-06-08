@@ -61,19 +61,23 @@ export default function CheckboxComp({
   const values = useMemo(() => {
     // value가 없거나 잘못된 값일 때 0으로 처리
     const valueNumberDecimal = parseInt(value || "0", 16);
-    const binaryString = valueNumberDecimal
-      .toString(2)
-      .padStart(filteredOptionsString.length, "0");
+    let binaryString = valueNumberDecimal.toString(2).padStart(filteredOptionsString.length, "0");
+    // 16진수로 변환 시 뒤집혀서 처리되므로, 여기서도 뒤집어서 보여줌
+    binaryString = binaryString.split("").reverse().join("");
     return binaryString.split("");
   }, [value, filteredOptionsString.length]);
+
+  console.log("values ::::", values);
+  console.log("value ::::", value);
+  
 
   const handleAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
     const changeValues = new Array(filteredOptionsString.length).fill(
       e.target.checked ? "1" : "0"
     );
-    const changeValue = parseInt(changeValues.join(""), 2)
-      .toString(16)
-      .padStart(Math.ceil(filteredOptionsString.length / 4), "0");
+    // 16진수 변환을 위해 비트 순서를 뒤집음 (왼쪽 체크박스가 오른쪽 비트가 되도록)
+    const binaryString = [...changeValues].reverse().join("");
+    const changeValue = parseInt(binaryString, 2).toString(16).toUpperCase();
     onChange(changeValue);
   };
 
@@ -81,9 +85,9 @@ export default function CheckboxComp({
     const changeValues = values.map((item, valueIndex) =>
       valueIndex === index ? (checked ? "1" : "0") : item
     );
-    const changeValue = parseInt(changeValues.join(""), 2)
-      .toString(16)
-      .padStart(Math.ceil(filteredOptionsString.length / 4), "0");
+    // 16진수 변환을 위해 비트 순서를 뒤집음 (왼쪽 체크박스가 오른쪽 비트가 되도록)
+    const binaryString = [...changeValues].reverse().join("");
+    const changeValue = parseInt(binaryString, 2).toString(16).toUpperCase();
     onChange(changeValue);
   };
 
