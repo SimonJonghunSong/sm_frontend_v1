@@ -274,7 +274,10 @@ const useSerial = () => {
                 alertCommandRef.current = value;
               }
 
-              if (isEndOfMessage(value) && value.includes("ERR")) {
+              if (
+                isEndOfMessage(value) &&
+                alertCommandRef.current.includes("ERR")
+              ) {
                 port.isAlertSend = false;
                 alertBroadcastRef.current.postMessage(alertCommandRef.current);
                 alertCommandRef.current = null;
@@ -717,7 +720,16 @@ const useSerial = () => {
                 alertCommandRef.current = value;
               }
 
-              if (isEndOfMessage(value) && value.includes("ERR")) {
+              console.log("value ::::", value);
+              console.log(
+                "alertCommandRef.current ::::",
+                alertCommandRef.current
+              );
+
+              if (
+                isEndOfMessage(value) &&
+                alertCommandRef.current.includes("ERR")
+              ) {
                 port.isAlertSend = false;
                 alertBroadcastRef.current.postMessage(alertCommandRef.current);
                 alertCommandRef.current = null;
