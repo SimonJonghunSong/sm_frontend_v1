@@ -4,10 +4,8 @@ import { useTranslations } from "next-intl";
 import {
   Button,
   FormControl,
-  FormHelperText,
   IconButton,
   MenuItem,
-  Select,
   Stack,
   TextField,
 } from "@mui/material";
@@ -15,8 +13,6 @@ import { FormField } from "../page";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { SECTIONS } from "constants/searchField";
-import useSendFormData from "../(utils)/useSendFormData";
-import SelectField from "../(components)/SelectField";
 import DataTable from "@/components/dataTable";
 import useModal from "@/utils/useModal";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
@@ -41,6 +37,7 @@ interface Props {
   write: any;
   port: SerialPortState;
   isReady: boolean;
+  bleRegistrationMax: number;
 }
 
 const BleRegistration = ({
@@ -49,6 +46,7 @@ const BleRegistration = ({
   write,
   port,
   isReady,
+  bleRegistrationMax,
 }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -232,6 +230,16 @@ const BleRegistration = ({
     });
   };
 
+  const generateRegistrationRange = (maxCount: number) => {
+    // 00부터 maxCount-1까지의 범위 생성
+    const range = Array.from({ length: maxCount }, (_, i) =>
+      i.toString().padStart(2, "0")
+    ).join(",");
+    return range;
+  };
+
+  const range = generateRegistrationRange(bleRegistrationMax);
+
   const fetch = () => {
     port.port.onbuffervalue = (data) => {
       bleRegistrationRef.current += data;
@@ -242,7 +250,7 @@ const BleRegistration = ({
         const parts = bleRegistrationData.split(";");
         const dataParts = parts.slice(3);
         // 추출할 키 목록
-        const targetKeys = ["00", "01", "02", "03", "04"];
+        const targetKeys = range.split(",");
 
         // 결과 생성
         const result = {};
@@ -286,7 +294,7 @@ const BleRegistration = ({
     };
 
     write({
-      data: `${AT_REQ}${port.imei};41;00,01,02,03,04`,
+      data: `${AT_REQ}${port.imei};41;${range}`,
       port: port.port,
       writer: port.writer,
     });
@@ -339,6 +347,7 @@ const BleRegistration = ({
 
       {detailModal && (
         <DetailModal
+          bleRegistrationMax={bleRegistrationMax}
           onClose={() => {
             setEditRow(null);
             detailModalToggle();
@@ -374,6 +383,7 @@ function DetailModal({
   handleConfirm,
   filterNumbers,
   defaultValues,
+  bleRegistrationMax,
 }: {
   onClose: () => void;
   openErrorPopup: (
@@ -381,6 +391,7 @@ function DetailModal({
     options?: { title: string; onErrorPopupOk?: () => void }
   ) => void;
   handleConfirm: (values: string) => void;
+  bleRegistrationMax: number;
   filterNumbers: number[];
   defaultValues?: {
     point: number;
@@ -555,11 +566,11 @@ function DetailModal({
                       error={!!error}
                       helperText={error?.message}
                     >
-                      <MenuItem value={"00"}>1</MenuItem>
-                      <MenuItem value={"01"}>2</MenuItem>
-                      <MenuItem value={"02"}>3</MenuItem>
-                      <MenuItem value={"03"}>4</MenuItem>
-                      <MenuItem value={"04"}>5</MenuItem>
+                      {Array.from({ length: bleRegistrationMax }, (_, i) => (
+                        <MenuItem value={i.toString().padStart(2, "0")}>
+                          {i + 1}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 />

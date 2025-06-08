@@ -2,8 +2,8 @@ import { Dispatch, SetStateAction } from "react";
 import { FormField } from "../page";
 import { Stack } from "@mui/material";
 import { Ble, Sensor } from "../(bluetooth)/@index";
+import BleRegistration from "app/(auth)/device-info/(bluetooth)/BleRegistration";
 import { SerialPortState } from "@/src/stores/useSerialStore";
-import BleRegistration from "../(bluetooth)/BleRegistration";
 
 interface Props {
   formData: {
@@ -17,6 +17,7 @@ interface Props {
   isReady: boolean;
   write: any;
   port: SerialPortState;
+  originData: any;
 }
 
 export default function BluetoothTab({
@@ -25,7 +26,15 @@ export default function BluetoothTab({
   isReady,
   write,
   port,
+  originData,
 }: Props) {
+  const infoFields = originData.map(
+    (shit) => Object.values(shit)[0][0].info?.[0]
+  );
+
+  const bleRegistrationMax =
+    infoFields.find((shit) => shit?.tab_id === "41")?.max * 1 || 0;
+
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -53,6 +62,7 @@ export default function BluetoothTab({
         isReady={isReady}
         write={write}
         port={port}
+        bleRegistrationMax={bleRegistrationMax}
       />
 
       <Sensor
