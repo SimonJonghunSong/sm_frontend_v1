@@ -386,6 +386,7 @@ export default function DeviceInfoPage() {
       case "Bluetooth":
         return (
           <BluetoothTab
+            originData={originData}
             formData={formData}
             setFormData={setFormData}
             isReady={isReady && isFechedPackage && isDeviceInfoFetched}

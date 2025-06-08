@@ -314,6 +314,7 @@ export default function DeviceInfoPage() {
             isReady={isReady && isFechedPackage && isDeviceInfoFetched}
             write={write}
             port={currentPort}
+            originData={originData}
           />
         );
 
