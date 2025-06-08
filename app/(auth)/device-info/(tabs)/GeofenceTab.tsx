@@ -96,16 +96,25 @@ export default function GeofenceTab({
     (item) => item["Polygon Geofence"]
   );
 
-  const circularGeofenceArray = circularGeofenceObj?.["Circular Geofence"] || [];
+  const circularGeofenceArray =
+    circularGeofenceObj?.["Circular Geofence"] || [];
   const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"] || [];
-  
+
   const circularGeofenceKeys: string[] = (circularGeofenceArray || [])?.map(
     (item) => Object.keys(item)[0]
   );
 
+  const outputActiveList = circularGeofenceArray.find(
+    (item) => item["OUT_ACT"]
+  )?.["OUT_ACT"]?.[0]?.list?.[0];
+
+  const outputActiveListKeys = (Object.values(outputActiveList) || [])?.map(
+    (list: string) => list.split(";")[0]
+  );
+
   const polygonGeofenceInfo: { [key: string]: { [key: string]: string[] } }[] =
     (polygonGeofenceArray || [])
-    ?.find((item) => Object.keys(item)[0] === "Set Geofence Parameter")
+      ?.find((item) => Object.keys(item)[0] === "Set Geofence Parameter")
       ?.["Set Geofence Parameter"].find(
         (item) => Object.keys(item)[0] === "sub"
       )?.["sub"];
@@ -146,6 +155,7 @@ export default function GeofenceTab({
     if (type === "add") {
       return (
         <AddGeofence
+          outputActiveListKeys={outputActiveListKeys}
           formData={formData}
           currentPort={port}
           write={write}
@@ -185,6 +195,7 @@ export default function GeofenceTab({
               currentPort={port}
               write={write}
               circularGeofenceKeys={circularGeofenceKeys}
+              outputActiveListKeys={outputActiveListKeys}
               onSuccess={() => setMustFetch(true)}
               onCancel={() => setType("list")}
             />

@@ -376,7 +376,7 @@ const Geofence = ({
   useEffect(() => {
     setTimeout(() => {
       setIsFullLoading(false);
-    }, 15000);
+    }, 30000);
   }, []);
 
   return (

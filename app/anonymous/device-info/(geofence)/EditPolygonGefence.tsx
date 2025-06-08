@@ -197,7 +197,6 @@ const EditPolygonGeofence = ({
         polygonGeofenceKeys.includes("Speed Limit Debounce")
           ? speedLimitDebounceHex
           : "";
-
       currentPort.port.oneditsuccess = () => {
         onSuccess();
         onCancel();

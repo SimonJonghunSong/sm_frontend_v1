@@ -41,6 +41,7 @@ interface Props {
     writer: WritableStreamDefaultWriter<string>;
   }) => Promise<Boolean>;
   circularGeofenceKeys: string[];
+  outputActiveListKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
 }
@@ -139,6 +140,7 @@ const EditCircularGeofence = ({
   currentPort,
   write,
   circularGeofenceKeys,
+  outputActiveListKeys,
   onSuccess,
   onCancel,
 }: Props) => {
@@ -255,13 +257,25 @@ const EditCircularGeofence = ({
       return circleState.antiJamming ? "01" : "00";
     };
 
+    const getSpeedLimitDebounceHexString = () => {
+      if (
+        !formData["9002"] ||
+        formData["9002"].realValue === "00" ||
+        !circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")
+      )
+        return "";
+
+      return "0000"; // 01로 하면 무조건 에러 남
+    };
+
     const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
     const outputActiveHexString = getOutputActiveHexString();
     const outputActiveDelayHexString = getOutputActiveDelayHexString();
     const buzzerSpeedLimitHexString = getBuzzerSpeedLimitHexString();
     const antiJammingHexString = getAntiJammingHexString();
+    const speedLimitDebounceHexString = getSpeedLimitDebounceHexString();
 
-    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}`;
+    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
 
     currentPort.port.onbuffervalue = (value) => {
       buffervalueRef.current += value;
@@ -329,24 +343,36 @@ const EditCircularGeofence = ({
                 })
               }
             >
-              <MenuItem value={"00"}>
-                {t("account.add_account_pop_up.select")}
-              </MenuItem>
-              <MenuItem value={"01"}>
-                {t("configuration.geofence.output_1")}
-              </MenuItem>
-              <MenuItem value={"02"}>
-                {t("configuration.geofence.output_2")}
-              </MenuItem>
-              <MenuItem value={"03"}>
-                {t("configuration.geofence.output_3")}
-              </MenuItem>
-              <MenuItem value={"04"}>
-                {t("configuration.geofence.output_4")}
-              </MenuItem>
-              <MenuItem value={"05"}>
-                {t("configuration.geofence.all_outputs")}
-              </MenuItem>
+              {outputActiveListKeys.includes("0") && (
+                <MenuItem value={"00"}>
+                  {t("account.add_account_pop_up.select")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("1") && (
+                <MenuItem value={"01"}>
+                  {t("configuration.geofence.output_1")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("2") && (
+                <MenuItem value={"02"}>
+                  {t("configuration.geofence.output_2")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("3") && (
+                <MenuItem value={"03"}>
+                  {t("configuration.geofence.output_3")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("4") && (
+                <MenuItem value={"04"}>
+                  {t("configuration.geofence.output_4")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("5") && (
+                <MenuItem value={"05"}>
+                  {t("configuration.geofence.all_outputs")}
+                </MenuItem>
+              )}
             </Select>
           )}
         </Stack>

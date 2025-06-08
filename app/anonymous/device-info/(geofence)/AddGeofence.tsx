@@ -51,8 +51,11 @@ interface Props {
   circularGeofenceMax: number;
   circularGeofenceKeys: string[];
   polygonGeofenceKeys: string[];
+  outputActiveListKeys: string[];
   onSuccess?: () => void;
   onCancel: () => void;
+  polygonMinId: number;
+  circularMinId: number;
 }
 
 const tooltipText = {
@@ -156,6 +159,7 @@ const polygonReducer = (state: any, action: any) => {
 };
 
 const AddGeofence = ({
+  outputActiveListKeys,
   formData,
   currentPort,
   write,
@@ -165,6 +169,8 @@ const AddGeofence = ({
   polygonGeofenceKeys,
   onSuccess,
   onCancel,
+  polygonMinId,
+  circularMinId,
 }: Props) => {
   const buffervalueRef = useRef<string>("");
   const [typeFilter, setTypeFilter] = useState<"Polygon" | "Circular">(
@@ -172,7 +178,7 @@ const AddGeofence = ({
   );
 
   const [circleState, circleDispatch] = useReducer(circleReducer, {
-    id: 1,
+    id: circularMinId,
     enterAlert: false,
     exitAlert: false,
     showOutputActive: false,
@@ -183,7 +189,7 @@ const AddGeofence = ({
     antiJamming: false,
   });
   const [polygonState, polygonDispatch] = useReducer(polygonReducer, {
-    id: 1,
+    id: polygonMinId,
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
@@ -372,24 +378,36 @@ const AddGeofence = ({
                 })
               }
             >
-              <MenuItem value={"00"}>
-                {t("account.add_account_pop_up.select")}
-              </MenuItem>
-              <MenuItem value={"01"}>
-                {t("configuration.geofence.output_1")}
-              </MenuItem>
-              <MenuItem value={"02"}>
-                {t("configuration.geofence.output_2")}
-              </MenuItem>
-              <MenuItem value={"03"}>
-                {t("configuration.geofence.output_3")}
-              </MenuItem>
-              <MenuItem value={"04"}>
-                {t("configuration.geofence.output_4")}
-              </MenuItem>
-              <MenuItem value={"05"}>
-                {t("configuration.geofence.all_outputs")}
-              </MenuItem>
+              {outputActiveListKeys.includes("0") && (
+                <MenuItem value={"00"}>
+                  {t("account.add_account_pop_up.select")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("1") && (
+                <MenuItem value={"01"}>
+                  {t("configuration.geofence.output_1")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("2") && (
+                <MenuItem value={"02"}>
+                  {t("configuration.geofence.output_2")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("3") && (
+                <MenuItem value={"03"}>
+                  {t("configuration.geofence.output_3")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("4") && (
+                <MenuItem value={"04"}>
+                  {t("configuration.geofence.output_4")}
+                </MenuItem>
+              )}
+              {outputActiveListKeys.includes("5") && (
+                <MenuItem value={"05"}>
+                  {t("configuration.geofence.all_outputs")}
+                </MenuItem>
+              )}
             </Select>
           )}
         </Stack>

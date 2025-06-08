@@ -9,6 +9,19 @@ import {
 } from "../(geofence)/@index";
 import { SerialPortState } from "@/src/stores/useSerialStore";
 import EditPolygonGeofence from "../(geofence)/EditPolygonGefence";
+import {
+  getCircularGeofenceData,
+  getPolygonGeofenceData,
+} from "@/src/hooks/useSerial/utils";
+
+function getMinMissingGroupId(array: { groupId: number }[]): number {
+  const ids = new Set(array.map((item) => item.groupId));
+  let i = 1;
+  while (ids.has(i)) {
+    i++;
+  }
+  return i;
+}
 
 interface Props {
   formData: {
@@ -58,6 +71,15 @@ export default function GeofenceTab({
     }));
   };
 
+  const polygonList = port?.polygonGeofenceData || [];
+  const circularList = port?.circularGeofenceData || [];
+
+  const polygonData = getPolygonGeofenceData(polygonList);
+  const circularData = getCircularGeofenceData(circularList);
+
+  const polygonMinId = getMinMissingGroupId(polygonData);
+  const circularMinId = getMinMissingGroupId(circularData);
+
   const infoFields = originData.map(
     (shit) => Object.values(shit)[0][0].info?.[0]
   );
@@ -73,17 +95,26 @@ export default function GeofenceTab({
   const polygonGeofenceObj = originData.find(
     (item) => item["Polygon Geofence"]
   );
+
   const circularGeofenceArray =
     circularGeofenceObj?.["Circular Geofence"] || [];
   const polygonGeofenceArray = polygonGeofenceObj?.["Polygon Geofence"] || [];
 
-  const circularGeofenceKeys: string[] = circularGeofenceArray.map(
+  const circularGeofenceKeys: string[] = (circularGeofenceArray || [])?.map(
     (item) => Object.keys(item)[0]
   );
 
+  const outputActiveList = circularGeofenceArray.find(
+    (item) => item["OUT_ACT"]
+  )?.["OUT_ACT"]?.[0]?.list?.[0];
+
+  const outputActiveListKeys = (Object.values(outputActiveList) || [])?.map(
+    (list: string) => list.split(";")[0]
+  );
+
   const polygonGeofenceInfo: { [key: string]: { [key: string]: string[] } }[] =
-    polygonGeofenceArray
-      .find((item) => Object.keys(item)[0] === "Set Geofence Parameter")
+    (polygonGeofenceArray || [])
+      ?.find((item) => Object.keys(item)[0] === "Set Geofence Parameter")
       ?.["Set Geofence Parameter"].find(
         (item) => Object.keys(item)[0] === "sub"
       )?.["sub"];
@@ -124,6 +155,7 @@ export default function GeofenceTab({
     if (type === "add") {
       return (
         <AddGeofence
+          outputActiveListKeys={outputActiveListKeys}
           formData={formData}
           currentPort={port}
           write={write}
@@ -133,6 +165,8 @@ export default function GeofenceTab({
           circularGeofenceKeys={circularGeofenceKeys}
           polygonGeofenceKeys={polygonGeofenceKeys}
           onCancel={() => setType("list")}
+          polygonMinId={polygonMinId}
+          circularMinId={circularMinId}
         />
       );
     }
@@ -161,6 +195,7 @@ export default function GeofenceTab({
               currentPort={port}
               write={write}
               circularGeofenceKeys={circularGeofenceKeys}
+              outputActiveListKeys={outputActiveListKeys}
               onSuccess={() => setMustFetch(true)}
               onCancel={() => setType("list")}
             />

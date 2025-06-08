@@ -371,7 +371,7 @@ const Geofence = ({
   useEffect(() => {
     setTimeout(() => {
       setIsFullLoading(false);
-    }, 15000);
+    }, 30000);
   }, []);
 
   return (
@@ -401,12 +401,16 @@ const Geofence = ({
               sx={{ minWidth: 160 }}
             >
               <MenuItem value={"All"}>{t("configuration.driver.all")}</MenuItem>
-              <MenuItem value={"Polygon"}>
-                {t("configuration.geofence.polygon")}
-              </MenuItem>
-              <MenuItem value={"Circular"}>
-                {t("configuration.geofence.circular")}
-              </MenuItem>
+              {polygonGeofenceMax !== 0 && (
+                <MenuItem value={"Polygon"}>
+                  {t("configuration.geofence.polygon")}
+                </MenuItem>
+              )}
+              {circularGeofenceMax !== 0 && (
+                <MenuItem value={"Circular"}>
+                  {t("configuration.geofence.circular")}
+                </MenuItem>
+              )}
             </Select>
 
             <Button
