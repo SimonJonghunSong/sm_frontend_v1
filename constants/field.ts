@@ -5400,11 +5400,11 @@ export const FIELD_VALIDATIONS = {
     title: {
       en: "Towing Mode",
       pt: "Modo de Reboque",
-      es: "Modo de Remolque",
+      es: "Modo de Reboque",
     },
     tooltip: {
       en: "The mode to be assigned to Towing Mode.",
-      es: "El modo que se asignará al Modo de Remolque.",
+      es: "El modo que se asignará al Modo de Reboque.",
       pt: "O modo a ser atribuído ao Modo de Reboque.",
     },
     min: null,
@@ -16027,7 +16027,7 @@ export const FIELD_VALIDATIONS = {
     },
     tooltip: {
       en: "Interval for transmitting messages to LoRaWAN in Towing mode.\r\n• Range : 0~65,535\r\n• Default : 10",
-      es: "Intervalo para transmitir mensajes a LoRaWAN en modo de remolque.\r\n• Rango: 0~65,535\r\n• Predeterminado: 10",
+      es: "Intervalo para transmitir mensajes a LoRaWAN en Modo de Reboque.\r\n• Rango: 0~65,535\r\n• Predeterminado: 10",
       pt: "Intervalo para transmissão de mensagens para LoRaWAN no modo Reboque.\r\n• Intervalo: 0~65.535\r\n• Padrão: 10",
     },
     min: 0,

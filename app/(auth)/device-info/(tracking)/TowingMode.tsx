@@ -28,7 +28,7 @@ interface Props {
 const tooltipText = {
   en: "Device will report messages in Towing Mode.\n• Default : Off",
   ps: "O dispositivo reportará mensagens no Modo de Reboque.\n• Padrão : Desativado",
-  es: "El dispositivo informará mensajes en Modo de Remolque.\n• Predeterminado: Desactivado",
+  es: "El dispositivo informará mensajes en Modo de Reboque.\n• Predeterminado: Desactivado",
 };
 
 const TowingMode = ({ formData, onChange, setFormData }: Props) => {

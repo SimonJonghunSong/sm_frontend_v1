@@ -125,7 +125,7 @@ export const SECTIONS = {
   Power: {
     en: "Power",
     es: "Potencia",
-    pt: "Potência",
+    pt: "Parâmetros de tensão",
   },
   TdiOdometer: {
     en: "Tdi Odometer",
@@ -279,7 +279,7 @@ export const SECTIONS = {
   },
   TowingMode: {
     en: "Towing Mode",
-    es: "Modo de Remolque",
+    es: "Modo de Reboque",
     pt: "Modo de Remolque",
   },
 
