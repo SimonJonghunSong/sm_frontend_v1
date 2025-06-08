@@ -46,8 +46,6 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
     );
   });
 
-  // if (hiddenParameter) return null;
-
   const handleChange = (id: string, value: string) => {
     onChange(id, value);
   };
@@ -76,6 +74,8 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
 
     return true;
   };
+
+  if (hiddenParameter) return null;
 
   return (
     <Form
