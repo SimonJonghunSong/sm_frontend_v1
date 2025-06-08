@@ -8665,14 +8665,6 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "00",
-        label: {
-          en: "Disable",
-          es: "Disable",
-          pt: "Disable",
-        },
-      },
-      {
         value: "01",
         label: {
           en: "Deep Sleep Mode",

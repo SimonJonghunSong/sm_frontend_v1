@@ -121,7 +121,7 @@ const Power = ({ formData, onChange, setFormData, originData }: Props) => {
         <Stack gap={"24px"} flex={1}>
           <SelectField
             id="1930"
-            isSwitch
+            isSwitch={isPossibleDisable}
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
