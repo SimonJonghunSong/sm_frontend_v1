@@ -80,6 +80,7 @@ export default function DeviceList() {
       setIsDisconnected,
       setIsConnected,
       setIsAlreadyUnlock,
+      setPassword: setPasswordFunc,
     },
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
@@ -231,12 +232,26 @@ export default function DeviceList() {
                 onClick={(e) => {
                   e.stopPropagation();
                   const isLock = params.value.port.port.isLock;
+
+                  if (
+                    isLock &&
+                    params.value.port.isAlreadyUnlock &&
+                    params.value.port.password
+                  ) {
+                    write({
+                      data: `AT^$PSTUPD;${params.value.port.password}`,
+                      writer: params.value.port.writer,
+                      port: params.value.port.port,
+                    });
+                  }
+
                   if (!params.value.port.isAlreadyUnlock && isLock) {
                     imeiRef.current = params.value.port.port.imei;
                     setRemainingTime(15);
                     passwordModalToggle();
                     return;
                   }
+
                   setImei(params.value.port.port.imei);
                   resetTab();
                   setModelName(params.value.port.port.modelinfo.split("_")[0]);
@@ -300,7 +315,13 @@ export default function DeviceList() {
 
     currentPort.port.onbuffervalue = (value) => {
       bufferRef.current += value;
-      if (value.includes(CR)) {
+      if (
+        value.includes(CR) ||
+        bufferRef.current.trim() === "AT^$PST;UPD;2" ||
+        bufferRef.current.trim() === "AT^$PST;UPD;1"
+      ) {
+        currentPort.port.onbuffervalue = null;
+
         if (bufferRef.current.trim() === "AT^$PST;UPD;2") {
           toggle();
         }
@@ -316,11 +337,14 @@ export default function DeviceList() {
           );
           setTargetCountry([]);
           setIsAlreadyUnlock({ imei: currentPort.port.imei });
+          setPasswordFunc({
+            imei: currentPort.port.imei,
+            password: password,
+          });
           router.push(`/device-info`);
         }
 
         bufferRef.current = "";
-        currentPort.port.onbuffervalue = null;
       }
     };
 

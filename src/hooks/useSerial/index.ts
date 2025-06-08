@@ -81,6 +81,7 @@ const useSerial = () => {
     setIsDisconnected,
     setIsConnected,
     setIsAlreadyUnlock,
+    setPassword,
   } = useSerialStore();
 
   const killAllPort = () => {
@@ -416,6 +417,7 @@ const useSerial = () => {
                           isDisconnected: false,
                           modemVersion: "",
                           isAlreadyUnlock: false,
+                          password: "",
                         });
                         port.ispackagecountfetching = true;
                         write({
@@ -857,6 +859,7 @@ const useSerial = () => {
                           isDisconnected: false,
                           modemVersion: "",
                           isAlreadyUnlock: false,
+                          password: "",
                         });
                         if (port.isLock) {
                           port.ispackagecountfetching = true;
@@ -1312,6 +1315,7 @@ const useSerial = () => {
       setIsDisconnected,
       setIsConnected,
       setIsAlreadyUnlock,
+      setPassword,
     },
   };
 };

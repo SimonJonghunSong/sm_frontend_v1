@@ -23,6 +23,7 @@ export type SerialPortState = {
   isDisconnected: boolean;
   modemVersion: string;
   isAlreadyUnlock: boolean;
+  password?: string;
 };
 
 type SerialPortAction = {
@@ -72,6 +73,7 @@ type SerialPortAction = {
   setIsDisconnected: ({ imei }: { imei: string }) => void;
   setIsConnected: ({ imei }: { imei: string }) => void;
   setIsAlreadyUnlock: ({ imei }: { imei: string }) => void;
+  setPassword: ({ imei, password }: { imei: string; password: string }) => void;
 };
 
 export const parse = (str) => {
@@ -262,6 +264,16 @@ const useSerialStore = create(
             portList: get().portList.map((item) => {
               return item.imei === imei
                 ? { ...item, isAlreadyUnlock: true }
+                : item;
+            }),
+          };
+        }),
+      setPassword: ({ imei, password }) =>
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return item.imei === imei
+                ? { ...item, password: password }
                 : item;
             }),
           };
