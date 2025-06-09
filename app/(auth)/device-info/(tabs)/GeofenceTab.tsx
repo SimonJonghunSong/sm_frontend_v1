@@ -104,9 +104,9 @@ export default function GeofenceTab({
     (item) => Object.keys(item)[0]
   );
 
-  const outputActiveList = circularGeofenceArray.find(
-    (item) => item["OUT_ACT"]
-  )?.["OUT_ACT"]?.[0]?.list?.[0];
+  const outputActiveList =
+    circularGeofenceArray.find((item) => item["OUT_ACT"])?.["OUT_ACT"]?.[0]
+      ?.list?.[0] || {};
 
   const outputActiveListKeys = (Object.values(outputActiveList) || [])?.map(
     (list: string) => list.split(";")[0]
