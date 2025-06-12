@@ -348,7 +348,31 @@ export default function Model() {
         }
       }) || [];
 
-    const tabs = records.reduce((acc, cur) => {
+    const tabs = records.filter(({ target_country }) => {
+      if (targetCountry === "usa") {
+        return target_country.includes("USA");
+      }
+
+      if (targetCountry === "brasil") {
+        return target_country.includes("Brazil");
+      }
+
+      if (targetCountry === "méxico") {
+        return target_country.includes("Mexico");
+      }
+
+      if (targetCountry === "europe") {
+        return target_country.includes("Europe");
+      }
+    })
+    // text field search 필터 추가
+    .filter((item) => {
+      return item.dev_name.toLowerCase().includes(filterSearch.toLowerCase());
+    })
+    // Hide 숨기기
+    .filter((item) => {
+      return !item.hide;
+    }).reduce((acc, cur) => {
       const supportedFeatures = cur.supported_features;
 
       supportedFeatures.forEach((item) => {
@@ -370,7 +394,7 @@ export default function Model() {
             setSelectedTab("");
           }}
         >
-          All({records.length})
+          All({records.filter(item => item.dev_name.toLowerCase().includes(filterSearch.toLowerCase())).filter(item => !item.hide).length})
         </span>
         {Object.entries(tabs).map(([key, value]) => (
           <span
