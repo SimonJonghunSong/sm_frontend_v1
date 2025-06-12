@@ -139,54 +139,54 @@ export default function DeviceList() {
         return <>{params.value}</>;
       },
     },
-    {
-      field: "col5",
-      headerName: t("device.device_list.connection"),
-      flex: 1,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => {
-        if (params.id === "skeleton") {
-          return <RowSkeleton />;
-        }
-        return params.value ? (
-          !params.value.port.isDisconnected ? (
-            <Button
-              variant="outlined"
-              color="secondary"
-              sx={{ width: "120px" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsDisconnected({ imei: params.value.port.port.imei });
-              }}
-            >
-              {t("device.device_list.disconnect")}
-            </Button>
-          ) : (
-            <Button
-              variant="contained"
-              color="secondary"
-              sx={{ width: "120px" }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setIsConnected({ imei: params.value.port.port.imei });
-              }}
-            >
-              {t("device.device_list.connect")}
-            </Button>
-          )
-        ) : (
-          <Button
-            variant="outlined"
-            color="secondary"
-            sx={{ width: "120px" }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            Device detached
-          </Button>
-        );
-      },
-    },
+    // {
+    //   field: "col5",
+    //   headerName: t("device.device_list.connection"),
+    //   flex: 1,
+    //   headerAlign: "center",
+    //   align: "center",
+    //   renderCell: (params) => {
+    //     if (params.id === "skeleton") {
+    //       return <RowSkeleton />;
+    //     }
+    //     return params.value ? (
+    //       !params.value.port.isDisconnected ? (
+    //         <Button
+    //           variant="outlined"
+    //           color="secondary"
+    //           sx={{ width: "120px" }}
+    //           onClick={(e) => {
+    //             e.stopPropagation();
+    //             setIsDisconnected({ imei: params.value.port.port.imei });
+    //           }}
+    //         >
+    //           {t("device.device_list.disconnect")}
+    //         </Button>
+    //       ) : (
+    //         <Button
+    //           variant="contained"
+    //           color="secondary"
+    //           sx={{ width: "120px" }}
+    //           onClick={(e) => {
+    //             e.stopPropagation();
+    //             setIsConnected({ imei: params.value.port.port.imei });
+    //           }}
+    //         >
+    //           {t("device.device_list.connect")}
+    //         </Button>
+    //       )
+    //     ) : (
+    //       <Button
+    //         variant="outlined"
+    //         color="secondary"
+    //         sx={{ width: "120px" }}
+    //         onClick={(e) => e.stopPropagation()}
+    //       >
+    //         Device detached
+    //       </Button>
+    //     );
+    //   },
+    // },
     {
       field: "col6",
       headerName: t("device.device_list.configuration"),
