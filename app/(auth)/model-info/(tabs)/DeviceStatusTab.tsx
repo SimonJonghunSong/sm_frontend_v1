@@ -43,7 +43,6 @@ export default function DeviceStatusTab({
           />
         </div>
         <div style={{ flex: 1 }}>
-          <CellularInformation />
         </div>
       </Stack>
     </Stack>
