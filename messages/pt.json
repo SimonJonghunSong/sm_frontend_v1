@@ -526,9 +526,10 @@
       "system": "Sistema",
       "report": "Relatório",
       "tracking": "Rastreamento",
-      "input/output(i/o)": "Entrada/Saída (I/O)",
+      "input_output_io": "Entrada/Saída (I/O)",
       "geofence": "Geofence",
       "ble": "BLE",
+      "bluetooth": "Bluetooth",
       "accessories": "Acessórios",
       "rf": "RF",
       "commands": "Comandos",
@@ -536,7 +537,8 @@
       "edit_profile": "Editar Perfil",
       "show_hidden_parameters": "Mostrar Parâmetros Ocultos",
       "delete_model": "Excluir Modelo",
-      "f/w_update": "Atualização de F/W"
+      "f/w_update": "Atualização de F/W",
+      "driver": "Motorista"
     },
     "search_bar": {
       "sections": "Seções",
@@ -1763,6 +1765,27 @@
       }
     }
   },
+   "device_information": {
+    "model_name": "Nome do Modelo",
+    "fw_version": "Versão do F/W",
+    "modem_version": "Versão do Modem",
+    "ble_version": "Versão do BLE",
+    "gnss_version": "Versão do GNSS",
+    "backup_battery_level": "Nível da Bateria de Backup",
+    "wifi_version": "Versão do Wi-Fi",
+    "mcu_version": "Versão do MCU",
+    "rtc_time": "Hora RTC",
+    "operating_time": "Tempo de Operação",
+    "battery_activation_time": "Tempo de Ativação de Bateria",
+    "battery_activation_log": "Registro de Ativação de Bateria",
+    "gnss_state": "Estado de GNSS",
+    "wwan_state": "Estado de WWAN",
+    "reboot": "Reiniciar",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "angle": "Ângulo",
+    "speed": "Velocidade"
+   },
   "error": {
     "invalid_email_format": "Formato de e-mail inválido.",
     "At_least_8_characters": "Deve ter pelo menos 8 caracteres",

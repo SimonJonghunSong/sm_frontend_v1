@@ -45,6 +45,7 @@ import { ConstructionOutlined } from "@mui/icons-material";
 import { useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
 import EditProfileTab from "./(tabs)/EditProfileTab";
+import { useTranslations } from "next-intl";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -199,6 +200,8 @@ const extractCommandData = (originData: any[]) => {
 };
 
 export default function DeviceInfoPage() {
+
+  const t  = useTranslations();
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   // data
@@ -548,6 +551,7 @@ export default function DeviceInfoPage() {
             onClick: handleTabChange,
             tab,
             exclude: excludeMenus,
+            t
           })}
         />
         <Stack flex={1}>

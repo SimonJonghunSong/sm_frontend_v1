@@ -537,9 +537,10 @@
       "system": "System",
       "report": "Report",
       "tracking": "Tracking",
-      "input/output(i/o)": "Input/Output(I/O)",
+      "input_output_io": "Input/Output(I/O)",
       "geofence": "Geofence",
       "ble": "BLE",
+      "bluetooth": "Bluetooth",
       "accessories": "Accessories",
       "rf": "RF",
       "commands": "Commands",
@@ -547,7 +548,8 @@
       "edit_profile": "Edit Profile",
       "show_hidden_parameters": "Show Hidden Parameters",
       "delete_model": "Delete Model",
-      "f/w_update": "F/W Update"
+      "f/w_update": "F/W Update",
+      "driver": "Driver"
     },
     "search_bar": {
       "sections": "Sections",
@@ -1792,6 +1794,27 @@
         "saved_successfully!": "Saved successfully!"
       }
     }
+  },
+  "device_information": {
+    "model_name": "Model Name",
+    "fw_version": "F/W Version",
+    "modem_version": "Modem Version",
+    "ble_version": "BLE Version",
+    "gnss_version": "GNSS Version",
+    "backup_battery_level": "Backup Battery Level",
+    "wifi_version": "Wi-Fi Version",
+    "mcu_version": "MCU Version",
+    "rtc_time": "RTC Time",
+    "operating_time": "Operating Time",
+    "battery_activation_time": "Battery Activation Time",
+    "battery_activation_log": "Battery Activation Log",
+    "gnss_state": "GNSS State",
+    "wwan_state": "WWAN State",
+    "reboot": "Reboot",
+    "latitude": "Latitude",
+    "longitude": "Longitude",
+    "angle": "Angle",
+    "speed": "Speed"
   },
   "error": {
     "invalid_email_format": "Invalid email format.",
