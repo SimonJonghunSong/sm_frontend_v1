@@ -23,7 +23,7 @@
     "table-message": {
       "no-operation-logs-yet": "Aún no hay registros de operaciones."
     },
-    "save": "Ahorrar",
+    "save": "Guardar",
     "send_success": "Enviado con éxito!",
     "save_success": "¡Guardado con éxito!"
   },
@@ -290,7 +290,7 @@
       "all_required_fields_have_not_been_filled_out": {
         "": "No se han completado todos los campos requeridos."
       },
-      "save": "Ahorrar",
+      "save": "Guardar",
       "features-item": {
         "basic": "Básico",
         "advanced": "Avanzado",
