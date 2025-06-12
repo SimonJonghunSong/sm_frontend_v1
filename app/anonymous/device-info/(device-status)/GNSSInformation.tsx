@@ -3,6 +3,7 @@ import { Box, Stack } from "@mui/material";
 import { SECTIONS } from "constants/searchField";
 import styled from "styled-components";
 import Maps from "@/components/Map";
+import { useTranslations } from "next-intl";
 
 interface Props {
   lat: number;
@@ -12,6 +13,7 @@ interface Props {
 }
 
 export default function GNSSInformation({ lat, lng }: Props) {
+  const t = useTranslations();
   const { lang } = useLangStore();
   return (
     <Container>
@@ -43,19 +45,19 @@ export default function GNSSInformation({ lat, lng }: Props) {
           />
         </Box>
         <FieldItem>
-          <FieldLabel>Latitude</FieldLabel>
+          <FieldLabel>{t("device_information.latitude")}</FieldLabel>
           <FieldValue>{lat}</FieldValue>
         </FieldItem>
         <FieldItem>
-          <FieldLabel>Longitude</FieldLabel>
+          <FieldLabel>{t("device_information.longitude")}</FieldLabel>
           <FieldValue>{lng}</FieldValue>
         </FieldItem>
         <FieldItem>
-          <FieldLabel>Angle</FieldLabel>
+          <FieldLabel>{t("device_information.angle")}</FieldLabel>
           <FieldValue>N/A</FieldValue>
         </FieldItem>
         <FieldItem>
-          <FieldLabel>Speed</FieldLabel>
+          <FieldLabel>{t("device_information.speed")}</FieldLabel>
           <FieldValue>N/A</FieldValue>
         </FieldItem>
       </Stack>

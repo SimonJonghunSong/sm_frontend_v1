@@ -547,6 +547,7 @@ export default function DeviceInfoPage() {
             onClick: handleTabChange,
             tab,
             exclude: excludeMenus,
+            t
           })}
         />
         <Stack flex={1}>

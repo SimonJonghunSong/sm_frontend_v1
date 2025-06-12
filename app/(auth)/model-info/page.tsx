@@ -40,6 +40,7 @@ import { uploadProfile } from "@/src/api/services/profile";
 import { useMutation } from "@tanstack/react-query";
 import EditProfileTab from "app/(auth)/model-info/(tabs)/EditProfileTab";
 import GeofenceTab from "./(tabs)/GeofenceTab";
+import { useTranslations } from "next-intl";
 const SCROLL_TOP_OFFSET = 140;
 
 export type AssignItem = {
@@ -263,6 +264,7 @@ const extractCommandData = (originData: any[]) => {
 };
 
 export default function DeviceInfoPage() {
+  const t = useTranslations();
   const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState<string>("");
 
@@ -664,6 +666,7 @@ export default function DeviceInfoPage() {
             onClick: handleTabChange,
             tab,
             exclude: excludeMenus,
+            t
           })}
         />
         <Stack flex={1}>

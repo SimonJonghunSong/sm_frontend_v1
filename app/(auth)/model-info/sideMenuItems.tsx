@@ -14,63 +14,65 @@ export const sideMenuItems = ({
   onClick,
   tab,
   exclude = [],
+  t
 }: {
   onClick: (tab: string) => void;
   tab: string;
   exclude?: string[];
+  t: (key: string) => string;
 }) =>
   [
     {
-      name: "Device Status",
+      name: t("configuration.side_bar.device_status"),
       href: "#",
       isActive: tab === "DeviceStatus",
       icon: () => <StackedBarChartOutlinedIcon />,
       onClick: () => onClick("DeviceStatus"),
     },
     {
-      name: "Network",
+      name: t("configuration.side_bar.network"),
       href: "#",
       isActive: tab === "Network",
       icon: () => <WifiOutlinedIcon />,
       onClick: () => onClick("Network"),
     },
     {
-      name: "System",
+      name: t("configuration.side_bar.system"),
       href: "#",
       isActive: tab === "System",
       icon: () => <SettingsApplicationsOutlinedIcon />,
       onClick: () => onClick("System"),
     },
     {
-      name: "Report",
+      name: t("configuration.side_bar.report"),
       href: "#",
       isActive: tab === "Report",
       icon: () => <InsertChartOutlinedIcon />,
       onClick: () => onClick("Report"),
     },
     {
-      name: "Accessories",
+      name: t("configuration.side_bar.accessories"),
       href: "#",
       isActive: tab === "Accessories",
       icon: () => <FlareOutlinedIcon />,
       onClick: () => onClick("Accessories"),
     },
     {
-      name: "Input/Output(I/O)",
+      name: t("configuration.side_bar.input_output_io"),
       href: "#",
       isActive: tab === "Input/Output(I/O)",
       icon: () => <CompareArrowsOutlinedIcon />,
       onClick: () => onClick("Input/Output(I/O)"),
     },
     {
-      name: "Geofence",
+      name: t("configuration.side_bar.geofence"),
       href: "#",
       isActive: tab === "Geofence",
       icon: () => <HexagonOutlinedIcon />,
       onClick: () => onClick("Geofence"),
     },
     {
-      name: "Tracking",
+      name: t("configuration.side_bar.tracking"),
       href: "#",
       isActive: tab === "Tracking",
       icon: () => <PinDropOutlinedIcon />,
@@ -84,21 +86,21 @@ export const sideMenuItems = ({
     //   onClick: () => onClick("Driver"),
     // },
     {
-      name: "Bluetooth",
+        name: t("configuration.side_bar.bluetooth"),
       href: "#",
       isActive: tab === "Bluetooth",
       icon: () => <BluetoothOutlinedIcon />,
       onClick: () => onClick("Bluetooth"),
     },
     {
-      name: "RF",
+      name: t("configuration.side_bar.rf"),
       href: "#",
       isActive: tab === "RF",
       icon: () => <PodcastsOutlinedIcon />,
       onClick: () => onClick("RF"),
     },
     {
-      name: "Edit Profile",
+      name: t("configuration.side_bar.edit_profile"),
       href: "#",
       isActive: tab === "EditProfile",
       icon: () => <EditOutlined />,

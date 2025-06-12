@@ -3,6 +3,7 @@ import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
 import { Button, Stack } from "@mui/material";
 import { SECTIONS } from "constants/searchField";
+import { useTranslations } from "next-intl";
 import styled from "styled-components";
 
 interface Props {
@@ -20,6 +21,7 @@ export default function DeviceInformation({
   deviceVersionsObject,
   handleReboot,
 }: Props) {
+  const t = useTranslations();
   const { lang } = useLangStore();
 
   const renderVersion = (type: string) => {
@@ -44,39 +46,39 @@ export default function DeviceInformation({
       <Stack direction={"row"} gap={"32px 16px"}>
         <Stack direction="column" flex={1}>
           <FieldItem>
-            <FieldLabel>Model Name</FieldLabel>
+            <FieldLabel>{t("device_information.model_name")}</FieldLabel>
             <FieldValue>{modelName}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>F/W Version</FieldLabel>
+            <FieldLabel>{t("device_information.fw_version")}</FieldLabel>
             <FieldValue>{modelVersion}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Modem Version</FieldLabel>
+            <FieldLabel>{t("device_information.modem_version")}</FieldLabel>
             <FieldValue>{renderVersion("MODEM")}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>BLE Version</FieldLabel>
+            <FieldLabel>{t("device_information.ble_version")}</FieldLabel>
             <FieldValue>{renderVersion("BLE")}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Wi-Fi Version</FieldLabel>
+            <FieldLabel>{t("device_information.wifi_version")}</FieldLabel>
             <FieldValue>{renderVersion("WIFI")}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>MCU Version</FieldLabel>
+            <FieldLabel>{t("device_information.mcu_version")}</FieldLabel>
             <FieldValue>{renderVersion("MODEM_BYPASS_MCU")}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>RTC Time</FieldLabel>
+            <FieldLabel>{t("device_information.rtc_time")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Operating Time</FieldLabel>
+            <FieldLabel>{t("device_information.operating_time")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Battery Activation Time</FieldLabel>
+              <FieldLabel>{t("device_information.battery_activation_time")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
         </Stack>
@@ -90,27 +92,27 @@ export default function DeviceInformation({
             <FieldValue>{modelImei}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>GNSS Version</FieldLabel>
+            <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
             <FieldValue>{renderVersion("GNSS")}</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Backup Battery Level</FieldLabel>
+            <FieldLabel>{t("device_information.backup_battery_level")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Battery Activation Log</FieldLabel>
+            <FieldLabel>{t("device_information.battery_activation_log")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>GNSS State</FieldLabel>
+            <FieldLabel>{t("device_information.gnss_state")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>WWAN State</FieldLabel>
+            <FieldLabel>{t("device_information.wwan_state")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-            <FieldLabel>Reboot</FieldLabel>
+              <FieldLabel>{t("device_information.reboot")}</FieldLabel>
             <FieldValue
               style={{
                 height: 62,
@@ -127,7 +129,7 @@ export default function DeviceInformation({
                 disabled
                 onClick={handleReboot}
               >
-                Reboot
+                {t("device_information.reboot")}
               </Button>
             </FieldValue>
           </FieldItem>
