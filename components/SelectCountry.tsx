@@ -5,7 +5,7 @@ export const selectCountryData = [
   { label: "United States", value: "usa" },
   { label: "Brasil", value: "brasil" },
   { label: "México", value: "méxico" },
-  { label: "Europe", value: "europe" },
+  // { label: "Europe", value: "europe" },
 ];
 
 export default function SelectCountry({
