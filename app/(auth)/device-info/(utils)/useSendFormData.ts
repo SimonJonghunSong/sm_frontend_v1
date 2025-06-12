@@ -158,7 +158,7 @@ export default function useSendFormData() {
       } else {
         setIsLoading(false);
       }
-    }, 100);
+    }, 500);
   };
 
   return { sendFormData, isLoading };
