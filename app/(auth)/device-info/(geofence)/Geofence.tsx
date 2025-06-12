@@ -133,7 +133,11 @@ const Geofence = ({
   onEdit,
 }: Props) => {
   const [typeFilter, setTypeFilter] = useState<"All" | "Polygon" | "Circular">(
-    "All"
+    polygonGeofenceMax !== 0 && circularGeofenceMax !== 0
+      ? "All"
+      : polygonGeofenceMax !== 0
+      ? "Polygon"
+      : "Circular"
   );
   const [isFullLoading, setIsFullLoading] = useState(true);
   const t = useTranslations();
@@ -405,7 +409,12 @@ const Geofence = ({
               onChange={(e) => setTypeFilter(e.target.value as any)}
               sx={{ minWidth: 160 }}
             >
-              <MenuItem value={"All"}>{t("configuration.driver.all")}</MenuItem>
+              {polygonGeofenceMax === 0 ||
+                (circularGeofenceMax === 0 && (
+                  <MenuItem value={"All"}>
+                    {t("configuration.driver.all")}
+                  </MenuItem>
+                ))}
               {polygonGeofenceMax !== 0 && (
                 <MenuItem value={"Polygon"}>
                   {t("configuration.geofence.polygon")}
