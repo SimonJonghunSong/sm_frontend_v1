@@ -530,10 +530,12 @@ export default function DeviceInfoPage() {
 
   useEffect(() => {
     if (!originData) {
-      navigate.replace("/device");
+      // navigate.replace("/device");
       resetImei();
       resetTab();
       deleteSerialPort({ imei });
+
+      throw new Error("No origin data");
     }
   }, [originData]);
 
