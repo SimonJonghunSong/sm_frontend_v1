@@ -68,7 +68,7 @@ const useGefence = ({
         });
       }
     })();
-  }, [port.readable, port.writable, isReady]);
+  }, []);
 
   useEffect(() => {
     if (!circularGeofenceMax || !isCircularFetchReady) {

@@ -15,6 +15,7 @@ import useSerialStore from "../../stores/useSerialStore";
 import { fileDownload } from "@/utils/fileDownload";
 import { getGeofenceData } from "./utils";
 import { addReadLog, addWriteLog } from "@/utils/idbLogUtil";
+import { toast } from "react-toastify";
 
 const options = {
   baudRate: 115200,
@@ -1206,7 +1207,7 @@ const useSerial = () => {
       }
     } catch (error) {
       // toast(error, { type: "error" });
-      console.log("error ::::");
+
       if (port.isQuecModel) {
         console.log("reader ::::", reader);
         console.log("writer ::::", writer);
@@ -1218,6 +1219,9 @@ const useSerial = () => {
         writer.releaseLock();
         port.close();
       }
+
+      toast.error(error.message);
+
       console.log(error);
     } finally {
       reader.releaseLock();
