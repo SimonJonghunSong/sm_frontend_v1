@@ -238,11 +238,52 @@ export default function DeviceList() {
                     params.value.port.isAlreadyUnlock &&
                     params.value.port.password
                   ) {
+                    const currentPort = params.value.port;
+
+                    currentPort.port.onbuffervalue = (value) => {
+                      bufferRef.current += value;
+                      if (
+                        value.includes(CR) ||
+                        bufferRef.current.trim() === "AT^$PST;UPD;2" ||
+                        bufferRef.current.trim() === "AT^$PST;UPD;1"
+                      ) {
+                        currentPort.port.onbuffervalue = null;
+
+                        // 저장된 비밀번호가 틀린 비밀번호라면 패스워드 입력 모달 열기
+                        if (bufferRef.current.trim() === "AT^$PST;UPD;2") {
+                          imeiRef.current = currentPort.port.imei;
+                          passwordModalToggle();
+                        }
+
+                        // 저장된 비밀번호가 맞는 비밀번호라면 기기 정보 페이지로 이동
+                        if (bufferRef.current.trim() === "AT^$PST;UPD;1") {
+                          setImei(currentPort.port.imei);
+                          resetTab();
+                          setModelName(
+                            currentPort.port.modelinfo.split("_")[0]
+                          );
+                          setFwVer(
+                            currentPort.port.modelinfo.split("_")[
+                              currentPort.port.modelinfo.split("_").length - 1
+                            ]
+                          );
+                          setTargetCountry([]);
+                          setIsAlreadyUnlock({ imei: currentPort.port.imei });
+
+                          router.push(`/device-info`);
+                        }
+
+                        bufferRef.current = "";
+                      }
+                    };
+
                     write({
                       data: `AT^$PSTUPD;${params.value.port.password}`,
                       writer: params.value.port.writer,
                       port: params.value.port.port,
                     });
+
+                    return;
                   }
 
                   if (!params.value.port.isAlreadyUnlock && isLock) {
