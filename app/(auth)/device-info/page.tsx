@@ -21,6 +21,7 @@ import {
   AT_EDIT_PREFIX,
   AT_GET_JSON,
   AT_REQ,
+  CR,
 } from "@/src/hooks/useSerial/constant";
 import SearchModal from "app/(auth)/device-info/(components)/SearchModal";
 import Modal from "@/components/Modal";
@@ -530,11 +531,49 @@ export default function DeviceInfoPage() {
     }, 10000);
   };
 
+  const [isPasswordReady, setIsPasswordReady] = useState(false);
+  const bufferRef = useRef("");
+
   useEffect(() => {
     if (isReady) {
-      handleRefreshJsonPacket();
+      const isLock = currentPort.port.isLock;
+
+      if (isLock && currentPort.isAlreadyUnlock && currentPort.password) {
+        if (isPasswordReady) {
+          handleRefreshJsonPacket();
+          return;
+        }
+
+        currentPort.port.onbuffervalue = (value) => {
+          bufferRef.current += value;
+          if (
+            value.includes(CR) ||
+            bufferRef.current.trim() === "AT^$PST;UPD;2" ||
+            bufferRef.current.trim() === "AT^$PST;UPD;1"
+          ) {
+            currentPort.port.onbuffervalue = null;
+
+            if (bufferRef.current.trim() === "AT^$PST;UPD;2") {
+            }
+
+            if (bufferRef.current.trim() === "AT^$PST;UPD;1") {
+              setIsPasswordReady(true);
+            }
+
+            bufferRef.current = "";
+          }
+        };
+
+        write({
+          data: `AT^$PSTUPD;${currentPort.password}`,
+          writer: currentPort.writer,
+          port: currentPort.port,
+        });
+      } else {
+        handleRefreshJsonPacket();
+      }
     }
-  }, [isReady]);
+  }, [isReady, isPasswordReady]);
 
   useEffect(() => {
     if (!originData) {
