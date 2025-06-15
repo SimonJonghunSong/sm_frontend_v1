@@ -216,6 +216,7 @@ export default function DeviceInfoPage() {
   } = useSerial();
   const t = useTranslations();
   const [isFechedPackage, setIsFechedPackage] = useState(false);
+  const isFechedPackageRef = useRef(false);
   const packageCountRef = useRef(0);
 
   const [isCmdModalWide, setIsCmdModalWide] = useState(false);
@@ -439,9 +440,12 @@ export default function DeviceInfoPage() {
     }
 
     setTimeout(() => {
-      setIsFechedPackage(true);
-      setIsLoading(false);
-      currentPort.port.isjsonpackagefetching = false;
+      if (!isFechedPackageRef.current) {
+        setIsFechedPackage(true);
+        isFechedPackageRef.current = true;
+        setIsLoading(false);
+        currentPort.port.isjsonpackagefetching = false;
+      }
     }, 10000);
   };
 
@@ -547,7 +551,7 @@ export default function DeviceInfoPage() {
             onClick: handleTabChange,
             tab,
             exclude: excludeMenus,
-            t
+            t,
           })}
         />
         <Stack flex={1}>

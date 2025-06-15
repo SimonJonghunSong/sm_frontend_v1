@@ -200,8 +200,7 @@ const extractCommandData = (originData: any[]) => {
 };
 
 export default function DeviceInfoPage() {
-
-  const t  = useTranslations();
+  const t = useTranslations();
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   // data
@@ -216,6 +215,8 @@ export default function DeviceInfoPage() {
     func: { write, getPorts },
   } = useSerial();
   const [isFechedPackage, setIsFechedPackage] = useState(false);
+  const isFechedPackageRef = useRef(false);
+  const [isFechedPackageVersion, setIsFechedPackageVersion] = useState(false);
   const packageCountRef = useRef(0);
 
   const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
@@ -504,6 +505,7 @@ export default function DeviceInfoPage() {
       packageCountRef.current += count;
       if (packageCountRef.current === currentPort.jsonPackageCount) {
         setIsFechedPackage(true);
+        isFechedPackageRef.current = true;
         setIsLoading(false);
         packageCountRef.current = 0;
       }
@@ -519,9 +521,12 @@ export default function DeviceInfoPage() {
     }
 
     setTimeout(() => {
-      setIsFechedPackage(true);
-      setIsLoading(false);
-      currentPort.port.isjsonpackagefetching = false;
+      if (!isFechedPackageRef.current) {
+        setIsFechedPackage(true);
+        isFechedPackageRef.current = true;
+        setIsLoading(false);
+        currentPort.port.isjsonpackagefetching = false;
+      }
     }, 10000);
   };
 
@@ -551,7 +556,7 @@ export default function DeviceInfoPage() {
             onClick: handleTabChange,
             tab,
             exclude: excludeMenus,
-            t
+            t,
           })}
         />
         <Stack flex={1}>
