@@ -34,6 +34,10 @@ const updateIndexedDB = async (
   broadcastChannel: BroadcastChannel
 ) => {
   if (isEndOfMessage(value)) {
+    console.log("test imei :::::::", imei);
+
+    if (!imei) return;
+
     await addReadLog(imei, (ref.current.get(imei) || "") + value);
     broadcastChannel.postMessage({ status: "updated", imei });
     ref.current.set(imei, undefined);
@@ -220,8 +224,7 @@ const useSerial = () => {
           "---------------- 기기에서 넘어오는 value end ----------------"
         );
 
-        console.log("value ::::", value.trim() === "");
-        if (value.trim() === "" || value === "$PST;PORT_OPEN") {
+        if (value === "$PST;PORT_OPEN") {
           console.log("value ::::", value);
           continue;
         }
@@ -352,7 +355,7 @@ const useSerial = () => {
                       writer,
                     });
                   }
-                } else if (port.isimeifetching) {
+                } else if (value.trim() !== "" && port.isimeifetching) {
                   imeiBufferRef.current.set(
                     port.injectedId,
                     (imeiBufferRef.current.get(port.injectedId) || "") + value
@@ -803,7 +806,7 @@ const useSerial = () => {
                       writer,
                     });
                   }
-                } else if (port.isimeifetching) {
+                } else if (value.trim() !== "" && port.isimeifetching) {
                   imeiBufferRef.current.set(
                     port.injectedId,
                     (imeiBufferRef.current.get(port.injectedId) || "") + value
