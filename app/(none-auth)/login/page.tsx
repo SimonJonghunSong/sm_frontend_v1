@@ -92,7 +92,7 @@ export default function LoginPage() {
           transform: "translate(-50%, -50%)",
         }}
       >
-        <span>202506170120</span>
+        <span>202506181215</span>
       </Stack>
 
       {errorDialog && <ErrorDialog onClose={() => setErrorDialog(false)} />}
