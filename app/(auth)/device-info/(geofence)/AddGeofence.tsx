@@ -873,6 +873,7 @@ const AddGeofence = ({
           buffervalueRef.current += value;
           if (value.includes("OK")) {
             buffervalueRef.current = "";
+            currentPort.port.onbuffervalue = null;
             onSuccess();
             onCancel();
           }

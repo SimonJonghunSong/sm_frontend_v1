@@ -4,9 +4,11 @@ import {
   AT_GET_CIRCULAR_GEOFENCE_10_LIST,
   AT_GET_CIRCULAR_GEOFENCE_255_LIST,
   AT_GET_CIRCULAR_GEOFENCE_999_LIST,
+  AT_GET_POLYGON_GEOFENCE,
   AT_GET_POLYGON_GEOFENCE_LIST,
 } from "./useSerial/constant";
 import { SerialPortState } from "../stores/useSerialStore";
+import { generateNumberSequence } from "@/src/utils/generateNumberSequence";
 
 interface UseGefenceProps {
   port: SerialPortState;
@@ -24,6 +26,7 @@ interface UseGefenceProps {
   circularGeofenceMax: number;
   imei: string;
   onAfterFetch?: () => void;
+  isForceFetch?: boolean;
 }
 
 const useGefence = ({
@@ -34,11 +37,16 @@ const useGefence = ({
   circularGeofenceMax,
   imei,
   onAfterFetch,
+  isForceFetch,
 }: UseGefenceProps) => {
   const [isFetching, setIsFetching] = useState(false);
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
   const port = propsPort.port;
   useEffect(() => {
+    if (port.ispolygonfetching) {
+      return;
+    }
+
     if (!port?.readable || !port?.writable || !isReady) return;
 
     if (!polygonGeofenceMax) {
@@ -48,8 +56,11 @@ const useGefence = ({
 
     port.polygonfetchcount = 0;
     port.ispolygonfetching = true;
+    port.polygongeofence = "";
     port.polygonmax = Number(polygonGeofenceMax);
     port.onafterpolygongeofence = () => {
+      console.log("언제 타나유₩??");
+
       port.ispolygonfetching = false;
       setIsCircularFetchReady(true);
       port.polygongeofence = "";
@@ -58,19 +69,29 @@ const useGefence = ({
     setIsFetching(true);
 
     (async () => {
-      for (const command of AT_GET_POLYGON_GEOFENCE_LIST(imei)) {
-        await delayPromise(60); // 60ms 지연
+      console.log("polygonGeofenceMax ::::", polygonGeofenceMax);
+      console.log(
+        "generateNumberSequence ::::",
+        generateNumberSequence(polygonGeofenceMax)
+      );
+
+      for (const command of generateNumberSequence(polygonGeofenceMax)) {
+        await delayPromise(100); // 60ms 지연
 
         write({
-          data: command,
+          data: AT_GET_POLYGON_GEOFENCE(imei) + command.join(","),
           port: propsPort,
           writer: propsPort.writer,
         });
       }
     })();
-  }, []);
+  }, [isForceFetch]);
 
   useEffect(() => {
+    if (port.iscircularfetching) {
+      return;
+    }
+
     if (!circularGeofenceMax || !isCircularFetchReady) {
       return;
     }
@@ -84,6 +105,7 @@ const useGefence = ({
 
     port.circularfetchcount = 0;
     port.iscircularfetching = true;
+    port.circulargeofence = "";
     port.circlemax = Number(circularGeofenceMax);
     port.onaftercirculargeofence = () => {
       port.iscircularfetching = false;
@@ -100,7 +122,7 @@ const useGefence = ({
         ? AT_GET_CIRCULAR_GEOFENCE_255_LIST(imei)
         : AT_GET_CIRCULAR_GEOFENCE_999_LIST(imei)) {
         await delayPromise(
-          circularGeofenceMax === 10 || circularGeofenceMax === 255 ? 60 : 100
+          circularGeofenceMax === 10 || circularGeofenceMax === 255 ? 100 : 200
         ); // 100ms 지연
 
         write({
@@ -110,7 +132,7 @@ const useGefence = ({
         });
       }
     })();
-  }, [isReady, port?.readable, port?.writable, isCircularFetchReady]);
+  }, [isForceFetch, isCircularFetchReady]);
 
   return { isFetching };
 };

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FormField } from "../page";
 import { Stack } from "@mui/material";
 import {
@@ -13,6 +13,7 @@ import {
   getCircularGeofenceData,
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
+import useGefence from "@/src/hooks/useGefence";
 
 function getMinMissingGroupId(array: { groupId: number }[]): number {
   const ids = new Set(array.map((item) => item.groupId));
@@ -123,6 +124,19 @@ export default function GeofenceTab({
     (object) => Object.keys(object)[0]
   );
 
+  const [isForceFetch, setIsForceFetch] = useState(false);
+
+  const { isFetching } = useGefence({
+    port,
+    isReady,
+    write,
+    polygonGeofenceMax,
+    circularGeofenceMax,
+    imei: port.imei,
+    onAfterFetch: () => setMustFetch(false),
+    isForceFetch,
+  });
+
   const renderGeofence = () => {
     if (type === "list") {
       return (
@@ -136,11 +150,10 @@ export default function GeofenceTab({
           <Geofence
             formData={formData}
             currentPort={port}
-            isReady={isReady && mustFetch}
+            isFetching={isFetching}
             write={write}
             polygonGeofenceMax={polygonGeofenceMax}
             circularGeofenceMax={circularGeofenceMax}
-            onAfterFetch={() => setMustFetch(false)}
             onAdd={() => setType("add")}
             onEdit={(id: number, type: "polygon" | "circular") => {
               setType("edit");
@@ -204,6 +217,14 @@ export default function GeofenceTab({
       }
     }
   };
+
+  useEffect(() => {
+    if (type === "list") {
+      setTimeout(() => {
+        setIsForceFetch((prev) => !prev);
+      }, 300);
+    }
+  }, [type]);
 
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
