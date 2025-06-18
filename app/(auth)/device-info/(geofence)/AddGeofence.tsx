@@ -693,9 +693,6 @@ const AddGeofence = ({
     );
   }
 
-  // AT^PRG;4335433522;53;00# 05 00 00 00000000
-  // AT^PRG;0000000000;53;04# 04 00 00 00989680 0014
-  // AT^PRG;4335433522;53;05# 05 00 00 00989680
   const renderAntiJamming = () => {
     if (
       !circularGeofenceKeys.includes("ANTI_JAM") ||
