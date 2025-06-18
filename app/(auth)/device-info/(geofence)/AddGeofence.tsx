@@ -346,7 +346,7 @@ const AddGeofence = ({
         if (buffervalueRef.current.includes("OK")) {
           onSuccess();
           onCancel();
-        }else {
+        } else {
           toast.error(buffervalueRef.current)
         }
         buffervalueRef.current = "";
@@ -1030,6 +1030,8 @@ const AddGeofence = ({
             currentPort.port.onbuffervalue = null;
             onSuccess();
             onCancel();
+          } else {
+            toast.error(buffervalueRef.current)
           }
         };
 
