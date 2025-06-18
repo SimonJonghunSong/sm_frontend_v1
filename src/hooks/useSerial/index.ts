@@ -1061,6 +1061,13 @@ const useSerial = () => {
                       (port.polygonfetchcount ?? 0) + hashCount;
                   }
 
+                  console.log("value ::::", value);
+
+                  console.log(
+                    "port.polygonfetchcount :::",
+                    port.polygonfetchcount
+                  );
+
                   if (
                     port.polygonfetchcount === port.polygonmax &&
                     value.includes(CR)
@@ -1086,6 +1093,11 @@ const useSerial = () => {
                     port.circularfetchcount =
                       (port.circularfetchcount ?? 0) + hashCount;
                   }
+
+                  console.log(
+                    "port.circularfetchcount ::::",
+                    port.circularfetchcount
+                  );
 
                   if (
                     port.circularfetchcount === port.circlemax &&

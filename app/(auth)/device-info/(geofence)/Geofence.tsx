@@ -15,7 +15,7 @@ import {
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
 import useSerialStore, { SerialPortState } from "@/src/stores/useSerialStore";
-import useGefence from "@/src/hooks/useGefence";
+
 import {
   AT_EDIT_PREFIX,
   CR,
@@ -40,7 +40,7 @@ interface Props {
     [key: string]: FormField;
   };
   currentPort: SerialPortState;
-  isReady: boolean;
+  isFetching: boolean;
   write: ({
     data,
     port,
@@ -53,7 +53,6 @@ interface Props {
 
   polygonGeofenceMax: number;
   circularGeofenceMax: number;
-  onAfterFetch?: () => void;
   onAdd?: () => void;
   onEdit?: (id: number, type: "polygon" | "circular") => void;
 }
@@ -124,11 +123,10 @@ const tooltipText = {
 
 const Geofence = ({
   currentPort,
-  isReady,
+  isFetching,
   write,
   polygonGeofenceMax,
   circularGeofenceMax,
-  onAfterFetch,
   onAdd,
   onEdit,
 }: Props) => {
@@ -155,16 +153,6 @@ const Geofence = ({
 
   const polygonPointRef = useRef("");
   const circlePointRef = useRef("");
-
-  const { isFetching } = useGefence({
-    port: currentPort,
-    isReady,
-    write,
-    polygonGeofenceMax,
-    circularGeofenceMax,
-    imei: currentPort.imei,
-    onAfterFetch,
-  });
 
   const polygonList = currentPort.polygonGeofenceData;
   const circularList = currentPort.circularGeofenceData;

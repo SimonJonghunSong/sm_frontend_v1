@@ -208,6 +208,8 @@ const useSerialStore = create(
         }),
       setPolygonGeofence: ({ imei, payload }) =>
         set(() => {
+          console.log("payload ::::", payload);
+
           return {
             portList: get().portList.map((item) => {
               return item.imei === imei
