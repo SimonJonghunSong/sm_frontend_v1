@@ -1246,6 +1246,8 @@
       "all_outputs": "Todas as Saídas",
       "output_keep_active": "Manter Saída Ativa",
       "output_active_delay": "Atraso na Ativação da Saída",
+      "speed_1": "Velocidade 1",
+      "speed_2": "Velocidade 2",
       "buzzer_speed_limit": "Limite de Velocidade do Buzzer",
       "anti_jamming": "Anti-Jamming",
       "cancel": "Cancelar",

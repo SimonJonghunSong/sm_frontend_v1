@@ -43,15 +43,18 @@ const useGefence = ({
   const [isCircularFetchReady, setIsCircularFetchReady] = useState(false);
   const port = propsPort.port;
   useEffect(() => {
-    if (port.ispolygonfetching) {
-      return;
-    }
+    console.log("test ?:::::::", polygonGeofenceMax);
+
 
     if (!port?.readable || !port?.writable || !isReady) return;
 
     if (!polygonGeofenceMax) {
       setIsFetching(true);
       return setIsCircularFetchReady(true);
+    }
+
+    if (port.ispolygonfetching) {
+      return;
     }
 
     port.polygonfetchcount = 0;
@@ -62,7 +65,11 @@ const useGefence = ({
       console.log("언제 타나유₩??");
 
       port.ispolygonfetching = false;
-      setIsCircularFetchReady(true);
+
+      // 요청 겹치는거 방지
+      setTimeout(() => {
+        setIsCircularFetchReady(true);
+      }, 1000);
       port.polygongeofence = "";
     };
 
@@ -88,10 +95,7 @@ const useGefence = ({
   }, [isForceFetch]);
 
   useEffect(() => {
-    if (port.iscircularfetching) {
-      return;
-    }
-
+    
     if (!circularGeofenceMax || !isCircularFetchReady) {
       return;
     }
@@ -100,6 +104,10 @@ const useGefence = ({
       setIsFetching(false);
       setIsCircularFetchReady(false);
       onAfterFetch?.();
+      return;
+    }
+
+    if (port.iscircularfetching) {
       return;
     }
 
