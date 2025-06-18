@@ -160,6 +160,8 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimit":
+      return { ...state, speedLimit: action.payload };
     case "setSpeedLimitDebounce":
       return { ...state, speedLimitDebounce: action.payload };
   }
@@ -203,6 +205,7 @@ const AddGeofence = ({
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
+    speedLimit: 0,
     speedLimitDebounce: 0,
   });
 
@@ -527,7 +530,7 @@ const AddGeofence = ({
   };
 
   const renderSpeeds = () => {
-    if (!circularGeofenceKeys.includes("SPEED_1") && !circularGeofenceKeys.includes("SPEED_2")) return null;
+    if (!formData["9002"] || formData["9002"].realValue === "00" || (!circularGeofenceKeys.includes("SPEED_1") && !circularGeofenceKeys.includes("SPEED_2")) || circleState.buzzerSpeedLimit === "00") return null;
   
     return (
       <>
@@ -690,16 +693,9 @@ const AddGeofence = ({
     );
   }
 
-  // AT^PRG;4335433522;50;25#023BE32B0790291E03BF000000000000000000
-  // AT^PRG;4335433522;50;25#023BD86E0790187905730000000000000000000000000000000000
-  // AT^PRG;0000000000;50;27#023C3CB6078FDAC40755000000 00000000 0000
-  // AT^PRG;0000000000;50;27#023C2643078FD96D03B2 00 00 00 00000000
-  // AT^PRG;0000000000;50;27#023C7E2F078FF3F10544 00 00 00 00000000 00000000 00 0000
-  // AT^PRG;0000000000;50;27#023C6DB3078FF94E0501 00 00 00 00989680 00989680 000000
-  // AT^PRG;0000000000;50;27#023C75AD0790117203C6 00 00 00 00989680 00989680 00 000A
-  // AT^PRG;0000000000;50;27#023C46DB078FDC1C08DC 00 00 00 00000000 00000000 00 00
-  // AT^PRG;0000000000;50;27#023C2643078FD96D03B2 01 01 01 00000000
-  // AT^PRG;4335433522;50;25#023C5C19078FCF5E04CD 01 01 06 00000000 00989680 00989680 01 00
+  // AT^PRG;4335433522;53;00# 05 00 00 00000000
+  // AT^PRG;0000000000;53;04# 04 00 00 00989680 0014
+  // AT^PRG;4335433522;53;05# 05 00 00 00989680
   const renderAntiJamming = () => {
     if (
       !circularGeofenceKeys.includes("ANTI_JAM") ||
@@ -933,8 +929,8 @@ const AddGeofence = ({
           </Stack>
           {renderOutputActive()}
           {renderOutputActiveDelay()}
-          {renderSpeeds()}
           {renderBuzzerSpeedLimit()}
+          {renderSpeeds()}
           {renderSpeedLimitDebounce()}
           {renderAntiJamming()}
         </Stack>
@@ -999,6 +995,13 @@ const AddGeofence = ({
           .padStart(8, "0")
           .toUpperCase();
 
+        const speedLimitHex = Math.floor(
+          polygonState.speedLimit * 1000000
+        )
+          .toString(16)
+          .padStart(8, "0")
+          .toUpperCase();
+
         const speedLimitDebounceHex = Math.floor(
           polygonState.speedLimitDebounce
         )
@@ -1006,10 +1009,15 @@ const AddGeofence = ({
           .padStart(4, "0")
           .toUpperCase();
 
+        const getPolygonBuzzerSpeedLimitHex =
+          polygonGeofenceKeys.includes("Buzzer Speed Limit")
+            ? buzzerSpeedLimitHex
+            : "";
+
         const getPolygonSpeedLimitHex =
           !isPolygonSpeedLimitDisabled &&
           polygonGeofenceKeys.includes("Polygon Speed Limit")
-            ? buzzerSpeedLimitHex
+            ? speedLimitHex
             : "";
 
         const getSpeedLimitDebounceHex =
@@ -1036,7 +1044,7 @@ const AddGeofence = ({
             .padStart(
               2,
               "0"
-            )}${enterExitHexString}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
+            )}${enterExitHexString}${getPolygonBuzzerSpeedLimitHex}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
           port: currentPort,
           writer: currentPort.writer,
         });
@@ -1056,6 +1064,48 @@ const AddGeofence = ({
       }
     );
   };
+  
+  const renderPolygonBuzzerSpeedLimit = () => {
+    if (!polygonGeofenceKeys.includes("Buzzer Speed Limit")) return null;
+
+    return ( <Stack gap="8px">
+      <Stack direction="row" gap="4px" alignItems="center">
+        <InputBox.Title>
+          {t("configuration.geofence.buzzer_speed_limit")}
+        </InputBox.Title>
+      </Stack>
+
+      <TextField
+        type="number"
+        value={polygonState.buzzerSpeedLimit}
+        onChange={(e) =>
+          polygonDispatch({
+            type: "setBuzzerSpeedLimit",
+            payload: e.target.value,
+          })
+        }
+        helperText={
+          (polygonState.buzzerSpeedLimit > 300 ||
+            polygonState.buzzerSpeedLimit < 0) &&
+          polygonState.buzzerSpeedLimit !== ""
+            ? lang === "en"
+              ? `Input only between 0 ~ 300`
+              : lang === "pt"
+              ? `Entrada somente entre 0 ~ 300`
+              : `Entrada solo entre 0 ~ 300`
+            : ""
+        }
+        error={
+          polygonState.buzzerSpeedLimit > 300 ||
+          polygonState.buzzerSpeedLimit < 0
+        }
+        inputProps={{
+          min: 0,
+          max: 300,
+        }}
+      />
+    </Stack>)
+  }
 
   const renderPolygonSpeedLimit = () => {
     if (
@@ -1074,17 +1124,17 @@ const AddGeofence = ({
 
         <TextField
           type="number"
-          value={polygonState.buzzerSpeedLimit}
+          value={polygonState.speedLimit}
           onChange={(e) =>
             polygonDispatch({
-              type: "setBuzzerSpeedLimit",
+              type: "setSpeedLimit",
               payload: e.target.value,
             })
           }
-          helperText={
-            (polygonState.buzzerSpeedLimit > 300 ||
-              polygonState.buzzerSpeedLimit < 0) &&
-            polygonState.buzzerSpeedLimit !== ""
+          helperText={  
+            (polygonState.speedLimit > 300 ||
+              polygonState.speedLimit < 0) &&
+            polygonState.speedLimit !== ""
               ? lang === "en"
                 ? `Input only between 0 ~ 300`
                 : lang === "pt"
@@ -1093,8 +1143,8 @@ const AddGeofence = ({
               : ""
           }
           error={
-            polygonState.buzzerSpeedLimit > 300 ||
-            polygonState.buzzerSpeedLimit < 0
+            polygonState.speedLimit > 300 ||
+            polygonState.speedLimit < 0
           }
           inputProps={{
             min: 0,
@@ -1300,6 +1350,7 @@ const AddGeofence = ({
             />
           </Stack>
 
+          {renderPolygonBuzzerSpeedLimit()}
           {renderPolygonSpeedLimit()}
           {renderPolygonSpeedLimitDebounce()}
         </Stack>
