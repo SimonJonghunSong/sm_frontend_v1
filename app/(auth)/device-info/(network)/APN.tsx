@@ -5,7 +5,10 @@ import { Button, Stack } from "@mui/material";
 import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import SelectField from "../(components)/SelectField";
-import { FIELD_ERRORS } from "constants/fieldErrorValidations";
+import {
+  FIELD_ERRORS,
+  FIELD_ERRORS_REGEX,
+} from "constants/fieldErrorValidations";
 import TextInputField from "../(components)/TextInputField";
 import { hasFormDataFields } from "../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
@@ -114,9 +117,15 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
             onChange={handleChange}
             // isRequired
             style={{ width: "100%" }}
-            error={!/^[A-Za-z0-9.]*$/.test(formData["1001"].realValue)}
+            error={
+              !FIELD_ERRORS_REGEX.alphaNumericPatternWithSymbols.test(
+                formData["1001"].realValue
+              )
+            }
             helperText={
-              !/^[A-Za-z0-9.]*$/.test(formData["1001"].realValue)
+              !FIELD_ERRORS_REGEX.alphaNumericPatternWithSymbols.test(
+                formData["1001"].realValue
+              )
                 ? FIELD_ERRORS["alphaNumericPatternWithSymbols"][lang]
                 : undefined
             }
