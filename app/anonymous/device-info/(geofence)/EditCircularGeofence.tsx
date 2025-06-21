@@ -24,6 +24,7 @@ import { convertCircleCoordinatesToHexString } from "@/utils/coordinateToHex";
 import { AT_EDIT_PREFIX, CR } from "@/src/hooks/useSerial/constant";
 import { parseLatLngRadius } from "app/(auth)/configuration/geofence/utils";
 import FullLoading from "@/components/FullLoading";
+import { toast } from "react-toastify";
 
 interface Props {
   id: number;
@@ -125,8 +126,14 @@ const circleReducer = (state: any, action: any) => {
       return { ...state, outputKeepActive: action.payload };
     case "setOutputActiveDelay":
       return { ...state, outputActiveDelay: action.payload };
+    case "setSpeed1":
+      return { ...state, speed1: action.payload };
+    case "setSpeed2":
+      return { ...state, speed2: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimitDebounce":
+      return { ...state, speedLimitDebounce: action.payload };
     case "setAntiJamming":
       return { ...state, antiJamming: action.payload };
     default:
@@ -154,7 +161,10 @@ const EditCircularGeofence = ({
     outputActive: "00",
     outputKeepActive: false,
     outputActiveDelay: 0,
-    buzzerSpeedLimit: 0,
+    buzzerSpeedLimit: "00",
+    speedLimitDebounce: 0,
+    speed1: 0,
+    speed2: 0,
     antiJamming: false,
   });
 
@@ -165,16 +175,23 @@ const EditCircularGeofence = ({
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
 
+  console.log("circularGeofenceKeys ::::", circularGeofenceKeys);
+
   /** Circular Geofence */
   const handleEditCirGeo = () => {
     buffervalueRef.current = "";
-    const circleIndex = findCircleIndexByNumber(circleState.id - 1);
+    const circleIndex = findCircleIndexByNumber(id - 1);
     const circle = mapManager.circles[0];
     const coordinateToHexString = convertCircleCoordinatesToHexString({
       lat: circle.center.lat,
       lng: circle.center.lng,
       radius: circle.radius,
     });
+
+    console.log("circleIndex ::::", circleIndex);
+    // AT^PRG;4335433522;50;27#023C3E8E078FEEE2083D0101000098968001312D0001C9C3800100
+    // AT^PRG;4335433522;50;27#023C3E8E078FEEE2083D0101000098968001312D0001C9C3800100
+    
 
     const enterAlertHexString = circleState.enterAlert ? "01" : "00";
     const exitAlertHexString = circleState.exitAlert ? "01" : "00";
@@ -221,31 +238,53 @@ const EditCircularGeofence = ({
       )
         return "";
 
-      if (
-        circularGeofenceKeys.includes("SPEED_2") &&
-        circularGeofenceKeys.includes("SPEED_1")
-      ) {
-        return (
-          Math.floor(circleState.buzzerSpeedLimit * 1000000)
-            .toString(16)
-            .padStart(8, "0")
-            .toUpperCase() +
-          Math.floor(circleState.buzzerSpeedLimit * 1000000)
-            .toString(16)
-            .padStart(8, "0")
-            .toUpperCase() +
-          "00" // 01로 하면 무조건 에러 남
-        );
-      }
-
-      return (
-        Math.floor(circleState.buzzerSpeedLimit * 1000000)
-          .toString(16)
-          .padStart(8, "0")
-          .toUpperCase() + "00" // 01로 하면 무조건 에러 남
-      );
+      return circleState.buzzerSpeedLimit;
     };
 
+    const getSpeed1HexString = () => {
+      if ( 
+        !formData["9002"] ||
+        formData["9002"].realValue === "00" || 
+        !circularGeofenceKeys.includes("SPEED_1")
+      ) return "";
+
+      return (
+        Math.floor(circleState.speed1 * 1000000)
+          .toString(16)
+          .padStart(8, "0")
+          .toUpperCase()
+      );
+    }
+    const getSpeed2HexString = () => {
+      if (
+        !formData["9002"] ||
+        formData["9002"].realValue === "00" || 
+        !circularGeofenceKeys.includes("SPEED_2")
+      ) return "";
+
+      return (
+        Math.floor(circleState.speed2 * 1000000)
+          .toString(16)
+          .padStart(8, "0")
+          .toUpperCase()
+      );
+    }
+
+    const getSpeedLimitDebounceHexString = () => {
+      if (
+        !formData["9002"] ||
+        formData["9002"].realValue === "00" ||
+        !circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")
+      )
+        return "";
+
+        return (
+          Math.floor(circleState.speedLimitDebounce * 1000000)
+            .toString(16)
+            .padStart(4, "0")
+            .toUpperCase()
+        );
+    };
     const getAntiJammingHexString = () => {
       if (
         !circularGeofenceKeys.includes("ANTI_JAM") ||
@@ -257,33 +296,30 @@ const EditCircularGeofence = ({
       return circleState.antiJamming ? "01" : "00";
     };
 
-    const getSpeedLimitDebounceHexString = () => {
-      if (
-        !formData["9002"] ||
-        formData["9002"].realValue === "00" ||
-        !circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")
-      )
-        return "";
-
-      return "0000"; // 01로 하면 무조건 에러 남
-    };
-
     const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
     const outputActiveHexString = getOutputActiveHexString();
     const outputActiveDelayHexString = getOutputActiveDelayHexString();
     const buzzerSpeedLimitHexString = getBuzzerSpeedLimitHexString();
+    const speed1HexString = getSpeed1HexString();
+    const speed2HexString = getSpeed2HexString();
     const antiJammingHexString = getAntiJammingHexString();
     const speedLimitDebounceHexString = getSpeedLimitDebounceHexString();
 
-    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
+    const restString = `${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${speed1HexString}${speed2HexString}${buzzerSpeedLimitHexString}${speedLimitDebounceHexString}${antiJammingHexString}`;
+// AT^PRG;0000000000;50;33#023C332C078FD3640DF501010000989680 01 9BFCC001 0000
+// AT^PRG;0000000000;50;25#023C332C078FD3640DF501010000989680 01 C9C38001 0000
+// AT^PRG;0000000000;50;25#023C332C078FD3640DF501010000989680 01 9BFCC001 0000
+// AT^PRG;0000000000;50;33#023C332C078FD3640DF501010000989680 01 C9C38001 0000 
 
-    currentPort.port.onbuffervalue = (value) => {
+currentPort.port.onbuffervalue = (value) => {
       buffervalueRef.current += value;
 
       if (value.includes(CR)) {
         if (buffervalueRef.current.includes("OK")) {
           onSuccess();
           onCancel();
+        } else {
+          toast.error(buffervalueRef.current);
         }
         buffervalueRef.current = "";
         currentPort.port.onbuffervalue = null;
@@ -465,12 +501,100 @@ const EditCircularGeofence = ({
     );
   };
 
+
+  const renderSpeeds = () => {
+    if (!formData["9002"] || formData["9002"].realValue === "00" || (!circularGeofenceKeys.includes("SPEED_1") && !circularGeofenceKeys.includes("SPEED_2")) || circleState.buzzerSpeedLimit === "00") return null;
+  
+    return (
+      <>
+     {circularGeofenceKeys.includes("SPEED_1") && <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>
+            {t("configuration.geofence.speed_1")}
+          </InputBox.Title>
+        </Stack>
+        <TextField
+          type="number"
+          value={circleState.speed1}
+          onChange={(e) =>
+            circleDispatch({
+              type: "setSpeed1",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (circleState.speed1 > 3600 ||
+              circleState.speed1 < 0) &&
+            circleState.speed1 !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 3,600`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 3,600`
+                : `Entrada solo entre 0 ~ 3,600`
+              : ""
+          }
+          error={
+            circleState.speed1 > 3600 ||
+            circleState.speed1 < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 3600,
+          }}
+        />
+        </Stack>}
+      {circularGeofenceKeys.includes("SPEED_2") && 
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>
+            {t("configuration.geofence.speed_2")}
+          </InputBox.Title>
+        </Stack>
+        <TextField
+          type="number"
+          value={circleState.speed2}
+          onChange={(e) =>
+            circleDispatch({
+              type: "setSpeed2",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (circleState.speed2 > 3600 ||
+              circleState.speed2 < 0) &&
+            circleState.speed2 !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 3,600`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 3,600`
+                : `Entrada solo entre 0 ~ 3,600`
+              : ""
+          }
+          error={
+            circleState.speed2 > 3600 ||
+            circleState.speed2 < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 3600,
+          }}
+        />
+      </Stack>
+      }
+      </>
+    );
+  };
+
   const renderBuzzerSpeedLimit = () => {
     if (!circularGeofenceKeys.includes("BUZZER_SPEED_LIMIT")) return null;
     if (!formData["9002"] || formData["9002"].realValue === "00") return null;
 
     return (
-      <Stack gap="8px">
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+      >
         <Stack direction="row" gap="4px" alignItems="center">
           <InputBox.Title>
             {t("configuration.geofence.buzzer_speed_limit")}
@@ -485,38 +609,62 @@ const EditCircularGeofence = ({
           />
         </Stack>
 
-        <TextField
-          type="number"
-          value={circleState.buzzerSpeedLimit}
+        <SwitchPrimary
+          checked={circleState.buzzerSpeedLimit === "01"}
           onChange={(e) =>
             circleDispatch({
               type: "setBuzzerSpeedLimit",
-              payload: e.target.value,
+              payload: e.target.checked ? "01" : "00",
             })
           }
-          helperText={
-            (circleState.buzzerSpeedLimit > 300 ||
-              circleState.buzzerSpeedLimit < 0) &&
-            circleState.buzzerSpeedLimit !== ""
-              ? lang === "en"
-                ? `Input only between 0 ~ 300`
-                : lang === "pt"
-                ? `Entrada somente entre 0 ~ 300`
-                : `Entrada solo entre 0 ~ 300`
-              : ""
-          }
-          error={
-            circleState.buzzerSpeedLimit > 300 ||
-            circleState.buzzerSpeedLimit < 0
-          }
-          inputProps={{
-            min: 0,
-            max: 300,
-          }}
         />
       </Stack>
     );
   };
+
+  const renderSpeedLimitDebounce = () => {
+    if (!circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")) return null;
+    if (!formData["9002"] || formData["9002"].realValue === "00") return null;
+  
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>
+            {t("configuration.geofence.speed_limit_debounce")}
+          </InputBox.Title>
+        </Stack>
+        <TextField
+          type="number"
+          value={circleState.speedLimitDebounce}
+          onChange={(e) =>
+            circleDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: e.target.value,  
+            })
+          }
+          helperText={
+            (circleState.speedLimitDebounce > 1800 ||
+              circleState.speedLimitDebounce < 0) &&
+            circleState.speedLimitDebounce !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 3,600`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 3,600`
+                : `Entrada solo entre 0 ~ 3,600`
+              : ""
+          }
+          error={
+            circleState.speedLimitDebounce > 1800 ||
+            circleState.speedLimitDebounce < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 1800,
+          }}
+        />
+      </Stack>
+    );
+  }
 
   const renderAntiJamming = () => {
     if (
@@ -688,6 +836,8 @@ const EditCircularGeofence = ({
           {renderOutputActive()}
           {renderOutputActiveDelay()}
           {renderBuzzerSpeedLimit()}
+          {renderSpeeds()}
+          {renderSpeedLimitDebounce()}
           {renderAntiJamming()}
         </Stack>
 
@@ -730,7 +880,12 @@ const EditCircularGeofence = ({
       infoRef.current += value;
       if (value.includes(CR)) {
         const circleData = parseLatLngRadius(infoRef.current);
-
+        console.  log("circleData ::::", circleData);
+        console.log("infoRef.current ::::", infoRef.current);
+        console.log("circleIndex ::::", circleIndex);
+        
+        
+        
         const newCircle = new google.maps.Circle({
           center: circleData.center,
           radius: circleData.radius,
@@ -755,6 +910,8 @@ const EditCircularGeofence = ({
             lng: circleData.center.lng,
           });
         }
+
+        console.log("circleData :::::", circleData);
 
         circleDispatch({
           type: "setEnterAlert",
@@ -835,6 +992,156 @@ const EditCircularGeofence = ({
           }
         }
 
+        if (
+          !!formData["9002"] && 
+          formData["9002"].realValue === "01" 
+          && circularGeofenceKeys.includes("BUZZER_SPEED_LIMIT")
+        ) {
+          const valueHex = infoRef.current.split("#")[1];
+          if (
+            !!formData["9001"] &&
+            formData["9001"].realValue === "01" &&
+            circularGeofenceKeys.includes("OUT_ACT")
+          ) {
+            // 둘다 있음 ()
+            // 023c3d4b079031a2095e0101 01 000f4240 000f4240 00 0001
+            if (circularGeofenceKeys.includes("SPEED_1") && circularGeofenceKeys.includes("SPEED_2")) {
+              // SPEED_1, SPEED_2 둘다 있음
+              const speed1Hex = valueHex.slice(34, 42);
+              const speed2Hex = valueHex.slice(42, 50);
+              const buzzerSpeedLimitHex = valueHex.slice(50, 52);
+
+              console.log("speed1Hex ::::", speed1Hex);
+              console.log("speed2Hex ::::", speed2Hex);
+              console.log("buzzerSpeedLimitHex ::::", buzzerSpeedLimitHex);
+              
+              circleDispatch({
+                type: "setSpeed1",
+                payload: parseInt(speed1Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setSpeed2",
+                payload: parseInt(speed2Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: buzzerSpeedLimitHex,
+              });
+            } else if (circularGeofenceKeys.includes("SPEED_1")) {
+              const speed1Hex = valueHex.slice(34, 42);
+              const buzzerSpeedLimitHex = valueHex.slice(42, 44);
+
+              console.log("speed1Hex ::::", speed1Hex);
+              console.log("buzzerSpeedLimitHex ::::", buzzerSpeedLimitHex);
+
+              circleDispatch({
+                type: "setSpeed1",
+                payload: parseInt(speed1Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: buzzerSpeedLimitHex,
+              });
+              // SPEED_1만 있음
+            } else if (circularGeofenceKeys.includes("SPEED_2")) {
+              // SPEED_2만 있음
+              const speed2Hex = valueHex.slice(34, 42);
+              const buzzerSpeedLimitHex = valueHex.slice(42, 44);
+
+              circleDispatch({
+                type: "setSpeed2",
+                payload: parseInt(speed2Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: buzzerSpeedLimitHex,
+              });
+            }
+          } else {
+            // speed만 있음
+            // 023c3d4b079031a2095e0101 000f4240 00 0001
+            if (circularGeofenceKeys.includes("SPEED_1") && circularGeofenceKeys.includes("SPEED_2")) {
+              // SPEED_1, SPEED_2 둘다 있음
+              const speed1Hex = valueHex.slice(24, 32);
+              const speed2Hex = valueHex.slice(32, 40);
+              const buzzerSpeedLimitHex = valueHex.slice(40, 42);
+
+              console.log("speed1Hex ::::", speed1Hex);
+              console.log("speed2Hex ::::", speed2Hex);
+              console.log("buzzerSpeedLimitHex ::::", buzzerSpeedLimitHex);
+              
+
+              circleDispatch({
+                type: "setSpeed1",
+                payload: parseInt(speed1Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setSpeed2",
+                payload: parseInt(speed2Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: buzzerSpeedLimitHex,
+              });
+            } else if (circularGeofenceKeys.includes("SPEED_1")) {
+              const speed1Hex = valueHex.slice(24, 32);
+              const buzzerSpeedLimitHex = valueHex.slice(32, 34);
+
+              console.log("speed1Hex ::::", speed1Hex);
+              console.log("buzzerSpeedLimitHex ::::", buzzerSpeedLimitHex);
+              
+
+              circleDispatch({
+                type: "setSpeed1",
+                payload: parseInt(speed1Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: buzzerSpeedLimitHex,
+              });
+              // SPEED_1만 있음
+            } else if (circularGeofenceKeys.includes("SPEED_2")) {
+              // SPEED_2만 있음
+              const speed2Hex = valueHex.slice(24, 32);
+              const buzzerSpeedLimitHex = valueHex.slice(32, 34);
+
+              circleDispatch({
+                type: "setSpeed2",
+                payload: parseInt(speed2Hex, 16) / 1000000,
+              });
+              circleDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: buzzerSpeedLimitHex,
+              });
+            }
+          }
+        }
+
+        if (
+          !!formData["9002"] && 
+          formData["9002"].realValue === "01" 
+          && circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")
+        ) {
+          const valueHex = infoRef.current.split("#")[1];
+
+          if (circularGeofenceKeys.includes("ANTI_JAM")) {
+            const speedLimitDebounceHex = valueHex.trim().slice(-6);
+
+            circleDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: parseInt(speedLimitDebounceHex, 16) / 1000000,
+            });
+            } else {
+            const speedLimitDebounceHex = valueHex.trim().slice(-4);
+
+            circleDispatch({
+              type: "setSpeedLimitDebounce",
+              payload: parseInt(speedLimitDebounceHex, 16) / 1000000,
+            });
+          }
+          
+        }
+
         if (circularGeofenceKeys.includes("ANTI_JAM")) {
           const valueHex = infoRef.current.split("#")[1];
           const antiJammingHex = valueHex.trim().slice(-2);
@@ -867,7 +1174,7 @@ const EditCircularGeofence = ({
     >
       {isFullLoading && <FullLoading />}
       <h1 data-section-id={SECTIONS.GeofenceConfig.en}>
-        {t("configuration.geofence.add_geofence_(circular)")}
+        {t("configuration.geofence.edit_geofence_(circular)")}
       </h1>
 
       {renderCircularGeofence()}
