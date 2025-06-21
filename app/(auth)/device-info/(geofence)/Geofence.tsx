@@ -371,6 +371,10 @@ const Geofence = ({
     }, 30000);
   }, []);
 
+  console.log("typeFilter ::::", typeFilter);
+  console.log("circularGeofenceMax ::::", circularGeofenceMax);
+  console.log("circularGeofenceMax ::::", circularGeofenceMax);
+
   return (
     <Form
       onSubmit={(e) => {
@@ -397,12 +401,11 @@ const Geofence = ({
               onChange={(e) => setTypeFilter(e.target.value as any)}
               sx={{ minWidth: 160 }}
             >
-              {polygonGeofenceMax === 0 ||
-                (circularGeofenceMax === 0 && (
-                  <MenuItem value={"All"}>
-                    {t("configuration.driver.all")}
-                  </MenuItem>
-                ))}
+              {polygonGeofenceMax !== 0 && circularGeofenceMax !== 0 && (
+                <MenuItem value={"All"}>
+                  {t("configuration.driver.all")}
+                </MenuItem>
+              )}
               {polygonGeofenceMax !== 0 && (
                 <MenuItem value={"Polygon"}>
                   {t("configuration.geofence.polygon")}
