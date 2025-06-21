@@ -27,6 +27,7 @@ import { delayPromise } from "@/src/hooks/useSerial";
 import { parseResponseToPolygonData } from "app/(auth)/configuration/geofence/utils";
 import { SerialPortState } from "@/src/stores/useSerialStore";
 import { FormField } from "../page";
+import { toast } from "react-toastify";
 
 interface Props {
   id: number;
@@ -121,6 +122,8 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimit":
+      return { ...state, speedLimit: action.payload };
     case "setSpeedLimitDebounce":
       return { ...state, speedLimitDebounce: action.payload };
   }
@@ -135,6 +138,8 @@ const EditPolygonGeofence = ({
   onCancel,
   polygonGeofenceKeys,
 }: Props) => {
+  const buffervalueRef = useRef<string>("");
+  
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [polygonInfoFetched, setPolygonInfoFetched] = useState(false);
   const [polygonState, polygonDispatch] = useReducer(polygonReducer, {
@@ -142,6 +147,7 @@ const EditPolygonGeofence = ({
     enterAlert: false,
     exitAlert: false,
     buzzerSpeedLimit: 0,
+    speedLimit: 0,
     speedLimitDebounce: 0,
   });
 
@@ -154,6 +160,9 @@ const EditPolygonGeofence = ({
   const polygonInfoRef = useRef("");
   const polygonList = currentPort.polygonGeofenceData;
   const polygonData = getPolygonGeofenceData(polygonList);
+
+
+  console.log("polygonGeofenceKeys :::::", polygonGeofenceKeys);
 
   /** Polygon Geofence */
   const handleEditPolygonGeo = () => {
@@ -181,15 +190,27 @@ const EditPolygonGeofence = ({
         .padStart(8, "0")
         .toUpperCase();
 
+      const speedLimitHex = Math.floor(
+        polygonState.speedLimit * 1000000
+      )
+        .toString(16)
+        .padStart(8, "0")
+        .toUpperCase();
+
       const speedLimitDebounceHex = Math.floor(polygonState.speedLimitDebounce)
         .toString(16)
         .padStart(4, "0")
         .toUpperCase();
 
+      const getPolygonBuzzerSpeedLimitHex =
+        polygonGeofenceKeys.includes("Buzzer Speed Limit")
+          ? buzzerSpeedLimitHex
+          : "";
+
       const getPolygonSpeedLimitHex =
         !isPolygonSpeedLimitDisabled &&
         polygonGeofenceKeys.includes("Polygon Speed Limit")
-          ? buzzerSpeedLimitHex
+          ? speedLimitHex
           : "";
 
       const getSpeedLimitDebounceHex =
@@ -197,24 +218,38 @@ const EditPolygonGeofence = ({
         polygonGeofenceKeys.includes("Speed Limit Debounce")
           ? speedLimitDebounceHex
           : "";
-      currentPort.port.oneditsuccess = () => {
-        onSuccess();
-        onCancel();
-      };
+      
+        currentPort.port.onbuffervalue = (value) => {
+          buffervalueRef.current += value;
+    
+          if (value.includes(CR)) {
+            if (buffervalueRef.current.includes("OK")) {
+              onSuccess();
+              onCancel();
+            } else {
+              toast.error(buffervalueRef.current);
+            }
+            buffervalueRef.current = "";
+            currentPort.port.onbuffervalue = null;
+          }
+        };
 
       write({
         data: `${AT_EDIT_PREFIX}${imei};53;${String(
-          polygonState.id - 1
+          Number(id) - 1
         ).padStart(2, "0")}#${mapManager.polygons[0].path.length
           .toString(16)
           .padStart(
             2,
             "0"
-          )}${enterExitHexString}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
+          )}${enterExitHexString}${getPolygonBuzzerSpeedLimitHex}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
         port: currentPort,
         writer: currentPort.writer,
       });
     };
+
+    // AT^PRG;4335433522;70;00#023C3516078FA723;01#023C5CFC07900B0C;02#023C196C07902DEB;03#023BE29E078FCEB3
+    // AT^PRG;4335433522;60;00#023C3516078FA723;01#023C5CFC07900B0C;02#023C196C07902DEB;03#023BE29E078FCEB3
 
     // 20개 이상이면 쪼개서 보내는 로직
     chunkDataByNumberAndWrite(
@@ -229,14 +264,14 @@ const EditPolygonGeofence = ({
       }
     );
   };
-
-  const renderPolygonSpeedLimit = () => {
-    if (!formData["9000"] || formData["9000"].realValue === "00") return null;
+  
+  const renderBuzzerSpeedLimit = () => {
+    if (!formData["9000"] || formData["9000"].realValue === "00" || !polygonGeofenceKeys.includes("Buzzer Speed Limit")) return null;
     return (
       <Stack gap="8px">
         <Stack direction="row" gap="4px" alignItems="center">
           <InputBox.Title>
-            {t("configuration.geofence.polygon_speed_limit")}
+            {t("configuration.geofence.buzzer_speed_limit")}
           </InputBox.Title>
         </Stack>
 
@@ -263,6 +298,49 @@ const EditPolygonGeofence = ({
           error={
             polygonState.buzzerSpeedLimit > 300 ||
             polygonState.buzzerSpeedLimit < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 300,
+          }}
+        />
+      </Stack>
+    );
+  };
+
+  const renderPolygonSpeedLimit = () => {
+    if (!formData["9000"] || formData["9000"].realValue === "00" || !polygonGeofenceKeys.includes("Polygon Speed Limit")) return null;
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>
+            {t("configuration.geofence.polygon_speed_limit")}
+          </InputBox.Title>
+        </Stack>
+
+        <TextField
+          type="number"
+          value={polygonState.speedLimit}
+          onChange={(e) =>
+            polygonDispatch({
+              type: "setSpeedLimit",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (polygonState.speedLimit > 300 ||
+              polygonState.speedLimit < 0) &&
+            polygonState.speedLimit !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 300`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 300`
+                : `Entrada solo entre 0 ~ 300`
+              : ""
+          }
+          error={
+            polygonState.speedLimit > 300 ||
+            polygonState.speedLimit < 0
           }
           inputProps={{
             min: 0,
@@ -403,6 +481,7 @@ const EditPolygonGeofence = ({
             />
           </Stack>
 
+          {renderBuzzerSpeedLimit()}
           {renderPolygonSpeedLimit()}
           {renderSpeedLimitDebounce()}
         </Stack>
@@ -459,6 +538,11 @@ const EditPolygonGeofence = ({
           // 폴리곤 정보 파싱
           const polygonInfoData = parsePolygonInfo(responseData);
 
+          console.log("responseData :::::", responseData);
+          
+          console.log("polygonInfoData :::::", polygonInfoData);
+          
+
           if (polygonInfoData) {
             polygonDispatch({
               type: "setEnterAlert",
@@ -468,14 +552,23 @@ const EditPolygonGeofence = ({
               type: "setExitAlert",
               payload: polygonInfoData.exitAlert,
             });
-            polygonDispatch({
-              type: "setBuzzerSpeedLimit",
-              payload: polygonInfoData?.buzzerSpeedLimit || 0,
-            });
-            polygonDispatch({
-              type: "setSpeedLimitDebounce",
-              payload: polygonInfoData?.speedLimitDebounce || 0,
-            });
+
+            if (polygonGeofenceKeys.includes("Buzzer Speed Limit")) {
+              polygonDispatch({
+                type: "setBuzzerSpeedLimit",
+                payload: polygonInfoData?.buzzerSpeedLimit || 0,
+              });
+            } else if (polygonGeofenceKeys.includes("Polygon Speed Limit")) {
+              polygonDispatch({
+                type: "setSpeedLimit",
+                payload: polygonInfoData?.buzzerSpeedLimit || 0,
+              });
+              polygonDispatch({
+                type: "setSpeedLimitDebounce",
+                payload: polygonInfoData?.speedLimitDebounce || 0,
+              });
+            }
+
           }
 
           // 정보 요청 완료 표시 - 포인트 요청 효과 트리거

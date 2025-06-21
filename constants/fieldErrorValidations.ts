@@ -1,3 +1,7 @@
+export const FIELD_ERRORS_REGEX = {
+  alphaNumericPatternWithSymbols: /^[A-Za-z0-9\.-]*$/,
+};
+
 export const FIELD_ERRORS = {
   minMax: (min, max) => {
     return {

@@ -110,7 +110,6 @@ export default function useDeviceVersions({
     if (!currentPort?.port?.writable || !currentPort?.port?.readable) {
       return;
     }
-
     if (currentPort?.port?.isReadyToUse && isFechedPackage) {
       setTimeout(() => {
         setIsLoading(true);
@@ -147,8 +146,14 @@ export default function useDeviceVersions({
                 deviceVersionsObjectRef.current
               );
 
-              console.log("deviceVersionsCount.current :::", deviceVersionsCount.current);
-              
+              console.log(
+                "deviceVersionsCount.current :::",
+                deviceVersionsCount.current
+              );
+
+              if (key === "MODEM" && !currentPort.modemVersion) {
+                currentPort.modemVersion = value;
+              }
 
               if (deviceVersionsCount.current === 10) {
                 currentPort.port.isDeviceVersionsFetching = false;

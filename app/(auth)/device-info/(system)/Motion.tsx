@@ -11,8 +11,8 @@ import { SwitchPrimary } from "@/components/switches";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
-import CheckboxComp from "app/(auth)/device-info/(components)/CheckboxComp";
 import EditDot from "../(components)/EditDot";
+import MotionSensorCheckbox from "../(components)/MotionSensorCheckbox";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Motion.en];
 
@@ -152,13 +152,12 @@ const Motion = ({ formData, onChange, setFormData }: Props) => {
                   <InputBox.Number>1900</InputBox.Number>
                   {isDirtyFields.includes("1900") && <EditDot />}
                 </Stack>
-                <CheckboxComp
+                <MotionSensorCheckbox
                   value={formData["1900"]?.realValue}
-                  optionsString={"b0, b1, b2"}
-                  labelsString={labelsString}
-                  hasAllCheckbox={false}
                   lang={lang}
                   onChange={(newValue) => {
+                    console.log("newValue :::", newValue);
+
                     handleChange("1900", newValue);
                   }}
                 />

@@ -15,7 +15,7 @@ import {
   getPolygonGeofenceData,
 } from "@/src/hooks/useSerial/utils";
 import useSerialStore, { SerialPortState } from "@/src/stores/useSerialStore";
-import useGefence from "@/src/hooks/useGefence";
+
 import {
   AT_EDIT_PREFIX,
   CR,
@@ -40,7 +40,7 @@ interface Props {
     [key: string]: FormField;
   };
   currentPort: SerialPortState;
-  isReady: boolean;
+  isFetching: boolean;
   write: ({
     data,
     port,
@@ -53,7 +53,6 @@ interface Props {
 
   polygonGeofenceMax: number;
   circularGeofenceMax: number;
-  onAfterFetch?: () => void;
   onAdd?: () => void;
   onEdit?: (id: number, type: "polygon" | "circular") => void;
 }
@@ -124,11 +123,10 @@ const tooltipText = {
 
 const Geofence = ({
   currentPort,
-  isReady,
+  isFetching,
   write,
   polygonGeofenceMax,
   circularGeofenceMax,
-  onAfterFetch,
   onAdd,
   onEdit,
 }: Props) => {
@@ -155,16 +153,6 @@ const Geofence = ({
 
   const polygonPointRef = useRef("");
   const circlePointRef = useRef("");
-
-  const { isFetching } = useGefence({
-    port: currentPort,
-    isReady,
-    write,
-    polygonGeofenceMax,
-    circularGeofenceMax,
-    imei: currentPort.imei,
-    onAfterFetch,
-  });
 
   const polygonList = currentPort.polygonGeofenceData;
   const circularList = currentPort.circularGeofenceData;
@@ -208,6 +196,11 @@ const Geofence = ({
           const imei = currentPort.port.imei;
           if (type === "polygon") {
             const zeroLength = polygonList[groupId - 1].split("#")[1].length;
+
+            console.log(
+              polygonList[groupId - 1].split("#")[1].length,
+              polygonList[groupId - 1].split("#")[1]
+            );
 
             currentPort.port.oneditsuccess = () => {
               setPolygonGeofence({
@@ -378,6 +371,10 @@ const Geofence = ({
     }, 30000);
   }, []);
 
+  console.log("typeFilter ::::", typeFilter);
+  console.log("circularGeofenceMax ::::", circularGeofenceMax);
+  console.log("circularGeofenceMax ::::", circularGeofenceMax);
+
   return (
     <Form
       onSubmit={(e) => {
@@ -404,12 +401,11 @@ const Geofence = ({
               onChange={(e) => setTypeFilter(e.target.value as any)}
               sx={{ minWidth: 160 }}
             >
-              {polygonGeofenceMax === 0 ||
-                (circularGeofenceMax === 0 && (
-                  <MenuItem value={"All"}>
-                    {t("configuration.driver.all")}
-                  </MenuItem>
-                ))}
+              {polygonGeofenceMax !== 0 && circularGeofenceMax !== 0 && (
+                <MenuItem value={"All"}>
+                  {t("configuration.driver.all")}
+                </MenuItem>
+              )}
               {polygonGeofenceMax !== 0 && (
                 <MenuItem value={"Polygon"}>
                   {t("configuration.geofence.polygon")}
