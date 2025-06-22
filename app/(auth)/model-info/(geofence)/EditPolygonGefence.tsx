@@ -101,6 +101,8 @@ const polygonReducer = (state: any, action: any) => {
       return { ...state, exitAlert: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimit":
+      return { ...state, speedLimit: action.payload };
     case "setSpeedLimitDebounce":
       return { ...state, speedLimitDebounce: action.payload };
   }
@@ -140,11 +142,60 @@ const EditPolygonGeofence = ({
         enterAlert: polygonState.enterAlert,
         exitAlert: polygonState.exitAlert,
         buzzerSpeedLimit: polygonState.buzzerSpeedLimit,
+        speedLimit: polygonState.speedLimit,
         speedLimitDebounce: polygonState.speedLimitDebounce,
       },
     ]);
 
     onCancel();
+  };
+
+  const renderBuzzerSpeedLimit = () => {
+    if (
+      !formData["9000"] ||
+      formData["9000"].realValue === "00" ||
+      !polygonGeofenceKeys.includes("Buzzer Speed Limit")
+    )
+      return null;
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>
+            {t("configuration.geofence.buzzer_speed_limit")}
+          </InputBox.Title>
+        </Stack>
+
+        <TextField
+          type="number"
+          value={polygonState.buzzerSpeedLimit}
+          onChange={(e) =>
+            polygonDispatch({
+              type: "setBuzzerSpeedLimit",
+              payload: e.target.value,
+            })
+          }
+          helperText={
+            (polygonState.buzzerSpeedLimit > 300 ||
+              polygonState.buzzerSpeedLimit < 0) &&
+            polygonState.buzzerSpeedLimit !== ""
+              ? lang === "en"
+                ? `Input only between 0 ~ 300`
+                : lang === "pt"
+                ? `Entrada somente entre 0 ~ 300`
+                : `Entrada solo entre 0 ~ 300`
+              : ""
+          }
+          error={
+            polygonState.buzzerSpeedLimit > 300 ||
+            polygonState.buzzerSpeedLimit < 0
+          }
+          inputProps={{
+            min: 0,
+            max: 300,
+          }}
+        />
+      </Stack>
+    );
   };
 
   const renderPolygonSpeedLimit = () => {
@@ -325,6 +376,7 @@ const EditPolygonGeofence = ({
             />
           </Stack>
 
+          {renderBuzzerSpeedLimit()}
           {renderPolygonSpeedLimit()}
           {renderSpeedLimitDebounce()}
         </Stack>
@@ -398,6 +450,10 @@ const EditPolygonGeofence = ({
       polygonDispatch({
         type: "setBuzzerSpeedLimit",
         payload: data?.buzzerSpeedLimit || 0,
+      });
+      polygonDispatch({
+        type: "setSpeedLimit",
+        payload: data?.speedLimit || 0,
       });
       polygonDispatch({
         type: "setSpeedLimitDebounce",

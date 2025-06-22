@@ -84,6 +84,8 @@ const useProfileWithoutDevice = ({
     const circularGeofence = modelData.geofence.circular;
     const polygonGeofence = modelData.geofence.polygon;
 
+    console.log("circularGeofence :::", circularGeofence);
+
     const circularGeofenceProfileList = circularGeofence.map(
       ({
         id,
@@ -96,6 +98,9 @@ const useProfileWithoutDevice = ({
         outputActiveDelay,
         outputKeepActive,
         buzzerSpeedLimit,
+        speed1,
+        speed2,
+        speedLimitDebounce,
         antiJamming,
       }) => {
         const circleIndex = findCircleIndexByNumber(id - 1);
@@ -151,29 +156,34 @@ const useProfileWithoutDevice = ({
           )
             return "";
 
-          if (
-            circularGeofenceKeys.includes("SPEED_2") &&
-            circularGeofenceKeys.includes("SPEED_1")
-          ) {
-            return (
-              Math.floor(Number(buzzerSpeedLimit) * 1000000)
-                .toString(16)
-                .padStart(8, "0")
-                .toUpperCase() +
-              Math.floor(Number(buzzerSpeedLimit) * 1000000)
-                .toString(16)
-                .padStart(8, "0")
-                .toUpperCase() +
-              "00" // 01로 하면 무조건 에러 남
-            );
-          }
+          return buzzerSpeedLimit;
+        };
 
-          return (
-            Math.floor(Number(buzzerSpeedLimit) * 1000000)
-              .toString(16)
-              .padStart(8, "0")
-              .toUpperCase() + "00" // 01로 하면 무조건 에러 남
-          );
+        const getSpeed1HexString = () => {
+          if (
+            !formData["9002"] ||
+            formData["9002"].realValue === "00" ||
+            !circularGeofenceKeys.includes("SPEED_1")
+          )
+            return "";
+
+          return Math.floor(Number(speed1) * 1000000)
+            .toString(16)
+            .padStart(8, "0")
+            .toUpperCase();
+        };
+        const getSpeed2HexString = () => {
+          if (
+            !formData["9002"] ||
+            formData["9002"].realValue === "00" ||
+            !circularGeofenceKeys.includes("SPEED_2")
+          )
+            return "";
+
+          return Math.floor(Number(speed2) * 1000000)
+            .toString(16)
+            .padStart(8, "0")
+            .toUpperCase();
         };
 
         const getSpeedLimitDebounceHexString = () => {
@@ -184,7 +194,10 @@ const useProfileWithoutDevice = ({
           )
             return "";
 
-          return "0000"; // 01로 하면 무조건 에러 남
+          return Math.floor(Number(speedLimitDebounce) * 1000000)
+            .toString(16)
+            .padStart(4, "0")
+            .toUpperCase();
         };
 
         const getAntiJammingHexString = () => {
@@ -201,10 +214,12 @@ const useProfileWithoutDevice = ({
         const outputActiveHexString = getOutputActiveHexString();
         const outputActiveDelayHexString = getOutputActiveDelayHexString();
         const buzzerSpeedLimitHexString = getBuzzerSpeedLimitHexString();
+        const speed1HexString = getSpeed1HexString();
+        const speed2HexString = getSpeed2HexString();
         const antiJammingHexString = getAntiJammingHexString();
         const speedLimitDebounceHexString = getSpeedLimitDebounceHexString();
 
-        const restString = `CGF,PRG;;${circleIndex};${coordinateToHexString}${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${buzzerSpeedLimitHexString}${antiJammingHexString}${speedLimitDebounceHexString}`;
+        const restString = `CGF,PRG;;${circleIndex};${coordinateToHexString}${enterExitHexString}${outputActiveHexString}${outputActiveDelayHexString}${speed1HexString}${speed2HexString}${buzzerSpeedLimitHexString}${speedLimitDebounceHexString}${antiJammingHexString}`;
 
         return restString;
       }
@@ -216,6 +231,7 @@ const useProfileWithoutDevice = ({
         enterAlert,
         exitAlert,
         buzzerSpeedLimit,
+        speedLimit,
         speedLimitDebounce,
         coordinates,
       }) => {
@@ -237,15 +253,26 @@ const useProfileWithoutDevice = ({
           .padStart(8, "0")
           .toUpperCase();
 
+        const speedLimitHex = Math.floor(Number(speedLimit) * 1000000)
+          .toString(16)
+          .padStart(8, "0")
+          .toUpperCase();
+
         const speedLimitDebounceHex = Math.floor(Number(speedLimitDebounce))
           .toString(16)
           .padStart(4, "0")
           .toUpperCase();
 
+        const getPolygonBuzzerSpeedLimitHex = polygonGeofenceKeys.includes(
+          "Buzzer Speed Limit"
+        )
+          ? buzzerSpeedLimitHex
+          : "";
+
         const getPolygonSpeedLimitHex =
           !isPolygonSpeedLimitDisabled &&
           polygonGeofenceKeys.includes("Polygon Speed Limit")
-            ? buzzerSpeedLimitHex
+            ? speedLimitHex
             : "";
 
         const getSpeedLimitDebounceHex =
@@ -258,7 +285,7 @@ const useProfileWithoutDevice = ({
         const restString2 = `PLG,PRG;;53;${String(id - 1).padStart(
           2,
           "0"
-        )};${enterExitHexString}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`;
+        )};${enterExitHexString}${getPolygonBuzzerSpeedLimitHex}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`;
 
         return {
           points: restString,
