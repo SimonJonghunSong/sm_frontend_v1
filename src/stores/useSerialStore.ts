@@ -24,6 +24,8 @@ export type SerialPortState = {
   modemVersion: string;
   isAlreadyUnlock: boolean;
   password?: string;
+  isPackageRefetching: boolean;
+  hasRefetching: boolean;
 };
 
 type SerialPortAction = {
@@ -39,6 +41,8 @@ type SerialPortAction = {
     payload: Partial<SerialPortState>;
   }) => void;
   setPackageFetchingStart: ({ imei }: { imei: string }) => void;
+  setPackageRefetchingStart: ({ imei }: { imei: string }) => void;
+  setPackageRefetchingEnd: ({ imei }: { imei: string }) => void;
   setJsonPackageOfSerialPort: ({
     imei,
     payload,
@@ -74,6 +78,8 @@ type SerialPortAction = {
   setIsConnected: ({ imei }: { imei: string }) => void;
   setIsAlreadyUnlock: ({ imei }: { imei: string }) => void;
   setPassword: ({ imei, password }: { imei: string; password: string }) => void;
+  setHasRefetching: ({ imei, value }: { imei: string; value: boolean }) => void;
+  resetHasRefetching: () => void;
 };
 
 export const parse = (str) => {
@@ -131,6 +137,63 @@ const useSerialStore = create(
             ),
           };
         }),
+      setPackageRefetchingStart: ({ imei }) =>
+        set(() => {
+          const getState = get();
+          const portInGlobalState = getState.portList.find(
+            (p) => p.port.imei === imei
+          );
+
+          return {
+            portList: getState.portList.map((port) =>
+              port.port.imei === imei
+                ? {
+                    ...portInGlobalState,
+                    isPackageFetching: true,
+                    isPackageRefetching: true,
+                    isPackageError: false,
+                  }
+                : port
+            ),
+          };
+        }),
+      setPackageRefetchingEnd: ({ imei }) =>
+        set(() => {
+          const getState = get();
+          const portInGlobalState = getState.portList.find(
+            (p) => p.port.imei === imei
+          );
+
+          return {
+            portList: getState.portList.map((port) =>
+              port.port.imei === imei
+                ? {
+                    ...portInGlobalState,
+                    isPackageFetching: false,
+                    isPackageRefetching: false,
+                    isPackageError: false,
+                  }
+                : port
+            ),
+          };
+        }),
+      setHasRefetching: ({ imei, value }) =>
+        set(() => {
+          const getState = get();
+
+          console.log("setHasRefetching ::::::@::@:@::::");
+
+          return {
+            portList: getState.portList.map((port) =>
+              port.port.imei === imei
+                ? {
+                    ...port,
+                    hasRefetching: value,
+                  }
+                : port
+            ),
+          };
+        }),
       setJsonPackageOfSerialPort: ({ imei, payload }) =>
         set(() => {
           const getState = get();
@@ -166,8 +229,6 @@ const useSerialStore = create(
               .replace(/\0/g, "")
           );
 
-          console.log("json ::::", json);
-
           return {
             portList: getState.portList.map((prevPort) =>
               prevPort.port.imei === imei
@@ -179,6 +240,8 @@ const useSerialStore = create(
                     shouldRefetchPackage: false,
                     packageToJson: json as unknown as { synctrak: any[] },
                     isPackageError: !json,
+                    isPackageRefetching: false,
+                    hasRefetching: true,
                   }
                 : prevPort
             ),
@@ -280,6 +343,15 @@ const useSerialStore = create(
             }),
           };
         }),
+      resetHasRefetching: () => {
+        set(() => {
+          return {
+            portList: get().portList.map((item) => {
+              return { ...item, hasRefetching: false };
+            }),
+          };
+        });
+      },
     }),
     {
       name: "serialStore",

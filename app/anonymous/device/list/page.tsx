@@ -10,8 +10,8 @@ import DataTable from "@/components/dataTable";
 import Modal from "@/components/Modal";
 import useModal from "@/utils/useModal";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
-import { AT_EDIT_PREFIX } from "@/src/hooks/useSerial/constant";
-import useSerialStore from "@/src/stores/useSerialStore";
+import { AT_EDIT_PREFIX, AT_GET_JSON } from "@/src/hooks/useSerial/constant";
+import useSerialStore, { SerialPortState } from "@/src/stores/useSerialStore";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 import styles from "./styles.module.scss";
 import dayjs from "dayjs";
@@ -76,6 +76,50 @@ export default function DeviceList() {
   } = useSerial();
   const { setImei, resetTab } = useSerialConfigurationStore();
   const { setModelName, setFwVer, setTargetCountry } = useModelInfoStore();
+
+  const { setPackageRefetchingStart, setPackageRefetchingEnd } =
+    useSerialStore();
+
+  const handleRefreshJsonPacket = async (targetPort: SerialPortState) => {
+    let isFechedPackageRef = false;
+    let packageCountRef = 0;
+
+    targetPort.port.grpNo = targetPort.jsonPackageCount;
+    setPackageRefetchingStart({ imei: targetPort.port.imei });
+
+    const commands = Array.from(
+      { length: targetPort.jsonPackageCount },
+      (_, i) => `${AT_GET_JSON}${i + 1}`
+    );
+    targetPort.port.isjsonpackagefetching = true;
+    targetPort.port.onjsonpacketcountup = (count) => {
+      packageCountRef += count;
+      if (packageCountRef === targetPort.jsonPackageCount) {
+        isFechedPackageRef = true;
+        packageCountRef = 0;
+        setPackageRefetchingEnd({ imei: targetPort.port.imei });
+      }
+    };
+    for (const command of commands) {
+      await delayPromise(300); // 100ms 지연
+
+      write({
+        data: command,
+        port: targetPort.port,
+        writer: targetPort.writer,
+      });
+    }
+
+    setTimeout(() => {
+      if (!isFechedPackageRef) {
+        isFechedPackageRef = true;
+        packageCountRef = 0;
+        targetPort.port.isjsonpackagefetching = false;
+        targetPort.isPackageRefetching = false;
+        setPackageRefetchingEnd({ imei: targetPort.port.imei });
+      }
+    }, 10000);
+  };
 
   const columns: GridColDef[] = [
     {
@@ -191,17 +235,45 @@ export default function DeviceList() {
         }
         if (params.value.isPackageFetching) {
           return (
-            <Button
-              disabled
-              variant="contained"
-              color="secondary"
-              sx={{ width: "120px" }}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="center"
+              gap={"4px"}
+              width={"100%"}
+              height={"100%"}
             >
-              Loading...
-            </Button>
+              <Button
+                disabled
+                variant="contained"
+                color="secondary"
+                sx={{ width: "120px" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                Loading...
+              </Button>
+              {params.value.hasRefetching && (
+                <Button
+                  color="secondary"
+                  variant="outlined"
+                  sx={{
+                    padding: "7px",
+                  }}
+                  onClick={() => {
+                    handleRefreshJsonPacket(params.value.port);
+                  }}
+                  disabled={params.value.isPackageRefetching}
+                >
+                  {params.value.isPackageRefetching ? (
+                    <LoadingCircle />
+                  ) : (
+                    <RefreshOutlinedIcon />
+                  )}
+                </Button>
+              )}
+            </Stack>
           );
         } else {
           return (
@@ -258,7 +330,9 @@ export default function DeviceList() {
           !port.isPackageFetching &&
           port.jsonPackage?.length === port.jsonPackageCount,
         isPackageFetching: port.isPackageFetching,
+        isPackageRefetching: port.isPackageRefetching,
         isPackageError: port.isPackageError,
+        hasRefetching: port.hasRefetching,
         port,
       },
     };
