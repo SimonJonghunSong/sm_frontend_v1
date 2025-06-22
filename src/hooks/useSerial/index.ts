@@ -87,6 +87,8 @@ const useSerial = () => {
     setIsConnected,
     setIsAlreadyUnlock,
     setPassword,
+    resetHasRefetching,
+    setHasRefetching,
   } = useSerialStore();
 
   const killAllPort = () => {
@@ -110,6 +112,10 @@ const useSerial = () => {
           await port.open(options);
           await addPortToState(port);
         } catch (error) {
+          if (port?.imei) {
+            setHasRefetching({ imei: port.imei, value: true });
+          }
+
           return;
         }
       });
@@ -162,6 +168,7 @@ const useSerial = () => {
         writer,
         readableStreamClosed,
         writableStreamClosed,
+        setHasRefetching,
       }).catch(() => {});
 
       setTimeout(async () => {
@@ -205,12 +212,20 @@ const useSerial = () => {
     writer,
     readableStreamClosed,
     writableStreamClosed,
+    setHasRefetching,
   }: {
     port: SerialPort;
     reader: ReadableStreamDefaultReader<string>;
     writer: WritableStreamDefaultWriter<string>;
     readableStreamClosed: Promise<void>;
     writableStreamClosed: Promise<void>;
+    setHasRefetching: ({
+      imei,
+      value,
+    }: {
+      imei: string;
+      value: boolean;
+    }) => void;
   }) => {
     try {
       while (true) {
@@ -393,6 +408,8 @@ const useSerial = () => {
                             writableStreamClosed,
                             writer,
                             reader,
+                            isPackageRefetching: false,
+                            hasRefetching: true,
                           },
                           imei: currentImei,
                         });
@@ -415,6 +432,7 @@ const useSerial = () => {
                           rawPackage: "",
                           jsonPackage: [],
                           isPackageFetching: false,
+                          isPackageRefetching: false,
                           imei: currentImei,
                           packageToJson: undefined,
                           isPackageError: false,
@@ -425,6 +443,7 @@ const useSerial = () => {
                           modemVersion: "",
                           isAlreadyUnlock: false,
                           password: "",
+                          hasRefetching: false,
                         });
                         port.ispackagecountfetching = true;
                         write({
@@ -844,6 +863,8 @@ const useSerial = () => {
                             writableStreamClosed,
                             writer,
                             reader,
+                            isPackageRefetching: false,
+                            hasRefetching: true,
                           },
                           imei: currentImei,
                         });
@@ -866,6 +887,7 @@ const useSerial = () => {
                           rawPackage: "",
                           jsonPackage: [],
                           isPackageFetching: false,
+                          isPackageRefetching: false,
                           imei: currentImei,
                           packageToJson: undefined,
                           isPackageError: false,
@@ -876,6 +898,7 @@ const useSerial = () => {
                           modemVersion: "",
                           isAlreadyUnlock: false,
                           password: "",
+                          hasRefetching: false,
                         });
                         if (port.isLock) {
                           port.ispackagecountfetching = true;
@@ -1234,7 +1257,7 @@ const useSerial = () => {
 
       toast.error(error.message);
 
-      console.log(error);
+      setHasRefetching({ imei: port.imei, value: true });
     } finally {
       reader.releaseLock();
     }
@@ -1270,8 +1293,6 @@ const useSerial = () => {
           if (port.isQuecModel) {
             await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
           } else {
-            console.log("test :::::::::", data);
-
             await writer.write(data + SUFFIX); // Uint8Array 전송
           }
         }
@@ -1326,6 +1347,7 @@ const useSerial = () => {
   };
 
   useEffect(() => {
+    resetHasRefetching();
     getPorts();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
