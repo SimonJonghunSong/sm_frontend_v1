@@ -113,8 +113,14 @@ const circleReducer = (state: any, action: any) => {
       return { ...state, outputKeepActive: action.payload };
     case "setOutputActiveDelay":
       return { ...state, outputActiveDelay: action.payload };
+    case "setSpeed1":
+      return { ...state, speed1: action.payload };
+    case "setSpeed2":
+      return { ...state, speed2: action.payload };
     case "setBuzzerSpeedLimit":
       return { ...state, buzzerSpeedLimit: action.payload };
+    case "setSpeedLimitDebounce":
+      return { ...state, speedLimitDebounce: action.payload };
     case "setAntiJamming":
       return { ...state, antiJamming: action.payload };
     default:
@@ -142,7 +148,10 @@ const EditCircularGeofence = ({
     outputActive: "00",
     outputKeepActive: false,
     outputActiveDelay: 0,
-    buzzerSpeedLimit: 0,
+    buzzerSpeedLimit: "00",
+    speedLimitDebounce: 0,
+    speed1: 0,
+    speed2: 0,
     antiJamming: false,
   });
 
@@ -167,7 +176,10 @@ const EditCircularGeofence = ({
         outputActive: circleState.outputActive,
         outputActiveDelay: circleState.outputActiveDelay,
         outputKeepActive: circleState.outputKeepActive,
+        speed1: circleState.speed1,
+        speed2: circleState.speed2,
         buzzerSpeedLimit: circleState.buzzerSpeedLimit,
+        speedLimitDebounce: circleState.speedLimitDebounce,
         antiJamming: circleState.antiJamming,
       },
     ]);
@@ -331,12 +343,100 @@ const EditCircularGeofence = ({
     );
   };
 
+  const renderSpeeds = () => {
+    if (
+      !formData["9002"] ||
+      formData["9002"].realValue === "00" ||
+      (!circularGeofenceKeys.includes("SPEED_1") &&
+        !circularGeofenceKeys.includes("SPEED_2")) ||
+      circleState.buzzerSpeedLimit === "00"
+    )
+      return null;
+
+    return (
+      <>
+        {circularGeofenceKeys.includes("SPEED_1") && (
+          <Stack gap="8px">
+            <Stack direction="row" gap="4px" alignItems="center">
+              <InputBox.Title>
+                {t("configuration.geofence.speed_1")}
+              </InputBox.Title>
+            </Stack>
+            <TextField
+              type="number"
+              value={circleState.speed1}
+              onChange={(e) =>
+                circleDispatch({
+                  type: "setSpeed1",
+                  payload: e.target.value,
+                })
+              }
+              helperText={
+                (circleState.speed1 > 3600 || circleState.speed1 < 0) &&
+                circleState.speed1 !== ""
+                  ? lang === "en"
+                    ? `Input only between 0 ~ 3,600`
+                    : lang === "pt"
+                    ? `Entrada somente entre 0 ~ 3,600`
+                    : `Entrada solo entre 0 ~ 3,600`
+                  : ""
+              }
+              error={circleState.speed1 > 3600 || circleState.speed1 < 0}
+              inputProps={{
+                min: 0,
+                max: 3600,
+              }}
+            />
+          </Stack>
+        )}
+        {circularGeofenceKeys.includes("SPEED_2") && (
+          <Stack gap="8px">
+            <Stack direction="row" gap="4px" alignItems="center">
+              <InputBox.Title>
+                {t("configuration.geofence.speed_2")}
+              </InputBox.Title>
+            </Stack>
+            <TextField
+              type="number"
+              value={circleState.speed2}
+              onChange={(e) =>
+                circleDispatch({
+                  type: "setSpeed2",
+                  payload: e.target.value,
+                })
+              }
+              helperText={
+                (circleState.speed2 > 3600 || circleState.speed2 < 0) &&
+                circleState.speed2 !== ""
+                  ? lang === "en"
+                    ? `Input only between 0 ~ 3,600`
+                    : lang === "pt"
+                    ? `Entrada somente entre 0 ~ 3,600`
+                    : `Entrada solo entre 0 ~ 3,600`
+                  : ""
+              }
+              error={circleState.speed2 > 3600 || circleState.speed2 < 0}
+              inputProps={{
+                min: 0,
+                max: 3600,
+              }}
+            />
+          </Stack>
+        )}
+      </>
+    );
+  };
+
   const renderBuzzerSpeedLimit = () => {
     if (!circularGeofenceKeys.includes("BUZZER_SPEED_LIMIT")) return null;
     if (!formData["9002"] || formData["9002"].realValue === "00") return null;
 
     return (
-      <Stack gap="8px">
+      <Stack
+        direction={"row"}
+        alignItems={"center"}
+        justifyContent={"space-between"}
+      >
         <Stack direction="row" gap="4px" alignItems="center">
           <InputBox.Title>
             {t("configuration.geofence.buzzer_speed_limit")}
@@ -351,33 +451,57 @@ const EditCircularGeofence = ({
           />
         </Stack>
 
-        <TextField
-          type="number"
-          value={circleState.buzzerSpeedLimit}
+        <SwitchPrimary
+          checked={circleState.buzzerSpeedLimit === "01"}
           onChange={(e) =>
             circleDispatch({
               type: "setBuzzerSpeedLimit",
+              payload: e.target.checked ? "01" : "00",
+            })
+          }
+        />
+      </Stack>
+    );
+  };
+
+  const renderSpeedLimitDebounce = () => {
+    if (!circularGeofenceKeys.includes("SPEED_LIMIT_DEBOUNCE")) return null;
+    if (!formData["9002"] || formData["9002"].realValue === "00") return null;
+
+    return (
+      <Stack gap="8px">
+        <Stack direction="row" gap="4px" alignItems="center">
+          <InputBox.Title>
+            {t("configuration.geofence.speed_limit_debounce")}
+          </InputBox.Title>
+        </Stack>
+        <TextField
+          type="number"
+          value={circleState.speedLimitDebounce}
+          onChange={(e) =>
+            circleDispatch({
+              type: "setSpeedLimitDebounce",
               payload: e.target.value,
             })
           }
           helperText={
-            (circleState.buzzerSpeedLimit > 300 ||
-              circleState.buzzerSpeedLimit < 0) &&
-            circleState.buzzerSpeedLimit !== ""
+            (circleState.speedLimitDebounce > 1800 ||
+              circleState.speedLimitDebounce < 0) &&
+            circleState.speedLimitDebounce !== ""
               ? lang === "en"
-                ? `Input only between 0 ~ 300`
+                ? `Input only between 0 ~ 3,600`
                 : lang === "pt"
-                ? `Entrada somente entre 0 ~ 300`
-                : `Entrada solo entre 0 ~ 300`
+                ? `Entrada somente entre 0 ~ 3,600`
+                : `Entrada solo entre 0 ~ 3,600`
               : ""
           }
           error={
-            circleState.buzzerSpeedLimit > 300 ||
-            circleState.buzzerSpeedLimit < 0
+            circleState.speedLimitDebounce > 1800 ||
+            circleState.speedLimitDebounce < 0
           }
           inputProps={{
             min: 0,
-            max: 300,
+            max: 1800,
           }}
         />
       </Stack>
@@ -554,6 +678,8 @@ const EditCircularGeofence = ({
           {renderOutputActive()}
           {renderOutputActiveDelay()}
           {renderBuzzerSpeedLimit()}
+          {renderSpeeds()}
+          {renderSpeedLimitDebounce()}
           {renderAntiJamming()}
         </Stack>
 
@@ -652,8 +778,20 @@ const EditCircularGeofence = ({
         payload: data?.outputKeepActive,
       });
       circleDispatch({
+        type: "setSpeed1",
+        payload: data?.speed1,
+      });
+      circleDispatch({
+        type: "setSpeed2",
+        payload: data?.speed2,
+      });
+      circleDispatch({
         type: "setBuzzerSpeedLimit",
         payload: data?.buzzerSpeedLimit,
+      });
+      circleDispatch({
+        type: "setSpeedLimitDebounce",
+        payload: data?.speedLimitDebounce,
       });
       circleDispatch({
         type: "setAntiJamming",

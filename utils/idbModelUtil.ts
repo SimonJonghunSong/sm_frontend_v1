@@ -21,6 +21,9 @@ export interface IDBCircularGeofence {
   outputActiveDelay?: string;
   outputKeepActive?: boolean;
   buzzerSpeedLimit?: boolean;
+  speed1?: string;
+  speed2?: string;
+  speedLimitDebounce?: string;
   antiJamming?: boolean;
 }
 
@@ -30,6 +33,7 @@ export interface IDBPolygonGeofence {
   enterAlert: boolean;
   exitAlert: boolean;
   buzzerSpeedLimit?: string;
+  speedLimit?: string;
   speedLimitDebounce?: string; // Polygon Speed limit
 }
 
