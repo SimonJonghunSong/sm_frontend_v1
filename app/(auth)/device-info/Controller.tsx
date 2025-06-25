@@ -252,7 +252,7 @@ export default function ModelInfoController({
               marginRight: 16,
             }}
           >
-            Profile
+            {t("configuration.profile_menu.profile")}
           </span>
           <Button
             variant="contained"
@@ -261,7 +261,7 @@ export default function ModelInfoController({
             onClick={handleApply}
             disabled={!isLoadedProfile}
           >
-            Apply
+            {t("configuration.profile_menu.apply")}
           </Button>
           <Button
             variant="contained"
@@ -269,7 +269,7 @@ export default function ModelInfoController({
             sx={{ width: 100 }}
             onClick={handleSave}
           >
-            Save
+            {t("configuration.profile_menu.save")}
           </Button>
           <Button
             variant="contained"
@@ -277,7 +277,7 @@ export default function ModelInfoController({
             sx={{ width: 100 }}
             onClick={handleLoad}
           >
-            Load
+            {t("configuration.profile_menu.load")}
           </Button>
           {/* 
             // Administrator/Customer/Client : Shown
@@ -307,7 +307,7 @@ export default function ModelInfoController({
               sx={{ width: 100 }}
               onClick={handleUpload}
             >
-              Upload
+              {t("configuration.profile_menu.upload")}
             </Button>
           </Tooltip>
         </Stack>
