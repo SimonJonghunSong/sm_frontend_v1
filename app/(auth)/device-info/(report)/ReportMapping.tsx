@@ -28,11 +28,11 @@ const checkboxOptions = {
       "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23",
     labelString: {
       TEXT_EN_ITEM_CONTENT:
-        "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Mode, Status Report Type, Message Number, Reserved, Assign Map",
+        "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Alert ID, Alert Modifier, Alert ID Data, Reserved, Assign Map",
       TEXT_PT_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Modo, Tipo de Relatório de Status, Número da Mensagem, Reservado, Atribuir Mapa",
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, ID de Alerta, Modificador de Alerta, Dados do ID de Alerta, Reservado, Atribuir Mapa",
       TEXT_ES_ITEM_CONTENT:
-        "Mapa de Informe, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de Fijación del GPS, Estados de Entrada, Estados de Salida, Modo, Tipo de Informe de Estado, Número de Mensaje, Reservado, Asignar Mapa",
+        "Mapa de Informe, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de Fijación del GPS, Estados de Entrada, Estados de Salida, ID de Alerta, Modificador de Alerta, Dados del ID de Alerta, Reservado, Asignar Mapa",
     },
   },
   "1084": {
@@ -49,14 +49,14 @@ const checkboxOptions = {
   },
   "1087": {
     optionString:
-      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25, b26, b27",
+      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25, b26, b27, b28, b29, b30, b31, b32, b33, b34, b35, b36, b37, b38, b39",
     labelString: {
       TEXT_EN_ITEM_CONTENT:
-        "Report Map, Model, Software Version, Message Type, Date, Time, Travel Start Latitude, Travel Start Longitude, Travel End Latitude, Travel End Longitude, Driver ID, Travel Distance, Driving Time, Time in Idle Mode, Idle events, Time in Speed Mode, Speed Mode, Maximum Speed, Average Speed, Odometer, Speed Histogram, Reserved, Reserved, Time Eco Up, Time Eco Down, Time Eco INSIDE, Time Over RPM, Time Dead Center",
+        "Report Map, Model, Software Version, Message Type, Date, Time, Travel Start Latitude, Travel Start Longitude, Travel End Latitude, Travel End Longitude, Driver ID, Travel Distance, Driving Time, Time in Idle Mode, Idle events, Time in Speed Mode, Speed Mode, Maximum Speed, Average Speed, Odometer, Speed Histogram, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved",
       TEXT_PT_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Latitude de Início da Viagem, Longitude de Início da Viagem, Latitude de Fim da Viagem, Longitude de Fim da Viagem, ID do Motorista, Distância de Viagem, Tempo de Condução, Tempo em Modo de Inatividade, Eventos de Inatividade, Tempo em Modo de Velocidade, Modo de Velocidade, Velocidade Máxima, Velocidade Média, Odômetro, Histograma de Velocidade, Reserved, Reserved, Tempo Eco Subida, Tempo Eco Descida, Tempo Eco Dentro, Tempo Acima do RPM, Tempo Ponto Morto",
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, Latitude de Início da Viagem, Longitude de Início da Viagem, Latitude de Fim da Viagem, Longitude de Fim da Viagem, ID do Motorista, Distância de Viagem, Tempo de Condução, Tempo em Modo de Inatividade, Eventos de Inatividade, Tempo em Modo de Velocidade, Modo de Velocidade, Velocidade Máxima, Velocidade Média, Odômetro, Histograma de Velocidade, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved",
       TEXT_ES_ITEM_CONTENT:
-        "Mapa de reportes, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Latitud de Inicio de Viaje, Longitud de Inicio de Viaje, Latitud de Fin de Viaje, Longitud de Fin de Viaje, ID del Conductor, Distancia del Viaje, Tiempo de Conducción, Tiempo en Modo de Inactividad, Eventos de Inactividad, Tiempo en Modo de Velocidad, Modo de Velocidad, Velocidad Máxima, Velocidad Promedio, Odómetro, Histograma de Velocidad, Reserved, Reserved, Tiempo Eco Subida, Tiempo Eco Bajada, Tiempo Eco Dentro, Tiempo Sobre RPM, Tiempo Punto Muerto",
+        "Mapa de reportes, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, Latitud de Inicio de Viaje, Longitud de Inicio de Viaje, Latitud de Fin de Viaje, Longitud de Fin de Viaje, ID del Conductor, Distancia del Viaje, Tiempo de Conducción, Tiempo en Modo de Inactividad, Eventos de Inactividad, Tiempo en Modo de Velocidad, Modo de Velocidad, Velocidad Máxima, Velocidad Promedio, Odómetro, Histograma de Velocidad, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved",
     },
   },
   "1089": {
@@ -295,10 +295,45 @@ const ReportMapping = ({ formData, onChange, setFormData }: Props) => {
               id="1087"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["1087"].optionString}
-              labelString={checkboxOptions["1087"].labelString}
-              hasAllCheckbox
-              isDirty={isDirtyFields.includes("1087")}
+              optionString={checkboxOptions["1087"].optionString
+                .split(",")
+                .slice(0, formData["1087"].labelList.length)
+                .join(",")}
+              labelString={{
+                TEXT_EN_ITEM_CONTENT: checkboxOptions[
+                  "1087"
+                ].labelString.TEXT_EN_ITEM_CONTENT.split(",")
+                  .slice(0, formData["1087"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["1087"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_PT_ITEM_CONTENT: checkboxOptions[
+                  "1087"
+                ].labelString.TEXT_PT_ITEM_CONTENT.split(",")
+                  .slice(0, formData["1087"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["1087"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_ES_ITEM_CONTENT: checkboxOptions[
+                  "1087"
+                ].labelString.TEXT_ES_ITEM_CONTENT.split(",")
+                  .slice(0, formData["1087"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["1087"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+              }}
             />
           )}
           {!!formData["1088"] && (

@@ -13,37 +13,38 @@ import CheckboxField from "app/(auth)/device-info/(components)/CheckboxField";
 const checkboxOptions = {
   "3100": {
     optionString:
-      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17",
+      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23",
     labelString: {
       TEXT_EN_ITEM_CONTENT:
-        "Report Map, Model, Software Version, Total Sensor, Current Sensor, Scans, Date, Time, Time Packet, Latitude, Longitude, Latitude Gap, Longitude Gap, Temperature, Humidity, Barometric Pressure, 1-Wire, 1-Wire Temperature",
+        "Report Map, Model, Software Version, Total Sensor, Current Sensor, Scans, Date, Time, Time Packet, Latitude, Longitude, Latitude Gap, Longitude Gap, Temperature, Humidity, Barometric Pressure, 1-Wire, 1-Wire Temperature, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved",
       TEXT_PT_ITEM_CONTENT:
-        "Mapa do Relatório, Modelo, Versão do Software, Total de Sensores, Sensor Atual, Scans, Data, Hora, Pacote de Tempo, Latitude, Longitude, Diferença de Latitude, Diferença de Longitude, Temperatura, Umidade, Pressão Barométrica, 1-Wire, Temperatura 1-Wire",
+        "Mapa do Relatório, Modelo, Versão do Software, Total de Sensores, Sensor Atual, Scans, Data, Hora, Pacote de Tempo, Latitude, Longitude, Diferença de Latitude, Diferença de Longitude, Temperatura, Umidade, Pressão Barométrica, 1-Wire, Temperatura 1-Wire, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado",
       TEXT_ES_ITEM_CONTENT:
-        "Mapa de reportes, Modelo, Versión de Software, Sensor Total, Sensor Actual, Escaneos, Fecha, Hora, Paquete de Tiempo, Latitud, Longitud, Diferencia de Latitud, Diferencia de Longitud, Temperatura, Humedad, Presión Barométrica, 1-Wire, Temperatura 1-Wire",
+        "Mapa de reportes, Modelo, Versión de Software, Sensor Total, Sensor Actual, Escaneos, Fecha, Hora, Paquete de Tiempo, Latitud, Longitud, Diferencia de Latitud, Diferencia de Longitud, Temperatura, Humedad, Presión Barométrica, 1-Wire, Temperatura 1-Wire, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado",
     },
   },
   "3101": {
-    optionString: "b0, b1, b2, b3, b4, b5, b6, b7, b8",
+    optionString:
+      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23",
     labelString: {
       TEXT_EN_ITEM_CONTENT:
-        "Report Map, Model, Software Version, Total Sensor, Current Sensor, BLE Sensor Scan, Scanned BLE Sensor, BLE Sensor ID, Temp/Hum/Pres",
+        "Report Map, Model, Software Version, Total Sensor, Current Sensor, BLE Sensor Scan, Scanned BLE Sensor, BLE Sensor ID, Temp/Hum/Pres, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved",
       TEXT_PT_ITEM_CONTENT:
-        "Mapa do Relatório, Modelo, Versão do Software, Total de Sensores, Sensor Atual, Scan de Sensor BLE, Sensor BLE Escaneado, ID do Sensor BLE, Temp/Hum/Pres",
+        "Mapa do Relatório, Modelo, Versão do Software, Total de Sensores, Sensor Atual, Scan de Sensor BLE, Sensor BLE Escaneado, ID do Sensor BLE, Temp/Hum/Pres, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado",
       TEXT_ES_ITEM_CONTENT:
-        "Mapa de reportes, Modelo, Versión de Software, Total de sensores, Sensor Actual, Escaneo de Sensor BLE, Sensor BLE Escaneado, ID de Sensor BLE, Temp/Hum/Pres",
+        "Mapa de reportes, Modelo, Versión de Software, Total de sensores, Sensor Actual, Escaneo de Sensor BLE, Sensor BLE Escaneado, ID de Sensor BLE, Temp/Hum/Pres, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado",
     },
   },
   "3103": {
     optionString:
-      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14",
+      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23",
     labelString: {
       TEXT_EN_ITEM_CONTENT:
-        "Report Map, Model, Software Version, BLE sensor’s Scan Status, Total BLE Data, Current BLE Data, BLE Sensor, Date, Time, Latitude, Longitude, BLE Data Size, BLE Data, BLE Mac Address, BLE RSSI",
+        "Report Map, Model, Software Version, BLE sensor’s Scan Status, Total BLE Data, Current BLE Data, BLE Sensor, Date, Time, Latitude, Longitude, BLE Data Size, BLE Data, BLE Mac Address, BLE RSSI, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved, Reserved",
       TEXT_PT_ITEM_CONTENT:
-        "Mapa do Relatório, Modelo, Versão do Software, Status do Scan do Sensor BLE, Total de Dados BLE, Dados BLE Atuais, Sensor BLE, Data, Hora, Latitude, Longitude, Tamanho dos Dados BLE, Dados BLE, Endereço Mac do BLE, RSSI do BLE",
+        "Mapa do Relatório, Modelo, Versão do Software, Status do Scan do Sensor BLE, Total de Dados BLE, Dados BLE Atuais, Sensor BLE, Data, Hora, Latitude, Longitude, Tamanho dos Dados BLE, Dados BLE, Endereço Mac do BLE, RSSI do BLE, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado",
       TEXT_ES_ITEM_CONTENT:
-        "Mapa de reportes, Modelo, Versión de Software, Estado de Escaneo del Sensor BLE, Total de datos de BLE, Datos Actuales de BLE, Sensor BLE, Fecha, Hora, Latitud, Longitud, Tamaño de Datos BLE, Datos BLE, Dirección MAC BLE, RSSI BLE",
+        "Mapa de reportes, Modelo, Versión de Software, Estado de Escaneo del Sensor BLE, Total de datos de BLE, Datos Actuales de BLE, Sensor BLE, Fecha, Hora, Latitud, Longitud, Tamaño de Datos BLE, Datos BLE, Dirección MAC BLE, RSSI BLE, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado, Reservado",
     },
   },
   "2598": {
@@ -154,8 +155,45 @@ const ReportMapping2 = ({ formData, onChange, setFormData }: Props) => {
               id="3100"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["3100"].optionString}
-              labelString={checkboxOptions["3100"].labelString}
+              optionString={checkboxOptions["3100"].optionString
+                .split(",")
+                .slice(0, formData["3100"].labelList.length)
+                .join(",")}
+              labelString={{
+                TEXT_EN_ITEM_CONTENT: checkboxOptions[
+                  "3100"
+                ].labelString.TEXT_EN_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3100"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3100"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_PT_ITEM_CONTENT: checkboxOptions[
+                  "3100"
+                ].labelString.TEXT_PT_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3100"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3100"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_ES_ITEM_CONTENT: checkboxOptions[
+                  "3100"
+                ].labelString.TEXT_ES_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3100"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3100"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+              }}
               hasAllCheckbox
               isDirty={isDirtyFields.includes("3100")}
             />
@@ -165,8 +203,45 @@ const ReportMapping2 = ({ formData, onChange, setFormData }: Props) => {
               id="3101"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["3101"].optionString}
-              labelString={checkboxOptions["3101"].labelString}
+              optionString={checkboxOptions["3101"].optionString
+                .split(",")
+                .slice(0, formData["3101"].labelList.length)
+                .join(",")}
+              labelString={{
+                TEXT_EN_ITEM_CONTENT: checkboxOptions[
+                  "3101"
+                ].labelString.TEXT_EN_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3101"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3101"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_PT_ITEM_CONTENT: checkboxOptions[
+                  "3101"
+                ].labelString.TEXT_PT_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3101"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3101"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_ES_ITEM_CONTENT: checkboxOptions[
+                  "3101"
+                ].labelString.TEXT_ES_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3101"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3101"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+              }}
               hasAllCheckbox
               isDirty={isDirtyFields.includes("3101")}
             />
@@ -178,8 +253,45 @@ const ReportMapping2 = ({ formData, onChange, setFormData }: Props) => {
               id="3103"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["3103"].optionString}
-              labelString={checkboxOptions["3103"].labelString}
+              optionString={checkboxOptions["3103"].optionString
+                .split(",")
+                .slice(0, formData["3103"].labelList.length)
+                .join(",")}
+              labelString={{
+                TEXT_EN_ITEM_CONTENT: checkboxOptions[
+                  "3103"
+                ].labelString.TEXT_EN_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3103"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3103"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_PT_ITEM_CONTENT: checkboxOptions[
+                  "3103"
+                ].labelString.TEXT_PT_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3103"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3103"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_ES_ITEM_CONTENT: checkboxOptions[
+                  "3103"
+                ].labelString.TEXT_ES_ITEM_CONTENT.split(",")
+                  .slice(0, formData["3103"].labelList.length)
+                  .map((item, idx) => {
+                    return formData["3103"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+              }}
               hasAllCheckbox
               isDirty={isDirtyFields.includes("3103")}
             />
