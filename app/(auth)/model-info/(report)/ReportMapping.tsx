@@ -37,14 +37,14 @@ const checkboxOptions = {
   },
   "1084": {
     optionString:
-      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21",
+      "b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16, b17, b18, b19, b20, b21, b22, b23, b24, b25",
     labelString: {
       TEXT_EN_ITEM_CONTENT:
-        "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Length of Data, Data, Checksum",
+        "Report Map, Model, Software Version, Message Type, Date, Time, Cell ID, MCC, MNC, LAC – Local Area Code, RX_LVL, Latitude, Longitude, Speed, Course/Heading, Satellite Count, GPS Fix Status, Input States, Output States, Length of Data, Data, Checksum, Reserved, H_METER, GPS_ODOM, PWR_VOLT",
       TEXT_PT_ITEM_CONTENT:
-        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Comprimento dos Dados, Dados, Checksum",
+        "Mapa de Relatório, Modelo, Versão do Software, Tipo de Mensagem, Data, Hora, ID da Célula, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitude, Longitude, Velocidade, Curso/Rumo, Contagem de Satélites, Status de Fixação do GPS, Estados de Entrada, Estados de Saída, Comprimento dos Dados, Dados, Checksum, Reservado, H_METER, GPS_ODOM, PWR_VOLT",
       TEXT_ES_ITEM_CONTENT:
-        "Mapa de reportes de alerta, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de fix GPS, Estado de Entradas, Estados de Salida, Longitud de los Datos, Datos, Checksum",
+        "Mapa de reportes de alerta, Modelo, Versión de Software, Tipo de Mensaje, Fecha, Hora, ID de Celda, MCC, MNC, LAC – Código de Área Local, RX_LVL, Latitud, Longitud, Velocidad, Curso/Rumbo, Contador de Satélites, Estado de fix GPS, Estado de Entradas, Estados de Salida, Longitud de los Datos, Datos, Checksum, Reservado, H_METER, GPS_ODOM, PWR_VOLT",
     },
   },
   "1087": {
@@ -245,8 +245,45 @@ const ReportMapping = ({ formData, onChange, setFormData }: Props) => {
               id="1084"
               formData={formData}
               onChange={handleChange}
-              optionString={checkboxOptions["1084"].optionString}
-              labelString={checkboxOptions["1084"].labelString}
+              optionString={checkboxOptions["1084"].optionString
+                .split(",")
+                .slice(0, formData["1084"].list.length)
+                .join(",")}
+              labelString={{
+                TEXT_EN_ITEM_CONTENT: checkboxOptions[
+                  "1084"
+                ].labelString.TEXT_EN_ITEM_CONTENT.split(",")
+                  .slice(0, formData["1084"].list.length)
+                  .map((item, idx) => {
+                    return formData["1084"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_PT_ITEM_CONTENT: checkboxOptions[
+                  "1084"
+                ].labelString.TEXT_PT_ITEM_CONTENT.split(",")
+                  .slice(0, formData["1084"].list.length)
+                  .map((item, idx) => {
+                    return formData["1084"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+                TEXT_ES_ITEM_CONTENT: checkboxOptions[
+                  "1084"
+                ].labelString.TEXT_ES_ITEM_CONTENT.split(",")
+                  .slice(0, formData["1084"].list.length)
+                  .map((item, idx) => {
+                    return formData["1084"].list[idx].toLowerCase() ===
+                      "reserved"
+                      ? t("configuration.report.reserved")
+                      : item;
+                  })
+                  .join(","),
+              }}
               hasAllCheckbox
               isDirty={isDirtyFields.includes("1084")}
             />

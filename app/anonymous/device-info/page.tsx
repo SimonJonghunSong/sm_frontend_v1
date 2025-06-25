@@ -59,6 +59,7 @@ interface FieldValue {
   ID: string;
   value: string;
   list?: Array<{ [key: string]: string }>;
+  AssignList?: Array<{ [key: string]: string }>;
   [key: string]: any;
 }
 
@@ -77,6 +78,7 @@ export interface FormField {
   value: string;
   realValue: string;
   list: string[] | null;
+  labelList: string[] | null;
   alert_id: string | null;
   text_num: string | null;
   beforeValue: string;
@@ -110,13 +112,30 @@ const getRealValue = (field: FieldValue): string => {
 };
 
 const getList = (field: FieldValue): string[] => {
-  if (!field.list) return null;
+  if (!field.list && !field.AssignList) return null;
+
+  if (field.AssignList) {
+    return Object.values(field.AssignList[0]).map((item) =>
+      Number(item.split(";")[0]) < 10
+        ? `0${item.split(";")[0]}`
+        : item.split(";")[0]
+    );
+  }
 
   return Object.values(field.list[0]).map((item) =>
     Number(item.split(";")[0]) < 10
       ? `0${item.split(";")[0]}`
       : item.split(";")[0]
   );
+};
+const getLabelList = (field: FieldValue): string[] => {
+  if (!field.list && !field.AssignList) return null;
+
+  if (field.AssignList) {
+    return Object.values(field.AssignList[0]).map((item) => item.split(";")[1]);
+  }
+
+  return Object.values(field.list[0]).map((item) => item.split(";")[1]);
 };
 
 const transformFieldData = (
@@ -132,6 +151,7 @@ const transformFieldData = (
   const fieldId = formatFieldId(fieldData.ID);
   const realValue = getRealValue(fieldData);
   const optionsValueList = getList(fieldData);
+  const optionLabelList = getLabelList(fieldData);
 
   return [
     `${tabId}${fieldId}`,
@@ -140,6 +160,7 @@ const transformFieldData = (
       value: fieldData.value,
       realValue,
       list: optionsValueList,
+      labelList: optionLabelList,
       alert_id: fieldData.alert_id,
       text_num: fieldData.text_num,
       beforeValue: realValue,

@@ -106,6 +106,7 @@ interface FieldValue {
   ID: string;
   value: string;
   list?: Array<{ [key: string]: string }>;
+  AssignList?: Array<{ [key: string]: string }>;
   [key: string]: any;
 }
 
@@ -158,7 +159,15 @@ const getRealValue = (field: FieldValue): string => {
 };
 
 const getList = (field: FieldValue): string[] => {
-  if (!field.list) return null;
+  if (!field.list && !field.AssignList) return null;
+
+  if (field.AssignList) {
+    return Object.values(field.AssignList[0]).map((item) =>
+      Number(item.split(";")[0]) < 10
+        ? `0${item.split(";")[0]}`
+        : item.split(";")[0]
+    );
+  }
 
   return Object.values(field.list[0]).map((item) =>
     Number(item.split(";")[0]) < 10
@@ -168,7 +177,18 @@ const getList = (field: FieldValue): string[] => {
 };
 
 const getValueList = (field: FieldValue): { [key: string]: string } => {
-  if (!field.list) return null;
+  if (!field.list && !field.AssignList) return null;
+
+  if (field.AssignList) {
+    return Object.values(field.AssignList[0]).reduce((acc, item) => {
+      acc[
+        Number(item.split(";")[0]) < 10
+          ? `0${item.split(";")[0]}`
+          : item.split(";")[0]
+      ] = item.split(";")[1];
+      return acc;
+    }, {} as { [key: string]: string });
+  }
 
   return Object.values(field.list[0]).reduce((acc, item) => {
     acc[
@@ -666,7 +686,7 @@ export default function DeviceInfoPage() {
             onClick: handleTabChange,
             tab,
             exclude: excludeMenus,
-            t
+            t,
           })}
         />
         <Stack flex={1}>
