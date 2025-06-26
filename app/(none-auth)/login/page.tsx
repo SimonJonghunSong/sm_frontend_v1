@@ -77,6 +77,10 @@ export default function LoginPage() {
         <span>Anonymous</span>
       </Stack>
 
+      <Stack alignItems="center" pt={4} sx={{ color: "var(--grey5)" }}>
+        <span>Optimized for Chrome. For best results, use Chrome.</span>
+      </Stack>
+
       <Stack
         direction="row"
         alignItems="center"
