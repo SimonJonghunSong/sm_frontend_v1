@@ -24,6 +24,7 @@ import {
 import {
   findCircleIndexByNumber,
   generateFormattedIndexes,
+  generateFormattedIndexesUpperTo30,
 } from "@/utils/generateFormattedIndexes";
 import { chunkDataByNumberAndWrite } from "@/src/functions";
 import {
@@ -170,12 +171,14 @@ const Geofence = ({
   const rows = [
     ...(typeFilter === "Circular" ? [] : polygonData),
     ...(typeFilter === "Polygon" ? [] : circularData),
-  ].map(({ type, groupId }, index) => {
+  ].map(({ type, groupId, ...rest }, index) => {
     return {
       id: index + 1,
       no: index + 1,
       type: type === "polygon" ? "Polygon" : "Circular",
       groupId,
+      polygonPointId:
+        type === "polygon" ? (rest as any).polygonPointId : undefined,
       edit: {
         id: groupId,
         onEdit: () => {
@@ -272,6 +275,8 @@ const Geofence = ({
   const handleRowClick = (data: GridRowParams<any>) => {
     const imei = currentPort.port.imei;
 
+    console.log("data ::::", data);
+
     if (data.row.type === "Polygon") {
       setFetchedCircleData(undefined);
       const polyCount = polygonData.find(
@@ -316,6 +321,8 @@ const Geofence = ({
         currentPort.port.ispolygonpointfetching = false;
       };
 
+      console.log("data.row.groupId :::", data.row.groupId);
+
       chunkDataByNumberAndWrite(
         {
           write: write as any,
@@ -325,10 +332,14 @@ const Geofence = ({
 
         {
           chuckString: ",",
-          prefix: `AT^REQ;${imei};${
-            POLYGON_GEOFENCE_POINTS[(data.row.groupId - 1) as number]
-          };`,
-          target: generateFormattedIndexes(polyCount).join(),
+          prefix: `AT^REQ;${imei};${data.row.polygonPointId};`,
+          target:
+            data.row.groupId > 31
+              ? generateFormattedIndexesUpperTo30(
+                  polyCount,
+                  (31 - data.row.groupId) * 100
+                ).join()
+              : generateFormattedIndexes(polyCount).join(),
         }
       );
     } else {

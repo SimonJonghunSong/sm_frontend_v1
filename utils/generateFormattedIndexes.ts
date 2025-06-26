@@ -1,3 +1,11 @@
+export const generateFormattedIndexesUpperTo30 = (
+  count: number,
+  defaultIndex: number
+): string[] => {
+  return Array.from({ length: count }, (_, index) =>
+    (index + defaultIndex).toString().padStart(4, "0")
+  );
+};
 export const generateFormattedIndexes = (count: number): string[] => {
   return Array.from({ length: count }, (_, index) =>
     index.toString().padStart(2, "0")

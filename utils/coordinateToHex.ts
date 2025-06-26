@@ -4,6 +4,46 @@ type LatLng = {
 };
 
 // 좌표 배열을 받아서 변환된 문자열을 반환하는 공통 함수
+export const convertCoordinatesToHexStringUpperTo30 = (
+  coordiarray: LatLng[],
+  defaultIndex?: number
+): string => {
+  return coordiarray
+    .map((coord, index) => {
+      // Index를 두 자릿수로 포맷 (00, 01, 02...)
+      const indexStr = (index + (defaultIndex || 0))
+        .toString()
+        .padStart(4, "0");
+
+      // lat을 toFixed(6)으로 소수점 6자리로 고정 후 1000000 곱하고 16진수로 변환
+      let latValue = (Number(coord.lat.toFixed(6)) * 1000000)
+        .toString(16)
+        .toUpperCase()
+        .padStart(8, "0");
+
+      // 음수일 경우 첫 번째 자리를 8로 변경
+      if (coord.lat < 0) {
+        latValue = `8${latValue.slice(1)}`;
+      }
+
+      // lng를 toFixed(6)으로 소수점 6자리로 고정 후 1000000 곱하고 16진수로 변환
+      let lngValue = (Number(coord.lng.toFixed(6)) * 1000000)
+        .toString(16)
+        .toUpperCase()
+        .padStart(8, "0");
+
+      // 음수일 경우 첫 번째 자리를 8로 변경
+      if (coord.lng < 0) {
+        lngValue = `8${lngValue.slice(1)}`;
+      }
+
+      // XX#YYYYYYYYYYYYYYYY; 형식으로 문자열 생성
+      return `${indexStr}#${latValue}${lngValue}`;
+    })
+    .join(";"); // 각 결과를 ;로 이어붙임
+};
+
+// 좌표 배열을 받아서 변환된 문자열을 반환하는 공통 함수
 export const convertCoordinatesToHexString = (
   coordiarray: LatLng[]
 ): string => {

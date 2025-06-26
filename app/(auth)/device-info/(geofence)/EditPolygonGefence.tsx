@@ -14,7 +14,10 @@ import { useMapManager } from "@/src/hooks/useMapManager";
 import { getPolygonGeofenceData } from "@/src/hooks/useSerial/utils";
 import { useTranslations } from "next-intl";
 import { generateFormattedIndexes } from "@/utils/generateFormattedIndexes";
-import { convertCoordinatesToHexString } from "@/utils/coordinateToHex";
+import {
+  convertCoordinatesToHexString,
+  convertCoordinatesToHexStringUpperTo30,
+} from "@/utils/coordinateToHex";
 import {
   AT_EDIT_PREFIX,
   AT_GET_POLYGON_INFO,
@@ -165,11 +168,17 @@ const EditPolygonGeofence = ({
   const handleEditPolygonGeo = () => {
     const imei = currentPort.port.imei;
 
-    const pointId = POLYGON_GEOFENCE_POINTS[id - 1];
+    // 31부터는 5300 고정
+    const pointId = id > 30 ? 5300 : POLYGON_GEOFENCE_POINTS[id - 1];
 
-    const coordinateToHexString = convertCoordinatesToHexString(
-      mapManager.polygons[0].path
-    );
+    // 31부터는 좌표 변환 방식 변경
+    const coordinateToHexString =
+      id > 30
+        ? convertCoordinatesToHexStringUpperTo30(
+            mapManager.polygons[0].path,
+            (id - 31) * 100
+          )
+        : convertCoordinatesToHexString(mapManager.polygons[0].path);
 
     currentPort.port.oneditsuccess = async () => {
       await delayPromise(200);

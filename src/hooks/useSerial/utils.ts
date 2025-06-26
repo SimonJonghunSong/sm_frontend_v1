@@ -37,7 +37,7 @@ export const getPolygonGeofenceData = (
         value.substring(4, 6) === "00" ? "Disabled" : "Enabled";
       const polygonSpeedLimit = parseInt(value.substring(6), 16) / 1000000;
       const type = "polygon";
-      const polygonPointId = POLYGON_GEOFENCE_POINTS[index];
+      const polygonPointId = index > 30 ? 5300 : POLYGON_GEOFENCE_POINTS[index];
       const isPolygonSpeedLimitDisable = Number.isNaN(polygonSpeedLimit);
 
       // 변환된 데이터 객체를 accumulator에 추가
