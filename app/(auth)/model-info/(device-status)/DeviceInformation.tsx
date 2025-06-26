@@ -69,18 +69,6 @@ export default function DeviceInformation({
             <FieldLabel>{t("device_information.mcu_version")}</FieldLabel>
             <FieldValue>{renderVersion("MODEM_BYPASS_MCU")}</FieldValue>
           </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.rtc_time")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.operating_time")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
-          <FieldItem>
-              <FieldLabel>{t("device_information.battery_activation_time")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
         </Stack>
         <Stack direction="column" flex={1}>
           <FieldItem>
@@ -93,14 +81,6 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
-            <FieldValue>{renderVersion("GNSS")}</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.backup_battery_level")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.battery_activation_log")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
@@ -112,7 +92,7 @@ export default function DeviceInformation({
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
-              <FieldLabel>{t("device_information.reboot")}</FieldLabel>
+            <FieldLabel>{t("device_information.reboot")}</FieldLabel>
             <FieldValue
               style={{
                 height: 62,

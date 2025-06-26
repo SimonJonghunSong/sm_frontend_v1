@@ -38,12 +38,11 @@ export default function DeviceStatusTab({
           <GNSSInformation
             lat={modelInfo?.lat || 0}
             lng={modelInfo?.lng || 0}
-            angle={0}
-            speed={0}
+            gnss={deviceVersionsObject?.GNSS || "N/A"}
+            wwan={deviceVersionsObject?.WWAN || "N/A"}
           />
         </div>
-        <div style={{ flex: 1 }}>
-        </div>
+        <div style={{ flex: 1 }}></div>
       </Stack>
     </Stack>
   );

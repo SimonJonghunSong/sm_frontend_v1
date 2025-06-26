@@ -8,6 +8,7 @@ interface Props {
   modelName: string;
   modelVersion: string;
   modelImei: string;
+  buyer: string;
   deviceVersionsObject: Record<string, string>;
   handleReboot: () => void;
 }
@@ -16,6 +17,7 @@ export default function DeviceInformation({
   modelName,
   modelVersion,
   modelImei,
+  buyer,
   deviceVersionsObject,
   handleReboot,
 }: Props) {
@@ -48,6 +50,10 @@ export default function DeviceInformation({
             <FieldValue>{modelName}</FieldValue>
           </FieldItem>
           <FieldItem>
+            <FieldLabel>{t("device_information.buyer")}</FieldLabel>
+            <FieldValue>{buyer}</FieldValue>
+          </FieldItem>
+          <FieldItem>
             <FieldLabel>{t("device_information.fw_version")}</FieldLabel>
             <FieldValue>{modelVersion}</FieldValue>
           </FieldItem>
@@ -67,18 +73,6 @@ export default function DeviceInformation({
             <FieldLabel>{t("device_information.mcu_version")}</FieldLabel>
             <FieldValue>{renderVersion("MODEM_BYPASS_MCU")}</FieldValue>
           </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.rtc_time")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.operating_time")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.battery_activation_time")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
         </Stack>
         <Stack direction="column" flex={1}>
           <FieldItem>
@@ -91,14 +85,6 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
-            <FieldValue>{renderVersion("GNSS")}</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.backup_battery_level")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
-          </FieldItem>
-          <FieldItem>
-            <FieldLabel>{t("device_information.battery_activation_log")}</FieldLabel>
             <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>

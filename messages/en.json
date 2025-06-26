@@ -1800,10 +1800,13 @@
   },
   "device_information": {
     "model_name": "Model Name",
+    "buyer": "Buyer",
     "fw_version": "F/W Version",
     "modem_version": "Modem Version",
     "ble_version": "BLE Version",
+    "gnss": "GNSS",
     "gnss_version": "GNSS Version",
+    "wwan": "WWAN",
     "backup_battery_level": "Backup Battery Level",
     "wifi_version": "Wi-Fi Version",
     "mcu_version": "MCU Version",

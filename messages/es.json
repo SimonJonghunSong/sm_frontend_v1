@@ -1772,10 +1772,13 @@
   },
   "device_information": {
     "model_name": "Nombre del Modelo",
+    "buyer": "Comprador",
     "fw_version": "Versión de F/W",
     "modem_version": "Versión de Modem",
     "ble_version": "Versión de BLE",
     "gnss_version": "Versión de GNSS",
+    "gnss": "GNSS",
+    "wwan": "WWAN",
     "backup_battery_level": "Nivel de Batería de Respaldo",
     "wifi_version": "Versión de Wi-Fi",
     "mcu_version": "Versión de MCU",

@@ -1768,12 +1768,15 @@
       }
     }
   },
-   "device_information": {
+  "device_information": {
     "model_name": "Nome do Modelo",
+    "buyer": "Comprador",
     "fw_version": "Versão do F/W",
     "modem_version": "Versão do Modem",
     "ble_version": "Versão do BLE",
     "gnss_version": "Versão do GNSS",
+    "gnss": "GNSS",
+    "wwan": "WWAN",
     "backup_battery_level": "Nível da Bateria de Backup",
     "wifi_version": "Versão do Wi-Fi",
     "mcu_version": "Versão do MCU",
@@ -1788,7 +1791,7 @@
     "longitude": "Longitude",
     "angle": "Ângulo",
     "speed": "Velocidade"
-   },
+  },
   "error": {
     "invalid_email_format": "Formato de e-mail inválido.",
     "At_least_8_characters": "Deve ter pelo menos 8 caracteres",

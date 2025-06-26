@@ -309,6 +309,7 @@ export default function DeviceInfoPage() {
           <DeviceStatusTab
             originData={originData}
             formData={formData}
+            buyer={currentPort.port.modelinfo?.split("_")?.[1]}
             deviceVersionsObject={deviceVersionsObject}
             handleReboot={handleReboot}
           />

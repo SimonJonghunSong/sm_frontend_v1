@@ -12,6 +12,7 @@ interface Props {
   formData: {
     [key: string]: FormField;
   };
+  buyer: string;
   deviceVersionsObject: Record<string, string>;
   handleReboot: () => void;
 }
@@ -20,6 +21,7 @@ export default function DeviceStatusTab({
   formData,
   originData,
   deviceVersionsObject,
+  buyer,
   handleReboot,
 }: Props) {
   const modelInfo = originData?.[0]?.info?.[0];
@@ -30,6 +32,7 @@ export default function DeviceStatusTab({
         modelName={modelInfo?.S || "-"}
         modelVersion={modelInfo?.V || "-"}
         modelImei={modelInfo?.I || "-"}
+        buyer={buyer || "-"}
         deviceVersionsObject={deviceVersionsObject}
         handleReboot={handleReboot}
       />
@@ -38,13 +41,11 @@ export default function DeviceStatusTab({
           <GNSSInformation
             lat={modelInfo?.lat || 0}
             lng={modelInfo?.lng || 0}
-            angle={0}
-            speed={0}
+            gnss={deviceVersionsObject?.GNSS || "N/A"}
+            wwan={deviceVersionsObject?.WWAN || "N/A"}
           />
         </div>
-        <div style={{ flex: 1 }}>
-          
-        </div>
+        <div style={{ flex: 1 }}></div>
       </Stack>
     </Stack>
   );

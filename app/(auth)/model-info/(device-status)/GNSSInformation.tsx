@@ -10,11 +10,11 @@ import { useTranslations } from "next-intl";
 interface Props {
   lat: number;
   lng: number;
-  angle: number;
-  speed: number;
+  gnss: string;
+  wwan: string;
 }
 
-export default function GNSSInformation({ lat, lng }: Props) {
+export default function GNSSInformation({ lat, lng, gnss, wwan }: Props) {
   const t = useTranslations();
   const { lang } = useLangStore();
   return (
@@ -47,12 +47,12 @@ export default function GNSSInformation({ lat, lng }: Props) {
           <FieldValue>{lng}</FieldValue>
         </FieldItem>
         <FieldItem>
-          <FieldLabel>{t("device_information.angle")}</FieldLabel>
-          <FieldValue>N/A</FieldValue>
+          <FieldLabel>{t("device_information.gnss")}</FieldLabel>
+          <FieldValue>{gnss}</FieldValue>
         </FieldItem>
         <FieldItem>
-          <FieldLabel>{t("device_information.speed")}</FieldLabel>
-          <FieldValue>N/A</FieldValue>
+          <FieldLabel>{t("device_information.wwan")}</FieldLabel>
+          <FieldValue>{wwan}</FieldValue>
         </FieldItem>
       </Stack>
     </Container>

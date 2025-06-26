@@ -29,6 +29,8 @@ function getBackupBatteryVoltage(value: string) {
 const getDeviceVersionsForString = (data: string) => {
   console.log("getDeviceVersionsForString@ ::::", data);
 
+  // GNSS, WWAN 처리
+
   const resSplit = data.split(";");
   // 6자리보다 적으면 데이터가 부족한 것이므로 null 처리
   const resNumber = resSplit.length < 6 ? null : resSplit[resSplit.length - 2];
@@ -133,13 +135,44 @@ export default function useDeviceVersions({
           commands.push(command);
         }
 
+        commands.push(`AT^$PSTDIAG`);
+
         commands.forEach((command, index) => {
           setTimeout(async () => {
             currentPort.port.isDeviceVersionsFetching = true;
             currentPort.port.onEndDeviceVersionsFetched = (data) => {
-              const { key, value } = getDeviceVersionsForString(data);
-              deviceVersionsObjectRef.current[key] = value;
-              deviceVersionsCount.current += 1;
+              let key;
+              let value;
+
+              if (data.includes("DIAG")) {
+                const resSplit = data.trim().split(";");
+
+                const gnss = ["Fixed", "Not Fixed", "Chipset error"][
+                  parseInt(resSplit[2], 10)
+                ];
+                const wwan = [
+                  "Connected With Server",
+                  "Disconnected with Server",
+                  "Dieconnected GPRS Bearer",
+                  "No Network",
+                  "Pin Lock",
+                  "NW Error (Limited Service)",
+                  "No SIM",
+                  "Puk Lock",
+                  "Jamming Detected",
+                ][parseInt(resSplit[3], 10)];
+
+                deviceVersionsObjectRef.current["GNSS"] = gnss;
+                deviceVersionsObjectRef.current["WWAN"] = wwan;
+                deviceVersionsCount.current += 2;
+              } else {
+                const versionData = getDeviceVersionsForString(data);
+                key = versionData.key;
+                value = versionData.value;
+
+                deviceVersionsObjectRef.current[key] = value;
+                deviceVersionsCount.current += 1;
+              }
 
               console.log(
                 "deviceVersionsObjectRef.current :::",
@@ -155,7 +188,7 @@ export default function useDeviceVersions({
                 currentPort.modemVersion = value;
               }
 
-              if (deviceVersionsCount.current === 10) {
+              if (deviceVersionsCount.current === 12) {
                 currentPort.port.isDeviceVersionsFetching = false;
                 currentPort.port.onEndDeviceVersionsFetched = null;
 
