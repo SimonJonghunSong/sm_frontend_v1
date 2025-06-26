@@ -1817,6 +1817,7 @@
     "gnss_state": "GNSS State",
     "wwan_state": "WWAN State",
     "reboot": "Reboot",
+    "load": "Load",
     "latitude": "Latitude",
     "longitude": "Longitude",
     "angle": "Angle",

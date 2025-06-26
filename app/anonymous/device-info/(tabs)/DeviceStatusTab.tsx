@@ -13,16 +13,22 @@ interface Props {
     [key: string]: FormField;
   };
   buyer: string;
+  modelImei: string;
   deviceVersionsObject: Record<string, string>;
   handleReboot: () => void;
+  handleLoadImei: () => void;
+  isLoadingModelImei: boolean;
 }
 
 export default function DeviceStatusTab({
   formData,
   originData,
-  buyer,
   deviceVersionsObject,
+  buyer,
+  modelImei,
   handleReboot,
+  handleLoadImei,
+  isLoadingModelImei,
 }: Props) {
   const modelInfo = originData?.[0]?.info?.[0];
 
@@ -31,10 +37,13 @@ export default function DeviceStatusTab({
       <DeviceInformation
         modelName={modelInfo?.S || "-"}
         modelVersion={modelInfo?.V || "-"}
-        modelImei={modelInfo?.I || "-"}
+        modelEsn={modelInfo?.I || "-"}
+        modelImei={modelImei}
         buyer={buyer || "-"}
         deviceVersionsObject={deviceVersionsObject}
         handleReboot={handleReboot}
+        handleLoadImei={handleLoadImei}
+        isLoadingModelImei={isLoadingModelImei}
       />
       <Stack direction="row" gap={"16px"}>
         <div style={{ flex: 1 }}>

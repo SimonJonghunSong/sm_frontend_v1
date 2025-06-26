@@ -72,6 +72,7 @@ const useSerial = () => {
     "device_command_log"
   );
   const deviceCommandLogRef = useRef<string | null>(null);
+  const loadImeiDataRef = useRef<string>("");
   const {
     portList,
     getPortList,
@@ -304,6 +305,17 @@ const useSerial = () => {
             }
 
             if (valueProp) {
+              // load imei
+              if (port?.isLoadImei) {
+                loadImeiDataRef.current += value;
+
+                if (valueProp.includes("OK")) {
+                  port.onLoadImei?.(loadImeiDataRef.current);
+                  port.isLoadImei = false;
+                  loadImeiDataRef.current = "";
+                }
+              }
+
               if (port?.onbuffervalue) {
                 port?.onbuffervalue(value);
               }
@@ -760,6 +772,21 @@ const useSerial = () => {
             }
 
             if (value) {
+              // load imei
+              if (port?.isLoadImei) {
+                console.log("value ::::", value);
+                console.log("value ::::", value.includes("null"));
+                console.log("value ::::", !value);
+
+                loadImeiDataRef.current += value || "";
+                if (value.includes(CR)) {
+                  port.onLoadImei?.(loadImeiDataRef.current);
+                  port.isLoadImei = false;
+                  port.onLoadImei = null;
+                  loadImeiDataRef.current = "";
+                }
+              }
+
               if (port?.onbuffervalue) {
                 port?.onbuffervalue(value);
               }

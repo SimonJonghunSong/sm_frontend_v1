@@ -1,3 +1,5 @@
+import InputBox from "@/components/inputbox/InputBox";
+import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
 import { Button, Stack } from "@mui/material";
 import { SECTIONS } from "constants/searchField";
@@ -8,18 +10,24 @@ interface Props {
   modelName: string;
   modelVersion: string;
   modelImei: string;
+  modelEsn: string;
   buyer: string;
   deviceVersionsObject: Record<string, string>;
   handleReboot: () => void;
+  handleLoadImei: () => void;
+  isLoadingModelImei: boolean;
 }
 
 export default function DeviceInformation({
   modelName,
   modelVersion,
   modelImei,
+  modelEsn,
   buyer,
   deviceVersionsObject,
   handleReboot,
+  handleLoadImei,
+  isLoadingModelImei,
 }: Props) {
   const t = useTranslations();
   const { lang } = useLangStore();
@@ -77,11 +85,25 @@ export default function DeviceInformation({
         <Stack direction="column" flex={1}>
           <FieldItem>
             <FieldLabel>IMEI</FieldLabel>
-            <FieldValue>N/A</FieldValue>
+            <FieldValue>
+              <Stack direction="row" alignItems="center" gap={"12px"}>
+                {modelImei}
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ height: 30 }}
+                  size="small"
+                  onClick={handleLoadImei}
+                  disabled={isLoadingModelImei}
+                >
+                  {t("device_information.load")}
+                </Button>
+              </Stack>
+            </FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>ESN</FieldLabel>
-            <FieldValue>{modelImei}</FieldValue>
+            <FieldValue>{modelEsn}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>

@@ -82,6 +82,10 @@ interface SerialPort {
   isFirstLoad?: boolean;
   isQuecModel?: boolean;
   isHealthCheck?: boolean;
+
+  isLoadImei: boolean;
+  onLoadImei: (data: string) => void;
+  loadedImei?: string;
 }
 
 interface SerialOptions {

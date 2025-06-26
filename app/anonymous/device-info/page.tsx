@@ -300,6 +300,38 @@ export default function DeviceInfoPage() {
     });
   };
 
+  const handleLoadImei = () => {
+    setIsLoadingModelImei(true);
+
+    const resetTimeout = setTimeout(() => {
+      currentPort.port.isLoadImei = false;
+      currentPort.port.onLoadImei = null;
+      currentPort.port.loadedImei = "ERROR";
+      setModelImei("ERROR");
+      setIsLoadingModelImei(false);
+    }, 2000);
+
+    currentPort.port.isLoadImei = true;
+    currentPort.port.onLoadImei = (data) => {
+      if (data.includes("ERROR")) {
+        currentPort.port.loadedImei = "ERROR";
+        setModelImei("ERROR");
+        setIsLoadingModelImei(false);
+      } else {
+        setModelImei(data);
+        currentPort.port.loadedImei = data;
+        setIsLoadingModelImei(false);
+      }
+      clearTimeout(resetTimeout);
+    };
+
+    write({
+      data: `AT+EGMR=0,7`,
+      port: currentPort.port,
+      writer: currentPort.writer,
+    });
+  };
+
   const renderContent = () => {
     if (!currentPort) return null;
 
@@ -309,9 +341,12 @@ export default function DeviceInfoPage() {
           <DeviceStatusTab
             originData={originData}
             formData={formData}
+            modelImei={modelImei}
+            isLoadingModelImei={isLoadingModelImei}
             buyer={currentPort.port.modelinfo?.split("_")?.[1]}
             deviceVersionsObject={deviceVersionsObject}
             handleReboot={handleReboot}
+            handleLoadImei={handleLoadImei}
           />
         );
       case "Network":
@@ -487,6 +522,11 @@ export default function DeviceInfoPage() {
   }, [originData]);
 
   const [excludeMenus, setExcludeMenus] = useState<string[]>([]);
+
+  const [isLoadingModelImei, setIsLoadingModelImei] = useState(false);
+  const [modelImei, setModelImei] = useState<string>(
+    currentPort.port.loadedImei
+  );
 
   useEffect(() => {
     if (formData && Object.keys(formData)?.length > 0) {
