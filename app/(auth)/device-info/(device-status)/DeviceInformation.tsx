@@ -88,16 +88,18 @@ export default function DeviceInformation({
             <FieldValue>
               <Stack direction="row" alignItems="center" gap={"12px"}>
                 {modelImei}
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  sx={{ height: 30 }}
-                  size="small"
-                  onClick={handleLoadImei}
-                  disabled={isLoadingModelImei}
-                >
-                  {t("device_information.load")}
-                </Button>
+                {(!modelImei || modelImei === "ERROR") && (
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    sx={{ height: 30 }}
+                    size="small"
+                    onClick={handleLoadImei}
+                    disabled={isLoadingModelImei}
+                  >
+                    {t("device_information.load")}
+                  </Button>
+                )}
               </Stack>
             </FieldValue>
           </FieldItem>
