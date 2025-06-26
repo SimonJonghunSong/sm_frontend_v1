@@ -12,6 +12,8 @@ import NumericInputField from "../(components)/NumericInputField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import EditDot from "../(components)/EditDot";
+import SwitchField from "../(components)/SwitchField";
+import SelectField from "../(components)/SelectField";
 
 const fieldsIds = INCLUDE_FIELDS[SECTIONS.OBD.en];
 
@@ -123,13 +125,94 @@ const OBD = ({ formData, onChange, setFormData }: Props) => {
       </Stack>
 
       {formData["2000"].realValue === "01" && (
-        <Stack flexWrap="wrap" direction={"row"} gap={"24px 16px"}>
-          <Stack width={"calc(50% - 8px)"} gap={"8px"}>
+        <Stack direction={"row"} gap={"24px"}>
+          <Stack gap={"24px"} flex={1}>
             <NumericInputField
               id="2002"
               formData={formData}
               onChange={handleChange}
               isDirty={isDirtyFields.includes("2002")}
+              style={{ width: "100%" }}
+            />
+            <NumericInputField
+              id="2006"
+              formData={formData}
+              onChange={handleChange}
+              isDirty={isDirtyFields.includes("2006")}
+              style={{ width: "100%" }}
+            />
+            <SwitchField
+              id="2007"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("2007")}
+            />
+            <NumericInputField
+              id="2008"
+              formData={formData}
+              onChange={handleChange}
+              isDirty={isDirtyFields.includes("2008")}
+              style={{ width: "100%" }}
+            />
+            <NumericInputField
+              id="2009"
+              formData={formData}
+              onChange={handleChange}
+              isDirty={isDirtyFields.includes("2009")}
+              style={{ width: "100%" }}
+            />
+            <NumericInputField
+              id="2010"
+              formData={formData}
+              onChange={handleChange}
+              isDirty={isDirtyFields.includes("2010")}
+              style={{ width: "100%" }}
+            />
+          </Stack>
+
+          <Stack gap={"24px"} flex={1}>
+            <SwitchField
+              id="2011"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("2011")}
+            />
+            <SelectField
+              id="2012"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("2012")}
+            />
+            <SwitchField
+              id="2014"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("2014")}
+            />
+            <SwitchField
+              id="2015"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("2015")}
+            />
+            <NumericInputField
+              id="2016"
+              formData={formData}
+              onChange={handleChange}
+              isDirty={isDirtyFields.includes("2016")}
+              style={{ width: "100%" }}
+            />
+            <NumericInputField
+              id="2017"
+              formData={formData}
+              onChange={handleChange}
+              isDirty={isDirtyFields.includes("2017")}
+              style={{ width: "100%" }}
             />
           </Stack>
         </Stack>

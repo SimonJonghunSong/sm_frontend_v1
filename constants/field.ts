@@ -9997,6 +9997,179 @@ export const FIELD_VALIDATIONS = {
     max: 16383,
     list: null,
   },
+  "2006": {
+    title: {
+      en: "VIN Match",
+      pt: "VIN Match",
+      es: "VIN Match",
+    },
+    tooltip: null,
+    min: 0,
+    max: 17,
+    list: null,
+  },
+  "2007": {
+    title: {
+      en: "ROBD Enable",
+      pt: "ROBD Enable",
+      es: "ROBD Enable",
+    },
+    tooltip: null,
+    min: 0,
+    max: 17,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Disable",
+          es: "Disable",
+          pt: "Disable",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Enable",
+          es: "Enable",
+          pt: "Enable",
+        },
+      },
+    ],
+  },
+  "2008": {
+    title: {
+      en: "CanError MsgCount Thres",
+      pt: "CanError MsgCount Thres",
+      es: "CanError MsgCount Thres",
+    },
+    tooltip: null,
+    min: 0,
+    max: 999,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Disable",
+          es: "Disable",
+          pt: "Disable",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Enable",
+          es: "Enable",
+          pt: "Enable",
+        },
+      },
+    ],
+  },
+  "2009": {
+    title: {
+      en: "CanError TxErr Thres",
+      pt: "CanError TxErr Thres",
+      es: "CanError TxErr Thres",
+    },
+    tooltip: null,
+    min: 0,
+    max: 999,
+    list: null,
+  },
+  "2010": {
+    title: {
+      en: "CanError RxErr Thres",
+      pt: "CanError RxErr Thres",
+      es: "CanError RxErr Thres",
+    },
+    tooltip: null,
+    min: 0,
+    max: 999,
+    list: null,
+  },
+  "2011": {
+    title: {
+      en: "ODOM_SVC Enable",
+      pt: "ODOM_SVC Enable",
+      es: "ODOM_SVC Enable",
+    },
+    tooltip: null,
+    min: 0,
+    max: 2,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Disable",
+          es: "Disable",
+          pt: "Disable",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Enable",
+          es: "Enable",
+          pt: "Enable",
+        },
+      },
+    ],
+  },
+  "2012": {
+    title: {
+      en: "Operation Mode",
+      pt: "Operation Mode",
+      es: "Operation Mode",
+    },
+    tooltip: null,
+    min: 0,
+    max: 2,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "OBD",
+          es: "OBD",
+          pt: "OBD",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "J1939",
+          es: "J1939",
+          pt: "J1939",
+        },
+      },
+    ],
+  },
+  "2014": {
+    title: {
+      en: "TCR report Enable",
+      pt: "TCR report Enable",
+      es: "TCR report Enable",
+    },
+    tooltip: null,
+    min: 0,
+    max: 2,
+    list: [
+      {
+        value: "00",
+        label: {
+          en: "Disable",
+          es: "Disable",
+          pt: "Disable",
+        },
+      },
+      {
+        value: "01",
+        label: {
+          en: "Enable",
+          es: "Enable",
+          pt: "Enable",
+        },
+      },
+    ],
+  },
   "2101": {
     title: {
       en: "PID 01",
