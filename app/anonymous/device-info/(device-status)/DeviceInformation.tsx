@@ -85,21 +85,27 @@ export default function DeviceInformation({
         <Stack direction="column" flex={1}>
           <FieldItem>
             <FieldLabel>IMEI</FieldLabel>
-            <FieldValue>
+            <FieldValue
+              style={{
+                height: 62,
+                padding: "16px",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <Stack direction="row" alignItems="center" gap={"12px"}>
                 {modelImei}
-                {(!modelImei || modelImei === "ERROR") && (
-                  <Button
-                    variant="outlined"
-                    color="secondary"
-                    sx={{ height: 30 }}
-                    size="small"
-                    onClick={handleLoadImei}
-                    disabled={isLoadingModelImei}
-                  >
-                    {t("device_information.load")}
-                  </Button>
-                )}
+
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ height: 30 }}
+                  size="small"
+                  onClick={handleLoadImei}
+                  disabled={isLoadingModelImei}
+                >
+                  {t("device_information.load")}
+                </Button>
               </Stack>
             </FieldValue>
           </FieldItem>
