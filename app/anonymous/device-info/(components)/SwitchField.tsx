@@ -54,13 +54,15 @@ const SwitchField = ({
         >
           {FIELD_VALIDATIONS[realId].title[lang]}
         </InputBox.Title>
-        <InputBox.Info
-          tooltipText={
-            <span style={{ whiteSpace: "pre-wrap" }}>
-              {FIELD_VALIDATIONS[realId].tooltip[lang]}
-            </span>
-          }
-        />
+        {FIELD_VALIDATIONS[realId].tooltip?.[lang] && (
+          <InputBox.Info
+            tooltipText={
+              <span style={{ whiteSpace: "pre-wrap" }}>
+                {FIELD_VALIDATIONS[realId].tooltip[lang]}
+              </span>
+            }
+          />
+        )}
         <InputBox.Number>{id}</InputBox.Number>
         {isDirty && <EditDot />}
       </Stack>

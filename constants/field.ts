@@ -10170,6 +10170,39 @@ export const FIELD_VALIDATIONS = {
       },
     ],
   },
+  "2015": {
+    title: {
+      en: "VIN Reporting Enable",
+      pt: "VIN Reporting Enable",
+      es: "VIN Reporting Enable",
+    },
+    tooltip: null,
+    min: 0,
+    max: 2,
+    list: null,
+  },
+  "2016": {
+    title: {
+      en: "VIN Reporting Interval",
+      pt: "VIN Reporting Interval",
+      es: "VIN Reporting Interval",
+    },
+    tooltip: null,
+    min: 0,
+    max: 99999,
+    list: null,
+  },
+  "2017": {
+    title: {
+      en: "VIN Reporting Duration",
+      pt: "VIN Reporting Duration",
+      es: "VIN Reporting Duration",
+    },
+    tooltip: null,
+    min: 0,
+    max: 99999,
+    list: null,
+  },
   "2101": {
     title: {
       en: "PID 01",

@@ -55,13 +55,15 @@ const SelectField = ({
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
           )}
         </InputBox.Title>
-        <InputBox.Info
-          tooltipText={
-            <span style={{ whiteSpace: "pre-wrap" }}>
-              {FIELD_VALIDATIONS[realId].tooltip[lang]}
-            </span>
-          }
-        />
+        {FIELD_VALIDATIONS[realId].tooltip?.[lang] && (
+          <InputBox.Info
+            tooltipText={
+              <span style={{ whiteSpace: "pre-wrap" }}>
+                {FIELD_VALIDATIONS[realId].tooltip[lang]}
+              </span>
+            }
+          />
+        )}
         <InputBox.Number>{id}</InputBox.Number>
         {isDirty && <EditDot />}
       </Stack>
