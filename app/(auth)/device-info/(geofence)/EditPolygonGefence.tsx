@@ -248,6 +248,8 @@ const EditPolygonGeofence = ({
           onSuccess();
           onCancel();
         } else {
+          setIsReadyToFinalEdit(false);
+          isSuccessRefBufferRef.current = "";
           toast.error(buffervalueRef.current);
         }
         buffervalueRef.current = "";
