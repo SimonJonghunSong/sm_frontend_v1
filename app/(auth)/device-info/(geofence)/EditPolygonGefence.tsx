@@ -145,6 +145,7 @@ const EditPolygonGeofence = ({
 
   const [isFullLoading, setIsFullLoading] = useState(false);
   const [polygonInfoFetched, setPolygonInfoFetched] = useState(false);
+  const [isReadyToFinalEdit, setIsReadyToFinalEdit] = useState(false);
   const [polygonState, polygonDispatch] = useReducer(polygonReducer, {
     id: 1,
     enterAlert: false,
@@ -160,14 +161,14 @@ const EditPolygonGeofence = ({
   const lang = useLangStore((state) => state.lang);
   const mapRef = useRef<google.maps.Map>(null);
   const mapManager = useMapManager();
+  const isSuccessRefBufferRef = useRef("");
   const polygonInfoRef = useRef("");
   const polygonList = currentPort.polygonGeofenceData;
   const polygonData = getPolygonGeofenceData(polygonList);
+  const imei = currentPort.port.imei;
 
   /** Polygon Geofence */
   const handleEditPolygonGeo = () => {
-    const imei = currentPort.port.imei;
-
     // 31부터는 5300 고정
     const pointId = id > 30 ? 5300 : POLYGON_GEOFENCE_POINTS[id - 1];
 
@@ -179,86 +180,8 @@ const EditPolygonGeofence = ({
             (id - 31) * 100
           )
         : convertCoordinatesToHexString(mapManager.polygons[0].path);
+    checkReady();
 
-    currentPort.port.oneditsuccess = async () => {
-      await delayPromise(200);
-
-      const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
-      const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
-      const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
-
-      const isPolygonSpeedLimitDisabled =
-        !formData["9000"] || formData["9000"]?.realValue === "00";
-
-      const buzzerSpeedLimitHex = Math.floor(
-        polygonState.buzzerSpeedLimit * 1000000
-      )
-        .toString(16)
-        .padStart(8, "0")
-        .toUpperCase();
-
-      const speedLimitHex = Math.floor(polygonState.speedLimit * 1000000)
-        .toString(16)
-        .padStart(8, "0")
-        .toUpperCase();
-
-      const speedLimitDebounceHex = Math.floor(polygonState.speedLimitDebounce)
-        .toString(16)
-        .padStart(4, "0")
-        .toUpperCase();
-
-      const getPolygonBuzzerSpeedLimitHex = polygonGeofenceKeys.includes(
-        "Buzzer Speed Limit"
-      )
-        ? buzzerSpeedLimitHex
-        : "";
-
-      const getPolygonSpeedLimitHex =
-        !isPolygonSpeedLimitDisabled &&
-        polygonGeofenceKeys.includes("Polygon Speed Limit")
-          ? speedLimitHex
-          : "";
-
-      const getSpeedLimitDebounceHex =
-        !isPolygonSpeedLimitDisabled &&
-        polygonGeofenceKeys.includes("Speed Limit Debounce")
-          ? speedLimitDebounceHex
-          : "";
-
-      currentPort.port.onbuffervalue = (value) => {
-        buffervalueRef.current += value;
-
-        if (value.includes(CR)) {
-          if (buffervalueRef.current.includes("OK")) {
-            onSuccess();
-            onCancel();
-          } else {
-            toast.error(buffervalueRef.current);
-          }
-          buffervalueRef.current = "";
-          currentPort.port.onbuffervalue = null;
-        }
-      };
-
-      write({
-        data: `${AT_EDIT_PREFIX}${imei};53;${String(Number(id) - 1).padStart(
-          2,
-          "0"
-        )}#${mapManager.polygons[0].path.length
-          .toString(16)
-          .padStart(
-            2,
-            "0"
-          )}${enterExitHexString}${getPolygonBuzzerSpeedLimitHex}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
-        port: currentPort,
-        writer: currentPort.writer,
-      });
-    };
-
-    // AT^PRG;4335433522;70;00#023C3516078FA723;01#023C5CFC07900B0C;02#023C196C07902DEB;03#023BE29E078FCEB3
-    // AT^PRG;4335433522;60;00#023C3516078FA723;01#023C5CFC07900B0C;02#023C196C07902DEB;03#023BE29E078FCEB3
-
-    // 20개 이상이면 쪼개서 보내는 로직
     chunkDataByNumberAndWrite(
       {
         write: write as any,
@@ -270,6 +193,93 @@ const EditPolygonGeofence = ({
         target: coordinateToHexString,
       }
     );
+  };
+
+  const handleEditPolygonGeo2 = async () => {
+    await delayPromise(200);
+
+    const enterAlertHexString = polygonState.enterAlert ? "01" : "00";
+    const exitAlertHexString = polygonState.exitAlert ? "01" : "00";
+    const enterExitHexString = `${enterAlertHexString}${exitAlertHexString}`;
+
+    const isPolygonSpeedLimitDisabled =
+      !formData["9000"] || formData["9000"]?.realValue === "00";
+
+    const buzzerSpeedLimitHex = Math.floor(
+      polygonState.buzzerSpeedLimit * 1000000
+    )
+      .toString(16)
+      .padStart(8, "0")
+      .toUpperCase();
+
+    const speedLimitHex = Math.floor(polygonState.speedLimit * 1000000)
+      .toString(16)
+      .padStart(8, "0")
+      .toUpperCase();
+
+    const speedLimitDebounceHex = Math.floor(polygonState.speedLimitDebounce)
+      .toString(16)
+      .padStart(4, "0")
+      .toUpperCase();
+
+    const getPolygonBuzzerSpeedLimitHex = polygonGeofenceKeys.includes(
+      "Buzzer Speed Limit"
+    )
+      ? buzzerSpeedLimitHex
+      : "";
+
+    const getPolygonSpeedLimitHex =
+      !isPolygonSpeedLimitDisabled &&
+      polygonGeofenceKeys.includes("Polygon Speed Limit")
+        ? speedLimitHex
+        : "";
+
+    const getSpeedLimitDebounceHex =
+      !isPolygonSpeedLimitDisabled &&
+      polygonGeofenceKeys.includes("Speed Limit Debounce")
+        ? speedLimitDebounceHex
+        : "";
+
+    currentPort.port.onbuffervalue = (value) => {
+      buffervalueRef.current += value;
+
+      if (value.includes(CR)) {
+        if (buffervalueRef.current.includes("OK")) {
+          onSuccess();
+          onCancel();
+        } else {
+          toast.error(buffervalueRef.current);
+        }
+        buffervalueRef.current = "";
+        currentPort.port.onbuffervalue = null;
+      }
+    };
+
+    write({
+      data: `${AT_EDIT_PREFIX}${imei};53;${String(Number(id) - 1).padStart(
+        2,
+        "0"
+      )}#${mapManager.polygons[0]?.path.length
+        .toString(16)
+        .padStart(
+          2,
+          "0"
+        )}${enterExitHexString}${getPolygonBuzzerSpeedLimitHex}${getPolygonSpeedLimitHex}${getSpeedLimitDebounceHex}`,
+      port: currentPort,
+      writer: currentPort.writer,
+    });
+  };
+
+  const checkReady = () => {
+    currentPort.port.onpolygonedit = async (value) => {
+      isSuccessRefBufferRef.current += value;
+
+      if (isSuccessRefBufferRef.current.includes("RPR")) {
+        setIsReadyToFinalEdit(true);
+      } else {
+        isSuccessRefBufferRef.current += value;
+      }
+    };
   };
 
   const renderBuzzerSpeedLimit = () => {
@@ -551,10 +561,6 @@ const EditPolygonGeofence = ({
           // 폴리곤 정보 파싱
           const polygonInfoData = parsePolygonInfo(responseData);
 
-          console.log("responseData :::::", responseData);
-
-          console.log("polygonInfoData :::::", polygonInfoData);
-
           if (polygonInfoData) {
             polygonDispatch({
               type: "setEnterAlert",
@@ -695,6 +701,12 @@ const EditPolygonGeofence = ({
       setIsFullLoading(false);
     }, 8000);
   }, []);
+
+  useEffect(() => {
+    if (isReadyToFinalEdit) {
+      handleEditPolygonGeo2();
+    }
+  }, [isReadyToFinalEdit]);
 
   return (
     <Form

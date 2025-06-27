@@ -320,6 +320,10 @@ const useSerial = () => {
                 port?.onbuffervalue(value);
               }
 
+              if (port?.onpolygonedit) {
+                port.onpolygonedit(value);
+              }
+
               if (value.includes("RPR")) {
                 await updateIndexedDB(
                   port.imei,
@@ -785,6 +789,10 @@ const useSerial = () => {
                   port.onLoadImei = null;
                   loadImeiDataRef.current = "";
                 }
+              }
+
+              if (port?.onpolygonedit) {
+                port.onpolygonedit(value);
               }
 
               if (port?.onbuffervalue) {

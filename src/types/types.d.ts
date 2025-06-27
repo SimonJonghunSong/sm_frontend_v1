@@ -24,6 +24,7 @@ interface SerialPort {
   password: string;
   isAlertSend?: boolean;
   onbuffervalue(value: string): unknown;
+  onpolygonedit: (value: string) => void;
   circleoutputactivehandler(value: string): unknown;
   iscircleoutputactivefetching: boolean;
   onread(value: string): unknown;
