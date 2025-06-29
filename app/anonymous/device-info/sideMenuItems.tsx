@@ -116,9 +116,4 @@ export const sideMenuItems = ({
       icon: () => <TerminalOutlinedIcon />,
       onClick: () => onClick("CMD Tool"),
     },
-    {
-      name: t("configuration.side_bar.show_hidden_parameters"),
-      href: "#",
-      isActive: tab === "Show Hidden Parameters",
-    },
   ].filter((item) => !exclude.includes(item.name));

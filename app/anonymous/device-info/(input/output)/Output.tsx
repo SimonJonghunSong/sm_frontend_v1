@@ -53,7 +53,6 @@ interface Props {
 const rows = [
   {
     id: 1760,
-    col1: false,
     col2: "Output 1",
     col3: { id: "1760" },
     col4: { id: "1761" },
@@ -63,7 +62,6 @@ const rows = [
   },
   {
     id: 1762,
-    col1: false,
     col2: "Output 2",
     col3: { id: "1762" },
     col4: { id: "1763" },
@@ -73,7 +71,6 @@ const rows = [
   },
   {
     id: 1764,
-    col1: false,
     col2: "Output 3",
     col3: { id: "1764" },
     col4: { id: "1765" },
@@ -87,23 +84,6 @@ export default function Output({ formData, onChange }: Props) {
   const lang = useLangStore((state) => state.lang);
 
   const columns: GridColDef[] = [
-    {
-      field: "col1",
-      headerName: "",
-      width: 60,
-      headerAlign: "center",
-      align: "center",
-      renderCell: ({ id }) => {
-        return (
-          <SwitchPrimary
-            checked={formData[id]?.realValue !== "19"}
-            onChange={(e) =>
-              onChange(id.toString(), e.target.checked ? "00" : "19")
-            }
-          />
-        );
-      },
-    },
     {
       field: "col2",
       headerName: "",

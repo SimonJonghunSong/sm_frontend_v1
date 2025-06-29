@@ -280,7 +280,7 @@ export const SECTIONS = {
   TowingMode: {
     en: "Towing Mode",
     es: "Modo de Reboque",
-    pt: "Modo de Remolque",
+    pt: "Modo de Reboque",
   },
 
   // Driver

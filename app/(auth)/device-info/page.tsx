@@ -47,6 +47,7 @@ import { useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
 import EditProfileTab from "./(tabs)/EditProfileTab";
 import { useTranslations } from "next-intl";
+import useAuthStore from "@/utils/useAuthStore";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -236,11 +237,11 @@ export default function DeviceInfoPage() {
     state: { portList },
     func: { write, getPorts },
   } = useSerial();
+
   const [isFechedPackage, setIsFechedPackage] = useState(false);
   const isFechedPackageRef = useRef(false);
-  const [isFechedPackageVersion, setIsFechedPackageVersion] = useState(false);
   const packageCountRef = useRef(0);
-
+  const { userRole } = useAuthStore();
   const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
   const imei = getCurrentImei();
@@ -374,6 +375,10 @@ export default function DeviceInfoPage() {
         !originData?.find((item) => Object.keys(item)[0] === "Polygon Geofence")
       ) {
         excludeMenus.push(MENUS.Geofence.en);
+      }
+
+      if (userRole !== "ADMIN") {
+        excludeMenus.push(t("configuration.side_bar.show_hidden_parameters"));
       }
 
       setExcludeMenus(excludeMenus);
