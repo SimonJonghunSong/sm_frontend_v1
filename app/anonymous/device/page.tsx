@@ -156,7 +156,7 @@ function Failed({ setStep }) {
         <Button
           variant="outlined"
           sx={{ width: 200 }}
-          onClick={() => setStep("ING")}
+          onClick={() => window.location.reload()}
         >
           {t("device_detecting.retry")}
         </Button>
