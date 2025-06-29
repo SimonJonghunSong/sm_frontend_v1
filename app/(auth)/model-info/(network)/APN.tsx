@@ -154,12 +154,12 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
             }
             isDirty={isDirtyFields.includes("1002")}
           />
-
           <TextInputField
             id="1003"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
+            autoComplete={false}
             error={
               !FIELD_ERRORS_REGEX.alphaNumericPatternWithSymbols.test(
                 formData["1003"].realValue
@@ -180,6 +180,7 @@ const Network = ({ formData, onChange, setFormData }: Props) => {
             onChange={handleChange}
             type="password"
             style={{ width: "100%" }}
+            autoComplete={false}
             isDirty={isDirtyFields.includes("1004")}
           />
         </Stack>

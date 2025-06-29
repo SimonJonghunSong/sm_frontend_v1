@@ -22,6 +22,7 @@ interface TextInputFieldProps {
   type?: HTMLInputTypeAttribute;
   isDirty?: boolean;
   isForceRender?: boolean;
+  autoComplete?: boolean;
 }
 
 const TextInputField = ({
@@ -35,6 +36,7 @@ const TextInputField = ({
   type = "text",
   isDirty = false,
   isForceRender = false,
+  autoComplete = false,
 }: TextInputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const { hiddenParameter } = useParameterStore();
@@ -78,6 +80,7 @@ const TextInputField = ({
         error={error}
         helperText={helperText}
         required={isRequired}
+        autoComplete={autoComplete ? "on" : "new-password"}
         type={type === "password" ? (showPassword ? "text" : "password") : type}
         InputProps={
           type === "password" && {
