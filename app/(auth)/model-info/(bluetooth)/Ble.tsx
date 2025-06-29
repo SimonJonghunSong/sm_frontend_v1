@@ -14,6 +14,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import SelectField from "../(components)/SelectField";
 import EditDot from "../(components)/EditDot";
+import TextInputField from "../(components)/TextInputField";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Ble.en];
 
@@ -133,6 +134,21 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
             onChange={handleChange}
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("4028")}
+          />
+
+          <SwitchField
+            id="4037"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4037")}
+          />
+          <TextInputField
+            id="4039"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4039")}
           />
 
           <SwitchField

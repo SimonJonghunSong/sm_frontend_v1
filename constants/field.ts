@@ -18217,6 +18217,36 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "4037": {
+    title: {
+      en: "Continuous Scan",
+      pt: "Scan Contínuo",
+      es: "Escaneo Continuo",
+    },
+    tooltip: {
+      en: "This parameter determines whether to continuously scan BLE sensors or not.\r\n• Default : 0\r\n* This section is for ST4315B_Series and SD8000_series. * ** 1",
+      pt: "Este parâmetro determina se escaneia sensores BLE continuamente ou não.\r\n• Padrão : 0\r\n* Esta seção é para ST4315B_Series e SD8000_series. * ** 1",
+      es: "Este parámetro determina si escanea sensores BLE continuamente o no.\r\n• Predeterminado : 0\r\n* Esta sección es para ST4315B_Series y SD8000_series. * ** 1",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "4039": {
+    title: {
+      en: "DoorLock Sensor ID",
+      pt: "ID do Sensor de Porta",
+      es: "ID del Sensor de Puerta",
+    },
+    tooltip: {
+      en: "This parameter sets the ID of the door lock sensor.\r\nWhen the ID of the door lock sensor is set, only the sensors scanned with this set ID are monitored.\r\nPlease set the ID as shown below depending on the sensor.\r\n• Default : 000000000000\r\n* This section is for ST4315B_Series and SD8000_series. * ** 1",
+      pt: "Este parâmetro define o ID do sensor de porta.\r\nQuando o ID do sensor de porta é definido, apenas os sensores escaneados com este ID definido são monitorados.\r\nPor favor, defina o ID como mostrado abaixo, dependendo do sensor.\r\n• Padrão : 000000000000\r\n* Esta seção é para ST4315B_Series e SD8000_series. * ** 1",
+      es: "Este parámetro define el ID del sensor de puerta.\r\nCuando el ID del sensor de puerta está configurado, solo se monitorean los sensores escaneados con este ID configurado.\r\nPor favor, configure el ID como se muestra a continuación, dependiendo del sensor.\r\n• Predeterminado : 000000000000\r\n* Esta sección es para ST4315B_Series y SD8000_series. * ** 1",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
   "4035": {
     title: {
       en: "ELD Enabled",
