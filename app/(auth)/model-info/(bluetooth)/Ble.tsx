@@ -164,6 +164,20 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("4027")}
           />
+          <NumericInputField
+            id="4030"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4030")}
+          />
+          <SwitchField
+            id="4065"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4065")}
+          />
         </Stack>
 
         <Stack gap={"24px"} flex={1}>
@@ -221,7 +235,6 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
             id="4036"
             formData={formData}
             onChange={handleChange}
-            isSwitch
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("4036")}
           />
