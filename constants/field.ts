@@ -6349,6 +6349,14 @@ export const FIELD_VALIDATIONS = {
           pt: "Ignição por Movimento",
         },
       },
+      {
+        value: "04",
+        label: {
+          en: "Motion as Moving",
+          es: "Motion as Moving",
+          pt: "Motion as Moving",
+        },
+      },
     ],
   },
   "1701": {
