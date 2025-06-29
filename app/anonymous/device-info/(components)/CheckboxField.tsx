@@ -1,10 +1,11 @@
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import { Stack } from "@mui/material";
-import CheckboxComp from "./CheckboxComp";
-import { FormField } from "../page";
-import { FIELD_VALIDATIONS } from "constants/field";
+import CheckboxComp from "app/(auth)/device-info/(components)/CheckboxComp";
+import { FormField } from "app/(auth)/device-info/page";
 import EditDot from "./EditDot";
+import { FIELD_VALIDATIONS } from "constants/field";
+
 interface Props {
   id: string;
   formData: {

@@ -6,6 +6,7 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import EditDot from "./EditDot";
+
 interface SpecialRangeNumericFieldProps {
   id: string;
   formData: {
@@ -37,12 +38,13 @@ const SpecialRangeNumericField = ({
   max,
   unit,
   helperText,
-  isDirty,
+  isDirty = false,
 }: SpecialRangeNumericFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
     formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
   );
+  const [beforeValue, setBeforeValue] = useState(formData[id]?.realValue);
 
   if (!formData[id]) return null;
 
@@ -142,7 +144,6 @@ const SpecialRangeNumericField = ({
           />
         )}
         <InputBox.Number>{id}</InputBox.Number>
-        {isDirty && <EditDot />}
       </Stack>
 
       {isSwitch && (
@@ -152,7 +153,12 @@ const SpecialRangeNumericField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(id, e.target.checked ? "" : "0");
+
+              if (!e.target.checked) {
+                setBeforeValue(formData[id]?.realValue);
+              }
+
+              onChange(id, e.target.checked ? beforeValue : "0");
             }}
           />
         </Stack>
@@ -164,6 +170,11 @@ const SpecialRangeNumericField = ({
             required={isRequired}
             value={formData[id].realValue}
             type="number"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             error={hasError}
             size="small"
             inputProps={{
@@ -179,6 +190,7 @@ const SpecialRangeNumericField = ({
               {unit}
             </Typography>
           )}
+          {isDirty && <EditDot />}
         </Stack>
       )}
 

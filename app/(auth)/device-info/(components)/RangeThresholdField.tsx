@@ -42,6 +42,13 @@ const RangeThresholdField = ({
   const [minId, maxId] = id;
   const displayId = titleId || minId;
 
+  const [beforeMinValue, setBeforeMinValue] = useState(
+    formData[minId]?.realValue
+  );
+  const [beforeMaxValue, setBeforeMaxValue] = useState(
+    formData[maxId]?.realValue
+  );
+
   const [isChecked, setIsChecked] = useState(
     formData[minId]?.realValue !== "00" && formData[minId]?.realValue !== "0"
   );
@@ -191,9 +198,15 @@ const RangeThresholdField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
+
               if (!e.target.checked) {
+                setBeforeMinValue(formData[minId]?.realValue);
+                setBeforeMaxValue(formData[maxId]?.realValue);
                 handleMinChange("");
                 handleMaxChange("");
+              } else {
+                handleMinChange(beforeMinValue);
+                handleMaxChange(beforeMaxValue);
               }
             }}
           />

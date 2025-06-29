@@ -44,6 +44,7 @@ const NumericInputField = ({
   const [isChecked, setIsChecked] = useState(
     Number(formData?.[id]?.realValue) !== 0
   );
+  const [beforeValue, setBeforeValue] = useState(formData?.[id]?.realValue);
 
   const { hiddenParameter } = useParameterStore();
   const isHiddenParameter = hiddenParameterId.includes(id);
@@ -111,7 +112,10 @@ const NumericInputField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(id, e.target.checked ? "0" : "0");
+              if (!e.target.checked) {
+                setBeforeValue(formData?.[id]?.realValue);
+              }
+              onChange(id, e.target.checked ? beforeValue : "0");
             }}
           />
         </Stack>

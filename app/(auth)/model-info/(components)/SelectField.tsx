@@ -42,6 +42,12 @@ const SelectField = ({
 
   const hardwareList = formData[id]?.list || [];
 
+  const [beforeValue, setBeforeValue] = useState(
+    FIELD_VALIDATIONS[realId].list.filter((listItem) =>
+      hardwareList.includes(listItem.value)
+    )[0].value
+  );
+
   return (
     <Stack
       width={"calc(50% - 8px)"}
@@ -74,14 +80,12 @@ const SelectField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(
-                id,
-                e.target.checked
-                  ? FIELD_VALIDATIONS[realId].list.filter((listItem) =>
-                      hardwareList.includes(listItem.value)
-                    )[0].value
-                  : "00"
-              );
+
+              if (!e.target.checked) {
+                setBeforeValue(formData[id]?.realValue);
+              }
+
+              onChange(id, e.target.checked ? beforeValue : "00");
             }}
           />
         </Stack>

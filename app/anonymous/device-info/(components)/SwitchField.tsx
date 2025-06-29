@@ -5,8 +5,9 @@ import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SwitchPrimary } from "@/components/switches";
 import EditDot from "./EditDot";
-import { hiddenParameterId } from "app/anonymous/device-info/(tabs)/CommandTab";
+import { hiddenParameterId } from "app/(auth)/device-info/(tabs)/CommandTab";
 import useParameterStore from "@/utils/useParameterStore";
+
 interface SwitchFieldProps {
   id: string;
   formData: {
@@ -16,7 +17,7 @@ interface SwitchFieldProps {
   style?: React.CSSProperties;
   customChecked?: boolean;
   isDirty?: boolean;
-  isUnderbarId?: boolean;
+  isUnderbarId?: boolean; // 1974 같은 중복으로 인해서 추가된 속성
   isForceRender?: boolean;
 }
 
@@ -26,19 +27,24 @@ const SwitchField = ({
   onChange,
   style,
   customChecked,
-  isDirty,
-  isUnderbarId,
-  isForceRender,
+  isDirty = false,
+  isUnderbarId = false,
+  isForceRender = false,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
 
-  const isHiddenParameter = hiddenParameterId.includes(id);
   const { hiddenParameter } = useParameterStore();
 
-  if (!isForceRender && !formData?.[id]) return null;
-  if (isHiddenParameter && hiddenParameter) return null;
+  const isHiddenParameter = hiddenParameterId.includes(id);
+
+  if (
+    isForceRender
+      ? isHiddenParameter && hiddenParameter
+      : !formData[id] || (isHiddenParameter && hiddenParameter)
+  )
+    return null;
 
   return (
     <Stack

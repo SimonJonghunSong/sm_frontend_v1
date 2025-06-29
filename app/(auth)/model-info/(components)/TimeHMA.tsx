@@ -129,6 +129,8 @@ export default function TimeHMA({
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(!!formData?.[id]?.realValue);
 
+  const [beforeValue, setBeforeValue] = useState(formData?.[id]?.realValue);
+
   if (!isForceRender && !formData?.[id]) return null;
 
   const hour = value?.slice(0, 2) || DEFAULT_HOUR_VALUE;
@@ -192,7 +194,10 @@ export default function TimeHMA({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(id, e.target.checked ? "0100" : "");
+              if (!e.target.checked) {
+                setBeforeValue(formData?.[id]?.realValue);
+              }
+              onChange(id, e.target.checked ? beforeValue : "");
             }}
           />
         </Stack>

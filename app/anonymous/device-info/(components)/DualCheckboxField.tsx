@@ -6,6 +6,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import EditDot from "./EditDot";
+
 interface DualCheckboxFieldProps {
   id: string;
   formData: {
@@ -45,6 +46,8 @@ const DualCheckboxField = ({
       ? formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
       : true
   );
+
+  const [beforeValue, setBeforeValue] = useState(formData[id]?.realValue);
 
   if (!formData[id]) return null;
 
@@ -148,8 +151,10 @@ const DualCheckboxField = ({
             onChange={(e) => {
               setIsChecked(e.target.checked);
               if (!e.target.checked) {
-                onChange(id, "00");
+                setBeforeValue(formData[id]?.realValue);
               }
+
+              onChange(id, e.target.checked ? beforeValue : "00");
             }}
           />
         </Stack>

@@ -8,7 +8,7 @@ import VisibilityOffOutlinedIcon from "@mui/icons-material/VisibilityOffOutlined
 import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import EditDot from "./EditDot";
 import useParameterStore from "@/utils/useParameterStore";
-import { hiddenParameterId } from "app/anonymous/device-info/(tabs)/CommandTab";
+import { hiddenParameterId } from "../(tabs)/CommandTab";
 interface TextInputFieldProps {
   id: string;
   formData: {
@@ -39,15 +39,17 @@ const TextInputField = ({
   autoComplete = false,
 }: TextInputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
+  const { hiddenParameter } = useParameterStore();
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const { hiddenParameter } = useParameterStore();
   const isHiddenParameter = hiddenParameterId.includes(id);
 
-  if (!isForceRender && !formData?.[id]) return null;
-
-  if (isHiddenParameter && hiddenParameter) return null;
+  if (
+    isForceRender
+      ? isHiddenParameter && hiddenParameter
+      : !formData[id] || (isHiddenParameter && hiddenParameter)
+  )
+    return null;
 
   return (
     <Stack width={"calc(50% - 8px)"} gap={"8px"} style={style}>

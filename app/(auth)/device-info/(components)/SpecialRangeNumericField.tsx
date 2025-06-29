@@ -44,6 +44,7 @@ const SpecialRangeNumericField = ({
   const [isChecked, setIsChecked] = useState(
     formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
   );
+  const [beforeValue, setBeforeValue] = useState(formData[id]?.realValue);
 
   if (!formData[id]) return null;
 
@@ -152,7 +153,12 @@ const SpecialRangeNumericField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(id, e.target.checked ? "" : "0");
+
+              if (!e.target.checked) {
+                setBeforeValue(formData[id]?.realValue);
+              }
+
+              onChange(id, e.target.checked ? beforeValue : "0");
             }}
           />
         </Stack>

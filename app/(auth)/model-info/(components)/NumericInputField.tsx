@@ -43,6 +43,8 @@ const NumericInputField = ({
     Number(formData[id]?.realValue) !== 0
   );
 
+  const [beforeValue, setBeforeValue] = useState(formData[id]?.realValue);
+
   if (!isForceRender && !formData[id]) return null;
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
@@ -102,7 +104,12 @@ const NumericInputField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(id, e.target.checked ? "0" : "0");
+
+              if (!e.target.checked) {
+                setBeforeValue(formData[id]?.realValue);
+              }
+
+              onChange(id, e.target.checked ? beforeValue : "0");
             }}
           />
         </Stack>

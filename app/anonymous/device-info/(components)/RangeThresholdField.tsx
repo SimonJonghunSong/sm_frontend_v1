@@ -7,6 +7,7 @@ import InputBox from "@/components/inputbox/InputBox";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import EditDot from "./EditDot";
+
 interface RangeThresholdFieldProps {
   id: [string, string]; // [minId, maxId]
   formData: {
@@ -34,12 +35,19 @@ const RangeThresholdField = ({
   unit = "",
   helperText,
   titleId,
-  isDirty,
+  isDirty = false,
 }: RangeThresholdFieldProps) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
   const [minId, maxId] = id;
   const displayId = titleId || minId;
+
+  const [beforeMinValue, setBeforeMinValue] = useState(
+    formData[minId]?.realValue
+  );
+  const [beforeMaxValue, setBeforeMaxValue] = useState(
+    formData[maxId]?.realValue
+  );
 
   const [isChecked, setIsChecked] = useState(
     formData[minId]?.realValue !== "00" && formData[minId]?.realValue !== "0"
@@ -190,9 +198,15 @@ const RangeThresholdField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
+
               if (!e.target.checked) {
+                setBeforeMinValue(formData[minId]?.realValue);
+                setBeforeMaxValue(formData[maxId]?.realValue);
                 handleMinChange("");
                 handleMaxChange("");
+              } else {
+                handleMinChange(beforeMinValue);
+                handleMaxChange(beforeMaxValue);
               }
             }}
           />
@@ -205,6 +219,11 @@ const RangeThresholdField = ({
             required={isRequired}
             value={minValue}
             type="number"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             error={isError}
             size="small"
             inputProps={{
@@ -222,6 +241,11 @@ const RangeThresholdField = ({
             required={isRequired}
             value={maxValue}
             type="number"
+            onKeyDown={(e) => {
+              if (["e", "E", "+", "-"].includes(e.key)) {
+                e.preventDefault();
+              }
+            }}
             error={isError}
             size="small"
             style={{ flex: 1 }}

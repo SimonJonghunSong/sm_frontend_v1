@@ -27,7 +27,7 @@ const SelectField = ({
   isRequired,
   isSwitch,
   style,
-  isDirty,
+  isDirty = false,
   isUnderbarId = false,
 }: SelectFieldProps) => {
   const lang = useLangStore((state) => state.lang);
@@ -40,7 +40,13 @@ const SelectField = ({
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
 
-  const hardwareList = formData[id].list;
+  const hardwareList = formData[id]?.list || [];
+
+  const [beforeValue, setBeforeValue] = useState(
+    FIELD_VALIDATIONS[realId].list.filter((listItem) =>
+      hardwareList.includes(listItem.value)
+    )[0].value
+  );
 
   return (
     <Stack
@@ -74,14 +80,12 @@ const SelectField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(
-                id,
-                e.target.checked
-                  ? FIELD_VALIDATIONS[realId].list.filter((listItem) =>
-                      hardwareList.includes(listItem.value)
-                    )[0].value
-                  : "00"
-              );
+
+              if (!e.target.checked) {
+                setBeforeValue(formData[id]?.realValue);
+              }
+
+              onChange(id, e.target.checked ? beforeValue : "00");
             }}
           />
         </Stack>
@@ -95,7 +99,7 @@ const SelectField = ({
             onChange={(e) => onChange(id, e.target.value)}
           >
             {FIELD_VALIDATIONS[realId].list
-              .filter((listItem) => hardwareList.includes(listItem.value))
+              ?.filter((listItem) => hardwareList.includes(listItem.value))
               .map((item) => (
                 <MenuItem key={item.value} value={item.value}>
                   {item.label[lang]}

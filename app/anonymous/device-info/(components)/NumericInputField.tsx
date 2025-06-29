@@ -7,7 +7,7 @@ import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import useParameterStore from "@/utils/useParameterStore";
 import EditDot from "./EditDot";
-import { hiddenParameterId } from "app/anonymous/device-info/(tabs)/CommandTab";
+import { hiddenParameterId } from "app/(auth)/device-info/(tabs)/CommandTab";
 
 interface InputFieldProps {
   id: string;
@@ -44,11 +44,12 @@ const NumericInputField = ({
   const [isChecked, setIsChecked] = useState(
     Number(formData?.[id]?.realValue) !== 0
   );
+  const [beforeValue, setBeforeValue] = useState(formData?.[id]?.realValue);
 
   const { hiddenParameter } = useParameterStore();
   const isHiddenParameter = hiddenParameterId.includes(id);
 
-  if (!isForceRender && !formData?.[id]) return null;
+  if (!isForceRender && !formData[id]) return null;
 
   if (isHiddenParameter && hiddenParameter) return null;
 
@@ -60,7 +61,7 @@ const NumericInputField = ({
     (Number(formData?.[id]?.realValue) < FIELD_VALIDATIONS[realId].min ||
       Number(formData?.[id]?.realValue) > FIELD_VALIDATIONS[realId].max);
 
-  const isRequiredError = isRequired && !formData?.[id]?.realValue;
+  const isRequiredError = isRequired && !formData[id].realValue;
 
   const hasError = isRequiredError || customError || isMinMaxError;
 
@@ -83,7 +84,9 @@ const NumericInputField = ({
       style={{ ...(isSwitch && { position: "relative" }), ...style }}
     >
       <Stack direction="row" gap="4px" alignItems="center">
-        <InputBox.Title style={{ color: isHiddenParameter && "#FF0000" }}>
+        <InputBox.Title
+          style={{ color: isHiddenParameter ? "#FF0000" : undefined }}
+        >
           {FIELD_VALIDATIONS[realId].title[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
@@ -109,7 +112,10 @@ const NumericInputField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
-              onChange(id, e.target.checked ? "0" : "0");
+              if (!e.target.checked) {
+                setBeforeValue(formData?.[id]?.realValue);
+              }
+              onChange(id, e.target.checked ? beforeValue : "0");
             }}
           />
         </Stack>
@@ -121,12 +127,12 @@ const NumericInputField = ({
             required={isRequired}
             value={formData?.[id]?.realValue}
             type="number"
-            error={hasError}
             onKeyDown={(e) => {
-              if (e.key === "e" || e.key === "E") {
+              if (["e", "E", "+", "-"].includes(e.key)) {
                 e.preventDefault();
               }
             }}
+            error={hasError}
             helperText={errorMessage}
             inputProps={
               typeof FIELD_VALIDATIONS[realId].min === "number" &&

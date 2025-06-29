@@ -47,6 +47,8 @@ const DualCheckboxField = ({
       : true
   );
 
+  const [beforeValue, setBeforeValue] = useState(formData[id]?.realValue);
+
   if (!formData[id]) return null;
 
   const hasValidation = FIELD_VALIDATIONS[id] !== undefined;
@@ -148,9 +150,12 @@ const DualCheckboxField = ({
             checked={isChecked}
             onChange={(e) => {
               setIsChecked(e.target.checked);
+
               if (!e.target.checked) {
-                onChange(id, "00");
+                setBeforeValue(formData[id]?.realValue);
               }
+
+              onChange(id, e.target.checked ? beforeValue : "00");
             }}
           />
         </Stack>
