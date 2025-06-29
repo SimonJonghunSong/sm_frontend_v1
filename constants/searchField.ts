@@ -978,6 +978,8 @@ const INCLUDE_FIELDS_BLUETOOTH = {
     "4014",
     "4026",
     "4027",
+    "4035",
+    "4036",
   ],
   [SECTIONS.BleRegistration.en]: [],
   [SECTIONS.Sensor.en]: [

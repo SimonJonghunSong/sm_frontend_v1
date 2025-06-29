@@ -17868,19 +17868,19 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "00",
+        value: "0",
         label: {
-          en: "Disable",
-          es: "Disable",
-          pt: "Disable",
+          en: "Stop",
+          es: "Parar",
+          pt: "Parar",
         },
       },
       {
-        value: "01",
+        value: "1",
         label: {
-          en: "Enable",
-          es: "Enable",
-          pt: "Enable",
+          en: "Start",
+          es: "Iniciar",
+          pt: "Iniciar",
         },
       },
     ],
@@ -18103,6 +18103,60 @@ export const FIELD_VALIDATIONS = {
           en: "ELA + Minew + Eddystone",
           es: "ELA + Minew + Eddystone",
           pt: "ELA + Minew + Eddystone",
+        },
+      },
+    ],
+  },
+  "4035": {
+    title: {
+      en: "ELD Enabled",
+      pt: "ELD Enabled",
+      es: "ELD Enabled",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "4036": {
+    title: {
+      en: "ELD Interval",
+      pt: "ELD Interval",
+      es: "ELD Interval",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "4065": {
+    title: {
+      en: "Register BDA",
+      pt: "Registrar BDA",
+      es: "Registrar BDA",
+    },
+    tooltip: {
+      en: "Register BDA",
+      es: "Registrar BDA",
+      pt: "Registrar BDA",
+    },
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "0",
+        label: {
+          en: "Disable",
+          es: "Disable",
+          pt: "Disable",
+        },
+      },
+      {
+        value: "1",
+        label: {
+          en: "Enable",
+          es: "Enable",
+          pt: "Enable",
         },
       },
     ],
