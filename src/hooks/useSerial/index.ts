@@ -107,16 +107,20 @@ const useSerial = () => {
   const getPorts = async () => {
     try {
       const allowedPortList = await navigator.serial.getPorts();
-
+      console.log(allowedPortList, ":::: allowedPortList");
       allowedPortList.forEach(async (port) => {
         try {
+          console.log("before open port ::::", port.connected);
           await port.open(options);
+          console.log("after open port ::::", port.connected);
           await addPortToState(port);
         } catch (error) {
           if (port?.imei) {
             setHasRefetching({ imei: port.imei, value: true });
           }
 
+          console.log(portList, "portList");
+          console.log(error, port, "port open , addPortToState");
           return;
         }
       });
@@ -778,17 +782,7 @@ const useSerial = () => {
             if (value) {
               // load imei
               if (port?.isLoadImei) {
-                console.log("value ::::", value);
-                console.log("value ::::", value.includes("null"));
-                console.log("value ::::", !value);
-
-                loadImeiDataRef.current += value || "";
-                if (value.includes(CR)) {
-                  port.onLoadImei?.(loadImeiDataRef.current);
-                  port.isLoadImei = false;
-                  port.onLoadImei = null;
-                  loadImeiDataRef.current = "";
-                }
+                port.onLoadImei?.(value);
               }
 
               if (port?.onpolygonedit) {

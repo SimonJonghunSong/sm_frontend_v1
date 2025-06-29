@@ -241,6 +241,7 @@ export default function DeviceInfoPage() {
   const [isFechedPackage, setIsFechedPackage] = useState(false);
   const isFechedPackageRef = useRef(false);
   const packageCountRef = useRef(0);
+  const imeiRef = useRef("");
   const { userRole } = useAuthStore();
   const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -252,8 +253,6 @@ export default function DeviceInfoPage() {
 
   const originData = portList.find(({ port }) => port.imei === imei)
     ?.packageToJson.synctrak;
-
-  const navigate = useRouter();
 
   const {
     deviceVersionsObject,
@@ -395,27 +394,30 @@ export default function DeviceInfoPage() {
 
   const handleLoadImei = () => {
     setIsLoadingModelImei(true);
-
-    const resetTimeout = setTimeout(() => {
-      currentPort.port.isLoadImei = false;
-      currentPort.port.onLoadImei = null;
-      currentPort.port.loadedImei = "ERROR";
-      setModelImei("ERROR");
-      setIsLoadingModelImei(false);
-    }, 2000);
+    imeiRef.current = "";
 
     currentPort.port.isLoadImei = true;
     currentPort.port.onLoadImei = (data) => {
-      if (data.includes("ERROR")) {
-        currentPort.port.loadedImei = "ERROR";
-        setModelImei("ERROR");
+      imeiRef.current += data;
+
+      setTimeout(() => {
+        if (imeiRef.current.includes("+EGMR")) {
+          const match = imeiRef.current.match(/"(\d{15})"/);
+          const number = match ? match[1] : "TIMEOUT ERROR";
+
+          currentPort.port.isLoadImei = false;
+          currentPort.port.onLoadImei = null;
+          currentPort.port.loadedImei = number;
+          setModelImei(number);
+        } else {
+          currentPort.port.isLoadImei = false;
+          currentPort.port.onLoadImei = null;
+          currentPort.port.loadedImei = "TIMEOUT ERROR";
+          setModelImei("TIMEOUT ERROR");
+        }
+
         setIsLoadingModelImei(false);
-      } else {
-        setModelImei(data);
-        currentPort.port.loadedImei = data;
-        setIsLoadingModelImei(false);
-      }
-      clearTimeout(resetTimeout);
+      }, 2000);
     };
 
     write({
