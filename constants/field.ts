@@ -16837,6 +16837,21 @@ export const FIELD_VALIDATIONS = {
       },
     ],
   },
+  "2622": {
+    title: {
+      en: "Sensor Scan Interval in Towing (minutes)",
+      pt: "Intervalo de Varredura do Sensor ao Reboque (minutos)",
+      es: "Intervalo de Escaneo del Sensor al Remolque (minutos)",
+    },
+    tooltip: {
+      en: "Determines time interval by which the device will scan and store the values of dedicated sensors for ‘Sensor Report’ in Towing.",
+      pt: "Determina o intervalo de tempo pelo qual o dispositivo escaneará e armazenará os valores dos sensores dedicados para o 'Relatório de Sensor' no reboque.",
+      es: "Determina el intervalo de tiempo por el que el dispositivo escaneará y almacenará los valores de los sensores dedicados para el 'Informe de Sensor' en remolque.",
+    },
+    min: 10,
+    max: 1440,
+    list: null,
+  },
   "2704": {
     title: {
       en: "Carton Box Open Emergency",
@@ -17876,19 +17891,19 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: [
       {
-        value: "00",
+        value: "0",
         label: {
-          en: "Disable",
-          es: "Disable",
-          pt: "Disable",
+          en: "Stop",
+          es: "Parar",
+          pt: "Parar",
         },
       },
       {
-        value: "01",
+        value: "1",
         label: {
-          en: "Enable",
-          es: "Enable",
-          pt: "Enable",
+          en: "Start",
+          es: "Iniciar",
+          pt: "Iniciar",
         },
       },
     ],
@@ -17978,19 +17993,51 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "01",
+        label: {
+          en: "Reserve",
+          es: "Reserve",
+          pt: "Reserve",
+        },
+      },
+      {
         value: "02",
         label: {
-          en: "ConMet",
-          es: "ConMet",
-          pt: "ConMet",
+          en: "CONMET",
+          es: "CONMET",
+          pt: "CONMET",
+        },
+      },
+      {
+        value: "03",
+        label: {
+          en: "Reserve",
+          es: "Reserve",
+          pt: "Reserve",
         },
       },
       {
         value: "04",
         label: {
-          en: "ELA + ConMet",
-          es: "ELA + ConMet",
-          pt: "ELA + ConMet",
+          en: "ELA+CONMET",
+          es: "ELA+CONMET",
+          pt: "ELA+CONMET",
+        },
+      },
+      {
+        value: "05",
+        label: {
+          en: "Reserve",
+          es: "Reserve",
+          pt: "Reserve",
+        },
+      },
+      {
+        value: "06",
+        label: {
+          en: "Reserve",
+          es: "Reserve",
+          pt: "Reserve",
         },
       },
       {
@@ -18012,17 +18059,17 @@ export const FIELD_VALIDATIONS = {
       {
         value: "09",
         label: {
-          en: "ConMet + Otodata",
-          es: "ConMet + Otodata",
-          pt: "ConMet + Otodata",
+          en: "CONMET + Otodata",
+          es: "CONMET + Otodata",
+          pt: "CONMET + Otodata",
         },
       },
       {
         value: "10",
         label: {
-          en: "ELA + ConMet + Otodata",
-          es: "ELA + ConMet + Otodata",
-          pt: "ELA + ConMet + Otodata",
+          en: "ELA + CONMET + Otodata",
+          es: "ELA + CONMET + Otodata",
+          pt: "ELA + CONMET + Otodata",
         },
       },
       {
@@ -18090,6 +18137,14 @@ export const FIELD_VALIDATIONS = {
         },
       },
       {
+        value: "19",
+        label: {
+          en: "Reserve",
+          es: "Reserve",
+          pt: "Reserve",
+        },
+      },
+      {
         value: "20",
         label: {
           en: "Minew",
@@ -18111,6 +18166,107 @@ export const FIELD_VALIDATIONS = {
           en: "ELA + Minew + Eddystone",
           es: "ELA + Minew + Eddystone",
           pt: "ELA + Minew + Eddystone",
+        },
+      },
+      {
+        value: "23",
+        label: {
+          en: "Escort",
+          es: "Escort",
+          pt: "Escort",
+        },
+      },
+      {
+        value: "24",
+        label: {
+          en: "iBeacon + Teltonika",
+          es: "iBeacon + Teltonika",
+          pt: "iBeacon + Teltonika",
+        },
+      },
+      {
+        value: "25",
+        label: {
+          en: "Eddystone + Teltonika",
+          es: "Eddystone + Teltonika",
+          pt: "Eddystone + Teltonika",
+        },
+      },
+      {
+        value: "26",
+        label: {
+          en: "iBeacon + Eddystone + Minew",
+          es: "iBeacon + Eddystone + Minew",
+          pt: "iBeacon + Eddystone + Minew",
+        },
+      },
+    ],
+  },
+  "4030": {
+    title: {
+      en: "BDA sync number with STT in tow mode",
+      pt: "Número de sincronização BDA com STT em modo de reboque",
+      es: "Número de sincronización BDA con STT en modo de remolque",
+    },
+    tooltip: {
+      en: "This parameter is used to set the frequency at which BDA reports are reported to the server in towing mode.",
+      pt: "Este parâmetro é usado para definir a frequência com que os relatórios BDA são enviados para o servidor no modo de reboque.",
+      es: "Este parámetro se utiliza para definir la frecuencia con la que se envían los informes BDA al servidor en modo de remolque.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "4035": {
+    title: {
+      en: "ELD Enabled",
+      pt: "ELD Enabled",
+      es: "ELD Enabled",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "4036": {
+    title: {
+      en: "ELD Interval",
+      pt: "ELD Interval",
+      es: "ELD Interval",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "4065": {
+    title: {
+      en: "Enable Register BDA",
+      pt: "Habilitar Registro BDA",
+      es: "Habilitar Registro BDA",
+    },
+    tooltip: {
+      en: "This parameter determines whether only registered sensors will be displayed in the BDA report or all surrounding sensors will be displayed.",
+      es: "Este parámetro determina si solo se mostrarán sensores registrados en el informe BDA o todos los sensores circundantes.",
+      pt: "Este parâmetro determina se apenas sensores registrados serão exibidos no relatório BDA ou todos os sensores circundantes.",
+    },
+    min: null,
+    max: null,
+    list: [
+      {
+        value: "0",
+        label: {
+          en: "Disable",
+          es: "Disable",
+          pt: "Disable",
+        },
+      },
+      {
+        value: "1",
+        label: {
+          en: "Enable",
+          es: "Enable",
+          pt: "Enable",
         },
       },
     ],

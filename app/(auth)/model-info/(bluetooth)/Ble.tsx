@@ -41,7 +41,7 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
     [formData]
   );
 
-  if (!formData["4021"] || !hasFormDataFields(formData, fieldIds)) return null;
+  if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string, selectValue?: string) => {
     onChange(id, value, selectValue);
@@ -106,122 +106,140 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
           <h1 data-section-id={SECTIONS.Ble.en}>
             {t("configuration.ble.ble")}
           </h1>
-          <InputBox.Info
-            tooltipText={
-              <span style={{ whiteSpace: "pre-wrap" }}>
-                <p>{FIELD_VALIDATIONS["4021"].tooltip[lang]}</p>
-              </span>
-            }
-          />
-          <InputBox.Number>4021</InputBox.Number>
-          {isDirtyFields.includes("4021") && <EditDot />}
         </Stack>
-
-        <SwitchPrimary
-          checked={formData["4021"]?.realValue === "01"}
-          onChange={(e) => onChange("4021", e.target.checked ? "01" : "00")}
-        />
       </Stack>
 
-      {formData["4021"]?.realValue === "01" && (
-        <Stack direction={"row"} gap={"24px"}>
-          <Stack gap={"24px"} flex={1}>
-            <NumericInputField
-              id="4020"
-              formData={formData}
-              onChange={handleChange}
-              isSwitch
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4020")}
-            />
+      <Stack direction={"row"} gap={"24px"}>
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="4020"
+            formData={formData}
+            onChange={handleChange}
+            isSwitch
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4020")}
+          />
+          <SwitchField
+            id="4021"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4021")}
+          />
 
-            <SelectField
-              id="4028"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4028")}
-            />
+          <SelectField
+            id="4028"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4028")}
+          />
 
-            <SwitchField
-              id="4025"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4025")}
-            />
+          <SwitchField
+            id="4025"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4025")}
+          />
 
-            <NumericInputField
-              id="4012"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4012")}
-            />
-            <NumericInputField
-              id="4026"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4026")}
-            />
-            <NumericInputField
-              id="4027"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4027")}
-            />
-          </Stack>
-
-          <Stack gap={"24px"} flex={1}>
-            <NumericInputField
-              id="4000"
-              formData={formData}
-              onChange={handleChange}
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4000")}
-            />
-
-            <NumericInputField
-              id="4010"
-              formData={formData}
-              onChange={handleChange}
-              isSwitch
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4010")}
-            />
-
-            <NumericInputField
-              id="4011"
-              formData={formData}
-              onChange={handleChange}
-              isSwitch
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4011")}
-            />
-
-            <NumericInputField
-              id="4013"
-              formData={formData}
-              onChange={handleChange}
-              isSwitch
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4013")}
-            />
-
-            <NumericInputField
-              id="4014"
-              formData={formData}
-              onChange={handleChange}
-              isSwitch
-              style={{ width: "100%" }}
-              isDirty={isDirtyFields.includes("4014")}
-            />
-          </Stack>
+          <NumericInputField
+            id="4012"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4012")}
+          />
+          <NumericInputField
+            id="4026"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4026")}
+          />
+          <NumericInputField
+            id="4027"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4027")}
+          />
+          <NumericInputField
+            id="4030"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4030")}
+          />
+          <SwitchField
+            id="4065"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4065")}
+          />
         </Stack>
-      )}
 
+        <Stack gap={"24px"} flex={1}>
+          <NumericInputField
+            id="4000"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4000")}
+          />
+
+          <NumericInputField
+            id="4010"
+            formData={formData}
+            onChange={handleChange}
+            isSwitch
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4010")}
+          />
+
+          <NumericInputField
+            id="4011"
+            formData={formData}
+            onChange={handleChange}
+            isSwitch
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4011")}
+          />
+
+          <NumericInputField
+            id="4013"
+            formData={formData}
+            onChange={handleChange}
+            isSwitch
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4013")}
+          />
+
+          <NumericInputField
+            id="4014"
+            formData={formData}
+            onChange={handleChange}
+            isSwitch
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4014")}
+          />
+          <SwitchField
+            id="4035"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4035")}
+          />
+          <NumericInputField
+            id="4036"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("4036")}
+          />
+        </Stack>
+      </Stack>
       <Stack direction="row" justifyContent="flex-end" alignItems="center">
         <Button
           color="secondary"

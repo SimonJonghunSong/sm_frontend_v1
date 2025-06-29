@@ -198,6 +198,13 @@ const Sensor = ({ formData, onChange, setFormData }: Props) => {
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("2621")}
           />
+          <NumericInputField
+            id="2622"
+            formData={formData}
+            onChange={handleChange}
+            style={{ width: "100%" }}
+            isDirty={isDirtyFields.includes("2622")}
+          />
         </Stack>
       </Stack>
 
