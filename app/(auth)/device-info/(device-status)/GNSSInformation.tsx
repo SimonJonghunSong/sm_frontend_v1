@@ -1,5 +1,3 @@
-import InputBox from "@/components/inputbox/InputBox";
-import { SwitchPrimary } from "@/components/switches";
 import useLangStore from "@/utils/useLangStore";
 import { Box, Stack } from "@mui/material";
 import { SECTIONS } from "constants/searchField";
@@ -10,11 +8,9 @@ import { useTranslations } from "next-intl";
 interface Props {
   lat: number;
   lng: number;
-  gnss: string;
-  wwan: string;
 }
 
-export default function GNSSInformation({ lat, lng, gnss, wwan }: Props) {
+export default function GNSSInformation({ lat, lng }: Props) {
   const t = useTranslations();
   const { lang } = useLangStore();
   return (
@@ -53,14 +49,6 @@ export default function GNSSInformation({ lat, lng, gnss, wwan }: Props) {
         <FieldItem>
           <FieldLabel>{t("device_information.longitude")}</FieldLabel>
           <FieldValue>{lng}</FieldValue>
-        </FieldItem>
-        <FieldItem>
-          <FieldLabel>{t("device_information.gnss")}</FieldLabel>
-          <FieldValue>{gnss}</FieldValue>
-        </FieldItem>
-        <FieldItem>
-          <FieldLabel>{t("device_information.wwan")}</FieldLabel>
-          <FieldValue>{wwan}</FieldValue>
         </FieldItem>
       </Stack>
     </Container>

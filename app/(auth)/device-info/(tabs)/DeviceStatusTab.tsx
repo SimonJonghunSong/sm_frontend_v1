@@ -35,6 +35,8 @@ export default function DeviceStatusTab({
   return (
     <Stack className="contentWrap" direction="column" gap={"20px"}>
       <DeviceInformation
+        gnss={deviceVersionsObject?.GNSS || "N/A"}
+        wwan={deviceVersionsObject?.WWAN || "N/A"}
         modelName={modelInfo?.S || "-"}
         modelVersion={modelInfo?.V || "-"}
         modelEsn={modelInfo?.I || "-"}
@@ -50,8 +52,6 @@ export default function DeviceStatusTab({
           <GNSSInformation
             lat={modelInfo?.lat || 0}
             lng={modelInfo?.lng || 0}
-            gnss={deviceVersionsObject?.GNSS || "N/A"}
-            wwan={deviceVersionsObject?.WWAN || "N/A"}
           />
         </div>
         <div style={{ flex: 1 }}></div>

@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import styled from "styled-components";
 
 interface Props {
+  gnss: string;
+  wwan: string;
   modelName: string;
   modelVersion: string;
   modelImei: string;
@@ -17,6 +19,8 @@ interface Props {
 }
 
 export default function DeviceInformation({
+  gnss,
+  wwan,
   modelName,
   modelVersion,
   modelImei,
@@ -112,11 +116,11 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
+            <FieldValue>{gnss}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_state")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
+            <FieldValue>{wwan}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.wwan_state")}</FieldLabel>
