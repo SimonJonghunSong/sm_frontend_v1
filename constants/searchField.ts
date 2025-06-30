@@ -196,7 +196,7 @@ export const SECTIONS = {
     es: "Accesorios",
     pt: "Acessórios",
   },
-  MDSM7: {
+  "MDSM-7": {
     en: "MDSM-7",
     es: "MDSM-7",
     pt: "MDSM-7",
@@ -206,7 +206,7 @@ export const SECTIONS = {
     es: "RS232",
     pt: "RS232",
   },
-  WireSettings: {
+  "1-WireSettings": {
     en: "1-Wire Settings",
     es: "Configuración 1-Wire",
     pt: "Configurações 1-Wire",
@@ -291,7 +291,7 @@ export const SECTIONS = {
   },
 
   // Bluetooth
-  Ble: {
+  Bluetooth: {
     en: "Bluetooth",
     es: "Bluetooth",
     pt: "Bluetooth",
@@ -839,7 +839,7 @@ const INCLUDE_FIELDS_ACCESSORIES = {
     "2334",
     "2336",
   ],
-  [SECTIONS.MDSM7.en]: [
+  [SECTIONS["MDSM-7"].en]: [
     "2350",
     "2351",
     "2352",
@@ -864,7 +864,7 @@ const INCLUDE_FIELDS_ACCESSORIES = {
     "2372",
   ],
   [SECTIONS.SerialRs232.en]: ["1950", "1951", "1956", "1957", "1958"],
-  [SECTIONS.WireSettings.en]: [
+  [SECTIONS["1-WireSettings"].en]: [
     "1970",
     "1971",
     "1972",
@@ -965,7 +965,7 @@ const INCLUDE_FIELDS_DRIVER = {
 };
 
 const INCLUDE_FIELDS_BLUETOOTH = {
-  [SECTIONS.Ble.en]: [
+  [SECTIONS["Bluetooth"].en]: [
     "4020",
     "4021",
     "4000",
@@ -1796,11 +1796,11 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Accessories",
       key: SECTIONS.Accessories.en,
     },
-    [SECTIONS.MDSM7.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.MDSM7.en],
-      searchText: `${MENUS.Accessories.en} > ${SECTIONS.MDSM7.en}`,
+    [SECTIONS["MDSM-7"].en]: {
+      fields: INCLUDE_FIELDS[SECTIONS["MDSM-7"].en],
+      searchText: `${MENUS.Accessories.en} > ${SECTIONS["MDSM-7"].en}`,
       tab: "Accessories",
-      key: SECTIONS.MDSM7.en,
+      key: SECTIONS["MDSM-7"].en,
     },
     [SECTIONS.SerialRs232.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.SerialRs232.en],
@@ -1808,11 +1808,11 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Accessories",
       key: SECTIONS.SerialRs232.en,
     },
-    [SECTIONS.WireSettings.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.WireSettings.en],
-      searchText: `${MENUS.Accessories.en} > ${SECTIONS.WireSettings.en}`,
+    [SECTIONS["1-WireSettings"].en]: {
+      fields: INCLUDE_FIELDS[SECTIONS["1-WireSettings"].en],
+      searchText: `${MENUS.Accessories.en} > ${SECTIONS["1-WireSettings"].en}`,
       tab: "Accessories",
-      key: SECTIONS.WireSettings.en,
+      key: SECTIONS["1-WireSettings"].en,
     },
   },
   es: {
@@ -1822,11 +1822,11 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Accessories",
       key: SECTIONS.Accessories.en,
     },
-    [SECTIONS.MDSM7.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.MDSM7.en],
-      searchText: `${MENUS.Accessories.es} > ${SECTIONS.MDSM7.es}`,
+    [SECTIONS["MDSM-7"].es]: {
+      fields: INCLUDE_FIELDS[SECTIONS["MDSM-7"].en],
+      searchText: `${MENUS.Accessories.es} > ${SECTIONS["MDSM-7"].es}`,
       tab: "Accessories",
-      key: SECTIONS.MDSM7.en,
+      key: SECTIONS["MDSM-7"].en,
     },
     [SECTIONS.SerialRs232.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.SerialRs232.en],
@@ -1834,11 +1834,11 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Accessories",
       key: SECTIONS.SerialRs232.en,
     },
-    [SECTIONS.WireSettings.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.WireSettings.en],
-      searchText: `${MENUS.Accessories.es} > ${SECTIONS.WireSettings.es}`,
+    [SECTIONS["1-WireSettings"].es]: {
+      fields: INCLUDE_FIELDS[SECTIONS["1-WireSettings"].en],
+      searchText: `${MENUS.Accessories.es} > ${SECTIONS["1-WireSettings"].es}`,
       tab: "Accessories",
-      key: SECTIONS.WireSettings.en,
+      key: SECTIONS["1-WireSettings"].en,
     },
   },
   pt: {
@@ -1848,11 +1848,11 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Accessories",
       key: SECTIONS.Accessories.en,
     },
-    [SECTIONS.MDSM7.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.MDSM7.en],
-      searchText: `${MENUS.Accessories.pt} > ${SECTIONS.MDSM7.pt}`,
+    [SECTIONS["MDSM-7"].pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS["MDSM-7"].en],
+      searchText: `${MENUS.Accessories.pt} > ${SECTIONS["MDSM-7"].pt}`,
       tab: "Accessories",
-      key: SECTIONS.MDSM7.en,
+      key: SECTIONS["MDSM-7"].en,
     },
     [SECTIONS.SerialRs232.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.SerialRs232.en],
@@ -1860,11 +1860,11 @@ export const ACCESSORIES_SECTION: Record<Lang, Record<string, SearchFields>> = {
       tab: "Accessories",
       key: SECTIONS.SerialRs232.en,
     },
-    [SECTIONS.WireSettings.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.WireSettings.en],
-      searchText: `${MENUS.Accessories.pt} > ${SECTIONS.WireSettings.pt}`,
+    [SECTIONS["1-WireSettings"].pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS["1-WireSettings"].en],
+      searchText: `${MENUS.Accessories.pt} > ${SECTIONS["1-WireSettings"].pt}`,
       tab: "Accessories",
-      key: SECTIONS.WireSettings.en,
+      key: SECTIONS["1-WireSettings"].en,
     },
   },
 };
@@ -2087,11 +2087,11 @@ export const DRIVER_SECTION: Record<Lang, Record<string, SearchFields>> = {
 
 export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
   en: {
-    [SECTIONS.Ble.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
-      searchText: `${MENUS.Bluetooth.en} > ${SECTIONS.Ble.en}`,
+    [SECTIONS["Bluetooth"].en]: {
+      fields: INCLUDE_FIELDS[SECTIONS["Bluetooth"].en],
+      searchText: `${MENUS.Bluetooth.en} > ${SECTIONS["Bluetooth"].en}`,
       tab: "Bluetooth",
-      key: SECTIONS.Ble.en,
+      key: SECTIONS["Bluetooth"].en,
     },
     [SECTIONS.BleRegistration.en]: {
       fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
@@ -2107,11 +2107,11 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
     },
   },
   es: {
-    [SECTIONS.Ble.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
-      searchText: `${MENUS.Bluetooth.es} > ${SECTIONS.Ble.es}`,
+    [SECTIONS["Bluetooth"].es]: {
+      fields: INCLUDE_FIELDS[SECTIONS["Bluetooth"].en],
+      searchText: `${MENUS.Bluetooth.es} > ${SECTIONS["Bluetooth"].es}`,
       tab: "Bluetooth",
-      key: SECTIONS.Ble.en,
+      key: SECTIONS["Bluetooth"].en,
     },
     [SECTIONS.BleRegistration.es]: {
       fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],
@@ -2127,11 +2127,11 @@ export const BLUETOOTH_SECTION: Record<Lang, Record<string, SearchFields>> = {
     },
   },
   pt: {
-    [SECTIONS.Ble.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.Ble.en],
-      searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS.Ble.pt}`,
+    [SECTIONS["Bluetooth"].pt]: {
+      fields: INCLUDE_FIELDS[SECTIONS["Bluetooth"].en],
+      searchText: `${MENUS.Bluetooth.pt} > ${SECTIONS["Bluetooth"].pt}`,
       tab: "Bluetooth",
-      key: SECTIONS.Ble.en,
+      key: SECTIONS["Bluetooth"].en,
     },
     [SECTIONS.BleRegistration.pt]: {
       fields: INCLUDE_FIELDS[SECTIONS.BleRegistration.en],

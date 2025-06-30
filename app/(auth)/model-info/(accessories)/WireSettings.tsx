@@ -13,7 +13,7 @@ import DualCheckboxField from "../(components)/DualCheckboxField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 
-const fieldIds = INCLUDE_FIELDS[SECTIONS.WireSettings.en];
+const fieldIds = INCLUDE_FIELDS[SECTIONS["1-WireSettings"].en];
 
 interface Props {
   formData: {
@@ -108,8 +108,8 @@ const WireSettings = ({ formData, onChange, setFormData }: Props) => {
         // 여기에 데이터 제출 로직 추가
       }}
     >
-      <h1 data-section-id={SECTIONS.WireSettings.en}>
-        {SECTIONS.WireSettings[lang]}
+      <h1 data-section-id={SECTIONS["1-WireSettings"].en}>
+        {SECTIONS["1-WireSettings"][lang]}
       </h1>
 
       <Stack direction="row" gap={"24px"}>

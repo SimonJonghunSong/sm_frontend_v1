@@ -12,7 +12,7 @@ import SpecialRangeNumericField from "../(components)/SpecialRangeNumericField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 
-const fieldIds = INCLUDE_FIELDS[SECTIONS.MDSM7.en];
+const fieldIds = INCLUDE_FIELDS[SECTIONS["MDSM-7"].en];
 
 interface Props {
   formData: {
@@ -103,7 +103,9 @@ const MDSM7 = ({ formData, onChange, setFormData }: Props) => {
       }}
     >
       <Stack direction="row" alignItems="center" gap={"4px"}>
-        <h1 data-section-id={SECTIONS.MDSM7.en}>{SECTIONS.MDSM7[lang]}</h1>
+        <h1 data-section-id={SECTIONS["MDSM-7"].en}>
+          {SECTIONS["MDSM-7"][lang]}
+        </h1>
 
         <InputBox.Info
           tooltipText={

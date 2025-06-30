@@ -298,6 +298,9 @@ export default function DeviceInfoPage() {
     [key: string]: SearchField;
   }>(null);
 
+  console.log(searchSectionData, " :::: searchSectionData");
+  console.log(searchParamData, " :::: searchParamData");
+
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
   const imei = getCurrentImei();

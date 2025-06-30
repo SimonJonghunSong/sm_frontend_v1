@@ -153,6 +153,7 @@ export default function SearchModal({
         }
       });
       setSearchSectionResults(sectionResults);
+      console.log("paramData ::::@ :::", paramData);
 
       const paramResults = [];
       const paramResultsEntries = Object.entries(paramData).filter(

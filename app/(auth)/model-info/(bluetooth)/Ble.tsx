@@ -16,7 +16,7 @@ import SelectField from "../(components)/SelectField";
 import EditDot from "../(components)/EditDot";
 import TextInputField from "../(components)/TextInputField";
 
-const fieldIds = INCLUDE_FIELDS[SECTIONS.Ble.en];
+const fieldIds = INCLUDE_FIELDS[SECTIONS["Bluetooth"].en];
 
 interface Props {
   formData: {
@@ -104,7 +104,7 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Stack direction="row" alignItems="center" gap="16px">
-          <h1 data-section-id={SECTIONS.Ble.en}>
+          <h1 data-section-id={SECTIONS["Bluetooth"].en}>
             {t("configuration.ble.ble")}
           </h1>
         </Stack>
