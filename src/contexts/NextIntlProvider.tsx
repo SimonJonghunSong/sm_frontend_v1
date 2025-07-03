@@ -24,7 +24,7 @@ const NextIntlProvider = ({ children }: IntlProviderProps) => {
 
   return (
     <html lang={lang}>
-      <NextIntlClientProvider messages={messages} locale={lang}>
+      <NextIntlClientProvider messages={messages} locale={lang} timeZone="UTC">
         {children}
       </NextIntlClientProvider>
     </html>

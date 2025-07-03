@@ -345,7 +345,7 @@ export default function ModelInfoController({
               );
             })}
           </Select>
-          {currentPort && !currentPort.isDisconnected ? (
+          {/* {currentPort && !currentPort.isDisconnected ? (
             <Button
               variant="outlined"
               color="secondary"
@@ -374,7 +374,7 @@ export default function ModelInfoController({
             >
               {t("configuration.profile_menu.connect")}
             </Button>
-          )}
+          )} */}
         </Stack>
         {/* <Stack direction="row" gap="8px" alignItems="center">
           <IconButton onClick={onRefreshJsonPacket}>
