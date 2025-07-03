@@ -15,6 +15,7 @@ const modifyUser = (body: UserBody) => {
   return put("/api/v1/user", body);
 };
 const deleteUser = (body: string[]) => {
+  console.log("deleteUser", body);
   return del("/api/v1/users", { user_id_list: body });
 };
 
