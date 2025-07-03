@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styles from "./styles.module.scss";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Divider, Stack } from "@mui/material";
+import { Button, Divider, Stack } from "@mui/material";
 import { SwitchSecondary } from "../switches";
 import useParameterStore from "../../utils/useParameterStore";
 import useAuthStore from "@/utils/useAuthStore";
@@ -33,12 +33,14 @@ type SideMenuProps = {
   sideMenuItems: sideMenuItem[];
   configuration?: boolean;
   queries?: Record<string, string>;
+  onDelete?: () => void;
 };
 
 export default function SideMenu({
   sideMenuItems,
   configuration = false,
   queries,
+  onDelete,
 }: SideMenuProps) {
   const router = useRouter();
   const t = useTranslations();
@@ -215,6 +217,24 @@ export default function SideMenu({
               </li>
             </>
           )} */}
+          {onDelete && (
+            <li>
+              <Divider sx={{ borderColor: "var(--grey7)" }} />
+              <span
+                onClick={onDelete}
+                style={{
+                  display: "inline-block",
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                  margin: "24px 16px",
+                  textAlign: "left",
+                  color: "var(--grey5)",
+                }}
+              >
+                {t("configuration.side_bar.delete_model")}
+              </span>
+            </li>
+          )}
         </ul>
       </aside>
 
