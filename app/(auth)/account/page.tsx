@@ -116,7 +116,7 @@ export default function Account() {
                       title: t("common.popup.confrim"),
                       confirmText: t("common.popup.yes"),
                       onErrorPopupOk: () => {
-                        mutate([event.row.id]);
+                        mutate([event.row.real_id]);
                       },
                     }
                   );
@@ -139,7 +139,7 @@ export default function Account() {
                       title: t("common.popup.confrim"),
                       confirmText: t("common.popup.yes"),
                       onErrorPopupOk: () => {
-                        mutate([event.row.id]);
+                        mutate([event.row.real_id]);
                       },
                     }
                   );
@@ -493,6 +493,7 @@ export default function Account() {
                   ) => {
                     return {
                       id: user_id + index,
+                      real_id: user_id,
                       col1: email,
                       col2: user_id,
                       col3: name,

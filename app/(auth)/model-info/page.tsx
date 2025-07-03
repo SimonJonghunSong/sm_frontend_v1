@@ -30,7 +30,10 @@ import { getSearchParamsData } from "@/src/utils/searchParams";
 import DeviceStatusTab from "./(tabs)/DeviceStatusTab";
 import { useRouter } from "next/navigation";
 import { Stack } from "@mui/material";
-import { getModelDataFromIDB } from "@/utils/idbModelUtil";
+import {
+  deleteJsonDataFromIDB,
+  getModelDataFromIDB,
+} from "@/utils/idbModelUtil";
 import { ModelConfigWithData } from "@/src/api/services/model/type";
 import useModelInfoStore from "@/src/stores/useModelInfo";
 import BluetoothTab from "app/(auth)/model-info/(tabs)/BluetoothTab";
@@ -667,6 +670,12 @@ export default function DeviceInfoPage() {
     formData,
   });
 
+  const handleDelete = async () => {
+    console.log("delete");
+    await deleteJsonDataFromIDB(modelName, fwVer, targetCountry);
+    navigate.replace("/model");
+  };
+
   useEffect(() => {
     if (!originData) return;
 
@@ -691,6 +700,7 @@ export default function DeviceInfoPage() {
             exclude: excludeMenus,
             t,
           })}
+          onDelete={handleDelete}
         />
         <Stack flex={1}>
           <Controller
@@ -730,6 +740,7 @@ export default function DeviceInfoPage() {
           {renderContent()}
         </Stack>
       </div>
+      <p onClick={handleDelete}>delete</p>
 
       {searchModal && (
         <Modal
