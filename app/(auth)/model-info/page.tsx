@@ -740,7 +740,6 @@ export default function DeviceInfoPage() {
           {renderContent()}
         </Stack>
       </div>
-      <p onClick={handleDelete}>delete</p>
 
       {searchModal && (
         <Modal
