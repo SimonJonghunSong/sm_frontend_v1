@@ -77,7 +77,7 @@ export default function LoginPage() {
         <span>Anonymous</span>
       </Stack>
 
-      <Stack alignItems="center" pt={4} sx={{ color: "var(--grey5)" }}>
+      <Stack alignItems="center" pt={4} sx={{ color: "var(--grey5)" , fontSize: 12 }}>
         <span>Optimized for Chrome. For best results, use Chrome.</span>
       </Stack>
 
@@ -94,6 +94,7 @@ export default function LoginPage() {
           left: "50%",
           right: "50%",
           transform: "translate(-50%, -50%)",
+          fontSize: 10,
         }}
       >
         <span>202507010210</span>
