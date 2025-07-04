@@ -571,7 +571,7 @@ export default function DeviceInfoPage() {
           }
 
           if (isList) {
-            valueProps = newFormData[key].labelList[value];
+            valueProps = newFormData[key].labelList[value] || value;
           }
 
           console.log(`Updating formData for key ${key}:`, {
