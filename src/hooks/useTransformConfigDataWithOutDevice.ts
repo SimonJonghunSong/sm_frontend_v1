@@ -192,11 +192,13 @@ function fieldToEditString(fieldData: Field): string {
   const optionId =
     Number(fieldData.ID) < 10 ? `0${fieldData.ID}` : fieldData.ID;
 
-  console.log("fieldData :::", fieldData);
-
   switch (fieldData.type) {
     case "combo":
       if ("list" in fieldData) {
+        if (!Number.isNaN(Number(fieldData.value))) {
+          return `${optionId}#${fieldData.value}`;
+        }
+
         const options = parseComboList(fieldData.list);
         const selectValue =
           options.find((item) => item.value === fieldData.value)?.realValue ||
@@ -306,6 +308,7 @@ export function useTransformConfigDataWithOutDevice({
               const fieldData = (fieldDataArray as Field[])[0];
 
               const processedField = processField(fieldData, fieldName);
+
               if (processedField) {
                 fields.push(processedField);
               }
