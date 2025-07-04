@@ -44,6 +44,7 @@ import { useMutation } from "@tanstack/react-query";
 import EditProfileTab from "app/(auth)/model-info/(tabs)/EditProfileTab";
 import GeofenceTab from "./(tabs)/GeofenceTab";
 import { useTranslations } from "next-intl";
+import useConfirmDialog from "@/src/hooks/useConfirmDialog";
 const SCROLL_TOP_OFFSET = 140;
 
 export type AssignItem = {
@@ -288,7 +289,6 @@ const extractCommandData = (originData: any[]) => {
 
 export default function DeviceInfoPage() {
   const t = useTranslations();
-  const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState<string>("");
 
   const { sendFormData } = useSendFormData();
@@ -300,9 +300,6 @@ export default function DeviceInfoPage() {
   const [searchParamData, setSearchParamData] = useState<{
     [key: string]: SearchField;
   }>(null);
-
-  console.log(searchSectionData, " :::: searchSectionData");
-  console.log(searchParamData, " :::: searchParamData");
 
   const { getCurrentImei } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -342,6 +339,15 @@ export default function DeviceInfoPage() {
 
   const [excludeMenus, setExcludeMenus] = useState<string[]>([]);
   const isReadyMenusRef = useRef(false);
+  const { toggle: deleteDialogToggle, renderConfirmModal: renderDeleteModal } =
+    useConfirmDialog({
+      description: t(
+        "popup.configuration.side_bar.are_you_sure_you_want_to_delete_this_model_from_loaded_model_list?"
+      ),
+      onYes: () => {
+        handleDelete();
+      },
+    });
 
   useEffect(() => {
     if (isReadyMenusRef.current) return;
@@ -671,7 +677,6 @@ export default function DeviceInfoPage() {
   });
 
   const handleDelete = async () => {
-    console.log("delete");
     await deleteJsonDataFromIDB(modelName, fwVer, targetCountry);
     navigate.replace("/model");
   };
@@ -691,7 +696,6 @@ export default function DeviceInfoPage() {
 
   return (
     <>
-      {isLoading && <FullLoading />}
       <div className="pageWrap">
         <SideMenu
           sideMenuItems={sideMenuItems({
@@ -700,7 +704,7 @@ export default function DeviceInfoPage() {
             exclude: excludeMenus,
             t,
           })}
-          onDelete={handleDelete}
+          onDelete={deleteDialogToggle}
         />
         <Stack flex={1}>
           <Controller
@@ -740,6 +744,8 @@ export default function DeviceInfoPage() {
           {renderContent()}
         </Stack>
       </div>
+
+      {renderDeleteModal()}
 
       {searchModal && (
         <Modal
