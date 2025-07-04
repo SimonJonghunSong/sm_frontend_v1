@@ -516,8 +516,13 @@ export default function Account() {
                   }
                 )}
               columns={columns}
-              onRowSelectionModelChange={(list) => {
-                setSelectedRowIdList(list as string[]);
+              onRowSelectionModelChange={(list, { api }) => {
+                const selectedRows = api.getSelectedRows();
+                const selectedRowIds = Array.from(selectedRows.values()).map(
+                  (row) => row.real_id
+                );
+
+                setSelectedRowIdList(selectedRowIds);
               }}
               footerButton={
                 <Button
