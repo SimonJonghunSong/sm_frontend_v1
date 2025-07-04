@@ -570,7 +570,19 @@ const EditCircularGeofence = ({
             </Stack>
             <TextField
               type="number"
+              disabled={!mapManager.circles?.[0]?.center}
               value={mapManager.circles?.[0]?.center?.lat.toFixed(5) || ""}
+              inputProps={{
+                step: 0.001,
+              }}
+              onChange={(e) => {
+                const lat = parseFloat(e.target.value);
+                mapManager.updateCircleCenter(
+                  0,
+                  lat,
+                  mapManager.circles?.[0]?.center?.lng
+                );
+              }}
             />
           </Stack>
 
@@ -591,7 +603,19 @@ const EditCircularGeofence = ({
             </Stack>
             <TextField
               type="number"
+              disabled={!mapManager.circles?.[0]?.center}
               value={mapManager.circles?.[0]?.center?.lng.toFixed(5) || ""}
+              inputProps={{
+                step: 0.001,
+              }}
+              onChange={(e) => {
+                const lng = parseFloat(e.target.value);
+                mapManager.updateCircleCenter(
+                  0,
+                  mapManager.circles?.[0]?.center?.lat,
+                  lng
+                );
+              }}
             />
           </Stack>
 
@@ -612,7 +636,14 @@ const EditCircularGeofence = ({
             </Stack>
             <TextField
               type="number"
+              disabled={!mapManager.circles?.[0]?.center}
               value={mapManager.circles?.[0]?.radius.toFixed(5) || ""}
+              inputProps={{
+                step: 5,
+              }}
+              onChange={(e) => {
+                mapManager.updateCircleRadius(0, parseFloat(e.target.value));
+              }}
             />
           </Stack>
 
@@ -754,6 +785,10 @@ const EditCircularGeofence = ({
       }
 
       circleDispatch({
+        type: "setId",
+        payload: data.id,
+      });
+      circleDispatch({
         type: "setEnterAlert",
         payload: data?.enterAlert,
       });
@@ -821,7 +856,10 @@ const EditCircularGeofence = ({
           type="submit"
           variant="contained"
           color="secondary"
-          disabled={!mapManager.circles?.[0]?.center}
+          disabled={
+            !mapManager.circles?.[0]?.center ||
+            (!circleState.enterAlert && !circleState.exitAlert)
+          }
         >
           {t("configuration.ble.save")}
         </Button>

@@ -440,6 +440,10 @@ const EditPolygonGeofence = ({
       }
 
       polygonDispatch({
+        type: "setId",
+        payload: data.id,
+      });
+      polygonDispatch({
         type: "setEnterAlert",
         payload: data.enterAlert,
       });
@@ -483,7 +487,10 @@ const EditPolygonGeofence = ({
           type="submit"
           variant="contained"
           color="secondary"
-          disabled={!mapManager.polygons?.[0]?.path}
+          disabled={
+            !mapManager.polygons?.[0]?.path ||
+            (!polygonState.enterAlert && !polygonState.exitAlert)
+          }
         >
           {t("server.edit_scuti_server_pop_up.save")}
         </Button>
