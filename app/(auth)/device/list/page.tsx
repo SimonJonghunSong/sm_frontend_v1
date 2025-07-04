@@ -511,7 +511,7 @@ export default function DeviceList() {
             rowHeight={72}
             checkbox={false}
             disablePagination
-            minHeight={connectingPortCount === 0 ? undefined : "auto"}
+            minHeight={rows.length <= 5 ? "400px" : "600px"}
             rows={
               connectingPortCount > 0 ? [...rows, { id: "skeleton" }] : rows
             }
@@ -526,7 +526,10 @@ export default function DeviceList() {
             width={"100%"}
             alignItems={"center"}
             justifyContent={"space-between"}
-            style={{ marginTop: "40px" }}
+            style={{ 
+              marginTop: rows.length <= 5 ? "24px" : "40px",
+              marginBottom: "24px"
+            }}
           >
             <Button
               variant="contained"
