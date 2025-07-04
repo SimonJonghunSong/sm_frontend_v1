@@ -21,7 +21,7 @@ const options = {
   baudRate: 115200,
 };
 
-const SUFFIX = "\n";
+
 
 export const delayPromise = (ms) =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -1322,7 +1322,13 @@ const useSerial = () => {
           if (port.isQuecModel) {
             await writer.write(`AT+ST="${data}"` + CR); // Uint8Array 전송
           } else {
-            await writer.write(data + SUFFIX); // Uint8Array 전송
+            const SUFFIX = '\n';
+            // AT+EGMR=0,7 명령어에 대해서는 \r\n을 추가
+            if (data.startsWith('AT+EGMR=0,7')) {
+              await writer.write(data + CR + SUFFIX); // Uint8Array 전송
+            } else {
+              await writer.write(data + SUFFIX); // Uint8Array 전송
+            }
           }
         }
         return true;
