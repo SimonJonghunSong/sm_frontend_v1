@@ -754,7 +754,10 @@ const AddGeofence = ({
             </Stack>
             <Select
               value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as any)}
+              onChange={(e) => {
+                mapManager.removeCircle(0);
+                setTypeFilter(e.target.value as any);
+              }}
             >
               {circularGeofenceMax !== 0 && (
                 <MenuItem value={"Circular"}>
@@ -817,7 +820,19 @@ const AddGeofence = ({
             </Stack>
             <TextField
               type="number"
+              disabled={!mapManager.circles?.[0]?.center}
               value={mapManager.circles?.[0]?.center?.lat.toFixed(5) || ""}
+              inputProps={{
+                step: 0.001,
+              }}
+              onChange={(e) => {
+                const lat = parseFloat(e.target.value);
+                mapManager.updateCircleCenter(
+                  0,
+                  lat,
+                  mapManager.circles?.[0]?.center?.lng
+                );
+              }}
             />
           </Stack>
 
@@ -838,7 +853,19 @@ const AddGeofence = ({
             </Stack>
             <TextField
               type="number"
+              disabled={!mapManager.circles?.[0]?.center}
               value={mapManager.circles?.[0]?.center?.lng.toFixed(5) || ""}
+              inputProps={{
+                step: 0.001,
+              }}
+              onChange={(e) => {
+                const lng = parseFloat(e.target.value);
+                mapManager.updateCircleCenter(
+                  0,
+                  mapManager.circles?.[0]?.center?.lat,
+                  lng
+                );
+              }}
             />
           </Stack>
 
@@ -859,7 +886,14 @@ const AddGeofence = ({
             </Stack>
             <TextField
               type="number"
+              disabled={!mapManager.circles?.[0]?.center}
               value={mapManager.circles?.[0]?.radius.toFixed(5) || ""}
+              inputProps={{
+                step: 5,
+              }}
+              onChange={(e) => {
+                mapManager.updateCircleRadius(0, parseFloat(e.target.value));
+              }}
             />
           </Stack>
 
@@ -1240,7 +1274,13 @@ const AddGeofence = ({
             </Stack>
             <Select
               value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value as any)}
+              onChange={(e) => {
+                const polygon = mapManager.polygons?.[0];
+                if (polygon) {
+                  mapManager.removePolygon(polygon.id);
+                }
+                setTypeFilter(e.target.value as any);
+              }}
             >
               {circularGeofenceMax !== 0 && (
                 <MenuItem value={"Circular"}>
@@ -1420,8 +1460,10 @@ const AddGeofence = ({
           color="secondary"
           disabled={
             typeFilter === "Polygon"
-              ? !mapManager.polygons?.[0]?.path
-              : !mapManager.circles?.[0]?.center
+              ? !mapManager.polygons?.[0]?.path ||
+                (!polygonState.enterAlert && !polygonState.exitAlert)
+              : !mapManager.circles?.[0]?.center ||
+                (!circleState.enterAlert && !circleState.exitAlert)
           }
         >
           {t("model.add_model_pop_up.add")}
