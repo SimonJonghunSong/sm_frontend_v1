@@ -585,6 +585,11 @@ export default function DeviceList() {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && password.length > 0) {
+                handlePassword();
+              }
+            }}
           />
           <div style={{ color: "#FC6508", marginTop: 8, textAlign: "right" }}>
             {remainingTime} seconds left
