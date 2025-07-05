@@ -150,22 +150,56 @@ export default function ModelInfoController({
             Profile
           </span>
 
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ width: 100 }}
-            onClick={handleSave}
+          <Tooltip
+            title={t("configuration.profile_menu.tooltip_save")}
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
           >
-            {t("configuration.profile_menu.save")}
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ width: 100 }}
-            onClick={handleLoad}
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ width: 100 }}
+              onClick={handleSave}
+            >
+              {t("configuration.profile_menu.save")}
+            </Button>
+          </Tooltip>
+          <Tooltip
+            title={t("configuration.profile_menu.tooltip_load")}
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
           >
-            {t("configuration.profile_menu.load")}
-          </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ width: 100 }}
+              onClick={handleLoad}
+            >
+              {t("configuration.profile_menu.load")}
+            </Button>
+          </Tooltip>
           {/* 
             // Administrator/Customer/Client : Shown
             // Guest/Anonnymous : Hidden

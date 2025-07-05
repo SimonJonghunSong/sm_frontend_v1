@@ -568,7 +568,11 @@
       "upload_to_scuti": "Upload to Scuti",
       "no_device": "No Device",
       "connect": "Connect",
-      "disconnect": "Disconnect"
+      "disconnect": "Disconnect",
+      "tooltip_load": "Load from local file or Scuti",
+      "tooltip_save": "Export file",
+      "tooltip_upload": "Scuti Upload",
+      "tooltip_apply": "Apply to device"
     },
     "load_profile_popup": {
       "load_profile": "Load Profile",

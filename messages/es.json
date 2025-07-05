@@ -557,7 +557,11 @@
       "upload_to_scuti": "Subir a Scuti",
       "no_device": "Sin Dispositivo",
       "connect": "Conectar",
-      "disconnect": "Desconectar"
+      "disconnect": "Desconectar",
+      "tooltip_load": "Load from local file or Scuti (ES)",
+      "tooltip_save": "Export file (ES)",
+      "tooltip_upload": "Scuti Upload (ES)",
+      "tooltip_apply": "Apply to device (ES)"
     },
     "load_profile_popup": {
       "load_profile": "Cargar Perfil",
