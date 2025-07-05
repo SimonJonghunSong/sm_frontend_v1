@@ -11,12 +11,20 @@ import { fileDownload } from "@/utils/fileDownload";
 interface Props {
   currentPort: SerialPortState;
   write: any;
+  profileData?: string;
+  setProfileData?: (data: string) => void;
 }
 
-export default function EditProfileTab({ currentPort, write }: Props) {
+export default function EditProfileTab({ currentPort, write, profileData: externalProfileData, setProfileData: setExternalProfileData }: Props) {
   const t = useTranslations();
-  const [profileData, setProfileData] = useState<string>();
+  const [internalProfileData, setInternalProfileData] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
+
+
+  // Use external profile data if provided, otherwise use internal state
+  const profileData = externalProfileData || internalProfileData || "";
+  const setProfileData = setExternalProfileData || setInternalProfileData;
 
   const {
     state: { percentage },
@@ -28,15 +36,49 @@ export default function EditProfileTab({ currentPort, write }: Props) {
     writeSerial: write || "",
   });
 
-  useEffect(() => {
-    (async () => {
-      setIsLoading(true);
+    // 현재 에러 있음. 전체 선택하고 backspace누르면 지워지고난 후 다시 데이터가 리로드 됨. 
+    // 나중에 다시 살펴볼 것. 
 
-      const data = await getProfileAllData(false);
-      setProfileData(data.join("\n"));
-      setIsLoading(false);
-    })();
-  }, []);
+  useEffect(() => { // 이건 에러남. 
+    // Only load from device if no external profile data is provided and internal data is empty
+    if (!externalProfileData && !internalProfileData) {
+      (async () => {
+        setIsLoading(true);
+        const data = await getProfileAllData(false);
+        setInternalProfileData(data.join("\n"));
+        setIsLoading(false);
+      })();
+    }
+  }, []); // Remove externalProfileData dependency
+
+
+
+  // #01 - 데이터 만 로드하는 코드 
+  // useEffect(() => {
+  //   if (!externalProfileData && !internalProfileData && !isProfileLoaded) {
+  //     (async () => {
+  //       setIsLoading(true);
+  //       const data = await getProfileAllData(false);
+  //       setInternalProfileData(data.join("\n"));
+  //       setIsProfileLoaded(true); // ✅ 이후 다시 실행 안 됨
+  //       setIsLoading(false);
+  //     })();
+  //   }
+  // }, [externalProfileData, internalProfileData, isProfileLoaded]);
+
+  // #02 - 이건 Port 변경되면 다시 리로드 하는 코드. 
+  // useEffect(() => { //이것은 
+  //   if (!externalProfileData && !internalProfileData && currentPort?.port && !isProfileLoaded) {
+  //     (async () => {
+  //       setIsLoading(true);
+  //       const data = await getProfileAllData(false);
+  //       setInternalProfileData(data.join("\n"));
+  //       setIsProfileLoaded(true);
+  //       setIsLoading(false);
+  //     })();
+  //   }
+  // }, [currentPort?.port, externalProfileData, internalProfileData, isProfileLoaded]);
+
 
   const handleSave = async () => {
     const blob = new Blob([profileData], {
@@ -64,6 +106,44 @@ export default function EditProfileTab({ currentPort, write }: Props) {
         <StyledTextarea
           value={profileData}
           onChange={(e) => setProfileData(e.target.value)}
+
+          onKeyDown={(e) => {
+            const textarea = e.currentTarget;
+          
+            if (
+              e.key === "Backspace" &&
+              textarea.selectionStart !== textarea.selectionEnd
+            ) {
+              e.preventDefault();
+              const start = textarea.selectionStart;
+              const end = textarea.selectionEnd;
+              const newValue = profileData.substring(0, start) + profileData.substring(end);
+              setProfileData(newValue);
+          
+              // Fix: use saved reference to textarea
+              setTimeout(() => {
+                textarea.setSelectionRange(start, start);
+              }, 0);
+            }
+          }}
+
+//           onKeyDown={(e) => {
+//             // Prevent default behavior for backspace when text is selected
+// //일부 에러 있음. Ctrl-A로 전체 선택하고 Backspace 누르면 안지워짐. 
+// // 문자열 블록처리하고 backspace 누르면 에러남. 
+
+//             if (e.key === 'Backspace' && e.currentTarget.selectionStart !== e.currentTarget.selectionEnd) {
+//               e.preventDefault();
+//               const start = e.currentTarget.selectionStart;
+//               const end = e.currentTarget.selectionEnd;
+//               const newValue = profileData.substring(0, start) + profileData.substring(end);
+//               setProfileData(newValue);
+//               // Set cursor position after the change
+//               setTimeout(() => {
+//                 e.currentTarget.setSelectionRange(start, start);
+//               }, 0);
+//             }
+//           }}
         />
         <Button
           style={{ alignSelf: "flex-end" }}

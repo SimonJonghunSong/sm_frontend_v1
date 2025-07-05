@@ -270,6 +270,7 @@ export default function DeviceInfoPage() {
   }>(null);
 
   const [profile, setProfile] = useState<string>("");
+  const [profileData, setProfileData] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
 
   const handleResetTab = () => {
@@ -518,7 +519,7 @@ export default function DeviceInfoPage() {
           />
         );
       case "EditProfile":
-        return <EditProfileTab currentPort={currentPort} write={write} />;
+        return <EditProfileTab currentPort={currentPort} write={write} profileData={profileData} setProfileData={setProfileData} />;
       default:
         return null;
     }
@@ -677,6 +678,7 @@ export default function DeviceInfoPage() {
               console.log("=== Profile Data Processing Start ===");
               console.log("Original Profile:", profile);
               setProfile(profile);
+              setProfileData(profile);
 
               const newFormData = { ...formData };
               console.log("Initial formData:", newFormData);
