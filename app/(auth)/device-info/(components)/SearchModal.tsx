@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { SearchField, SearchFields } from "constants/searchField";
+import { commands } from "app/(auth)/device-info/(commands)/@index";
+import { FIELD_VALIDATIONS } from "constants/field";
 
 type SearchResult = {
   key: string;
@@ -176,6 +178,53 @@ export default function SearchModal({
           tab: value.tab,
         });
       });
+
+      // Commands 검색 결과 추가
+      const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+      console.log("Searching for commands with term:", normalizedSearchTerm);
+      console.log("Available commands:", commands);
+      
+      // 모든 commands 섹션을 순회하며 검색
+      Object.entries(commands).forEach(([sectionKey, commandList]) => {
+        console.log(`Searching in section: ${sectionKey}`, commandList);
+        
+        const matchingCommands = commandList.filter((command) => {
+          // FIELD_VALIDATIONS에서 제목 가져오기
+          const fieldValidation = FIELD_VALIDATIONS[command.id];
+          console.log(`Command ${command.id}:`, fieldValidation);
+          
+          // JSON ID로 검색
+          if (command.id.toLowerCase().includes(normalizedSearchTerm)) {
+            console.log(`Command ${command.id} matches by ID`);
+            return true;
+          }
+          
+          if (!fieldValidation) {
+            console.log(`No field validation for command ${command.id}`);
+            return false;
+          }
+          
+          const title = fieldValidation.title?.en || "";
+          const matches = title.toLowerCase().includes(normalizedSearchTerm);
+          console.log(`Command ${command.id} title: "${title}", matches: ${matches}`);
+          return matches;
+        });
+
+        console.log(`Matching commands in ${sectionKey}:`, matchingCommands);
+
+        matchingCommands.forEach((command) => {
+          const fieldValidation = FIELD_VALIDATIONS[command.id];
+          if (fieldValidation) {
+            paramResults.push({
+              key: command.id,
+              searchText: `${fieldValidation.title?.en || command.id} (${command.id})`,
+              tab: "Commands",
+            });
+          }
+        });
+      });
+
+      console.log("Final param results:", paramResults);
       setSearchParamResults(paramResults);
     }
   }, [searchTerm]);
