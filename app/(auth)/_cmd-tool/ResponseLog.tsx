@@ -298,7 +298,7 @@ export default function ResponseLog({
               position: "absolute",
               left: "-48px",
               top: "-60px",
-              transform: expand ? undefined : "rotate(-180deg)",
+              transform: expand ? "rotate(-180deg)" : undefined,
             }}
             onClick={toggleWidth}
           >
