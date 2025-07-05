@@ -7,6 +7,8 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { SearchField, SearchFields } from "constants/searchField";
 import { commands } from "app/(auth)/device-info/(commands)/@index";
 import { FIELD_VALIDATIONS } from "constants/field";
+import useParameterStore from "@/utils/useParameterStore";
+import { hiddenParameterId } from "app/(auth)/device-info/(tabs)/CommandTab";
 
 type SearchResult = {
   key: string;
@@ -33,6 +35,7 @@ export default function SearchModal({
 
   // uitls
   const t = useTranslations();
+  const { hiddenParameter } = useParameterStore();
 
   // states
   const [searchTerm, setSearchTerm] = useState("");
@@ -215,9 +218,18 @@ export default function SearchModal({
         matchingCommands.forEach((command) => {
           const fieldValidation = FIELD_VALIDATIONS[command.id];
           if (fieldValidation) {
+            // 숨겨진 파라미터인지 확인
+            const isHidden = hiddenParameterId.includes(command.id);
+            
+            // Show Hidden Parameters가 비활성화되어 있고 숨겨진 파라미터라면 건너뛰기
+            if (isHidden && hiddenParameter) {
+              console.log(`Skipping hidden command: ${command.id}`);
+              return;
+            }
+            
             paramResults.push({
               key: command.id,
-              searchText: `${fieldValidation.title?.en || command.id} (${command.id})`,
+              searchText: `${fieldValidation.title?.en || command.id} (${command.id})${isHidden ? ' [Hidden]' : ''}`,
               tab: "Commands",
             });
           }
