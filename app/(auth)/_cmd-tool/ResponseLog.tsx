@@ -1,4 +1,4 @@
-import { Stack, TextField, Button, IconButton } from "@mui/material";
+import { Stack, TextField, Button, IconButton, Modal, Box } from "@mui/material";
 import styles from "./styles.module.scss";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -122,6 +122,7 @@ export default function ResponseLog({
 }) {
   const [commandValue, setCommandValue] = useState("");
   const [selectedIdxs, setSelectedIdxs] = useState([]);
+  const [showCommandsModal, setShowCommandsModal] = useState(false);
   const consoleRef = useRef<HTMLDivElement | null>(null);
   console.log("selectedIdxs :::", selectedIdxs);
 
@@ -129,6 +130,76 @@ export default function ResponseLog({
   const toggleWidth = () => {
     setExpand(!expand);
   };
+
+  // 지원하는 커맨드 예시 데이터
+  const commandExamples = [
+    {
+      category: "System Commands",
+      commands: [
+        "AT^VERSION",
+        "AT^IMEI",
+        "AT^MODEL",
+        "AT^RESET",
+        "AT^REBOOT",
+        "AT^POWEROFF"
+      ]
+    },
+    {
+      category: "Network Commands",
+      commands: [
+        "AT^SIGNAL",
+        "AT^OPERATOR",
+        "AT^BAND",
+        "AT^APN",
+        "AT^IPADDR",
+        "AT^DNS"
+      ]
+    },
+    {
+      category: "GPS Commands",
+      commands: [
+        "AT^GPS",
+        "AT^GPSSTATUS",
+        "AT^GPSFIX",
+        "AT^GPSCOORD",
+        "AT^GPSALT",
+        "AT^GPSSPEED"
+      ]
+    },
+    {
+      category: "Configuration Commands",
+      commands: [
+        "AT^CONFIG",
+        "AT^PARAM",
+        "AT^SETTING",
+        "AT^PROFILE",
+        "AT^BACKUP",
+        "AT^RESTORE"
+      ]
+    },
+    {
+      category: "Status Commands",
+      commands: [
+        "AT^STATUS",
+        "AT^HEALTH",
+        "AT^BATTERY",
+        "AT^TEMP",
+        "AT^MEMORY",
+        "AT^CPU"
+      ]
+    },
+    {
+      category: "Communication Commands",
+      commands: [
+        "AT^SMS",
+        "AT^CALL",
+        "AT^DATA",
+        "AT^HTTP",
+        "AT^MQTT",
+        "AT^TCP"
+      ]
+    }
+  ];
   const {
     state: { portList },
     func: { write },
@@ -315,6 +386,7 @@ export default function ResponseLog({
                 right: 0,
                 top: "-52px",
               }}
+              onClick={() => setShowCommandsModal(true)}
             >
               Show All Commands
               <InfoOutlinedIcon sx={{ color: "var(--grey5)" }} />
@@ -377,6 +449,108 @@ export default function ResponseLog({
           </Stack>
         </Stack>
       </Stack>
+
+      {/* Commands Examples Modal */}
+      <Modal
+        open={showCommandsModal}
+        onClose={() => setShowCommandsModal(false)}
+        aria-labelledby="commands-modal-title"
+        aria-describedby="commands-modal-description"
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: "80%",
+            maxWidth: "800px",
+            maxHeight: "80vh",
+            bgcolor: "background.paper",
+            border: "2px solid #000",
+            borderRadius: "8px",
+            boxShadow: 24,
+            p: 4,
+            overflow: "auto",
+          }}
+        >
+          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
+            <h2 id="commands-modal-title" style={{ margin: 0, fontSize: "24px", fontWeight: "bold" }}>
+              Supported Commands Examples
+            </h2>
+            <IconButton
+              onClick={() => setShowCommandsModal(false)}
+              sx={{
+                color: "var(--grey5)",
+                "&:hover": {
+                  color: "var(--black)",
+                },
+              }}
+            >
+              ✕
+            </IconButton>
+          </Stack>
+          
+          <Stack spacing={3}>
+            {commandExamples.map((category, index) => (
+              <Box key={index}>
+                <h3 style={{ 
+                  margin: "0 0 12px 0", 
+                  fontSize: "18px", 
+                  fontWeight: "600",
+                  color: "var(--secondary)",
+                  borderBottom: "2px solid var(--grey4)",
+                  paddingBottom: "8px"
+                }}>
+                  {category.category}
+                </h3>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                    gap: 2,
+                    p: 2,
+                    bgcolor: "var(--grey1)",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {category.commands.map((command, cmdIndex) => (
+                    <Box
+                      key={cmdIndex}
+                      sx={{
+                        p: 1.5,
+                        bgcolor: "white",
+                        border: "1px solid var(--grey3)",
+                        borderRadius: "4px",
+                        fontFamily: "monospace",
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        "&:hover": {
+                          bgcolor: "var(--grey2)",
+                          borderColor: "var(--secondary)",
+                        },
+                      }}
+                      onClick={() => {
+                        setCommandValue(command);
+                        setShowCommandsModal(false);
+                      }}
+                    >
+                      {command}
+                    </Box>
+                  ))}
+                </Box>
+              </Box>
+            ))}
+          </Stack>
+          
+          <Box mt={3} p={2} bgcolor="var(--grey1)" borderRadius="4px">
+            <p style={{ margin: 0, fontSize: "14px", color: "var(--grey5)" }}>
+              <strong>Note:</strong> Click on any command to copy it to the input field. 
+              These are example commands - actual supported commands may vary by device model and firmware version.
+            </p>
+          </Box>
+        </Box>
+      </Modal>
     </>
   );
 }
