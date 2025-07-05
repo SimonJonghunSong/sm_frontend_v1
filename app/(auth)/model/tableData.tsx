@@ -96,7 +96,9 @@ export const getAdminColumns: (
           flexWrap="wrap"
           height="100%"
         >
-          {params?.value.split(",").map((item) => (
+          {params?.value.split(",")
+            .sort((a, b) => featureTransition(params.row.lang, a).localeCompare(featureTransition(params.row.lang, b)))
+            .map((item) => (
             <span key={item} className="chip">
               {featureTransition(params.row.lang, item)}
             </span>

@@ -162,7 +162,9 @@ export default function Model() {
           height="100%"
           flexWrap="wrap"
         >
-          {params?.value.split(",").map((item) => (
+          {params?.value.split(",")
+            .sort((a, b) => a.localeCompare(b))
+            .map((item) => (
             <span key={item} className="chip">
               {item}
             </span>
