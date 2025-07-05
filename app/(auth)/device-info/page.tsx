@@ -437,7 +437,7 @@ export default function DeviceInfoPage() {
             formData={formData}
             modelImei={modelImei}
             isLoadingModelImei={isLoadingModelImei}
-            buyer={currentPort.port.modelinfo?.split("_")?.[1]}
+            buyer={currentPort.port.modelinfo ? currentPort.port.modelinfo.split("_")[1] : undefined}
             deviceVersionsObject={deviceVersionsObject}
             handleReboot={handleReboot}
             handleLoadImei={handleLoadImei}
