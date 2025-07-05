@@ -398,7 +398,9 @@ export default function Model() {
         >
           All({records.filter(item => item.dev_name.toLowerCase().includes(filterSearch.toLowerCase())).filter(item => !item.hide).length})
         </span>
-        {Object.entries(tabs).map(([key, value]) => (
+        {Object.entries(tabs)
+          .sort(([a], [b]) => a.localeCompare(b))
+          .map(([key, value]) => (
           <span
             className={selectedTab === key ? styles.active : undefined}
             onClick={() => {
