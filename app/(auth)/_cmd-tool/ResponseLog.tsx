@@ -1,101 +1,25 @@
-import { Stack, TextField, Button, IconButton, Modal, Box } from "@mui/material";
+import {
+  Stack,
+  TextField,
+  Button,
+  IconButton,
+  Modal,
+  Box,
+} from "@mui/material";
 import styles from "./styles.module.scss";
 
 import React, { useEffect, useRef, useState } from "react";
 
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import KeyboardDoubleArrowRightOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowRightOutlined";
 import DataTable from "../../../components/dataTable";
 import { GridColDef } from "@mui/x-data-grid";
 import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
-import useSerialStore from "@/src/stores/useSerialStore";
 import useSerial, { delayPromise } from "@/src/hooks/useSerial";
 import { CR } from "@/src/hooks/useSerial/constant";
 import dayjs from "dayjs";
-import useCommandStore from "@/utils/useCommandStore";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
-
-const columns = (
-  handleSend: (message: string, updateIndex?: number) => void,
-  handleDelete: (idx: number) => void,
-  updateCommand: (id: number, message: string) => void
-): GridColDef[] => [
-  {
-    field: "col1",
-    headerName: "No.",
-    width: 60,
-    headerAlign: "center",
-    align: "center",
-  },
-  {
-    field: "col2",
-    headerName: "Command",
-    flex: 1,
-    minWidth: 300,
-    headerAlign: "center",
-    align: "center",
-    renderCell: (params) => (
-      <Stack justifyContent="center" alignItems="center" height="42px">
-        <TextField
-          fullWidth
-          sx={{
-            height: 30,
-            "& .MuiInputBase-root": {
-              height: 30,
-            },
-          }}
-          value={params.value.value}
-          onChange={(e) => {
-            const newValue = e.target.value;
-            console.log("newValue :::", newValue);
-            console.log("params.value.id :::", params.value.id);
-            updateCommand(params.value.id, newValue);
-          }}
-        />
-      </Stack>
-    ),
-  },
-  {
-    field: "col3",
-    headerName: "Send",
-    width: 80,
-    headerAlign: "center",
-    align: "center",
-    renderCell: (params) => (
-      <Button
-        variant="outlined"
-        color="secondary"
-        sx={{ width: 60, height: 30 }}
-        onClick={(e) => {
-          e.stopPropagation();
-
-          handleSend(params.row.col2.value, params.row.id);
-        }}
-      >
-        Send
-      </Button>
-    ),
-  },
-  {
-    field: "col4",
-    headerName: "Delete",
-    width: 80,
-    headerAlign: "center",
-    align: "center",
-    renderCell: (params) => (
-      <IconButton
-        onClick={(e) => {
-          console.log("params :::", params);
-
-          e.stopPropagation();
-          handleDelete(params.row.id);
-        }}
-      >
-        <DeleteForeverOutlinedIcon />
-      </IconButton>
-    ),
-  },
-];
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { me, modifyMyAccount } from "@/src/api/services/auth";
 
 export default function ResponseLog({
   setIsCmdModalWide,
@@ -138,11 +62,138 @@ export default function ResponseLog({
     >
   >;
 }) {
+  const [userCmdList, setUserCmdList] = useState<
+    { id: string; value: string }[]
+  >([]);
+
+  const {
+    data: cmdList,
+    isSuccess,
+    refetch,
+  } = useQuery({
+    queryKey: ["me"],
+    queryFn: me,
+    select: (data) => {
+      return data.data.parameter.user.cmd_list || [];
+    },
+  });
+
+  const modifyCmdList = useMutation({
+    mutationFn: (cmdList: string[]) =>
+      modifyMyAccount({
+        cmd_list: cmdList,
+      }),
+  });
+
+  const columns: GridColDef[] = [
+    {
+      field: "col1",
+      headerName: "No.",
+      width: 60,
+      headerAlign: "center",
+      align: "center",
+    },
+    {
+      field: "col2",
+      headerName: "Command",
+      flex: 1,
+      minWidth: 300,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => {
+        return (
+          <Stack justifyContent="center" alignItems="center" height="42px">
+            <TextField
+              fullWidth
+              sx={{
+                height: 30,
+                "& .MuiInputBase-root": {
+                  height: 30,
+                },
+              }}
+              value={params.value.value}
+              onChange={(e) => {
+                setUserCmdList((prev) =>
+                  prev.map((cmd) =>
+                    cmd.id === params.value.id
+                      ? { ...cmd, value: e.target.value }
+                      : cmd
+                  )
+                );
+              }}
+            />
+          </Stack>
+        );
+      },
+    },
+    {
+      field: "col3",
+      headerName: "Send",
+      width: 80,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <Button
+          variant="outlined"
+          color="secondary"
+          sx={{ width: 60, height: 30 }}
+          onClick={async (e) => {
+            try {
+              e.stopPropagation();
+              await modifyCmdList.mutateAsync(
+                userCmdList.filter((cmd) => cmd.value).map((cmd) => cmd.value)
+              );
+              await refetch();
+              handleSendMessage(params.row.col2.value || "");
+            } catch (e) {
+              console.log("send error :::", e);
+            }
+          }}
+        >
+          Send
+        </Button>
+      ),
+    },
+    {
+      field: "col4",
+      headerName: "Delete",
+      width: 80,
+      headerAlign: "center",
+      align: "center",
+      renderCell: (params) => (
+        <IconButton
+          onClick={async (e) => {
+            try {
+              e.stopPropagation();
+
+              const newUserCmdList = userCmdList.filter(
+                (cmd) => cmd.id !== params.row.col2.id
+              );
+
+              await modifyCmdList.mutateAsync(
+                newUserCmdList
+                  .filter((cmd) => cmd.value)
+                  .map((cmd) => cmd.value)
+              );
+
+              await refetch();
+
+              setUserCmdList(newUserCmdList);
+            } catch (e) {
+              console.log("delete error :::", e);
+            }
+          }}
+        >
+          <DeleteForeverOutlinedIcon />
+        </IconButton>
+      ),
+    },
+  ];
+
   const [commandValue, setCommandValue] = useState("");
   const [selectedIdxs, setSelectedIdxs] = useState([]);
   const [showCommandsModal, setShowCommandsModal] = useState(false);
   const consoleRef = useRef<HTMLDivElement | null>(null);
-  console.log("selectedIdxs :::", selectedIdxs);
 
   const [expand, setExpand] = useState(false);
   const toggleWidth = () => {
@@ -159,8 +210,8 @@ export default function ResponseLog({
         "AT^MODEL",
         "AT^RESET",
         "AT^REBOOT",
-        "AT^POWEROFF"
-      ]
+        "AT^POWEROFF",
+      ],
     },
     {
       category: "Network Commands",
@@ -170,8 +221,8 @@ export default function ResponseLog({
         "AT^BAND",
         "AT^APN",
         "AT^IPADDR",
-        "AT^DNS"
-      ]
+        "AT^DNS",
+      ],
     },
     {
       category: "GPS Commands",
@@ -181,8 +232,8 @@ export default function ResponseLog({
         "AT^GPSFIX",
         "AT^GPSCOORD",
         "AT^GPSALT",
-        "AT^GPSSPEED"
-      ]
+        "AT^GPSSPEED",
+      ],
     },
     {
       category: "Configuration Commands",
@@ -192,8 +243,8 @@ export default function ResponseLog({
         "AT^SETTING",
         "AT^PROFILE",
         "AT^BACKUP",
-        "AT^RESTORE"
-      ]
+        "AT^RESTORE",
+      ],
     },
     {
       category: "Status Commands",
@@ -203,8 +254,8 @@ export default function ResponseLog({
         "AT^BATTERY",
         "AT^TEMP",
         "AT^MEMORY",
-        "AT^CPU"
-      ]
+        "AT^CPU",
+      ],
     },
     {
       category: "Communication Commands",
@@ -214,9 +265,9 @@ export default function ResponseLog({
         "AT^DATA",
         "AT^HTTP",
         "AT^MQTT",
-        "AT^TCP"
-      ]
-    }
+        "AT^TCP",
+      ],
+    },
   ];
   const {
     state: { portList },
@@ -227,31 +278,9 @@ export default function ResponseLog({
 
   const currentPort = portList.find(({ port }) => port.imei === imei);
 
-  const { commands, addCommand, removeCommand, updateCommand } =
-    useCommandStore();
-  const rows = commands.map((command, idx) => ({
-    id: command.id,
-    col1: `${idx + 1}`,
-    col2: { id: command.id, value: command.message },
-    col3: { id: command.id },
-    col4: { id: command.id },
-  }));
-
-  const handleSendMessage = (message: string, updateIndex?: number) => {
-    console.log("message :::::", message);
-
-    if (updateIndex === undefined) {
-      addCommand(message);
-    }
-
+  const handleSendMessage = (message: string) => {
     try {
       const port = currentPort.port;
-
-      console.log("currentPort :::", port);
-      console.log("readable :::", currentPort.port.readable);
-      console.log("writable :::", currentPort.port.writable);
-
-      console.log("port :::", port);
 
       const newLog = {
         type: "req",
@@ -312,6 +341,23 @@ export default function ResponseLog({
     setIsCmdModalWide?.(expand);
   }, [expand]);
 
+  useEffect(() => {
+    if (isSuccess) {
+      // 20개로 맞추기 위해 빈 객체로 채움
+      const paddedCmdList = cmdList.map((cmd, index) => ({
+        id: `cmd_${index}`,
+        value: cmd,
+      }));
+      while (paddedCmdList.length < 20) {
+        paddedCmdList.push({
+          id: `cmd_${paddedCmdList.length}`,
+          value: "",
+        });
+      }
+      setUserCmdList(paddedCmdList);
+    }
+  }, [isSuccess]);
+
   return (
     <>
       <Stack
@@ -360,7 +406,6 @@ export default function ResponseLog({
                 variant="outlined"
                 color="secondary"
                 onClick={() => {
-                  //setCommandValue("");
                   setLogs([]); // ResponseLog만 지우기
                 }}
               >
@@ -427,12 +472,14 @@ export default function ResponseLog({
             <div className={styles.logWrap}>
               <div>
                 <DataTable
-                  rows={rows}
-                  columns={columns(
-                    handleSendMessage,
-                    removeCommand,
-                    updateCommand
-                  )}
+                  rows={userCmdList.map((cmd, idx) => ({
+                    id: cmd.id,
+                    col1: `${idx + 1}`,
+                    col2: { id: cmd.id, value: cmd.value },
+                    col3: { id: cmd.id },
+                    col4: { id: cmd.id },
+                  }))}
+                  columns={columns}
                   rowHeight={42}
                   disablePagination
                   disableRowClick
@@ -449,14 +496,14 @@ export default function ResponseLog({
               color="secondary"
               disabled={!selectedIdxs.length}
               onClick={async () => {
-                console.log("selec :::", selectedIdxs);
+                await modifyCmdList.mutateAsync(
+                  userCmdList.filter((cmd) => cmd.value).map((cmd) => cmd.value)
+                );
+                await refetch();
 
-                for (const idx of selectedIdxs) {
-                  const target = rows[idx];
-
-                  handleSendMessage(target.col2.value, idx);
-
-                  console.log("asdasd ::::");
+                for (const cmdId of selectedIdxs) {
+                  const target = userCmdList.find((cmd) => cmd.id === cmdId);
+                  handleSendMessage(target?.value || "");
 
                   await delayPromise(500);
                 }
@@ -492,8 +539,16 @@ export default function ResponseLog({
             overflow: "auto",
           }}
         >
-          <Stack direction="row" justifyContent="space-between" alignItems="center" mb={3}>
-            <h2 id="commands-modal-title" style={{ margin: 0, fontSize: "24px", fontWeight: "bold" }}>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={3}
+          >
+            <h2
+              id="commands-modal-title"
+              style={{ margin: 0, fontSize: "24px", fontWeight: "bold" }}
+            >
               Supported Commands Examples
             </h2>
             <IconButton
@@ -508,18 +563,20 @@ export default function ResponseLog({
               ✕
             </IconButton>
           </Stack>
-          
+
           <Stack spacing={3}>
             {commandExamples.map((category, index) => (
               <Box key={index}>
-                <h3 style={{ 
-                  margin: "0 0 12px 0", 
-                  fontSize: "18px", 
-                  fontWeight: "600",
-                  color: "var(--secondary)",
-                  borderBottom: "2px solid var(--grey4)",
-                  paddingBottom: "8px"
-                }}>
+                <h3
+                  style={{
+                    margin: "0 0 12px 0",
+                    fontSize: "18px",
+                    fontWeight: "600",
+                    color: "var(--secondary)",
+                    borderBottom: "2px solid var(--grey4)",
+                    paddingBottom: "8px",
+                  }}
+                >
                   {category.category}
                 </h3>
                 <Box
@@ -560,11 +617,12 @@ export default function ResponseLog({
               </Box>
             ))}
           </Stack>
-          
+
           <Box mt={3} p={2} bgcolor="var(--grey1)" borderRadius="4px">
             <p style={{ margin: 0, fontSize: "14px", color: "var(--grey5)" }}>
-              <strong>Note:</strong> Click on any command to copy it to the input field. 
-              These are example commands - actual supported commands may vary by device model and firmware version.
+              <strong>Note:</strong> Click on any command to copy it to the
+              input field. These are example commands - actual supported
+              commands may vary by device model and firmware version.
             </p>
           </Box>
         </Box>

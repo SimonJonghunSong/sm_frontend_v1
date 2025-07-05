@@ -36,7 +36,7 @@ const me = () => {
   return get<CommonResponse<{ user: UserResponse }>>("/api/v1/auth/my/account");
 };
 
-const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
+const modifyMyAccount = (body: Partial<AuthMyAccountUpdateBody>) => {
   return put<
     {
       response: {
@@ -44,7 +44,7 @@ const modifyMyAccount = (body: AuthMyAccountUpdateBody) => {
         reaseon: string;
       };
     },
-    AuthMyAccountUpdateBody
+    Partial<AuthMyAccountUpdateBody>
   >("/api/v1/auth/my/account", body);
 };
 
