@@ -8,8 +8,9 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  TextField,
 } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import DeleteForeverOutlinedIcon from "@mui/icons-material/DeleteForeverOutlined";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { GridColDef } from "@mui/x-data-grid";
@@ -57,7 +58,7 @@ export default function ModelInfoController({
 
   const {
     state: { portList },
-    func: { setIsDisconnected, setIsConnected, write },
+    func: { setIsDisconnected, setIsConnected, write, setPassword: setPasswordFunc, setIsAlreadyUnlock },
   } = useSerial();
   const currentPort =
     portList.find(({ port }) => port.imei === modelNameState) || null;
@@ -82,10 +83,21 @@ export default function ModelInfoController({
   const [saveModal, saveModalToggle] = useModal();
   const [loadModal, loadModalToggle] = useModal();
   const [uploadModal, uploadModalToggle] = useModal();
+  const [passwordModal, passwordModalToggle] = useModal();
 
   const [isOpenCommonPopup, toggleIsOpenCommonPopup] = useModal();
   const commonPopupTitle = useRef("");
   const commonPopupMessage = useRef("");
+
+  // 패스워드 관련 상태
+  const [password, setPassword] = useState("");
+  const [remainingTime, setRemainingTime] = useState(15);
+  const imeiRef = useRef<string>();
+  const bufferRef = useRef<string>("");
+  const pendingDeviceChange = useRef<{ targetPort: any; targetModelName: string; targetFwVer: string } | null>(null);
+  const { renderErrorModal, toggle } = useErrorDialog({
+    description: t("error.Passwords_do_not_match"),
+  });
 
   const uploadProfileMutation = useMutation({
     mutationFn: uploadProfile,
@@ -161,24 +173,155 @@ export default function ModelInfoController({
   };
 
   const handleChange = async (event: SelectChangeEvent) => {
-    const targetProt = portList.find(
+    console.log("========================================handleChange1 / event.target.value ::::", event.target.value);
+    const targetPort = portList.find(
       ({ port }) => port.imei === event.target.value
     );
 
-    if (!targetProt) return;
+    if (!targetPort) {
+      console.log("targetPort NULL!, value", targetPort);
+      return;
+    }
 
+    const isLock = targetPort.port.isLock;
+
+    // 기기가 잠겨있고, 이미 언락된 상태이고, 패스워드가 저장되어 있는 경우
+    if (isLock && targetPort.isAlreadyUnlock && targetPort.password) {
+      const currentPort = targetPort;
+
+      currentPort.port.onbuffervalue = (value) => {
+        bufferRef.current += value;
+        if (
+          value.includes("\r") ||
+          bufferRef.current.trim() === "AT^$PST;UPD;2" ||
+          bufferRef.current.trim() === "AT^$PST;UPD;1"
+        ) {
+          currentPort.port.onbuffervalue = null;
+
+          // 저장된 비밀번호가 틀린 비밀번호라면 패스워드 입력 모달 열기
+          if (bufferRef.current.trim() === "AT^$PST;UPD;2") {
+            imeiRef.current = currentPort.port.imei;
+            setRemainingTime(15);
+            passwordModalToggle();
+          }
+
+          // 저장된 비밀번호가 맞는 비밀번호라면 기기 변경 진행
+          if (bufferRef.current.trim() === "AT^$PST;UPD;1") {
+            proceedWithDeviceChange(targetPort);
+          }
+
+          bufferRef.current = "";
+        }
+      };
+
+      write({
+        data: `AT^$PSTUPD;${targetPort.password}`,
+        writer: targetPort.writer,
+        port: targetPort.port,
+      });
+
+      return;
+    }
+
+    // 기기가 잠겨있고, 아직 언락되지 않은 경우
+    if (!targetPort.isAlreadyUnlock && isLock) {
+      imeiRef.current = targetPort.port.imei;
+      setRemainingTime(15);
+      passwordModalToggle();
+      
+      // 기기 변경 정보를 저장
+      const targetModelName = targetPort.modelVersion?.split("_")[0];
+      const targetFwVer =
+        targetPort.modelVersion?.split("_")[
+          targetPort.modelVersion?.split("_").length - 1
+        ];
+      pendingDeviceChange.current = { targetPort, targetModelName, targetFwVer };
+      return;
+    }
+
+    // 기기가 잠겨있지 않거나 이미 언락된 경우 바로 변경
+    proceedWithDeviceChange(targetPort);
+  };
+
+  const proceedWithDeviceChange = (targetPort: any) => {
     onModelChange();
-    const targetModelName = targetProt.modelVersion?.split("_")[0];
+    const targetModelName = targetPort.modelVersion?.split("_")[0];
     const targetFwVer =
-      targetProt.modelVersion?.split("_")[
-        targetProt.modelVersion?.split("_").length - 1
+      targetPort.modelVersion?.split("_")[
+        targetPort.modelVersion?.split("_").length - 1
       ];
-    setModelNameState(targetProt.imei);
-    setImei(targetProt.imei);
+    setModelNameState(targetPort.imei);
+    setImei(targetPort.imei);
     setModelNameFromModelInfoStore(targetModelName);
     setFwVerFromModelInfoStore(targetFwVer);
     router.refresh();
   };
+
+  const handlePassword = () => {
+    const imei = imeiRef.current;
+    const currentPort = portList.find((port) => port.imei === imei);
+
+    if (!currentPort) return;
+
+    currentPort.port.onbuffervalue = (value) => {
+      bufferRef.current += value;
+      if (
+        value.includes("\r") ||
+        bufferRef.current.trim() === "AT^$PST;UPD;2" ||
+        bufferRef.current.trim() === "AT^$PST;UPD;1"
+      ) {
+        currentPort.port.onbuffervalue = null;
+
+        if (bufferRef.current.trim() === "AT^$PST;UPD;2") {
+          toggle();
+        }
+
+        if (bufferRef.current.trim() === "AT^$PST;UPD;1") {
+          // 패스워드가 맞으면 저장하고 기기 변경 진행
+          setIsAlreadyUnlock({ imei: currentPort.port.imei });
+          setPasswordFunc({
+            imei: currentPort.port.imei,
+            password: password,
+          });
+          
+          if (pendingDeviceChange.current) {
+            proceedWithDeviceChange(pendingDeviceChange.current.targetPort);
+            pendingDeviceChange.current = null;
+          }
+          
+          passwordModalToggle();
+          setPassword("");
+        }
+
+        bufferRef.current = "";
+      }
+    };
+
+    write({
+      data: `AT^$PSTUPD;${password}`,
+      writer: currentPort.writer,
+      port: currentPort.port,
+    });
+  };
+
+  // 패스워드 모달 타이머
+  useEffect(() => {
+    if (passwordModal) {
+      const interval = setInterval(() => {
+        setRemainingTime((prev) => prev - 1);
+      }, 1000);
+
+      if (remainingTime === 0) {
+        passwordModalToggle();
+        setPassword("");
+        setRemainingTime(15);
+      }
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [passwordModal, remainingTime, passwordModalToggle]);
 
   const handleUploadProfileConfirm = async () => {
     const profileData = await getProfileAllData(false);
@@ -480,6 +623,41 @@ export default function ModelInfoController({
         </Modal>
       </Stack>
 
+              {/* 패스워드 입력 모달 */}
+        <Modal
+          width="360px"
+          closeButton
+          open={passwordModal}
+          toggleOpen={() => {
+            passwordModalToggle();
+            setPassword("");
+          }}
+          title={t("device.device_list.password")}
+          confirm={handlePassword}
+          confirmButtonText={t("device.device_list.ok")}
+          cancelButtonText={t("device.device_list.cancel")}
+          disabled={password.length === 0}
+        >
+          <Stack>
+            <TextField
+              placeholder={t("device.device_list.enter_password")}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && password.length > 0) {
+                  handlePassword();
+                }
+              }}
+            />
+            <div style={{ color: "#FC6508", marginTop: 8, textAlign: "right" }}>
+              {remainingTime} {t("device.device_list.seconds_left")}
+            </div>
+          </Stack>
+        </Modal>
+
+      {renderErrorModal()}
+
       {isOpenCommonPopup && (
         <Modal
           open
@@ -542,6 +720,7 @@ function LoadModal({
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log("========================================handleChange2 / event.target.value ::::", event.target.value);
     setSelectedValue(event.target.value);
   };
 

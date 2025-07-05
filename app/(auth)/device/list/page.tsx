@@ -391,7 +391,7 @@ export default function DeviceList() {
   ];
 
   const rows = portList?.map((port, index) => {
-    console.log("port ::::", port);
+    console.log("port_ ::::", port);
 
     return {
       id: index,
@@ -578,24 +578,27 @@ export default function DeviceList() {
           passwordModalToggle();
           setPassword("");
         }}
-        title={"Password"}
+        title={t("device.device_list.password")}
         confirm={handlePassword}
+        confirmButtonText={t("device.device_list.ok")}
+        cancelButtonText={t("device.device_list.cancel")}
         disabled={password.length === 0}
       >
         <Stack>
           <TextField
-            placeholder="Enter Password"
+            placeholder={t("device.device_list.enter_password")}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && password.length > 0) {
                 handlePassword();
+                
               }
             }}
           />
           <div style={{ color: "#FC6508", marginTop: 8, textAlign: "right" }}>
-            {remainingTime} seconds left
+            {remainingTime} {t("device.device_list.seconds_left")}
           </div>
         </Stack>
       </Modal>

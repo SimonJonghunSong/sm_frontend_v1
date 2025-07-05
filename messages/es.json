@@ -392,7 +392,12 @@
       "configure_multi-device": "Configurar Varios Dispositivos",
       "models_that_are_not_supported_will_not_be_displayed_on_the_device_list": "Los modelos que no están soportados no se mostrarán en la lista de dispositivos.",
       "next": "Siguiente",
-      "status": "Estado"
+      "status": "Estado",
+      "password": "Contraseña",
+      "enter_password": "Entrar Contraseña",
+      "seconds_left": "segundos a la izquierda",
+      "cancel": "Cancelar",
+      "ok": "OK"
     },
     "configure_multi-device_pop_up_(profile_load)": {
       "configure_multi-device": "Configurar Varios Dispositivos",
@@ -1696,7 +1701,10 @@
         "are_you_sure_you_want_to_leave_this_page?": "¿Está seguro de que desea salir de esta página?"
       },
       "device_list": {
-        "the_device_is_not_detected_anymore": "El dispositivo ya no se detecta."
+        "the_device_is_not_detected_anymore": "El dispositivo ya no se detecta.",
+        "password": "Contraseña",
+        "enter_password": "Entrar Contraseña",
+        "seconds_left": "segundos a la izquierda"
       },
       "configure_multi-device_pop_up": {
         "applied_successfully!": "¡Aplicado exitosamente!",
