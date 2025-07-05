@@ -116,15 +116,15 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
-            <FieldValue>{gnss}</FieldValue>
+            <FieldValue>N/A</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_state")}</FieldLabel>
-            <FieldValue>{wwan}</FieldValue>
+            <FieldValue>{gnss}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.wwan_state")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
+            <FieldValue>{wwan}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.reboot")}</FieldLabel>

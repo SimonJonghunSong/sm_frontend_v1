@@ -25,6 +25,15 @@ export default function CmdTool({
     }[]
   >([]);
 
+  const [responseLogs, setResponseLogs] = useState<
+    {
+      type: "req" | "res";
+      message: string;
+      date: string;
+      result: string;
+    }[]
+  >([]);
+
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setIsCmdModalWide?.(false);
     setValue(newValue);
@@ -56,8 +65,10 @@ export default function CmdTool({
         {value === "response" ? (
           <ResponseLog
             setIsCmdModalWide={setIsCmdModalWide}
-            logs={logs}
-            setLogs={setLogs}
+            logs={responseLogs}
+            setLogs={setResponseLogs}
+            operationLogs={logs}
+            setOperationLogs={setLogs}
           />
         ) : value === "operation" ? (
           <OperationLog logs={logs} />

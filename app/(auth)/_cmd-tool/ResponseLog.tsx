@@ -101,6 +101,8 @@ export default function ResponseLog({
   setIsCmdModalWide,
   logs,
   setLogs,
+  operationLogs,
+  setOperationLogs,
 }: {
   setIsCmdModalWide?: React.Dispatch<React.SetStateAction<boolean>>;
   logs: {
@@ -110,6 +112,22 @@ export default function ResponseLog({
     result: string;
   }[];
   setLogs: React.Dispatch<
+    React.SetStateAction<
+      {
+        type: "req" | "res";
+        message: string;
+        date: string;
+        result: string;
+      }[]
+    >
+  >;
+  operationLogs: {
+    type: "req" | "res";
+    message: string;
+    date: string;
+    result: string;
+  }[];
+  setOperationLogs: React.Dispatch<
     React.SetStateAction<
       {
         type: "req" | "res";
@@ -243,6 +261,7 @@ export default function ResponseLog({
       };
 
       setLogs((prev) => [...prev, newLog as any]);
+      setOperationLogs((prev) => [...prev, newLog as any]);
 
       setTimeout(() => {
         consoleRef.current.scrollBy({
@@ -341,7 +360,8 @@ export default function ResponseLog({
                 variant="outlined"
                 color="secondary"
                 onClick={() => {
-                  setCommandValue("");
+                  //setCommandValue("");
+                  setLogs([]); // ResponseLog만 지우기
                 }}
               >
                 Clear
@@ -379,7 +399,6 @@ export default function ResponseLog({
           </IconButton>
           {expand && (
             <Button
-              style={{ display: "flex", gap: "8px" }}
               sx={{
                 width: "180px",
                 position: "absolute",
@@ -389,7 +408,6 @@ export default function ResponseLog({
               onClick={() => setShowCommandsModal(true)}
             >
               Show All Commands
-              <InfoOutlinedIcon sx={{ color: "var(--grey5)" }} />
             </Button>
           )}
 
