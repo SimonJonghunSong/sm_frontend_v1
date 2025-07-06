@@ -62,6 +62,7 @@ export default function DataTable({
   return (
     <Box
       sx={{
+        width: "100%",
         display: "grid",
         gridTemplateColumns: "1fr",
         flex: 1,
@@ -126,6 +127,7 @@ export default function DataTable({
           },
         }}
         sx={{
+          width: "100%",
           "&.MuiDataGrid-root": {
             border: "none",
             "--unstable_DataGrid-radius": "0px !important",
