@@ -17,7 +17,15 @@ export default withNextIntl({
   typescript: {
     ignoreBuildErrors: true,
   },
-  webpack: (config, { isServer }) => {
+  experimental: {
+    webpackBuildWorker: false,
+  },
+  webpack: (config, { isServer, dev }) => {
+    // 개발 모드에서 캐시 경고 해결
+    if (dev) {
+      config.cache = false;
+    }
+    
     if (!isServer) {
       config.module.rules.push({
         test: /sw\.ts$/,

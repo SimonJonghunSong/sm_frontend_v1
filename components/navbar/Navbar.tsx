@@ -299,7 +299,7 @@ export default function Navbar() {
       <nav className={styles.nav}>
         <div className={styles.left}>
           <Link href={getRootHref()} className={styles.logo}>
-            <Image src={logo} alt="synctrack" />
+            <Image src={logo} alt="synctrack" priority />
             {mounted && <div className={styles.role}>{getRole(userRole)}</div>}
           </Link>
           <ul className={styles.mainMenu}>
@@ -484,20 +484,22 @@ export default function Navbar() {
                 />
               )}
 
-              <div
-                className={
-                  isOnline
-                    ? `${styles.toggle} ${styles.active}`
-                    : `${styles.toggle} ${styles.offline}`
-                }
-              >
-                <div onClick={() => isOnline && handleToggleNetwork(false)}>
-                  {t("gnb.pw_set.offline")}
+              {mounted && (
+                <div
+                  className={
+                    isOnline
+                      ? `${styles.toggle} ${styles.active}`
+                      : `${styles.toggle} ${styles.offline}`
+                  }
+                >
+                  <div onClick={() => isOnline && handleToggleNetwork(false)}>
+                    {t("gnb.pw_set.offline")}
+                  </div>
+                  <div onClick={() => !isOnline && handleToggleNetwork(true)}>
+                    {t("gnb.pw_set.online")}
+                  </div>
                 </div>
-                <div onClick={() => !isOnline && handleToggleNetwork(true)}>
-                  {t("gnb.pw_set.online")}
-                </div>
-              </div>
+              )}
             </>
           )}
         </div>

@@ -12,7 +12,8 @@ import {
   Polyline,
   useLoadScript,
 } from "@react-google-maps/api";
-import React, { useCallback, useRef, forwardRef } from "react";
+import { Loader } from "@googlemaps/js-api-loader";
+import React, { useCallback, useRef, forwardRef, useEffect, useState } from "react";
 
 import type { CircleType, MarkerType, PolygonType, PolylineType } from "./type";
 
@@ -68,11 +69,26 @@ const MapComponent = forwardRef<google.maps.Map | null, MapComponentProps>(
     },
     ref
   ) => {
-    const { isLoaded, loadError } = useLoadScript({
-      googleMapsApiKey: apiKey,
-      libraries: libraries as unknown as Libraries,
-      language: "en",
-    });
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [loadError, setLoadError] = useState<Error | null>(null);
+
+    useEffect(() => {
+      const loader = new Loader({
+        apiKey,
+        version: "weekly",
+        libraries: ["drawing"],
+        language: "en",
+      });
+
+      loader
+        .load()
+        .then(() => {
+          setIsLoaded(true);
+        })
+        .catch((error) => {
+          setLoadError(error);
+        });
+    }, [apiKey]);
 
     const mapRef = useRef<google.maps.Map | null>(null);
 

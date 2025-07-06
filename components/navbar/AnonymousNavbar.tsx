@@ -56,7 +56,7 @@ export default function AnonymousNavbar() {
       <nav className={styles.nav}>
         <div className={styles.left}>
           <Link href={getRootHref()} className={styles.logo}>
-            <Image src={logo} alt="synctrack" />
+            <Image src={logo} alt="synctrack" priority />
             {mounted && <div className={styles.role}>Anonymous</div>}
           </Link>
           <ul className={styles.mainMenu}>

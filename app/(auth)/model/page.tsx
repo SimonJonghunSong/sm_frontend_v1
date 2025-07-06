@@ -402,6 +402,7 @@ export default function Model() {
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([key, value]) => (
           <span
+            key={key}
             className={selectedTab === key ? styles.active : undefined}
             onClick={() => {
               setSelectedTab(key);

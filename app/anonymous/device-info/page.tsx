@@ -524,9 +524,14 @@ export default function DeviceInfoPage() {
   const [excludeMenus, setExcludeMenus] = useState<string[]>([]);
 
   const [isLoadingModelImei, setIsLoadingModelImei] = useState(false);
-  const [modelImei, setModelImei] = useState<string>(
-    currentPort.port.loadedImei
-  );
+  const [modelImei, setModelImei] = useState<string>("");
+
+  // modelImei 초기화를 useEffect로 감싸기
+  useEffect(() => {
+    if (currentPort?.port?.loadedImei) {
+      setModelImei(currentPort.port.loadedImei);
+    }
+  }, [currentPort?.port?.loadedImei]);
 
   useEffect(() => {
     if (formData && Object.keys(formData)?.length > 0) {
@@ -602,7 +607,7 @@ export default function DeviceInfoPage() {
 
       setExcludeMenus(excludeMenus);
     }
-  }, [currentPort]);
+  }, [formData, originData, t]);
 
   return (
     <>
