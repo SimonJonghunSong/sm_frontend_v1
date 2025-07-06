@@ -293,9 +293,11 @@ export default function ResponseLog({
       setOperationLogs((prev) => [...prev, newLog as any]);
 
       setTimeout(() => {
-        consoleRef.current.scrollBy({
-          top: consoleRef.current.scrollHeight,
-        });
+        if (consoleRef.current) {
+          consoleRef.current.scrollBy({
+            top: consoleRef.current.scrollHeight,
+          });
+        }
       }, 0);
 
       setCommandValue("");
@@ -317,9 +319,11 @@ export default function ResponseLog({
             },
           ]);
           setTimeout(() => {
-            consoleRef.current.scrollBy({
-              top: consoleRef.current.scrollHeight,
-            });
+            if (consoleRef.current) {
+              consoleRef.current.scrollBy({
+                top: consoleRef.current.scrollHeight,
+              });
+            }
           }, 100);
         }
       };
@@ -372,11 +376,11 @@ export default function ResponseLog({
             style={{ padding: "16px", width: "100%" }}
           >
             <div className={styles.logContainer}>
-              {logs.map((item) =>
+              {logs.map((item, index) =>
                 item.type === "req" ? (
-                  <div className={styles.logReq}>{`> ${item.message}`}</div>
+                  <div key={`log-req-${index}-${item.message.substring(0, 10)}`} className={styles.logReq}>{`> ${item.message}`}</div>
                 ) : (
-                  <div className={styles.logRes}>{item.message}</div>
+                  <div key={`log-res-${index}-${item.message.substring(0, 10)}`} className={styles.logRes}>{item.message}</div>
                 )
               )}
             </div>

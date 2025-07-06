@@ -49,13 +49,13 @@ export default function ConsoleLog() {
         style={{ flex: 1 }}
       >
         <div>
-          {log.map(({ read, write }) => {
+          {log.map(({ read, write }, index) => {
             const logString = read ? read.data : write.data;
             const isWrite = !!write;
             const prefix = isWrite ? ">" : "";
-            if (!logString) return <></>;
+            if (!logString) return null;
             return (
-              <div>
+              <div key={`log-${index}-${logString.substring(0, 10)}`}>
                 {isWrite ? (
                   <strong style={{ wordBreak: "break-all" }}>
                     {prefix} {logString}
