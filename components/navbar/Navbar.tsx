@@ -391,7 +391,8 @@ export default function Navbar() {
             )}
             <li>
               <Link
-                href="/info"
+                href="https://stsunlab.com/main"
+                target="_blank"
                 onClick={
                   !isOnline
                     ? (e) => {
