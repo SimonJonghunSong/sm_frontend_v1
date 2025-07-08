@@ -154,40 +154,40 @@ export default function ResponseLog({
         </Button>
       ),
     },
-    {
-      field: "col4",
-      headerName: "Delete",
-      width: 80,
-      headerAlign: "center",
-      align: "center",
-      renderCell: (params) => (
-        <IconButton
-          onClick={async (e) => {
-            try {
-              e.stopPropagation();
+    // {
+    //   field: "col4",
+    //   headerName: "Delete",
+    //   width: 80,
+    //   headerAlign: "center",
+    //   align: "center",
+    //   renderCell: (params) => (
+    //     <IconButton
+    //       onClick={async (e) => {
+    //         try {
+    //           e.stopPropagation();
 
-              const newUserCmdList = userCmdList.filter(
-                (cmd) => cmd.id !== params.row.col2.id
-              );
+    //           const newUserCmdList = userCmdList.filter(
+    //             (cmd) => cmd.id !== params.row.col2.id
+    //           );
 
-              await modifyCmdList.mutateAsync(
-                newUserCmdList
-                  .filter((cmd) => cmd.value)
-                  .map((cmd) => cmd.value)
-              );
+    //           await modifyCmdList.mutateAsync(
+    //             newUserCmdList
+    //               .filter((cmd) => cmd.value)
+    //               .map((cmd) => cmd.value)
+    //           );
 
-              await refetch();
+    //           await refetch();
 
-              setUserCmdList(newUserCmdList);
-            } catch (e) {
-              console.log("delete error :::", e);
-            }
-          }}
-        >
-          <DeleteForeverOutlinedIcon />
-        </IconButton>
-      ),
-    },
+    //           setUserCmdList(newUserCmdList);
+    //         } catch (e) {
+    //           console.log("delete error :::", e);
+    //         }
+    //       }}
+    //     >
+    //       <DeleteForeverOutlinedIcon />
+    //     </IconButton>
+    //   ),
+    // },
   ];
 
   const [commandValue, setCommandValue] = useState("");
@@ -200,7 +200,7 @@ export default function ResponseLog({
     setExpand(!expand);
   };
 
-  // 지원하는 커맨드 예시 데이터
+// 지원하는 커맨드 예시 데이터
   const commandExamples = [
     {
       category: "System Commands",
@@ -481,7 +481,7 @@ export default function ResponseLog({
                     col1: `${idx + 1}`,
                     col2: { id: cmd.id, value: cmd.value },
                     col3: { id: cmd.id },
-                    col4: { id: cmd.id },
+                    // col4: { id: cmd.id },
                   }))}
                   columns={columns}
                   rowHeight={42}
