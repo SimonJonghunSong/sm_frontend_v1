@@ -444,6 +444,7 @@ const Geofence = ({
           </Stack>
 
           <DataTable
+            checkbox={false}
             noDataMessage={t("configuration.geofence.no_registered_geofence")}
             onRowClick={handleRowClick}
             disableRowClick={!isConnectedHardware}

@@ -27,6 +27,7 @@ export default function ResponseLog({
   setLogs,
   operationLogs,
   setOperationLogs,
+  onClose,
 }: {
   setIsCmdModalWide?: React.Dispatch<React.SetStateAction<boolean>>;
   logs: {
@@ -61,6 +62,7 @@ export default function ResponseLog({
       }[]
     >
   >;
+  onClose?: () => void;
 }) {
   const [userCmdList, setUserCmdList] = useState<
     { id: string; value: string }[]
@@ -140,10 +142,13 @@ export default function ResponseLog({
           onClick={async (e) => {
             try {
               e.stopPropagation();
+              //현재 UI의 20개 리스트에서 값이 있는 항목들을 서버에 업데이트
               await modifyCmdList.mutateAsync(
                 userCmdList.filter((cmd) => cmd.value).map((cmd) => cmd.value)
               );
+              //서버에서 최신 데이터를 다시 가져와서 UI를 동기화
               await refetch();
+              //실제 명령어를 디바이스에 전송
               handleSendMessage(params.row.col2.value || "");
             } catch (e) {
               console.log("send error :::", e);

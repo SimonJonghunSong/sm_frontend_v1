@@ -313,6 +313,7 @@ const Geofence = ({ onAdd, onEdit }: Props) => {
           </Stack>
 
           <DataTable
+            checkbox={false}
             noDataMessage={t("configuration.geofence.no_registered_geofence")}
             onRowClick={handleRowClick}
             rows={rows}
