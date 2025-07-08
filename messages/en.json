@@ -590,6 +590,7 @@
       "date": "Date",
       "delete": "Delete",
       "load": "Load",
+      "no_profiles_loaded": "No Profiles Loaded",
       "no_loaded_profiles": {
         "": "No loaded profiles."
       }

@@ -579,6 +579,7 @@
       "date": "Data",
       "delete": "Excluir",
       "load": "Carregar",
+      "no_profiles_loaded": "Nenhum perfil carregado.",
       "no_loaded_profiles": {
         "": "Nenhum perfil carregado."
       }

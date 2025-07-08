@@ -561,6 +561,7 @@ function LoadModal({
       </Stack>
 
       <DataTable
+        noDataMessage={t("configuration.load_profile_popup.no_profiles_loaded")}
         rows={[
           ...selectedFiles,
           ...scutiRecords.map(({ uid, model, fw_ver, file, date }) => ({
