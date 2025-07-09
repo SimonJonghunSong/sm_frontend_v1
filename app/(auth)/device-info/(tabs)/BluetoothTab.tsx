@@ -54,6 +54,7 @@ export default function BluetoothTab({
         formData={formData}
         onChange={handleValueChange}
         setFormData={setFormData}
+        originData={originData}
       />
 
       <BleRegistration
