@@ -390,15 +390,32 @@ export default function ModelInfoController({
           >
             {t("configuration.profile_menu.profile")}
           </span>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={{ width: 100 }}
-            onClick={handleApply}
-            disabled={!isLoadedProfile}
+          <Tooltip
+            title={t("configuration.profile_menu.tooltip_apply")}
+            placement="top"
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -10],
+                    },
+                  },
+                ],
+              },
+            }}
           >
-            {t("configuration.profile_menu.apply")}
-          </Button>
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{ width: 100 }}
+              onClick={handleApply}
+              disabled={!isLoadedProfile}
+            >
+              {t("configuration.profile_menu.apply")}
+            </Button>
+          </Tooltip>
           <Tooltip
             title={t("configuration.profile_menu.tooltip_save")}
             placement="top"

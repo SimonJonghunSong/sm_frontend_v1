@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
-import { Button, IconButton, Skeleton, Stack } from "@mui/material";
+import { Button, IconButton, Skeleton, Stack, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import DataTable from "@/components/dataTable";
 import Modal from "@/components/Modal";
@@ -737,15 +737,32 @@ function Apply({
         >
           {t("device.configure_multi-device_pop_up_(device_list).back")}
         </Button>
-        <Button
-          disabled={!selectedIndex.length}
-          variant="contained"
-          color="secondary"
-          sx={{ width: 200 }}
-          onClick={handleApply}
+        <Tooltip
+          title={t("configuration.profile_menu.tooltip_apply")}
+          placement="top"
+          slotProps={{
+            popper: {
+              modifiers: [
+                {
+                  name: "offset",
+                  options: {
+                    offset: [0, -10],
+                  },
+                },
+              ],
+            },
+          }}
         >
-          {t("configuration.profile_menu.apply")}
-        </Button>
+          <Button
+            disabled={!selectedIndex.length}
+            variant="contained"
+            color="secondary"
+            sx={{ width: 200 }}
+            onClick={handleApply}
+          >
+            {t("configuration.profile_menu.apply")}
+          </Button>
+        </Tooltip>
       </Stack>
     </>
   );

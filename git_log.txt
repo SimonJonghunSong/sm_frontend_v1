@@ -1,0 +1,1064 @@
+49f0c06	SimonJonghunSong	Tue Jul 8 14:08:57 2025 +0900	geofence - remove checkbox						
+ed42458	SimonJonghunSong	Tue Jul 8 12:17:22 2025 +0900	Load Profile - sentence correction. No Data -> No Profiles Loaded.						
+ed11e3b	SimonJonghunSong	Tue Jul 8 10:37:19 2025 +0900	Command Tool - remove each delete button for 20 items						
+4f9df60	SimonJonghunSong	Tue Jul 8 08:16:09 2025 +0900	navbar ? link change to STSunlab homepage						
+fc49a3d	SimonJonghunSong	Sun Jul 6 22:07:07 2025 +0900	CMD Tool - error fix response log						
+70a5b11	SimonJonghunSong	Sun Jul 6 21:30:18 2025 +0900	CMD Tool - error fix. response log UI error						
+dc1b78e	SimonJonghunSong	Sun Jul 6 20:26:06 2025 +0900	goto login page when logged out due to timeout						
+66b18f6	SimonJonghunSong	Sun Jul 6 19:38:55 2025 +0900	various warning fix						
+abacbea	SimonJonghunSong	Sun Jul 6 18:11:50 2025 +0900	release date updated						
+fe959a1	SimonJonghunSong	Sun Jul 6 05:25:36 2025 +0900	"error fix - when device connected, doesn't work for button press on configure in device list page"						
+c69e546	SimonJonghunSong	Sun Jul 6 05:08:07 2025 +0900	Add feature - show up password input dialog for locked device on changing device in dropdown menu						
+8a5b037	SimonJonghunSong	Sun Jul 6 00:23:33 2025 +0900	features search filter - item ordering to A-Z						
+b304c9c	SimonJonghunSong	Sun Jul 6 00:17:34 2025 +0900	features list ordering to A-Z						
+915f29e	SimonJonghunSong	Sat Jul 5 23:57:33 2025 +0900	search bar - add feature for searching json id in show hidden parameters enabled						
+ca0e7b4	SimonJonghunSong	Sat Jul 5 23:48:46 2025 +0900	search bar - add feature for json id in Commands						
+238c475	___	Sat Jul 5 20:08:42 2025 +0900	feat: cmd 수정						
+33ea3de	SimonJonghunSong	Sat Jul 5 17:58:55 2025 +0900	Edit Profile - device_info - fill data to text box after loading from scuti						
+3ad536d	SimonJonghunSong	Sat Jul 5 16:05:19 2025 +0900	add profile tooltip						
+ae24438	SimonJonghunSong	Sat Jul 5 14:32:13 2025 +0900	"fix gnss, wwan status"						
+301c88e	SimonJonghunSong	Sat Jul 5 13:51:42 2025 +0900	add supported command example						
+f52c67d	SimonJonghunSong	Sat Jul 5 13:40:00 2025 +0900	"CMD tool >>, << problem fix"						
+b87c2d9	slogger-dk	Fri Jul 4 19:24:39 2025 +0900	fix: 모델 설정 스위치 컴포넌트 이슈 수정						
+29abb35	___	Fri Jul 4 17:41:50 2025 +0900	Merge branch 'develop'						
+502a569	___	Fri Jul 4 16:31:30 2025 +0900	feat: geofence 수정 가능 하게 변경						
+7529f8c	___	Fri Jul 4 14:30:22 2025 +0900	Merge branch 'develop'						
+24d6935	___	Fri Jul 4 14:30:15 2025 +0900	feat: delete model 모달						
+67ba515	SimonJonghunSong	Fri Jul 4 12:47:47 2025 +0900	Configure Multi-device Button position change to upper side than before						
+cbd4783	SimonJonghunSong	Fri Jul 4 12:33:16 2025 +0900	Enter key enabled at password input dialog in Device Connect						
+e606559	SimonJonghunSong	Fri Jul 4 12:25:11 2025 +0900	"IMEI read, partial fix.(ST8300, ST4955LCBW), ST6560 not working"						
+fa6eb96	slogger-dk	Fri Jul 4 11:11:46 2025 +0900	Merge branch 'develop'						
+9e4a0a3	slogger-dk	Fri Jul 4 11:10:02 2025 +0900	fix: 모델페이지 load > 체크박스 미표기 이슈 수정						
+5.73E+142	___	Fri Jul 4 10:44:10 2025 +0900	Merge branch 'develop'						
+85fc694	___	Fri Jul 4 10:44:05 2025 +0900	feat: 멀티 삭제 수정						
+331f9c3	___	Fri Jul 4 08:42:17 2025 +0900	Merge branch 'develop'						
+8ad7d82	SimonJonghunSong	Fri Jul 4 07:59:14 2025 +0900	change release date						
+91c04ea	SimonJonghunSong	Thu Jul 3 21:00:13 2025 +0900	temporary remove - toast.success(t(common.send_success))						
+22f2824	___	Thu Jul 3 20:59:33 2025 +0900	feat: test 텍스트 삭제						
+05134d3	___	Thu Jul 3 20:49:29 2025 +0900	feat: 모델 삭제 및 계정 삭제						
+383ed2b	___	Thu Jul 3 20:22:27 2025 +0900	Merge branch 'master' into develop						
+b647d1e	SimonJonghunSong	Thu Jul 3 19:29:31 2025 +0900	"remove Disconnect button, add timezone=UTC"						
+0387b79	SimonJonghunSong	Thu Jul 3 17:51:58 2025 +0900	delete user print						
+9f47621	SimonJonghunSong	Thu Jul 3 17:05:19 2025 +0900	dummy push. 2						
+e077f93	SimonJonghunSong	Thu Jul 3 16:53:09 2025 +0900	google longin text size modify - optimized to chrome						
+940cb20	SimonJonghunSong	Thu Jul 3 16:29:23 2025 +0900	dummy push. 2						
+e3078c1	SimonJonghunSong	Thu Jul 3 14:06:38 2025 +0900	dummy push. test for loading						
+f572668	slogger-dk	Tue Jul 1 08:55:22 2025 +0900	fix: 검색 미노출 이슈 처리(208)						
+7fa237b	___	Tue Jul 1 02:10:54 2025 +0900	feat: time log 수정						
+b450326	___	Tue Jul 1 02:09:56 2025 +0900	fix: qa			_____	_____		
+2e5381d	___	Mon Jun 30 00:42:18 2025 +0900	feat: 타임로그 수정		109_ __	1	1	_____	
+a4c4fbe	___	Mon Jun 30 00:41:07 2025 +0900	feat: imei 수정			28	32		
+22066b6	slogger-dk	Sun Jun 29 23:36:48 2025 +0900	"fix: BLE 누락 필드 추가-2(4037, 4039)"			79	5		
+154e339	slogger-dk	Sun Jun 29 23:23:57 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop			0	0		
+cd19440	slogger-dk	Sun Jun 29 23:23:54 2025 +0900	fix: 셀렉트 접었다 폈다 해도 값 유지(163)			213	71		
+4632ec8	___	Sun Jun 29 23:10:03 2025 +0900	fix: qa			7	7	_____	
+09ed7d8	___	Sun Jun 29 22:32:40 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop			0	0		
+6c22a75	___	Sun Jun 29 22:32:37 2025 +0900	fix: qa			1	61		
+3.00E+93	slogger-dk	Sun Jun 29 22:12:48 2025 +0900	"fix: BLE 탭에 누락된 항목 추가(2622, 4030, 4065) & 4028 옵션 리스트 추가"			186	21		
+1b59e66	slogger-dk	Sun Jun 29 21:46:28 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop			0	0		
+4a07c17	slogger-dk	Sun Jun 29 21:46:19 2025 +0900	"fix: 누락된 BLE 명령어 추가 (4021, 4065)"						
+c65ff99	slogger-dk	Sun Jun 29 21:44:46 2025 +0900	"fix: 블루투스 탭 4035, 4036 필드 추가 및 4021 필드 분리"						
+00df5b0	___	Sun Jun 29 21:40:40 2025 +0900	fix: qa			23	1		
+549a595	slogger-dk	Sun Jun 29 20:21:26 2025 +0900	fix: retry 버튼 reload 추가(기기 연결 지연시 reload 처리)						
+06e759e	___	Fri Jun 27 17:08:01 2025 +0900	feat: 추가 로직			2	0	_____	
+6b7fb7c	___	Fri Jun 27 17:07:11 2025 +0900	fix: qa			102	81	____	
+0f944eb	___	Fri Jun 27 16:14:15 2025 +0900	feat: imei 불러오기 디자인 수정			37	28		
+c6e783b	___	Fri Jun 27 16:00:04 2025 +0900	feat: time log 수정			1	1	_____	
+82ceedf	___	Fri Jun 27 15:59:41 2025 +0900	hotfix: 리포트 탭			87	42	____	
+cea0ad8	slogger-dk	Fri Jun 27 01:32:34 2025 +0900	feat: time log 수정						
+2eee374	slogger-dk	Fri Jun 27 01:32:05 2025 +0900	fix: 모델 imei 로직 수정						
+2bda548	slogger-dk	Fri Jun 27 01:22:36 2025 +0900	feat: imei load 버튼 추가						
+cadaee8	slogger-dk	Fri Jun 27 00:27:54 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+24fd5f1	slogger-dk	Fri Jun 27 00:27:51 2025 +0900	feat: Device Information 필드 추가 및 삭제						
+f39fdd1	___	Fri Jun 27 00:22:32 2025 +0900	feat: obd 추가			439	7	____	
+c655119	___	Thu Jun 26 23:56:30 2025 +0900	feat: chorme 최적화 문구 추가			4	0	_____	
+8be9695	slogger-dk	Thu Jun 26 23:24:30 2025 +0900	fix: 지오펜스 신규 31~100번 대응						
+deae611	slogger-dk	Thu Jun 26 01:48:40 2025 +0900	"fix: 모델, 어나니머스 report mapping 로직 수정"						
+9e84a94	slogger-dk	Thu Jun 26 01:42:31 2025 +0900	feat: time log 수정						
+e31d65c	slogger-dk	Thu Jun 26 01:40:36 2025 +0900	fix: 리포트맵핑 처리 로직 수정						
+f0c5647	slogger-dk	Thu Jun 26 01:14:41 2025 +0900	fix: Report tab 1084 라벨 적용						
+739fe82	slogger-dk	Thu Jun 26 00:13:08 2025 +0900	fix: Controller 번역 누락 추가						
+ba684ce	slogger-dk	Thu Jun 26 00:06:25 2025 +0900	fix: 지오펜스 폴리곤 edit						
+5e6c66d	slogger-dk	Wed Jun 25 08:53:10 2025 +0900	feat: time log 수정						
+568c9c4	slogger-dk	Wed Jun 25 08:42:49 2025 +0900	"fix: Username, Password '-'입력 가능하도록 수정"						
+4be3eb2	slogger-dk	Sun Jun 22 22:33:59 2025 +0900	feat: time log 수정						
+fe216b6	slogger-dk	Sun Jun 22 22:32:37 2025 +0900	Merge branch 'develop'						
+738ede7	slogger-dk	Sun Jun 22 22:31:51 2025 +0900	fix: 기기 연결X 지오펜스 페이지에도 추가 필드 적용						
+cbb30bf	___	Sun Jun 22 21:28:03 2025 +0900	Merge branch 'develop'			0	0	_____	
+b46b9c9	slogger-dk	Sun Jun 22 18:17:38 2025 +0900	fix: configure 버튼 disable 지속 현상 > 새로고침 버튼 추가						
+febf4c5	slogger-dk	Sat Jun 21 15:32:02 2025 +0900	feat: time log 수정						
+619f359	slogger-dk	Sat Jun 21 15:31:30 2025 +0900	Merge branch 'develop'						
+3e6d93b	slogger-dk	Sat Jun 21 15:10:30 2025 +0900	fix: 어나니머스 지오펜스 반영						
+28b52ea	slogger-dk	Sat Jun 21 15:05:28 2025 +0900	fix: 모뎀 버전 업데이트 수정 사항						
+d9d971c	slogger-dk	Sat Jun 21 14:58:36 2025 +0900	fix: [1001-APN] - 또는 . VALIDATION 수정 사항						
+e8027f5	slogger-dk	Sat Jun 21 14:35:54 2025 +0900	fix: [1900-Monitor Sensor] value 불일치 이슈						
+c6baa12	slogger-dk	Sat Jun 21 13:54:08 2025 +0900	fix: 지오펜스 필터 All 로직 수정						
+582be78	___	Thu Jun 19 14:00:00 2025 +0900	Merge branch 'develop'			0	0	_____	
+8d8d2f4	sonic0506	Thu Jun 19 02:42:35 2025 +0900	feat: time log 수정						
+74596bc	sonic0506	Thu Jun 19 02:40:09 2025 +0900	fix: 폴리곤 지오펜스 추가 할때 에러 메세지 추가						
+fefb79f	sonic0506	Thu Jun 19 02:23:04 2025 +0900	fix: 지오펜스 수정 로직 수정						
+dc98f3c	sonic0506	Wed Jun 18 23:41:04 2025 +0900	fix: poly geofence 등록 로직 수정						
+b7f7503	sonic0506	Wed Jun 18 22:40:40 2025 +0900	fix: circular geofence 등록 로직 수정						
+6b86e85	___	Wed Jun 18 19:01:24 2025 +0900	Merge branch 'develop'			0	0	_____	
+702da50	slogger-dk	Wed Jun 18 00:16:47 2025 +0900	feat: time log 수정						
+5.33E+06	slogger-dk	Wed Jun 18 00:06:49 2025 +0900	fix: 지오펜스 이슈 수정						
+4693a6f	___	Tue Jun 17 01:20:31 2025 +0900	feat: time log 수정			1	1	_____	
+b104077	___	Sun Jun 15 22:47:09 2025 +0900	feat: time log 수정			1	1	_____	
+d9fe96c	slogger-dk	Sun Jun 15 22:41:41 2025 +0900	fix: gefence QA						
+ec5a67c	slogger-dk	Sun Jun 15 20:57:13 2025 +0900	fix: ST4230 ST4280 포트 연결 안되는 이슈						
+ff75a98	slogger-dk	Sun Jun 15 20:39:33 2025 +0900	fix: 새로고침시 패스워드 유지						
+d43fdfb	slogger-dk	Sun Jun 15 10:12:18 2025 +0900	fix: 기기 연결 불안정 이슈 - 1						
+fbcddf5	slogger-dk	Sun Jun 15 09:14:20 2025 +0900	fix: 프로파일 여러번 Save 시 기기 불안정 현상						
+4fde88a	___	Fri Jun 13 04:10:19 2025 +0900	fix: time log			1	1	_____	
+3a985f5	sonic0506	Fri Jun 13 02:43:21 2025 +0900	fix: send메세지 에러 알럿 노출 속도 조정						
+dbcbfe6	sonic0506	Fri Jun 13 02:13:12 2025 +0900	"fix: device status탭, 메뉴 번역 적용"						
+f91dcfb	sonic0506	Fri Jun 13 02:12:30 2025 +0900	"fix: device status탭, 메뉴 번역 적용"						
+7e6b3e4	sonic0506	Fri Jun 13 01:33:15 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+274253f	sonic0506	Fri Jun 13 01:33:10 2025 +0900	fix: 모델 페이지 필터 로직 추가						
+eaa8e22	___	Fri Jun 13 01:30:32 2025 +0900	fix: connect/disconnect 버튼 삭제			97	97	_____	______
+9f4d9cc	sonic0506	Fri Jun 13 01:25:01 2025 +0900	fix: Cellular Information 제거						
+8.42E+13	___	Fri Jun 13 01:21:47 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop			0	0		
+73c8e3c	___	Fri Jun 13 01:21:42 2025 +0900	fix: qa			61	1		
+60e1204	sonic0506	Fri Jun 13 01:16:41 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+dc9bb87	sonic0506	Fri Jun 13 01:16:37 2025 +0900	fix: 로그인 유럽 제외						
+4e1f312	___	Fri Jun 13 01:06:24 2025 +0900	fix: qa			3	3	_____	
+822d209	___	Fri Jun 13 00:54:44 2025 +0900	fix: qa			24	6	____	
+8e59ab5	___	Mon Jun 9 23:39:51 2025 +0900	fix: error			6	6	_____	
+92574c1	___	Mon Jun 9 01:03:22 2025 +0900	feat: time 로그 수정			1	1	_____	
+1b7a080	___	Mon Jun 9 01:02:58 2025 +0900	fix: qa			8	8	_____	
+47a6c48	___	Mon Jun 9 00:58:50 2025 +0900	fix: qa			3	3	_____	
+392903c	___	Mon Jun 9 00:57:46 2025 +0900	fix: qa			3	11	_____	
+becae4b	___	Mon Jun 9 00:52:24 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+27170f3	___	Mon Jun 9 00:52:21 2025 +0900	fix: qa			224	91	____	
+863c56a	sonic-slogup	Mon Jun 9 00:35:30 2025 +0900	fix: 디바이스 send 에러 로직 수정						
+3f57ba0	___	Mon Jun 9 00:15:00 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop			0	0		
+7715553	___	Mon Jun 9 00:14:54 2025 +0900	fix: qa			42	2		
+9ec50ac	sonic-slogup	Sun Jun 8 23:56:56 2025 +0900	fix: Username 필드 . 입력 가능						
+1e4b8c0	sonic-slogup	Sun Jun 8 23:53:04 2025 +0900	"fix: 1021, 1022 히든 파라미터 처리"						
+1f6bcee	sonic0506	Sun Jun 8 23:43:30 2025 +0900	fix: Report Mapping 데이터 핸들링 로직 반대로 수정						
+d437319	sonic-slogup	Sun Jun 8 22:54:18 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+aa61824	sonic-slogup	Sun Jun 8 22:54:14 2025 +0900	fix: 디바이스 send 에러 타이밍 수정						
+ab7172e	___	Sun Jun 8 22:49:51 2025 +0900	fix: qa			67	19		
+a07a6c2	___	Thu Jun 5 08:54:42 2025 +0900	feat: time 로그 변경			1	1		
+8551c19	sonic-slogup	Thu Jun 5 01:19:46 2025 +0900	fix: anonymous 필수 표기 필드 작업						
+1595cab	sonic-slogup	Thu Jun 5 01:03:05 2025 +0900	fix: 누락 타입 추가						
+b58244e	sonic-slogup	Thu Jun 5 01:02:46 2025 +0900	fix: 필수 노출 데이터 model-info 적용						
+5874654	sonic-slogup	Thu Jun 5 00:48:43 2025 +0900	fix: 패스워드 로직 store로 이동						
+144e1a3	sonic-slogup	Thu Jun 5 00:35:01 2025 +0900	fix: formData와 상관없이 보여지는 값 처리()						
+83f2df4	sonic-slogup	Wed Jun 4 23:57:18 2025 +0900	fix: password 한번 입력시 다시 입력 안받기						
+a8f3b73	sonic-slogup	Wed Jun 4 23:32:40 2025 +0900	fix: profile 다운로드 파일명 형식 수정						
+3a9ea22	___	Wed Jun 4 00:44:41 2025 +0900	fix: time 로그 변경			1	1	_____	
+73405b7	___	Wed Jun 4 00:44:01 2025 +0900	fix: qa			23	1		
+ebd03f8	___	Wed Jun 4 00:43:46 2025 +0900	fix: qa			72	0		
+54a0b99	___	Wed Jun 4 00:05:19 2025 +0900	fix: qa			1	1	_____	
+45b08fb	___	Wed Jun 4 00:03:20 2025 +0900	fix: qa			130	26		
+3c8441c	___	Tue Jun 3 23:10:40 2025 +0900	fix: qa			83	2	____	
+3f70b29	___	Tue Jun 3 23:04:27 2025 +0900	fix: qa			18	18	_____	
+eb19ac4	___	Sun Jun 1 19:18:40 2025 +0900	feat: 로그 시간 변경						
+cdae547	___	Sat May 31 22:46:36 2025 +0900	fix: qa		320_ __				
+3745128	___	Sat May 31 21:33:47 2025 +0900	feat: multi configure 버튼 원복						
+f14549a	sonic0506	Sat May 31 12:32:23 2025 +0900	fix: useDevciceVersions 타이밍 개선						
+d9ec27a	sonic0506	Sat May 31 12:31:52 2025 +0900	fix: $PST;PORT_OPEN 명령어 무시						
+63afd32	sonic-slogup	Sat May 31 11:58:24 2025 +0900	fix: assign-header 미지원 대응						
+ca5084f	sonic-slogup	Sat May 31 11:51:36 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+94f4a58	sonic-slogup	Sat May 31 11:51:33 2025 +0900	fix: 응답 빈값 포함 2번씩오는 기기 대응						
+85887ca	sonic0506	Fri May 30 23:09:20 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+2e02e7d	___	Fri May 30 16:33:03 2025 +0900	feat: 로그 시간 변경						
+74afc28	___	Fri May 30 16:32:22 2025 +0900	fix: qa						
+6d3328a	sonic-slogup	Fri May 30 10:13:18 2025 +0900	feat: log 시간 변경						
+7c52939	sonic-slogup	Fri May 30 10:11:35 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+ae54364	sonic-slogup	Fri May 30 10:11:32 2025 +0900	"fix: 카피라이트 문구 수정 & 커맨드 탭 0112, 0113, 0114 정리"						
+e7cd98c	___	Fri May 30 00:53:54 2025 +0900	feat: log 시간 변경						
+6baadd3	___	Fri May 30 00:51:24 2025 +0900	fix: qa						
+7704292	___	Fri May 30 00:44:04 2025 +0900	fix: qa						
+193e77f	sonic-slogup	Thu May 29 23:39:26 2025 +0900	fix: fix: device list 페이지 configure multi-device 버튼 우측 상단으로 이동-2						
+cbf168e	sonic-slogup	Thu May 29 23:36:36 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+fe1a2bb	sonic-slogup	Thu May 29 23:36:32 2025 +0900	fix: device list 페이지 configure multi-device 버튼 우측 상단으로 이동						
+c6c90c9	___	Thu May 29 23:31:50 2025 +0900	fix: qa						
+15c7b34	___	Thu May 29 17:02:33 2025 +0900	fix: qa						
+b4e80a4	___	Thu May 29 14:39:39 2025 +0900	feat: 배포 시간 변경						
+6675926	___	Thu May 29 14:39:17 2025 +0900	fix: qa						
+623982	___	Thu May 29 13:59:51 2025 +0900	fix: qa						
+d1b13d6	___	Thu May 29 11:03:04 2025 +0900	fix: qa						
+bb3c9ab	___	Thu May 29 01:05:53 2025 +0900	feat: 로그인 로그 시간 변경						
+af2cb24	___	Thu May 29 00:54:12 2025 +0900	fix: qa						
+a5619f5	___	Thu May 29 00:36:55 2025 +0900	fix: qa						
+fdda5be	___	Wed May 28 23:53:43 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+6b2bcf3	___	Wed May 28 23:52:40 2025 +0900	fix: qa						
+a9f118c	sonic0506	Wed May 28 23:09:44 2025 +0900	fix: 2개 이상 연결시 메뉴 리프레시						
+16f0ac4	sonic-slogup	Wed May 28 23:01:06 2025 +0900	fix: commands Q-Type 추가						
+068769d	sonic-slogup	Wed May 28 02:21:42 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+ecb40cb	sonic-slogup	Wed May 28 02:21:35 2025 +0900	fix: 시리얼 임시 에러 로그 제거						
+d68a9d0	___	Wed May 28 02:20:38 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+d194222	___	Wed May 28 02:20:28 2025 +0900	chore: 배포 시간 변경						
+47c6232	sonic0506	Wed May 28 02:19:50 2025 +0900	fix: origin data 이슈 수정						
+b1619a8	sonic0506	Wed May 28 02:19:00 2025 +0900	Merge branch 'feature/quec-model' into develop						
+83deba9	sonic-slogup	Wed May 28 02:18:00 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+84402df	sonic-slogup	Wed May 28 02:17:48 2025 +0900	fix: 기기 2대 이상 연결시 컨트롤러에서 기기 변경하면 device-status탭으로 이동						
+d999729	___	Wed May 28 02:10:19 2025 +0900	Merge branch 'master' into develop						
+75f0bab	___	Wed May 28 02:09:05 2025 +0900	fix: qa						
+e983a97	sonic0506	Wed May 28 02:01:20 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into feature/quec-model						
+e287582	sonic-slogup	Wed May 28 02:00:05 2025 +0900	fix: useDeviceVersions 로직 수정(정상 응답에 대해서만 처리)						
+cec519d	sonic-slogup	Wed May 28 01:37:13 2025 +0900	fix: 파라미터 설정 성공 여부에 대한 응답 추가						
+905affb	___	Wed May 28 01:19:07 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+c5c6c84	___	Wed May 28 01:19:02 2025 +0900	fix: qa						
+e7573a8	sonic0506	Wed May 28 01:18:02 2025 +0900	fix; 커멘드 탭 숨김 파라미터 스타일 수정						
+b01316d	sonic0506	Wed May 28 01:08:10 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into feature/quec-model						
+8e5354a	sonic-slogup	Wed May 28 00:56:15 2025 +0900	fix: 기기 2대 연결시 메뉴 리렌더						
+3d212da	sonic0506	Wed May 28 00:54:13 2025 +0900	fix: quec모델 이슈 수정						
+a073f36	___	Tue May 27 23:39:51 2025 +0900	chore: test						
+00ad928	___	Tue May 27 23:36:26 2025 +0900	chore: test						
+069d0ad	___	Tue May 27 23:12:00 2025 +0900	fix: qa						
+4cb292b	___	Tue May 27 22:54:39 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+49979c1	___	Tue May 27 22:54:35 2025 +0900	fix: qa						
+7c63eee	sonic0506	Tue May 27 22:43:20 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into feature/quec-model						
+7549acf	sonic0506	Tue May 27 22:41:54 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+03a8c9f	___	Tue May 27 22:39:16 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+d50678c	___	Tue May 27 22:39:03 2025 +0900	fix: qa						
+4b035ad	sonic-slogup	Tue May 27 22:30:12 2025 +0900	fix: 커맨드 섹션 숫자만 입력 가능하도록 수정						
+5da06b8	sonic-slogup	Tue May 27 22:21:49 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+d57fd0a	sonic-slogup	Tue May 27 22:21:31 2025 +0900	fix: 'q' 또는 숫자 값을 입력할 수 있어야 하는 파라미터 타입 추가(Q-Type)						
+3392f8a	___	Tue May 27 22:20:48 2025 +0900	fix: qa						
+85d778c	sonic-slogup	Tue May 27 21:55:08 2025 +0900	fix: UDP ACK 값이 남아있음 이슈 수정						
+f56ed67	sonic-slogup	Tue May 27 21:38:40 2025 +0900	fix: anonymous device-info 커멘드탭 필터 추가						
+254eee6	___	Tue May 27 10:12:11 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+f7ceebe	___	Tue May 27 10:12:08 2025 +0900	fix: qa						
+11fdf33	sonic-slogup	Tue May 27 09:50:33 2025 +0900	fix: 커맨드탭 필터 추가(device-info)						
+d9c260d	sonic-slogup	Tue May 27 08:49:04 2025 +0900	fix: 서치 창에서 JSON ID로 검색						
+e873453	___	Tue May 27 00:44:22 2025 +0900	fix: update timestamp on login page						
+594014a	___	Tue May 27 00:42:55 2025 +0900	fix: qa						
+ad92223	___	Tue May 27 00:03:59 2025 +0900	fix: qa						
+673d565	___	Mon May 26 01:31:24 2025 +0900	fix: qa						
+1caf299	___	Mon May 26 01:09:36 2025 +0900	feat: 배포 시간 수정						
+971c0cf	___	Mon May 26 01:08:53 2025 +0900	"feat: 기기 연결 안하고, geofence"						
+266841f	___	Mon May 26 00:07:14 2025 +0900	"fix: 기기 연결 없을때, geofence"						
+cf18e10	sonic-slogup	Sun May 25 17:08:32 2025 +0900	fix: UDP ACK 값이 남아있음						
+b59a10a	sonic-slogup	Sun May 25 16:32:53 2025 +0900	fix: Hidden Prams 커맨드 탭에서 네트워크 탭만 빨간 글씨 표기되는 이슈						
+426f050	sonic-slogup	Sun May 25 16:19:37 2025 +0900	fix: Profile 저장 시 naming 수정(<model><ver><YYYYMMDDHHMMSS>_<CRC16>.profile)						
+fa3b769	sonic-slogup	Sun May 25 13:30:26 2025 +0900	fix: Indexed DB 키 값 이슈						
+10b0c26	sonic0506	Sun May 25 12:58:38 2025 +0900	fix: 기기 연결 후 추가적인 기기 연결 했을 때 컨트롤러 Select에 기기 2개 안보이는 이슈						
+d061155	sonic0506	Sun May 25 12:55:13 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into feature/quec-model						
+590e983	sonic0506	Sun May 25 12:53:34 2025 +0900	fix: 누락 코드 추가						
+bfcc0f9	sonic0506	Sun May 25 12:52:15 2025 +0900	fix: gefence config isDirty check 로직 수정						
+0c9c378	sonic0506	Sun May 25 12:44:01 2025 +0900	fix: geofenc config send 비활성 처리						
+86935ca	___	Sun May 25 12:05:27 2025 +0900	feat: 배포 시간 변경						
+5bfc816	___	Sun May 25 12:04:28 2025 +0900	feat: log 제거						
+5b8d018	___	Sun May 25 11:24:33 2025 +0900	"ing: 기기 연결 안했을때, geofence 작업 중"						
+b9b5896	sonic0506	Sun May 25 09:24:17 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into feature/quec-model						
+1280296	sonic0506	Sun May 25 09:23:52 2025 +0900	fix: 2개 기기 연결시 기기 정보 혼합되서 보이는 이슈						
+0bb62a3	sonic0506	Sun May 25 08:28:39 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into feature/quec-model						
+5f6b256	___	Sun May 25 01:29:00 2025 +0900	fix: qa						
+c2570d2	___	Sun May 25 01:10:06 2025 +0900	fix: qa						
+ade5f4a	___	Sun May 25 01:07:39 2025 +0900	fix: qa						
+12e94e2	sonic-slogup	Sat May 24 13:32:04 2025 +0900	fix: 검색 결과 상태 초기화 이슈						
+820174c	sonic-slogup	Sat May 24 13:26:01 2025 +0900	fix: 모델 갤러리뷰 버전 정보 추가						
+9c9312f	sonic0506	Sat May 24 12:50:13 2025 +0900	feat: quec-model-open						
+7fe859f	___	Fri May 23 00:51:57 2025 +0900	feat: 버전 시간 변경						
+f76f0c4	___	Fri May 23 00:50:42 2025 +0900	fix: qa						
+18a6fea	___	Fri May 23 00:32:19 2025 +0900	fix: qa						
+17782df	___	Fri May 23 00:28:53 2025 +0900	fix: qa						
+07b22db	___	Thu May 22 23:56:10 2025 +0900	fix: qa						
+556b9e9	___	Thu May 22 23:25:44 2025 +0900	fix: qa						
+769e0b9	___	Wed May 21 23:30:05 2025 +0900	fix: qa						
+0c32976	___	Wed May 21 22:46:15 2025 +0900	feat: 버전 시간 변경						
+dde6dca	___	Wed May 21 22:43:04 2025 +0900	fix: qa						
+610f884	___	Wed May 21 09:55:33 2025 +0900	fix: restrict file upload acceptance to .json only in AddModal and EditModal						
+2c2f1fb	___	Wed May 21 09:52:38 2025 +0900	feat: 로그인 페이지 내 수정 시간 변경						
+5b33bca	sonic-slogup	Tue May 20 22:48:29 2025 +0900	fix: isDirtyFields 로직 수정						
+f0b0fe7	sonic-slogup	Tue May 20 22:45:40 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - RF 탭)						
+9101301	sonic-slogup	Tue May 20 22:38:23 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - 트래킹 탭)						
+61b3134	sonic-slogup	Tue May 20 22:31:13 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - input/output 탭)						
+78e5afb	sonic-slogup	Tue May 20 22:27:15 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - 블루투스 탭)						
+117d58c	sonic-slogup	Tue May 20 22:24:23 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - 악세사리 탭)						
+94b7626	sonic-slogup	Tue May 20 22:19:27 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - 레포트 탭)						
+f688ffa	sonic-slogup	Tue May 20 22:04:56 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - 시스템 탭)						
+0b928b4	sonic-slogup	Tue May 20 21:52:30 2025 +0900	fix: 수정 여부 로직 추가(Anonymous - 네트워크 탭)						
+8440cb5	sonic-slogup	Sun May 18 13:18:13 2025 +0900	fix: 수정 여부 로직 추가(기기 - 트래킹 탭)						
+9f43555	sonic-slogup	Sun May 18 13:09:34 2025 +0900	fix: 수정 여부 로직 추가(기기 - input/output 탭)						
+dbe286a	sonic-slogup	Sun May 18 13:08:34 2025 +0900	fix: 수정 여부 로직 추가(기기 - RF 탭)						
+4f044c3	sonic-slogup	Sun May 18 12:56:50 2025 +0900	fix: 수정 여부 로직 추가(기기 - 블루투스 탭)						
+6d37114	sonic-slogup	Sun May 18 12:54:04 2025 +0900	fix: 수정 여부 로직 추가(기기 - 악세서리 탭)						
+673a535	sonic-slogup	Sun May 18 12:49:22 2025 +0900	fix: 수정 여부 로직 추가(기기 - 리포트 탭)						
+c571b42	sonic-slogup	Sun May 18 12:27:14 2025 +0900	fix: 수정 여부 로직 추가(기기 - 네트워크 탭)						
+8a20923	sonic-slogup	Sun May 18 12:17:27 2025 +0900	fix: 수정 여부 로직 추가(기기 - 시스템 탭)						
+c0f443c	sonic-slogup	Sun May 18 09:30:29 2025 +0900	fix: 수정 여부 로직 추가(모델 - input/output 탭)						
+627fbe5	sonic-slogup	Sun May 18 09:22:39 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+f6fa2db	sonic-slogup	Sun May 18 09:22:20 2025 +0900	fix: 수정 여부 로직 추가(모델 - 트래킹 탭)						
+e102ef8	___	Sun May 18 09:21:39 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+8929f9f	___	Sun May 18 09:21:30 2025 +0900	fix: err 토스트 안나오는 이슈						
+5fd8474	sonic-slogup	Sun May 18 09:11:13 2025 +0900	fix: 수정 여부 로직 추가(모델 - RF 탭)						
+976123	sonic-slogup	Sun May 18 09:02:35 2025 +0900	fix: 수정 여부 로직 추가(모델 - 블루투스 탭)						
+dfdf430	sonic-slogup	Sun May 18 08:58:35 2025 +0900	fix: 수정 여부 로직 추가(모델 - 악세사리 탭)						
+ac82a8e	sonic-slogup	Sun May 18 08:42:47 2025 +0900	fix: 수정 여부 로직 추가(모델 - 리포트 탭)						
+9fe5078	sonic-slogup	Sun May 18 07:56:43 2025 +0900	fix: 수정 여부 로직 추가(모델 - 시스템 탭)						
+bb880c3	sonic-slogup	Sun May 18 07:43:13 2025 +0900	fix: 수정 여부 로직 추가(모델 - 네트워크 탭)						
+d19db8e	sonic-slogup	Sun May 18 06:57:25 2025 +0900	fix: anonymous 디바이스 페이지 NA 처리						
+06f8e79	sonic-slogup	Sat May 17 20:48:49 2025 +0900	fix: 메뉴 노출 로직 추가						
+35a8cc1	sonic-slogup	Sat May 17 20:19:14 2025 +0900	fix: 서치바 버그 수정						
+5db04cd	sonic-slogup	Sat May 17 20:04:52 2025 +0900	fix: 모델 페이지 문구 수정						
+9de5ed3	sonic-slogup	Sat May 17 19:59:00 2025 +0900	feat: 모델연결X Edit Profile 추가						
+1a775a3	sonic-slogup	Sat May 17 18:56:38 2025 +0900	fix: 커맨드 로그창 상단 고정						
+8d54abb	sonic-slogup	Sat May 17 18:45:24 2025 +0900	"fix: device, model info 페이지 device statue 탭 미표기 항목 NA 표기"						
+9eae754	sonic-slogup	Sat May 17 18:39:16 2025 +0900	fix: 모델 추가/수정 파일 형식 accept 수정						
+826193d	sonic-slogup	Sat May 17 18:32:59 2025 +0900	fix: 모델 edit 향지 체크 내용 사라짐						
+4b65eba	___	Sat May 17 00:54:31 2025 +0900	feat: feat: GNSSInformation 컴포넌트에 마커 추가 및 Map 컴포넌트 언어 영어 설정 - annoymous						
+5638370	___	Sat May 17 00:52:53 2025 +0900	fix: 모든 기기 연결 시 password box가 표출되는 에러 - annoymous						
+c678784	___	Sat May 17 00:43:58 2025 +0900	feat: GNSSInformation 컴포넌트에 마커 추가 및 Map 컴포넌트 언어 영어 설정						
+6a011f8	___	Sat May 17 00:32:04 2025 +0900	feat: 로그인 페이지에 수정 날짜 수정						
+ed87f3e	___	Sat May 17 00:31:01 2025 +0900	fix: 모든 기기 연결 시 password box가 표출되는 에러						
+4324ff6	___	Fri May 16 00:57:17 2025 +0900	feat: 폴더명 에러 수정						
+02889b2	sonic-slogup	Thu May 15 21:56:46 2025 +0900	fix: model-info 1011  필수 제외						
+2d99ae1	sonic-slogup	Thu May 15 21:54:49 2025 +0900	fix: model-info 네트워크탭 필수 값 추가						
+b23586a	sonic-slogup	Thu May 15 21:49:15 2025 +0900	fix: model-info 필수값 전체 제거						
+f341072	sonic-slogup	Thu May 15 21:09:01 2025 +0900	fix: model-info 페이지 문구 변경 send > save						
+820af33	sonic-slogup	Thu May 15 21:00:46 2025 +0900	fix: model-info 스위치 필드 width수정						
+87523c5	sonic-slogup	Thu May 15 20:57:36 2025 +0900	fix: model-info 어싸인헤더 완료						
+3d082e1	___	Thu May 15 14:10:17 2025 +0900	feat: device-info에서 모델 변경						
+2a0ab5b	___	Thu May 15 03:47:36 2025 +0900	fix: update timestamp in login page						
+f29deca	___	Thu May 15 03:45:35 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+880420e	___	Thu May 15 03:45:32 2025 +0900	feat: password 입력						
+2f0cb5e	sonic-slogup	Thu May 15 03:13:40 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+44b6929	sonic-slogup	Thu May 15 03:13:35 2025 +0900	fix: 누락 코드 추가						
+45346ef	sonic-slogup	Thu May 15 03:12:59 2025 +0900	fix: 리포트 어싸인헤더 로드시에 리렌더 안됨						
+f880bc7	___	Thu May 15 02:31:07 2025 +0900	chore: 임포트 수정						
+2fa0f34	___	Thu May 15 02:28:22 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+e31bed0	___	Thu May 15 02:28:19 2025 +0900	feat: 파일 정리						
+9d3d757	sonic-slogup	Thu May 15 02:02:46 2025 +0900	fix: alertConfig 프로파일 수정						
+91db256	___	Thu May 15 01:13:28 2025 +0900	feat: device-status 버튼 수정						
+e07467a	___	Thu May 15 01:02:06 2025 +0900	feat:hidden parameter 추가						
+8fa8454	sonic-slogup	Thu May 15 00:59:47 2025 +0900	fix: model-info RF탭 셀렉트 value 수정						
+84ece17	sonic-slogup	Thu May 15 00:58:01 2025 +0900	fix: model-info 블루투스 탭 셀렉트 value 수정						
+6447b46	sonic-slogup	Thu May 15 00:56:39 2025 +0900	fix: model-info 트래킹 탭 셀렉트 value 수정						
+0d52e04	sonic-slogup	Thu May 15 00:51:49 2025 +0900	fix: model-info input/output 탭 체인지 함수 수정						
+8e81fd0	sonic-slogup	Thu May 15 00:49:48 2025 +0900	fix: model-info 악세사리 탭 샐렉트 value 수정						
+460176	sonic-slogup	Thu May 15 00:46:48 2025 +0900	fix: model-info 레포트 탭 샐렉트 value 수정						
+f9c86a2	sonic-slogup	Thu May 15 00:38:23 2025 +0900	fix: model-info : load & apply 통합						
+a8a031d	sonic-slogup	Thu May 15 00:26:37 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+d347169	sonic-slogup	Thu May 15 00:26:34 2025 +0900	fix: model-info 컨트롤러 profile 로직 수정						
+bd9636f	sonic-slogup	Thu May 15 00:08:43 2025 +0900	fix: model-info 시스템 탭 체인지 함수 수정						
+b20d7ee	___	Wed May 14 23:55:35 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+9ace11d	___	Wed May 14 23:55:32 2025 +0900	feat: geofence 수정						
+cdd89a5	sonic-slogup	Wed May 14 23:36:28 2025 +0900	feat: model-info 컨트롤러 & 네트워크 탭 change 수정						
+9f10c9b	sonic-slogup	Wed May 14 21:43:42 2025 +0900	feat: model-info 컨트롤러 > apply						
+a79e551	sonic-slogup	Wed May 14 21:27:18 2025 +0900	feat: model-info 로드 프로파일						
+85f9ab4	sonic-slogup	Wed May 14 20:36:37 2025 +0900	feat: model-info 어싸인헤더						
+049cb29	___	Wed May 14 17:37:24 2025 +0900	fix: add console logging for loaded rows and improve row visibility check						
+291b409	___	Wed May 14 17:31:02 2025 +0900	fix: add logging for loaded rows and remove error handling for empty data						
+54bd8a6	___	Wed May 14 10:46:53 2025 +0900	Merge branch 'master' into develop						
+236c0d5	___	Wed May 14 10:46:29 2025 +0900	fix: update timestamp in login page						
+ff4ff09	___	Wed May 14 10:46:05 2025 +0900	fix: save 동작 개선						
+23fda84	___	Wed May 14 02:28:01 2025 +0900	feat: 수정						
+c7a03f8	___	Wed May 14 01:29:04 2025 +0900	fix: update timestamp in login page						
+9862734	___	Wed May 14 01:23:12 2025 +0900	feat: side menu 스타일 개선						
+349f4b7	___	Wed May 14 01:18:11 2025 +0900	feat: 필수값 제거						
+aa1c5f6	___	Wed May 14 00:54:52 2025 +0900	chore: log 제거						
+5200262	___	Wed May 14 00:54:35 2025 +0900	feat: load된 모델은 숨김처리 해제						
+b34e293	___	Wed May 14 00:39:23 2025 +0900	feat: 향지 처리 변경						
+25acfa8	___	Wed May 14 00:24:07 2025 +0900	fix: 10개 분기 추가						
+9c5c75c	___	Wed May 14 00:23:21 2025 +0900	feat: 10개 circular						
+60c69b0	___	Wed May 14 00:18:29 2025 +0900	feat: 999 제외 255개로 분기						
+0e03b12	___	Wed May 14 00:15:35 2025 +0900	feat: circular 데이터 페칭						
+6842632	___	Wed May 14 00:10:58 2025 +0900	feat: log						
+0ad48e4	___	Wed May 14 00:08:06 2025 +0900	feat: log						
+8090c4e	___	Wed May 14 00:01:01 2025 +0900	fix: 무한 로딩 개선						
+b838cb1	___	Tue May 13 23:53:35 2025 +0900	fix: clean up useDeviceVersions logic and remove unused battery voltage import						
+2bb5f7f	sonic-slogup	Tue May 13 23:22:11 2025 +0900	fix: load model 분기 수정						
+7fbf78d	sonic-slogup	Tue May 13 23:18:47 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+a1a479b	sonic-slogup	Tue May 13 23:18:36 2025 +0900	fix: model 연결 및 서치바 수정						
+c143a6b	___	Tue May 13 23:15:29 2025 +0900	feat: Response 응답 처리 개선						
+b5f4298	sonic-slogup	Tue May 13 22:25:31 2025 +0900	feat: 누락 파일 추가						
+6e0206d	sonic-slogup	Tue May 13 22:23:18 2025 +0900	feat: model-info send 까지 복사 완료						
+2866dbb	sonic-slogup	Tue May 13 21:18:45 2025 +0900	fix: 모델 info 페이지 작업중						
+bd2d3ef	sonic-slogup	Tue May 13 11:40:22 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+194b996	___	Tue May 13 03:33:13 2025 +0900	feat: log						
+18e6e7f	___	Tue May 13 03:32:42 2025 +0900	feat: controller						
+fa20700	sonic-slogup	Mon May 12 21:37:42 2025 +0900	feat: device-info 기기 연결 해제시 device 페이지 라우팅						
+586ab4d	___	Mon May 12 03:17:35 2025 +0900	feat: driver 로딩바 추가						
+2b07041	___	Mon May 12 03:05:11 2025 +0900	feat: assignHeader 주석 해제						
+7265b4a	___	Mon May 12 03:04:21 2025 +0900	Merge branch 'develop'						
+eb88a48	___	Mon May 12 03:04:13 2025 +0900	feat: 2차 배포						
+4d084a7	___	Mon May 12 03:03:04 2025 +0900	feat: bluetooth 등록 수정 삭제						
+4881402	sonic-slogup	Sun May 11 22:50:14 2025 +0900	feat: 커맨드 탭 커스텀 field						
+2456725	sonic-slogup	Sun May 11 21:52:27 2025 +0900	feat: APN list 커스텀 커맨드						
+3402eb6	sonic-slogup	Sun May 11 20:58:56 2025 +0900	feat: 커맨드 탭 기본 타입 완료						
+107030c	sonic-slogup	Sun May 11 13:10:39 2025 +0900	feat: BleRegistration 섹션 UI 작업						
+ecf0e37	___	Sun May 11 12:59:15 2025 +0900	"feat: 초기 탭 수정 및 lng, lat 넘버화"						
+10ed33c	sonic-slogup	Sun May 11 08:50:48 2025 +0900	feat: device status 탭						
+37792d8	sonic-slogup	Sun May 11 07:26:36 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+dd0ef49	___	Sun May 11 03:21:52 2025 +0900	feat: Driver ID 탭 기능						
+3c7df7e	___	Sun May 11 02:47:36 2025 +0900	feat: geofence 수정 완료						
+5fe514b	___	Sat May 10 18:38:05 2025 +0900	feat: 지오팬스 추가 완료						
+524a230	___	Sat May 10 16:26:08 2025 +0900	feat: 언어 추가						
+b2d581c	sonic-slogup	Sat May 10 15:13:26 2025 +0900	fix: 커맨드 응답 로직 수정						
+66e5fed	sonic-slogup	Sat May 10 15:08:55 2025 +0900	fix: device write 에러 알럿 로직 수정						
+c706c4d	sonic-slogup	Sat May 10 15:01:49 2025 +0900	fix: 디바이스 커맨드 탭 응답 메세지 수정						
+261e9fa	sonic-slogup	Sat May 10 14:55:32 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+042ec78	sonic-slogup	Sat May 10 14:55:28 2025 +0900	fix: 디바이스 커맨드 탭 로직 수정						
+5a6597f	___	Sat May 10 14:14:22 2025 +0900	chore: console 제거						
+975ab0a	sonic-slogup	Sat May 10 11:39:26 2025 +0900	feat: 파라미터 검색 추가						
+6ae53b2	___	Sat May 10 02:56:24 2025 +0900	feat: bluetooth 수정						
+4ab7dde	___	Sat May 10 02:25:23 2025 +0900	feat: field 아이디 추가						
+2880ce7	___	Sat May 10 02:19:38 2025 +0900	fix: 무한 로딩 수정 및 *Mode Settings 에러 수정						
+2957dd9	___	Sat May 10 02:01:35 2025 +0900	fix: 수정						
+0e62b0a	___	Sat May 10 02:00:30 2025 +0900	feat: maintenance server 레이아웃 및 1023 수정						
+c823241	___	Sat May 10 01:49:53 2025 +0900	feat: report schedule 수정						
+5dd477f	___	Sat May 10 00:54:28 2025 +0900	feat: report 내 Report 섹션 레이아웃 수정						
+4a4e446	___	Sat May 10 00:46:42 2025 +0900	fix: report mapping 2 수정						
+b142215	___	Sat May 10 00:36:37 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+ec35436	___	Sat May 10 00:35:01 2025 +0900	style: system 탭 레이아웃 수정						
+f80f2b3	sonic-slogup	Fri May 9 19:33:53 2025 +0900	fix: 디바이스 write 버튼 로딩 추가						
+4bb8631	sonic-slogup	Fri May 9 19:26:04 2025 +0900	feat: device-info error toast 추가						
+d8ec47a	sonic-slogup	Fri May 9 18:55:25 2025 +0900	fix: assignHeader 무한로딩 이슈 해결						
+c791274	___	Fri May 9 14:49:03 2025 +0900	feat: assign header 주석						
+30e6e7f	___	Fri May 9 14:39:05 2025 +0900	feat: device info로 라우팅						
+dc5ad2c	___	Fri May 9 14:34:06 2025 +0900	feat: 배포 일시 적용						
+c0fbbaf	___	Fri May 9 14:32:56 2025 +0900	feat: send command 적용						
+01a1f55	___	Fri May 9 13:52:44 2025 +0900	feat: 지오팬스 추가 작업 중						
+3506f8d	___	Fri May 9 02:52:05 2025 +0900	fix: value 메시지 하이재킹 롤백						
+94b3f66	___	Fri May 9 02:42:27 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+6e52e06	___	Fri May 9 02:41:54 2025 +0900	feat: geofence 리스트						
+2201610	sonic-slogup	Fri May 9 02:37:19 2025 +0900	feat: 네트워크 커맨드 기본 유형 추가						
+b1ac173	sonic-slogup	Fri May 9 01:17:02 2025 +0900	feat: device send RF 탭						
+0a8d6c4	sonic-slogup	Fri May 9 01:15:36 2025 +0900	feat: device send 블루투스 탭						
+b90a5f9	sonic-slogup	Fri May 9 01:10:54 2025 +0900	feat: device send 트래킹 탭						
+727c6e6	sonic-slogup	Fri May 9 01:06:09 2025 +0900	feat: device send 인풋/아웃풋 탭						
+939bafc	sonic-slogup	Fri May 9 01:04:55 2025 +0900	feat: device send 악세사리 탭						
+7c89252	sonic-slogup	Fri May 9 01:02:01 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+79b8a23	sonic-slogup	Fri May 9 01:01:49 2025 +0900	feat: assign header 섹션 추가						
+2e002f4	___	Fri May 9 00:47:53 2025 +0900	feat: geofence config 추가						
+e6764fe	sonic-slogup	Fri May 9 00:40:03 2025 +0900	feat: 리포트맵핑2 섹션 추가						
+d09a33a	sonic-slogup	Fri May 9 00:27:21 2025 +0900	feat: Report Mapping 섹션 추가						
+375839	sonic-slogup	Fri May 9 00:19:08 2025 +0900	ing: device send 레포트 탭 진행중						
+dd89386	sonic-slogup	Thu May 8 23:30:05 2025 +0900	feat: device send 레포트 탭						
+08df5d1	sonic-slogup	Thu May 8 22:54:33 2025 +0900	feat: device send 네트워크 탭						
+3d66bce	sonic-slogup	Thu May 8 22:40:55 2025 +0900	fix: device-info용 체크박스 컴포넌트 추가						
+6b2d3b7	sonic-slogup	Thu May 8 22:18:19 2025 +0900	feat: 모델 send 시스템 탭						
+0ecb992	sonic-slogup	Thu May 8 20:32:15 2025 +0900	feat: 서치바 RF 탭						
+9df25b7	sonic-slogup	Thu May 8 20:27:14 2025 +0900	feat: 서치바 블루투스 탭						
+0f61c0e	sonic-slogup	Thu May 8 20:24:47 2025 +0900	feat: 서치바 드라이버 탭						
+60727cc	sonic-slogup	Thu May 8 20:21:41 2025 +0900	feat: 서치바 트래킹 탭						
+85db1e6	sonic-slogup	Thu May 8 20:11:28 2025 +0900	feat: 서치바 인풋/아웃풋 탭						
+c95f043	sonic-slogup	Thu May 8 20:09:22 2025 +0900	feat: 서치바 악세사리 탭						
+5c83c09	sonic-slogup	Thu May 8 20:02:57 2025 +0900	feat: 서치바 레포트 탭						
+f9e0cc2	sonic-slogup	Thu May 8 19:40:56 2025 +0900	feat: 서치바 시스템 탭						
+cb424be	sonic-slogup	Thu May 8 19:21:38 2025 +0900	fix: gnb에 서치바 추가						
+3c366fe	sonic-slogup	Thu May 8 19:12:28 2025 +0900	fix: search 컴포넌트 추가 및 network 적용						
+e7ad4f4	___	Thu May 8 03:14:22 2025 +0900	feat: system motion 까지 레이아웃 수정						
+7fb203e	___	Thu May 8 03:00:34 2025 +0900	feat: commands ui type 정리						
+a17c128	___	Thu May 8 02:33:04 2025 +0900	feat: driver id 페칭						
+9a2596e	___	Thu May 8 01:18:37 2025 +0900	feat: input output 마무리						
+262ddc4	___	Wed May 7 02:16:42 2025 +0900	feat: Integrate CMD Tool tab with command store functionality and update side menu items						
+ce6424a	___	Wed May 7 02:06:01 2025 +0900	feat: Add command data extraction and update side menu for Commands tab						
+1ca384b	___	Wed May 7 01:40:06 2025 +0900	refactor: Update Satellite component to improve form data validation and streamline field handling						
+36c0c53	___	Wed May 7 01:39:22 2025 +0900	refactor: Enhance Sms component by improving form validation and layout structure						
+ee84f1c	___	Wed May 7 01:37:07 2025 +0900	refactor: Clean up NTPServer component by removing unused imports and consolidating field IDs						
+8f6831f	___	Wed May 7 01:35:18 2025 +0900	refactor: Update device-info components for improved structure and validation						
+10feec0	___	Tue May 6 23:48:51 2025 +0900	refactor: Simplify Network component layout and enhance form validation logic						
+9f6e84b	___	Tue May 6 23:45:37 2025 +0900	feat: Update Network component UI and validation logic						
+fe2c1cc	sonic-slogup	Tue May 6 22:04:30 2025 +0900	feat: Driver 탭 ui 작업						
+e37d155	sonic-slogup	Tue May 6 11:03:49 2025 +0900	ing: 드라이버 탭 작업중						
+6c48dae	___	Mon May 5 23:57:45 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+cf15e75	___	Mon May 5 23:57:28 2025 +0900	chore: driver 탭 관련 주석						
+e7ce316	sonic-slogup	Mon May 5 23:48:36 2025 +0900	feat: input/output 탭 ui 완료						
+effe89d	sonic-slogup	Mon May 5 22:14:23 2025 +0900	fix: RF 탭 필수 항목 수정						
+ee85821	sonic-slogup	Mon May 5 22:13:03 2025 +0900	feat: RF 탭						
+2ac3d57	___	Mon May 5 03:14:13 2025 +0900	feat: 액세서리 탭						
+7888786	___	Sun May 4 12:23:44 2025 +0900	feat: 블루투스 탭						
+0fb63a2	___	Sun May 4 03:19:01 2025 +0900	"feat: Tracking 탭, Report 탭, System 탭"						
+5262ae9	___	Sun May 4 03:17:59 2025 +0900	feat: Enhance FIELD_VALIDATIONS with new modes and translations						
+a883186	___	Sun May 4 03:17:25 2025 +0900	fix: Update SwitchPrimary styles for disabled state						
+f6c61a4	___	Sun May 4 03:17:03 2025 +0900	"feat: Add alert configuration messages in English, Spanish, and Portuguese"						
+bfb65a8	___	Sat May 3 18:49:06 2025 +0900	feat: Network 탭 Send 버튼 하단으로 내리기						
+a71d984	___	Sat May 3 04:40:36 2025 +0900	feat: Network 탭						
+819db98	sonic-slogup	Fri May 2 17:52:29 2025 +0900	fix: 구조 수정						
+334c1ce	sonic-slogup	Fri May 2 17:43:14 2025 +0900	feat: device 컴포넌트 구조 잡기						
+8c56eea	___	Fri May 2 14:35:06 2025 +0900	feat: error 파일 추가 (논의 후 fix 해야 함)						
+2ea7c7c	___	Fri May 2 14:23:36 2025 +0900	feat: config 변수처리						
+5a65d3f	___	Fri May 2 09:19:55 2025 +0900	feat: 로그인 창에 버전 추가						
+9566c57	___	Mon Apr 28 10:56:22 2025 +0900	chore: Remove atCommandParser and related types		85_ __				
+d4149a4	___	Fri Apr 25 02:05:24 2025 +0900	fix: LoadProfileDialog에서 펌웨어 버전 추출 로직 수정						
+4.04E+291	___	Fri Apr 25 02:01:55 2025 +0900	feat: Controller 컴포넌트에 프로파일 업로드 기능 추가						
+a4fea7a	___	Fri Apr 25 00:32:31 2025 +0900	refactor: 사용하지 않는 ToastContainer 및 console.log 제거						
+d329cb4	___	Fri Apr 25 00:20:39 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+47b89dc	___	Fri Apr 25 00:20:36 2025 +0900	fix: AddModal 및 EditModal의 이미지 파일 업로드 처리 개선						
+1046c57	sonic-slogup	Thu Apr 24 10:46:44 2025 +0900	fix: error.response.data.response.code === 5204 제거						
+2f7d883	___	Thu Apr 24 00:13:45 2025 +0900	fix: update file upload handling and improve user role checks						
+7823415	sonic-slogup	Tue Apr 22 21:23:46 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+8df47fe	sonic-slogup	Tue Apr 22 21:23:36 2025 +0900	fix: 버전정보 호출 임시 제거						
+528432f	___	Tue Apr 22 20:57:53 2025 +0900	style: 스타일 수정						
+57ca714	___	Tue Apr 22 20:53:15 2025 +0900	feat: find id / find password 삭제						
+e19d503	___	Sun Apr 20 17:01:55 2025 +0900	feat: download proflie						
+621ec89	___	Sun Apr 20 16:30:29 2025 +0900	feat: auto connect 삭제						
+9b0ed85	___	Sun Apr 20 16:17:36 2025 +0900	fix: qa						
+5095d93	sonic-slogup	Sun Apr 20 13:31:36 2025 +0900	fix: SM-68 asignHeaders 무한 로딩 이슈						
+a298698	sonic-slogup	Sun Apr 20 12:30:49 2025 +0900	fix: CMD Tool 우측에 표시되는 CMD 리스트는 스토어를 활용하여 관리						
+414f13e	sonic-slogup	Sun Apr 20 11:38:31 2025 +0900	fix: SM-40 - 로그인을 할때는 무조건 영어로 보여주기						
+397a498	sonic-slogup	Sun Apr 20 09:36:33 2025 +0900	"fix: Device Information 버전 정보 렌더(device-configuration, configuration)"						
+8bc206a	sonic-slogup	Sun Apr 20 00:58:14 2025 +0900	fix: commands 로그 상단 고정						
+e93d5d0	sonic-slogup	Sun Apr 20 00:50:30 2025 +0900	fix: device configuration select 수정						
+2005f90	sonic-slogup	Sun Apr 20 00:21:23 2025 +0900	fix: SM-54 디바이스 configuration 페이지 우측 상단 기능 추가						
+ee64178	sonic-slogup	Sat Apr 19 23:59:55 2025 +0900	fix: SM-23 모델 생성/수정 이미지 용량 5MB 에러						
+1cf90e9	___	Fri Apr 18 23:42:46 2025 +0900	fix: 개선된 숫자 입력 범위 검증 로직 적용 및 onBlur 이벤트 처리 개선						
+ec9ac55	___	Fri Apr 18 23:41:02 2025 +0900	fix: 개선된 숫자 입력 범위 검증 로직 적용						
+13569ee	___	Fri Apr 18 23:32:04 2025 +0900	feat: alert config input size 수정						
+4b17637	___	Fri Apr 18 01:51:05 2025 +0900	Merge branch 'develop'						
+f5736f0	___	Fri Apr 18 01:50:57 2025 +0900	feat: 포트 연결 성공 시 디바이스 목록으로 리다이렉트하고 사이드 메뉴의 특정 항목 숨김 처리						
+7.67E+13	___	Fri Apr 18 01:37:50 2025 +0900	fix: CmdTool과 ResponseLog에서 setIsCmdModalWide를 안전하게 호출하도록 개선						
+b3426f8	___	Fri Apr 18 01:05:01 2025 +0900	feat: 내비게이션 바와 페이지 컴포넌트의 디바이스 설정 처리 방식 개선						
+d4ece2c	___	Fri Apr 18 00:37:17 2025 +0900	feat: 디바이스 연결 없이 configure 페이지 내 서칭 모달 추가						
+830f1c7	sonic-slogup	Tue Apr 15 08:53:48 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+0d0d8af	sonic-slogup	Tue Apr 15 08:53:44 2025 +0900	fix: assign header 정렬 이슈 수정						
+aff5888	___	Mon Apr 14 19:05:22 2025 +0900	Merge branch 'develop'						
+51caba3	___	Mon Apr 14 19:05:13 2025 +0900	feat: geofence 수정 하는 부분						
+f956cca	___	Mon Apr 14 17:10:10 2025 +0900	style: 스타일 수정						
+6943bc7	sonic-slogup	Mon Apr 14 17:07:20 2025 +0900	fix: assign headers ui 스크롤 이슈 해결						
+867c001	___	Mon Apr 14 17:00:25 2025 +0900	feat: 테이블 컬럼 추가						
+a22b785	___	Mon Apr 14 16:53:17 2025 +0900	refactor: 로직 분리						
+e300768	___	Mon Apr 14 13:51:49 2025 +0900	feat: 주석 처리						
+df5b262	___	Mon Apr 14 13:34:19 2025 +0900	refactor: update typeFilter state to use specific string literals for better type safety						
+4113a91	___	Mon Apr 14 13:23:48 2025 +0900	fix: increase DELAY_MS in useSerial hook from 100 to 300						
+d9c6e78	___	Mon Apr 14 03:31:40 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+4519ffb	___	Mon Apr 14 03:31:34 2025 +0900	feat: geofence 구현						
+89e022f	sonic-slogup	Mon Apr 14 03:22:08 2025 +0900	feat: device-configuration assign header 띄어쓰기 추가						
+b334cfc	sonic-slogup	Mon Apr 14 03:10:24 2025 +0900	feat: device-configuration assign-header						
+bc27dee	sonic-slogup	Mon Apr 14 02:27:11 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+d97b2fc	sonic-slogup	Mon Apr 14 02:27:08 2025 +0900	fest: configuration assign headers						
+90bdf54	___	Sun Apr 13 22:14:08 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+7a8d958	___	Sun Apr 13 22:14:04 2025 +0900	feat: modelName 수정						
+a576059	sonic-slogup	Sun Apr 13 20:40:18 2025 +0900	debug: 디버깅 로그 추가						
+ff95b24	___	Sun Apr 13 20:37:56 2025 +0900	fix: imei 가져오는 명령어 수정						
+854319	___	Sun Apr 13 00:19:34 2025 +0900	fix: 기기 연결 안되는 이슈						
+ce1f34c	___	Sat Apr 12 23:27:56 2025 +0900	fix: 모뎀 부팅 전 커맨드 체크						
+75fd41f	___	Sat Apr 12 17:13:45 2025 +0900	chore: 안쓰는 모듈 삭제						
+cb73de7	___	Sat Apr 12 17:12:50 2025 +0900	fix: 알림 모달 없을 시 안뜨는 에러 수정 및 리팩토링						
+d988ddb	___	Sat Apr 12 17:12:28 2025 +0900	fix: 알림 모달 없을 시 안뜨는 에러 수정 및 리팩토링						
+3a2ddb3	___	Sat Apr 12 17:00:32 2025 +0900	refactor: 로그인 페이지 로직 분리						
+3ee4e37	___	Sat Apr 12 16:59:57 2025 +0900	fix: yaml 파일 재수어						
+908b208	___	Sat Apr 12 16:59:47 2025 +0900	fix: update no data message for model and gallery views						
+98a8f5b	___	Sat Apr 12 16:15:57 2025 +0900	feat: error						
+f7dfbb4	___	Sat Apr 12 15:59:06 2025 +0900	feat: test						
+47366a4	___	Sat Apr 12 15:49:43 2025 +0900	feat: log 추가						
+ef693a2	___	Sat Apr 12 15:40:07 2025 +0900	chore: remove unused model-detail components and related files						
+30b6dd7	___	Sat Apr 12 14:22:47 2025 +0900	feat: test log						
+6fbdc85	___	Sat Apr 12 13:56:47 2025 +0900	fix: selfoffline 초기화						
+4314909	___	Fri Apr 11 11:35:16 2025 +0900	feat: command log 추가						
+61f4faa	___	Fri Apr 11 11:14:15 2025 +0900	fix: google map 키 수정						
+b395795	___	Fri Apr 11 10:38:52 2025 +0900	refactor: user id unique하게 변경						
+050ae88	___	Fri Apr 11 03:24:15 2025 +0900	feat: add alert settings for geofence types and improve configuration UI						
+b86aa08	sonic-slogup	Fri Apr 11 00:16:53 2025 +0900	fix: 체크박스 에러 수정						
+e3488c9	sonic-slogup	Fri Apr 11 00:04:30 2025 +0900	feat: checkbox-edit 타입 연동						
+40cd6b2	sonic-slogup	Thu Apr 10 21:13:13 2025 +0900	fix: select 롤백						
+0e81e0a	sonic-slogup	Thu Apr 10 21:01:48 2025 +0900	fix: 테스트용 모델 하드코딩 삭제						
+2b810ff	sonic-slogup	Thu Apr 10 21:00:15 2025 +0900	fix: device-configuration 페이지 체크박스 로직 수정 및 console 제거						
+72f9f58	___	Thu Apr 10 02:05:28 2025 +0900	feat: geofence 작업 중						
+99af759	___	Wed Apr 9 23:51:57 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+4fe155b	___	Wed Apr 9 23:51:53 2025 +0900	feat: 입력 필드를 통한 명령어 처리 기능 향상 및 지오펜스 메뉴 옵션 업데이트						
+762218e	sonic-slogup	Wed Apr 9 21:50:32 2025 +0900	fix: 디바이스 설정 페이지 formData state로 변경						
+b131903	___	Wed Apr 9 15:01:15 2025 +0900	feat: command string						
+8e4ddd6	___	Wed Apr 9 12:49:13 2025 +0900	fix: 에러 처리						
+7e114ba	___	Wed Apr 9 12:12:11 2025 +0900	feat: 탭 움직일때마다 한번씩 불러오기						
+933e818	sonic-slogup	Wed Apr 9 10:32:41 2025 +0900	fix: 체크박스 동작 및 hook 분리						
+843b9b0	___	Wed Apr 9 03:29:09 2025 +0900	feat: feat: implement device navigation logic based on IndexedDB data for device configuration						
+df7d5c0	___	Mon Apr 7 23:43:18 2025 +0900	fix: update formatValue function to handle both string and number types						
+5d24e57	___	Mon Mar 31 00:57:06 2025 +0900	refactor: update model configuration handling and enhance profile export functionality		57_				
+f7c0b24	sonic-slogup	Sat Mar 29 14:21:09 2025 +0900	feat: model-info 페이지 assign 헤더 컴포넌트 추가						
+93e3bbd	___	Fri Mar 28 11:22:17 2025 +0900	feat: add profile export functionality and refactor model configuration types						
+12985f9	___	Wed Mar 26 15:13:39 2025 +0900	fix: load 모달 크기 조절						
+4fb0a48	___	Wed Mar 26 12:52:28 2025 +0900	feat: 프로파일 데이터 파싱 및 표시 기능을 포함한 LoadModal의 파일 업로드 및 로컬 파일 관리 기능 개선						
+8b62dd8	___	Wed Mar 26 12:20:30 2025 +0900	refactor: import 정리 및 LoadModal 기능 개선 - deleteProfile 뮤테이션 추가와 UI 요소의 다국어 지원						
+2954816	sonic-slogup	Tue Mar 25 18:31:53 2025 +0900	"fix: model-info 페이지 profile 업로드, 다운로드 api 연동"						
+a54fdbd	sonic-slogup	Tue Mar 25 16:27:53 2025 +0900	Merge branch 'master' into develop						
+06caedf	sonic-slogup	Tue Mar 25 15:45:45 2025 +0900	fix: 체크박스 타입 전체 선택 추가 및 로그 제거						
+5d49a4c	sonic-slogup	Tue Mar 25 15:19:48 2025 +0900	feat: model-info CheckboxEditButton 컴포넌트 추가						
+4b1d841	sonic-slogup	Tue Mar 25 13:11:52 2025 +0900	fix: checkbox 타입 컴포넌트 분리						
+fe05bb6	sonic-slogup	Tue Mar 25 12:51:12 2025 +0900	fix: TimeSeHMAButton 컴포넌트 버튼 save로 수정						
+3e0bacd	sonic-slogup	Tue Mar 25 12:48:18 2025 +0900	feat: TimeHMA 컴포넌트 개선 및 TimeSeHMAButton 타입 추가						
+053eac0	___	Tue Mar 25 11:46:36 2025 +0900	feat: Integrate ModelInfoController into model-info page and enhance UI rendering for various input types						
+f4eb57f	___	Tue Mar 25 11:42:34 2025 +0900	feat: Enhance model-info functionality by adding firmware version handling and updating UI components						
+ac88a63	___	Tue Mar 25 10:04:08 2025 +0900	fix: Update button label in model-info page to use localized text for save action						
+7f6ef85	___	Tue Mar 25 00:31:35 2025 +0900	feat: Update radio button options in AddModal and EditModal to reflect new geographical labels						
+91a7320	___	Tue Mar 25 00:14:05 2025 +0900	feat: model-info 페이지에 dropdown_button 및 edit_button 타입 추가와 관련된 UI 개선						
+4460c03	___	Mon Mar 24 23:53:58 2025 +0900	feat: model-info 페이지에 CheckboxEdit 컴포넌트 추가 및 체크박스 타입 렌더링 지원						
+5483a83	sonic-slogup	Mon Mar 24 22:52:26 2025 +0900	feat: time_se_HMA 타입 추가						
+d06b63d	sonic-slogup	Mon Mar 24 22:40:50 2025 +0900	feat: TimeHMA 타입 렌더						
+8cf978c	sonic-slogup	Mon Mar 24 21:30:19 2025 +0900	fix: 메인 모델 페이지 style 그리드로 수정						
+a159541	___	Mon Mar 24 12:00:09 2025 +0900	fix: jsonData를 빈 배열로 초기화하고 menuSectionList에 항목이 있을 때만 상태 업데이트하도록 변경						
+72a1a89	___	Mon Mar 24 11:48:50 2025 +0900	feat: model-info 페이지에 스위치 컴포넌트 추가 및 장치 상태 탭에 대한 UI 개선						
+4d71671	___	Sun Mar 23 13:00:49 2025 +0900	feat: 사용자 경험 개선을 위한 model-info 페이지의 유효성 검사 메시지와 버튼 라벨 업데이트						
+2e7d2a5	sonic-slogup	Sat Mar 22 14:19:01 2025 +0900	feat: 모델 configuration 페이지 Send 버튼 및 유효성 검사 추가						
+6b96fc3	sonic-slogup	Sat Mar 22 12:55:10 2025 +0900	feat: model-info 페이지 체크박스 타입 추가						
+420ef87	___	Sat Mar 22 00:02:25 2025 +0900	style: SideMenu 컴포넌트의 패딩과 테두리 스타일 업데이트						
+958273f	___	Fri Mar 21 23:52:19 2025 +0900	feat: model-info 페이지에 edit_hidden 입력 타입 지원 추가 및 보안 입력 처리를 위한 PasswordTextField 통합						
+e490b5d	___	Fri Mar 21 23:08:12 2025 +0900	Merge branch 'master' into develop						
+fe8a97d	___	Fri Mar 21 23:08:07 2025 +0900	refactor: ModelInfoPage의 탭 변경 처리를 switch문을 사용하여 단순화						
+98e0ed8	___	Fri Mar 21 22:58:59 2025 +0900	feat: Update ModelButton to accept model_version and modify API call to include model details						
+0968f5f	___	Fri Mar 21 22:42:28 2025 +0900	fix: jsonData 대신 모델 레코드를 저장하도록 API 응답 처리 방식 업데이트						
+ebb0364	___	Fri Mar 21 22:28:51 2025 +0900	fix: AddModal에서 동적 firmwareVersion 변수를 사용하도록 펌웨어 버전 처리 방식 업데이트						
+6bd9cd7	___	Fri Mar 21 18:07:27 2025 +0900	feat: Add firmware version management to AddModal reducer						
+c0610e6	___	Fri Mar 21 14:33:34 2025 +0900	fix: ContentByTab의 섹션 제목 로직 수정 및 API 서비스의 미사용 모델 타입 제거						
+137c205	___	Fri Mar 21 14:33:11 2025 +0900	feat: AddModal에 펌웨어 버전 입력 필드 추가 및 폼 상태 관리 업데이트						
+dc16bd0	___	Fri Mar 21 11:49:20 2025 +0900	Merge branch 'master' into develop						
+8b8071f	___	Fri Mar 21 11:49:13 2025 +0900	feat: IndexedDB의 모델 파라미터를 업데이트하는 updateParametersInIDB 함수 추가						
+7a868d3	___	Fri Mar 21 10:12:32 2025 +0900	fix: API 호출에서 모델 버전 형식의 'v' 접두사 제거						
+e5b2c6c	___	Fri Mar 21 01:06:49 2025 +0900	Merge branch 'develop'						
+b41d5fd	___	Fri Mar 21 01:06:37 2025 +0900	feat: Model 컴포넌트의 로드된 모델 필터링 및 데이터 가져오기 개선; AddModal과 EditModal의 파일 형식 수정 및 폼 데이터 키 업데이트						
+c2a5fad	___	Fri Mar 21 00:14:45 2025 +0900	feat: ModelInfoPage에 삭제 기능과 숨겨진 파라미터 토글 기능 추가						
+e5ebce4	___	Thu Mar 20 02:45:38 2025 +0900	Merge branch 'develop'						
+87fb3ee	___	Thu Mar 20 02:45:33 2025 +0900	feat: 사이드 메뉴 아이콘 추가 및 레이아웃 개선을 위한 SideMenu 컴포넌트 리팩토링						
+868d1d3	___	Thu Mar 20 02:36:51 2025 +0900	Merge branch 'develop'						
+48e1114	___	Thu Mar 20 02:36:36 2025 +0900	feat: integrate notification query in Navbar and update model page imports						
+98ae3df	___	Thu Mar 20 02:28:52 2025 +0900	feat: add model configuration API functions and integrate into ModelButton component						
+4e747ff	___	Wed Mar 19 10:00:23 2025 +0900	Merge branch 'develop'						
+84d0a48	___	Mon Mar 17 14:18:59 2025 +0900	fix: NotificationModal 내 주석 처리된 IconButton 컴포넌트들 제거						
+7fca034	___	Fri Mar 14 18:47:54 2025 +0900	Merge pull request #7 from ben031/develop						
+db270a5	___	Fri Mar 14 18:47:15 2025 +0900	fix: remove redundant npm log cleanup step from deployment script						
+b51853f	___	Fri Mar 14 18:44:01 2025 +0900	Merge pull request #6 from ben031/develop						
+2ead490	___	Fri Mar 14 18:43:30 2025 +0900	fix: remove npm log files during deployment to prevent clutter						
+10723f2	___	Fri Mar 14 18:37:02 2025 +0900	Merge pull request #5 from ben031/develop						
+b4ac4cb	___	Fri Mar 14 18:34:15 2025 +0900	fix: 디바이스 목록 레이아웃의 최소 높이와 여백 조정						
+7d6bf10	___	Fri Mar 14 18:25:34 2025 +0900	fix: 콘텐츠 레이아웃 개선을 위한 contentWrap 패딩 조정						
+555cc4c	sonic-slogup	Thu Feb 20 14:19:21 2025 +0900	fix: 어드민 계정 노티 노출 원복		16_				
+defd824	sonic-slogup	Thu Feb 20 12:38:21 2025 +0900	fix: gnb 어드민 노티 버튼 제거						
+b8f73db	sonic-slogup	Thu Feb 20 12:35:26 2025 +0900	fix: 유저 notification 삭제 기능 추가						
+0969f78	sonic-slogup	Thu Feb 20 10:25:25 2025 +0900	Merge branch 'feature/notification' into develop						
+f957ef0	sonic-slogup	Thu Feb 20 10:25:17 2025 +0900	feat: 알림 리스트 조회 api 연동						
+7692555	___	Tue Feb 18 11:26:40 2025 +0900	feat: disconnect 시 Configure 버튼 비활성화						
+6a276ba	___	Tue Feb 18 11:22:16 2025 +0900	feat: 사용자 추가 시 target_svr_country 필드 추가						
+4c9cfef	sonic-slogup	Thu Feb 13 17:13:08 2025 +0900	fix: 미사용 필드 제거						
+d2b992b	sonic-slogup	Wed Feb 12 09:57:00 2025 +0900	feat: notify 전송 api 연동 완료						
+10350fd	sonic-slogup	Wed Feb 12 09:56:22 2025 +0900	fix: 임시 알림 보내는 기능 제거						
+914b77d	sonic-slogup	Tue Feb 11 11:46:42 2025 +0900	feat: notify 페이지 퍼블리싱 완료						
+8dc04f8	___	Tue Feb 11 10:46:15 2025 +0900	fix: 워크플로 수정						
+51867fc	___	Tue Feb 11 10:33:37 2025 +0900	feat: 워크플로우 수정						
+eea634c	___	Tue Feb 11 10:09:56 2025 +0900	fix: workflow						
+f070865	___	Tue Feb 11 10:07:57 2025 +0900	feat: workflow 수정						
+a31b46e	___	Mon Feb 10 08:54:08 2025 +0900	feat: 캐싱 클린						
+689a04f	___	Thu Jan 23 01:38:15 2025 +0900	fix: 배포 테스트		54_				
+80b439a	___	Thu Jan 23 01:34:00 2025 +0900	feat: disconnection 기능						
+46b868a	___	Thu Jan 23 01:14:49 2025 +0900	feat: anonymous 추가						
+033cf58	___	Sun Jan 19 02:08:36 2025 +0900	fix: qa						
+e42e0a1	___	Sun Jan 19 02:06:19 2025 +0900	feat: 계정 관리 기능 업데이트						
+42faf4d	___	Thu Jan 16 15:04:25 2025 +0900	fix: 오프라인 로그인						
+2f06fc4	___	Wed Jan 15 13:11:53 2025 +0900	fix: qa						
+2311cdc	___	Wed Jan 15 13:00:31 2025 +0900	fix: 검색 결과 토글 버튼 로직 개선						
+cdb6183	___	Wed Jan 15 11:53:43 2025 +0900	fix: qa						
+bc72d6b	___	Wed Jan 15 11:17:33 2025 +0900	fix: qa						
+d364fdf	___	Wed Jan 15 11:16:53 2025 +0900	chore: i18n request 수정						
+ff1aa1c	___	Wed Jan 15 11:16:25 2025 +0900	fix: 버그 수정						
+4ad7b46	slogup	Tue Jan 14 18:03:38 2025 +0900	qa						
+56cc3ec	slogup	Tue Jan 14 17:51:23 2025 +0900	fix: admin model 페이지 생성/수정 모달 features 리스트 수정						
+fd5e02f	slogup	Tue Jan 14 17:50:10 2025 +0900	fix: cmd 모달 불필요 스크롤 제거						
+ec77648	slogup	Tue Jan 14 17:06:49 2025 +0900	fix: 모달 isDraggable 시 모달 영역 수정(CMD 모달 네비게이션 클릭 안되는 이슈 수정)						
+a95ef2a	___	Thu Jan 9 12:12:42 2025 +0900	fix: qa						
+7cd4253	___	Thu Jan 9 11:08:54 2025 +0900	fix: qa						
+e80f868	___	Thu Jan 9 10:48:00 2025 +0900	fix: qa						
+c6b8820	___	Wed Jan 8 14:20:35 2025 +0900	fix: 긴급						
+ea91438	sonic-slogup	Wed Jan 8 12:27:59 2025 +0900	fix: 디바이스 연결된 configuration 스테이터스 페이지 수정						
+90c3193	sonic-slogup	Wed Jan 8 12:15:33 2025 +0900	fix: configure > geofencec 탭 선택 이슈 해결						
+75670df	___	Wed Jan 8 11:36:50 2025 +0900	fix: qa						
+7ec9aad	___	Tue Jan 7 18:31:37 2025 +0900	fix: qa						
+13a5211	___	Tue Jan 7 18:08:22 2025 +0900	fix: qa						
+a29343b	___	Tue Jan 7 17:48:32 2025 +0900	fix: qa						
+01700c6	___	Tue Jan 7 16:51:30 2025 +0900	fix: qa						
+1632217	___	Tue Jan 7 16:26:18 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+6a21864	___	Tue Jan 7 16:26:15 2025 +0900	feat: model detail 준ㅂ						
+484813e	sonic-slogup	Tue Jan 7 15:16:48 2025 +0900	fix: CMD 모달 콘솔 탭 select 제거						
+b98a768	sonic-slogup	Tue Jan 7 15:15:24 2025 +0900	Merge branch 'develop'						
+d819792	sonic-slogup	Tue Jan 7 15:15:14 2025 +0900	"fix: CMD 모달 오류 수정(높이 조정, 커맨드 미선택시 버튼 비활성화)"						
+9c8fb5d	sonic-slogup	Tue Jan 7 15:02:05 2025 +0900	Merge branch 'develop'						
+542bc28	sonic-slogup	Tue Jan 7 15:01:53 2025 +0900	fix: 서비스워커 로딩 시점 수정(무한로딩 이슈 수정)						
+4e9805e	___	Tue Jan 7 10:08:01 2025 +0900	Merge branch 'develop'						
+37fba03	___	Tue Jan 7 10:07:52 2025 +0900	feat: login logout scuti로 변경						
+d70d7f9	sonic-slogup	Tue Jan 7 08:37:57 2025 +0900	Merge branch 'develop'						
+c782002	sonic-slogup	Tue Jan 7 08:37:45 2025 +0900	fix: 오프라인 모드 디버깅 로그 추가						
+34594d0	sonic-slogup	Tue Jan 7 00:58:51 2025 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+9cf2f1a	___	Tue Jan 7 00:50:00 2025 +0900	Merge branch 'master' into develop						
+f45cdea	___	Tue Jan 7 00:49:49 2025 +0900	fix: 요청사항						
+723fef6	sonic-slogup	Tue Jan 7 00:33:39 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+51c0ff5	sonic-slogup	Tue Jan 7 00:33:33 2025 +0900	fix: cmd 모달 로그 스크롤 조정						
+1aa50ed	___	Tue Jan 7 00:31:52 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+170b6ee	___	Tue Jan 7 00:31:49 2025 +0900	fix: qa						
+a888051	sonic-slogup	Tue Jan 7 00:20:28 2025 +0900	"fix: configuration 이름, 뱃지 분리"						
+38f312d	___	Tue Jan 7 00:04:28 2025 +0900	fix: qa						
+7b624af	sonic-slogup	Mon Jan 6 23:42:33 2025 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+ccc911b	sonic-slogup	Mon Jan 6 23:42:20 2025 +0900	fix: cmd 모달 send 기능 추가						
+31b49a2	___	Mon Jan 6 22:32:52 2025 +0900	fix: qa						
+968aac6	___	Mon Jan 6 19:56:49 2025 +0900	fix: qa						
+527809b	___	Mon Jan 6 16:57:15 2025 +0900	fix: qa						
+dcaa06d	sonic-slogup	Mon Jan 6 16:09:53 2025 +0900	fix: CMD 모달 스타일 수정						
+e1711fd	sonic-slogup	Thu Jan 2 23:43:25 2025 +0900	fix: geofence 페이지 상단 필터 타입 필터로 수정						
+d3abadc	___	Tue Dec 31 12:15:39 2024 +0900	fix: qa		122_				
+b809a2f	___	Tue Dec 31 10:20:04 2024 +0900	fix: qa						
+9b70f22	___	Mon Dec 30 11:26:18 2024 +0900	fix: qa						
+087b4b0	___	Fri Dec 27 12:51:43 2024 +0900	fix: qa						
+d1e20c7	___	Fri Dec 27 12:38:00 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+5ae130f	___	Fri Dec 27 12:37:42 2024 +0900	fix: qa						
+c9c26f0	sonic-slogup	Fri Dec 27 12:33:13 2024 +0900	fix: 로그인 페이지 오프라인/온라인 에러 모달 문구 분리						
+c4878ed	sonic-slogup	Fri Dec 27 09:18:35 2024 +0900	"fix: 디바이스 멀티 세팅 날짜 형식, no data 문구 수정"						
+ba371a9	sonic-slogup	Thu Dec 26 16:55:00 2024 +0900	fix: Configure Multi-Device 모달 스타일 수정						
+645b678	___	Thu Dec 26 14:16:47 2024 +0900	fix: qa						
+82174fe	___	Thu Dec 26 01:16:18 2024 +0900	fix: qa						
+d8d8ec7	___	Thu Dec 26 00:10:43 2024 +0900	fix: qa						
+d00b28a	sonic-slogup	Tue Dec 24 17:47:16 2024 +0900	fix: 로그인 페이지 워커 online 상태 처리						
+024893f	___	Mon Dec 23 16:56:17 2024 +0900	fix: qa						
+95dd481	sonic-slogup	Fri Dec 20 00:32:15 2024 +0900	"fix: 아이디 찾기, 비밀번호 찾기 프리로드"						
+8c56d7e	sonic-slogup	Fri Dec 20 00:24:37 2024 +0900	fix: 로그인 페이지 실제 네트워크 환경 바라보도록 수정						
+f36c42c	___	Wed Dec 18 23:50:14 2024 +0900	fix: qa						
+ab77fe7	___	Wed Dec 18 23:33:30 2024 +0900	fix: qa						
+c8fe021	sonic-slogup	Tue Dec 17 14:07:55 2024 +0900	fix: 온/오프라인 모드에서 모델 pkg 데이터 계정별 유지						
+7537af0	sonic-slogup	Tue Dec 17 11:38:24 2024 +0900	fix: 로그인 페이지 에러 팝업 2개 뜨는 이슈 해결						
+d2091ba	___	Fri Dec 13 10:25:43 2024 +0900	fix: qa						
+b9bd286	___	Thu Dec 12 00:38:33 2024 +0900	feat: 안쓰는 import 제거						
+09b3b6e	___	Thu Dec 12 00:29:04 2024 +0900	fix: qa						
+fd49159	___	Thu Dec 12 00:06:07 2024 +0900	fix: qa						
+2858b35	___	Wed Dec 11 17:08:03 2024 +0900	fix: qa						
+af32038	___	Wed Dec 11 12:33:55 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+94bc649	___	Wed Dec 11 12:33:52 2024 +0900	fix: qa						
+540fe5d	sonic-slogup	Wed Dec 11 09:43:33 2024 +0900	fix: coutrySelect 플레이스홀더 추가						
+d42d979	___	Wed Dec 11 01:31:25 2024 +0900	fix: qa						
+392de07	___	Wed Dec 11 00:45:09 2024 +0900	fix: qa						
+49288ac	___	Wed Dec 11 00:00:53 2024 +0900	fix: qa						
+45947f0	sonic-slogup	Tue Dec 10 19:22:13 2024 +0900	fix: root 계정 노티피케이션 삭제						
+648e1f5	___	Tue Dec 10 14:05:46 2024 +0900	feat: rollback						
+2f2412b	___	Tue Dec 10 12:14:32 2024 +0900	fix: qa						
+de1dedc	___	Tue Dec 10 00:24:14 2024 +0900	fix: qa						
+7ee8be5	___	Mon Dec 9 23:53:17 2024 +0900	fix: qa						
+d90f30b	___	Mon Dec 9 17:47:53 2024 +0900	feat: optional 분기 추가						
+fd6f122	___	Mon Dec 9 16:25:00 2024 +0900	feat: push to replace						
+bf9aa3e	___	Mon Dec 9 16:19:18 2024 +0900	fix: qa						
+a59e127	sonic-slogup	Mon Dec 9 16:04:24 2024 +0900	fix: 인터넷 연결 없을때 온라인 전환 클릭시 에러 메세지 수정						
+1d77137	sonic-slogup	Mon Dec 9 16:02:06 2024 +0900	fix: 세팅 페이지 약관 미노출 처리						
+32e2380	sonic-slogup	Mon Dec 9 12:37:30 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+83ef755	___	Mon Dec 9 12:28:01 2024 +0900	feat: network 초기화 하는 함수						
+4662fe3	sonic-slogup	Mon Dec 9 12:23:45 2024 +0900	feat: 오프라인 로그인 기능 추가						
+8fefa53	sonic-slogup	Mon Dec 9 11:16:10 2024 +0900	fix: 모델 홈 페이지 스크롤 기능 이슈 수정						
+ab07dde	___	Mon Dec 9 02:17:03 2024 +0900	fix: qa						
+8.14E+81	___	Mon Dec 9 01:55:56 2024 +0900	fix: qa						
+ae57eb5	___	Mon Dec 9 01:43:29 2024 +0900	fix: qa						
+6080c9a	___	Mon Dec 9 01:43:04 2024 +0900	feat: 언어 수정						
+a068768	___	Fri Dec 6 14:51:20 2024 +0900	fix: qa						
+f0574a0	___	Fri Dec 6 14:14:33 2024 +0900	fix: qa						
+e7f73df	___	Fri Dec 6 12:53:47 2024 +0900	fix: qa						
+7407597	sonic-slogup	Fri Dec 6 10:02:20 2024 +0900	fix: configuration 사이드 메뉴 버그 수정(2개 선택 됨)						
+95f3ed6	sonic-slogup	Fri Dec 6 09:51:33 2024 +0900	fix: 계정 페이지 customer 롤 제한 추가						
+d6c8959	sonic-slogup	Fri Dec 6 09:46:13 2024 +0900	fix: 디바이스 리스트 페이지 국가 필드 제거						
+eed6092	sonic-slogup	Fri Dec 6 09:40:35 2024 +0900	fix: 국가선택 필드 추가 및 account 등록시 nda_file 필드 추가(nda 저장 서버 작업필요)						
+874f171	___	Thu Dec 5 16:44:08 2024 +0900	feat: pagination 수정						
+13a52ea	___	Thu Dec 5 12:35:51 2024 +0900	fix: qa						
+7e07591	___	Thu Dec 5 12:23:24 2024 +0900	fix: qa						
+2c0de8e	___	Thu Dec 5 12:06:52 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+0dc4fb7	___	Thu Dec 5 12:06:47 2024 +0900	fix: qa						
+2d784b9	sonic-slogup	Thu Dec 5 09:40:00 2024 +0900	fix: 계정 생성 모달 name 공백 허용						
+92f3a94	___	Thu Dec 5 01:33:55 2024 +0900	fix: qa						
+bdc6fc4	___	Thu Dec 5 01:15:14 2024 +0900	fix: search 다국어 설정						
+d9d8138	___	Thu Dec 5 01:12:45 2024 +0900	fix: qa						
+036b5ae	___	Thu Dec 5 00:59:16 2024 +0900	fix: qa						
+d029b1d	sonic-slogup	Thu Dec 5 00:16:12 2024 +0900	fix: 새로운 배포가 존재할때 서비스워커 재호출시 데이터 프리패칭 & 오프라인 페이지 스타일 수정						
+830cc91	sonic-slogup	Wed Dec 4 17:41:04 2024 +0900	fix: online/offline 에러 팝업 추가						
+341b543	___	Wed Dec 4 10:01:58 2024 +0900	fix: qa						
+2c1c920	___	Wed Dec 4 09:57:25 2024 +0900	fix: qa						
+a85b3fe	sonic-slogup	Wed Dec 4 09:22:38 2024 +0900	fix: 디바이스 리스트 페이지 단순 문구 수정 및 컬럼 수정						
+ba905e2	sonic-slogup	Wed Dec 4 09:02:16 2024 +0900	fix: 온/오프라인 전환 팝업 수정						
+21d48d0	sonic-slogup	Wed Dec 4 08:35:42 2024 +0900	fix: 클라이언트 gnb 노출 메뉴 추가						
+8ac4d6f	sonic-slogup	Wed Dec 4 02:08:00 2024 +0900	Merge branch 'feature/offline-qa' into develop						
+a001399	sonic-slogup	Wed Dec 4 01:47:59 2024 +0900	fix						
+47f47f0	sonic-slogup	Wed Dec 4 01:47:40 2024 +0900	fix: gnb 서치바 컨피크 페이지에서만 노출						
+a3cd955	sonic-slogup	Wed Dec 4 01:42:43 2024 +0900	fix: 모델 페이지 수정시 유저가 다운로드 받은 모델은 히든 처리 불가하도록 수정						
+137684e	sonic-slogup	Wed Dec 4 01:36:01 2024 +0900	"fix: 모델, 계정 페이지 검색 시 검색 내역 없음 문구 수정"						
+2f2e748	sonic-slogup	Wed Dec 4 01:32:14 2024 +0900	fix: 계정 페이지 추가 모달 role 미선택시 form 미노출						
+82300a2	sonic-slogup	Wed Dec 4 01:27:50 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+21f0490	sonic-slogup	Wed Dec 4 01:27:40 2024 +0900	fix: cms tool 크기조정 이슈. 해결						
+0b558a5	sonic-slogup	Wed Dec 4 01:26:01 2024 +0900	fix: cmd tool 위치 변경 및 cmd tool 모달 사이즈 조정						
+44b06a7	___	Wed Dec 4 01:16:03 2024 +0900	fix: qa						
+a6e29c4	___	Wed Dec 4 01:08:41 2024 +0900	fix: qa						
+ba53796	sonic-slogup	Tue Dec 3 19:13:03 2024 +0900	fix: 다국어 처리 누락건 추가						
+b8fc0c5	sonic-slogup	Tue Dec 3 19:12:25 2024 +0900	fix: 모델 페이지 수정 시 알럿 문구 수정						
+83ea238	sonic-slogup	Tue Dec 3 19:08:20 2024 +0900	fix: 모델 등록 api 실패시 에러 문구 수정						
+a5ab763	sonic-slogup	Tue Dec 3 19:04:23 2024 +0900	fix: 모델 페이지 선택 삭제 시 로드 된 모델 에러 표기						
+7fd8af1	sonic-slogup	Tue Dec 3 18:56:54 2024 +0900	fix: 계정 페이지 검색 필터 ALL 검색 로직 추가(모든 아이템에 대한 조회)						
+8a13840	___	Tue Dec 3 17:39:13 2024 +0900	feat: log 삭제						
+60d084e	___	Tue Dec 3 16:28:19 2024 +0900	fix: qa						
+b0a713e	___	Tue Dec 3 16:19:30 2024 +0900	fix: qa						
+2d5a401	___	Tue Dec 3 16:09:02 2024 +0900	fix: qa						
+c1eff3b	___	Tue Dec 3 15:47:09 2024 +0900	fix: qa						
+243d48f	sonic-slogup	Tue Dec 3 10:45:21 2024 +0900	feat: FooterWithoutLink 컴포넌트 추가						
+716b32f	___	Tue Dec 3 10:19:24 2024 +0900	fix: qa						
+26099ed	___	Mon Dec 2 18:05:02 2024 +0900	fix: qa						
+f3d65b9	___	Mon Dec 2 17:59:11 2024 +0900	Merge branch 'master' into develop						
+7364b9a	___	Mon Dec 2 17:40:00 2024 +0900	fix: qa						
+2541b9f	___	Mon Dec 2 17:26:28 2024 +0900	fix: qa						
+97dea6c	sonic-slogup	Mon Dec 2 16:45:05 2024 +0900	fix: 모델 수정 네트워크 item 문구 변경						
+8af34fd	sonic-slogup	Mon Dec 2 16:43:45 2024 +0900	fix: 모델 페이지 qa 반영						
+03e6351	___	Mon Dec 2 14:31:41 2024 +0900	fix: 필요 없는 문구 삭제						
+d3b64d6	___	Mon Dec 2 14:30:52 2024 +0900	fix: qa						
+250ed29	___	Mon Dec 2 14:30:31 2024 +0900	fix: qa						
+faed9e4	___	Mon Dec 2 11:03:39 2024 +0900	fix: qa						
+0c94f97	sonic-slogup	Mon Dec 2 10:49:35 2024 +0900	fix: 모델 체크 삭제 컨펌 추가						
+606f456	___	Mon Dec 2 10:36:21 2024 +0900	fix: qa						
+e5b894f	sonic-slogup	Mon Dec 2 10:32:00 2024 +0900	fix: 모델 세팅 파일 json만 업로드 가능하도록 수정						
+0dcb7ac	sonic-slogup	Mon Dec 2 10:28:14 2024 +0900	Merge branch 'feature/model-qa' into develop						
+f15bca3	sonic-slogup	Mon Dec 2 10:27:58 2024 +0900	fix: 모델 페이지 수정 팝업 로직 수정						
+5c72e6b	sonic-slogup	Mon Dec 2 10:15:51 2024 +0900	"fix: 모델, 계정 페이지 등록 공통 에러 추가"						
+2788631	sonic-slogup	Mon Dec 2 10:13:25 2024 +0900	fix: 모델 add 모달 수정						
+f14fe99	___	Mon Dec 2 10:09:27 2024 +0900	fix: qa						
+67e201a	sonic-slogup	Mon Dec 2 09:47:36 2024 +0900	fix: 모델 페이지 삭제 컨펌 노출						
+13b4e37	___	Mon Dec 2 09:43:21 2024 +0900	fix: qa						
+24fa787	sonic-slogup	Mon Dec 2 09:42:38 2024 +0900	fix: 모델 페이지 hide처리 에러 알럿 추가						
+7f5af6a	sonic-slogup	Mon Dec 2 09:28:43 2024 +0900	fix: 모델 hide 처리 반영						
+7.63E+12	sonic-slogup	Mon Dec 2 09:26:41 2024 +0900	"fix: 모델, 계정 페이지 검색 기능 수정"						
+7c29ffe	sonic-slogup	Mon Dec 2 09:12:37 2024 +0900	fix: model name 검색 추가						
+6020dcd	sonic-slogup	Sun Dec 1 23:57:26 2024 +0900	fix: admin -> administrator 로 문구 수정						
+a1fc3fe	sonic-slogup	Sun Dec 1 23:27:56 2024 +0900	fix: 계정 페이지 2차 QA						
+9cbef85	___	Sat Nov 30 00:24:53 2024 +0900	fix: qa		167_				
+7390dcf	___	Fri Nov 29 23:23:26 2024 +0900	fix: qa						
+8cc0b3b	___	Fri Nov 29 23:03:38 2024 +0900	fix: qa						
+e9d573e	___	Fri Nov 29 22:49:48 2024 +0900	fix: qa						
+2596320	___	Fri Nov 29 14:07:09 2024 +0900	fix: 링크 새 탭으로 이동						
+9a8f481	sonic-slogup	Fri Nov 29 11:20:28 2024 +0900	fix: 계정 페이지 add 버튼 위치 수정						
+3b9bbfa	___	Fri Nov 29 11:18:00 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+6daaa25	___	Fri Nov 29 11:17:55 2024 +0900	fix: no data 문구 추가						
+637f640	sonic-slogup	Fri Nov 29 11:07:32 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+be8c7e2	sonic-slogup	Fri Nov 29 11:06:12 2024 +0900	fix: 계정 페이지 delete 버튼 하단 고정						
+4c568a9	___	Fri Nov 29 11:04:08 2024 +0900	fix: 비밀번호 설정 시 한국어 막기						
+cb42c5d	sonic-slogup	Fri Nov 29 11:01:19 2024 +0900	fix: 불필요 문구 제거						
+f5c2250	sonic-slogup	Fri Nov 29 10:59:47 2024 +0900	fix: 계정 페이지 선택 삭제 기본 disabled						
+2c90255	sonic-slogup	Fri Nov 29 10:55:57 2024 +0900	fix: 계정 테이블 헤더 수정(registered_date)						
+c1f550e	sonic-slogup	Fri Nov 29 10:30:26 2024 +0900	feat: 계정 페이지 QA 작업 진행						
+3f479f0	___	Fri Nov 29 02:24:43 2024 +0900	feat: cmd modal 기능 추가						
+a8f5433	___	Fri Nov 29 00:53:30 2024 +0900	feat: save => add 로 문구 변경						
+fb94c56	___	Fri Nov 29 00:35:58 2024 +0900	feat: logout dialog 다국어 설정						
+0c0801b	___	Fri Nov 29 00:24:32 2024 +0900	fix: qa						
+8f54381	___	Fri Nov 29 00:02:22 2024 +0900	fix: qa						
+5f4f96d	___	Fri Nov 29 00:01:36 2024 +0900	chore: regex pattern 추가						
+a4f1b64	___	Fri Nov 29 00:01:15 2024 +0900	style: strong.require className 스타일 추가						
+3712da4	___	Thu Nov 28 23:26:59 2024 +0900	fix: qa						
+ccc8aca	___	Thu Nov 28 23:22:17 2024 +0900	fix: qa						
+a1c1275	___	Thu Nov 28 23:07:17 2024 +0900	fix: qa						
+9236451	___	Thu Nov 28 21:12:25 2024 +0900	fix: qa						
+633329b	___	Thu Nov 28 21:02:40 2024 +0900	feat: footer link 추가						
+a8c385a	___	Thu Nov 28 20:40:25 2024 +0900	feat: link 작업						
+323c2d7	___	Thu Nov 28 20:14:58 2024 +0900	chore: 불필요한 import문 삭제						
+0ca1ef2	___	Thu Nov 28 20:13:42 2024 +0900	feat: input error 추가						
+c59f15a	___	Thu Nov 28 20:11:19 2024 +0900	feat: 에러 추가						
+9b1e8d6	___	Thu Nov 28 20:11:00 2024 +0900	fix: typo error						
+7393381	___	Thu Nov 28 19:26:42 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+9e63226	___	Thu Nov 28 19:25:55 2024 +0900	fix: qa						
+86a7e4b	___	Thu Nov 28 19:20:50 2024 +0900	feat: success dialog hook						
+0a19677	sonic-slogup	Thu Nov 28 18:51:11 2024 +0900	feat: Footer 컴포넌트 추가						
+390e3c7	sonic-slogup	Thu Nov 28 17:53:34 2024 +0900	fix: GNB 접근 팝업 일괄 수정 및 세팅 페이지 작업						
+febd50f	___	Thu Nov 28 17:05:42 2024 +0900	fix: typo error						
+15a8a6c	___	Thu Nov 28 17:03:39 2024 +0900	fix: qa						
+4ba4772	___	Thu Nov 28 17:03:30 2024 +0900	fix: qa						
+93c4441	___	Thu Nov 28 17:02:38 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+c36045c	___	Thu Nov 28 17:02:31 2024 +0900	feat: Error Dialog 컴포넌트 추가 및 InpurtErrorText 추가						
+c1d72cf	___	Thu Nov 28 17:01:55 2024 +0900	feat: input error message 추가						
+27a734c	___	Thu Nov 28 17:01:38 2024 +0900	add: react hook form						
+19910d7	___	Thu Nov 28 17:01:26 2024 +0900	feat: useErrorDialog 훅 추가						
+2596906	sonic-slogup	Thu Nov 28 16:53:16 2024 +0900	feat: 모델 페이지 모델 다운로드 오프라인 시 팝업 노출						
+892f819	sonic-slogup	Thu Nov 28 16:22:24 2024 +0900	feat: 오프라인 로그인 페이지 팝업 수정						
+ed984d0	sonic-slogup	Thu Nov 28 16:08:03 2024 +0900	ing: 오프라인 로그인 페이지 적용 펜딩						
+197a3d5	___	Thu Nov 28 13:08:33 2024 +0900	fix: qa						
+be51368	___	Thu Nov 28 13:01:40 2024 +0900	feat: lang 업데이트						
+9e7715d	___	Thu Nov 28 12:26:29 2024 +0900	fix: qa						
+faecda1	___	Thu Nov 28 12:13:56 2024 +0900	feat: popup language 추가						
+bf1d516	___	Thu Nov 28 01:51:47 2024 +0900	feat: 언어 추가						
+82ebcd3	___	Thu Nov 28 01:51:14 2024 +0900	add: react draggable and resizable 설치						
+fe068d4	___	Tue Nov 26 02:05:34 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+4cb4800	___	Tue Nov 26 02:05:28 2024 +0900	feat: onbuffervalue 추가						
+f382541	sonic-slogup	Tue Nov 26 01:46:52 2024 +0900	feat: 푸터 추가						
+9cc796d	sonic-slogup	Tue Nov 26 00:23:39 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+4978b2c	sonic-slogup	Tue Nov 26 00:23:27 2024 +0900	fix: 오프라인 모드에서 간헐적 무한 로딩 해결						
+bdfb174	___	Tue Nov 26 00:22:16 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+0b7ce8e	___	Tue Nov 26 00:22:11 2024 +0900	feat: Geofence 화면 비율 안 맞음						
+12b41ae	sonic-slogup	Mon Nov 25 23:48:09 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+4488027	sonic-slogup	Mon Nov 25 23:48:05 2024 +0900	fix: account 페이지 권한 이름 표기 이슈 수정(ALL -> Root)						
+4b45648	sonic-slogup	Mon Nov 25 23:47:37 2024 +0900	fix: GNB 상단 고정 & 계정별 메뉴 최신화						
+ccf6a7c	___	Mon Nov 25 23:38:47 2024 +0900	feat: Notification 창켜진 상태에서 스크롤 시 배경화면 고정하고 Notification 창에 스크롤 적용되게 변경						
+96b6c2a	sonic-slogup	Mon Nov 25 23:27:52 2024 +0900	"fix: account 페이지 생성, 수정 모달 disabled 시점 수정 및 필드 필터 수정"						
+5eb8364	sonic-slogup	Mon Nov 25 23:04:21 2024 +0900	feat: Accout 페이지 검색 기능 완료						
+9.39E+08	sonic-slogup	Mon Nov 25 18:17:35 2024 +0900	feat: 패스워드 찾기 토스트 추가						
+779343	sonic-slogup	Mon Nov 25 17:37:54 2024 +0900	feat: 오프라인 시점 수정(로그인 페이지)						
+b7ed06a	sonic-slogup	Mon Nov 25 17:11:32 2024 +0900	"feat: 로그인 페이지 RemberMe & 오프라인 findId, Find password 알림 노출"						
+b18ec9f	___	Mon Nov 18 14:45:07 2024 +0900	feat: notification						
+92d5be1	sonic-slogup	Mon Nov 18 09:05:16 2024 +0900	feat: 계정 페이지 다국어 작업						
+2d0130a	___	Mon Nov 18 01:13:49 2024 +0900	feat: device 페이지						
+44ff67d	___	Mon Nov 18 00:47:51 2024 +0900	feat: alert 문구						
+71ce3cf	___	Mon Nov 18 00:41:58 2024 +0900	feat: 설정 페이지						
+9c24c77	___	Mon Nov 18 00:14:20 2024 +0900	feat: model 페이지						
+1df018d	___	Sun Nov 17 23:18:11 2024 +0900	feat: add model 모달 번역						
+c3af91e	___	Sun Nov 17 22:14:37 2024 +0900	feat: model 페이지 변환 작업 중						
+01a8225	___	Sun Nov 17 21:59:07 2024 +0900	feat: 컴포넌트 밖에서 사용할 수 있는 언어 변환 유틸 함수						
+b99bdb5	___	Sun Nov 17 21:25:44 2024 +0900	feat: find password 페이지 완료						
+6ac458c	___	Sun Nov 17 20:09:03 2024 +0900	feat: find pw						
+06dca85	___	Sun Nov 17 20:02:39 2024 +0900	feat: find-id 페이지 완료						
+dfe40b1	___	Sun Nov 17 19:53:42 2024 +0900	feat: 언어 파일 수정 및 로그인 페이지 변환 작업 완료						
+da06ef2	sonic-slogup	Sun Nov 17 10:23:18 2024 +0900	fix: 서버 페이지 다국어 추가						
+160ff95	sonic-slogup	Sun Nov 17 10:14:36 2024 +0900	feat: 서버 페이지 다국어 처리 완료						
+d52a197	sonic-slogup	Sun Nov 17 00:20:11 2024 +0900	fix: 새로고침 시 active 상태일때 로딩 해제						
+24c929c	___	Sun Nov 17 00:14:22 2024 +0900	fix: 충돌						
+e9d0b74	___	Sun Nov 17 00:12:14 2024 +0900	feat: serwist 제거						
+c06a4c1	sonic-slogup	Sat Nov 16 14:26:30 2024 +0900	feat: pwa 오프라인 nav 메뉴 예외 처리						
+9d07f19	sonic-slogup	Fri Nov 15 12:17:21 2024 +0900	fix: 에러 상태 표기 오류 수정						
+0062b56	sonic-slogup	Fri Nov 15 12:07:43 2024 +0900	Merge branch 'develop' into feature/pwa						
+d9a266b	___	Thu Nov 14 10:58:29 2024 +0900	"feat: en, es, pt json 파일 업로드"						
+0bd825e	sonic-slogup	Thu Nov 14 09:33:02 2024 +0900	fix: 서비스 워커 프리패칭 url 추가 및 오프라인 모드 고도화						
+26978eb	sonic-slogup	Wed Nov 13 09:51:05 2024 +0900	ing: PWA 설정 초기 세팅 진행						
+8f3c2f1	___	Tue Nov 12 22:43:49 2024 +0900	feat: 주소 변경						
+d7edd95	___	Tue Nov 12 22:31:08 2024 +0900	feat: find id						
+4cf1116	___	Tue Nov 12 22:08:21 2024 +0900	Merge branch 'develop'						
+fa551bb	___	Tue Nov 12 22:08:16 2024 +0900	feat: error message 추가						
+33bf8eb	___	Tue Nov 12 21:58:48 2024 +0900	fix: crowdin 설정 파일 삭제						
+e5e8946	___	Tue Nov 12 21:46:26 2024 +0900	feat: crowdin setting						
+d7247bd	___	Tue Nov 12 21:29:14 2024 +0900	Merge pull request #3 from ben031/develop						
+3b3f042	___	Tue Nov 12 21:27:55 2024 +0900	feat: file upload						
+bef846a	___	Tue Nov 12 20:10:53 2024 +0900	feat: next-intl 세팅 완료						
+d9f3d2f	___	Tue Nov 12 18:07:28 2024 +0900	feat: next-intl 설정						
+01607cf	sonic-slogup	Tue Nov 12 08:26:32 2024 +0900	Merge branch 'develop' into feature/pwa						
+7a756b3	___	Tue Nov 12 02:20:54 2024 +0900	Merge branch 'develop'						
+fca7ed6	___	Tue Nov 12 02:20:13 2024 +0900	feat: 토스트 위치 변경						
+6735718	___	Tue Nov 12 02:12:13 2024 +0900	feat: 계정 별 계정 생성 모달 UI 분기 작업						
+50144f4	___	Tue Nov 12 01:36:28 2024 +0900	feat: toast pauseOnFocusLoss false 속성 추가						
+9c8a067	___	Tue Nov 12 01:35:58 2024 +0900	feat: image 업로드 완료						
+1703afd	___	Tue Nov 12 00:38:33 2024 +0900	feat: image						
+58e4f92	___	Mon Nov 11 19:03:29 2024 +0900	"feat: image file, 업로드"						
+e036095	___	Mon Nov 11 17:35:38 2024 +0900	feat: 모델 추가 수정 모달에 Network 체크박스로 변경						
+e640a80	___	Mon Nov 11 17:12:26 2024 +0900	feat: logout						
+3677aa3	___	Mon Nov 11 11:24:18 2024 +0900	Merge branch 'develop'						
+36660a1	sonic-slogup	Mon Nov 11 11:20:11 2024 +0900	fix: 모델 패키지 스토어 데이터 맵핑 오류 수정 및 완료 토스트 추가						
+88769fb	___	Mon Nov 11 10:48:13 2024 +0900	Merge branch 'develop' of https://github.com/ben031/stsunlab-sync-master into develop						
+5b90be4	___	Mon Nov 11 10:47:59 2024 +0900	feat: get pkg post 로 변경						
+f9376fa	sonic-slogup	Mon Nov 11 10:47:39 2024 +0900	fix: 커스텀 페이지네이션 훅 추가						
+2b00844	sonic-slogup	Mon Nov 11 10:36:03 2024 +0900	fix: 미사용 변수 삭제						
+14ba874	sonic-slogup	Mon Nov 11 10:32:13 2024 +0900	Merge branch 'feature/model-api' into develop						
+2b82791	sonic-slogup	Mon Nov 11 10:31:58 2024 +0900	feat: 모델 페이지 api 연동 작업 완료						
+a326e74	___	Mon Nov 11 00:57:22 2024 +0900	Merge pull request #2 from ben031/develop						
+14421cd	___	Mon Nov 11 00:56:20 2024 +0900	fix: error						
+f0a6141	sonic-slogup	Mon Nov 11 00:40:56 2024 +0900	Merge branch 'feature/model-api' into develop						
+9b4ba64	___	Mon Nov 11 00:38:33 2024 +0900	Merge branch 'develop'						
+bd22166	___	Mon Nov 11 00:38:29 2024 +0900	fix: error						
+fa0a218	sonic-slogup	Mon Nov 11 00:37:58 2024 +0900	feat: model 어드민 페이지 crud api 연동 완료						
+e1426ca	___	Sun Nov 10 22:14:04 2024 +0900	Merge branch 'develop'						
+e9fb0e8	___	Sun Nov 10 21:02:32 2024 +0900	feat: env 변경 및 typo 수정						
+b8a3098	sonic-slogup	Sun Nov 10 20:12:56 2024 +0900	"add: 오프라인 화면, 서비스 워커 기본 세팅"						
+023b82f	___	Fri Nov 8 01:21:29 2024 +0900	add: Readme 파일						
+89f8e73	___	Fri Nov 8 00:54:20 2024 +0900	feat: 개발 환경에서 Auth 가드 풀기						
+c28b9d9	___	Fri Nov 8 00:53:05 2024 +0900	feat: 안쓰는 파일 삭제						
+c35157f	___	Fri Nov 8 00:51:28 2024 +0900	Merge pull request #1 from ben031/develop						
+ac609d2	___	Fri Nov 8 00:50:00 2024 +0900	fix: grp number 못 가져오는 이슈						
+14f7bf0	___	Fri Nov 8 00:07:36 2024 +0900	feat: 테스트용 로그 제거						
+bad738f	___	Thu Nov 7 18:27:06 2024 +0900	feat: baseurl 수정						
+3e4874a	___	Thu Nov 7 11:32:24 2024 +0900	Merge branch 'master' into develop						
+5ab848e	___	Thu Nov 7 11:32:19 2024 +0900	add: favicon						
+bab9591	___	Thu Nov 7 09:35:29 2024 +0900	feat: baseURL 변경						
+1bb9d43	___	Wed Nov 6 16:14:47 2024 +0900	feat: account 수정						
+4b0ae20	___	Wed Nov 6 15:49:14 2024 +0900	feat: 불필요한 폴더 삭제						
+a9af53d	___	Wed Nov 6 15:43:28 2024 +0900	feat: pm2 환경 설정 주소 추가						
+b8331c0	___	Wed Nov 6 15:37:47 2024 +0900	feat: runs-on 추가						
+f98a03f	___	Wed Nov 6 15:36:11 2024 +0900	fix: yaml						
+4431df6	___	Wed Nov 6 12:47:36 2024 +0900	feat: 테스트.						
+13b3f0d	___	Wed Nov 6 12:46:00 2024 +0900	feat: 주석						
+4616441	___	Wed Nov 6 12:38:49 2024 +0900	feat: node.js 버전 캐시 비우기						
+72b60ad	___	Wed Nov 6 12:35:06 2024 +0900	pull						
+66ae9de	___	Wed Nov 6 12:30:55 2024 +0900	fix: disk 공간 확보						
+55422a0	___	Wed Nov 6 12:27:51 2024 +0900	fix: typo						
+c60132b	___	Wed Nov 6 12:27:10 2024 +0900	feat: puil 대신 clone						
+cfa85f3	___	Wed Nov 6 12:07:33 2024 +0900	feat: ci/cd						
+722a8ca	___	Wed Nov 6 04:10:31 2024 +0900	feat: edit 제외 기능						
+426ca3a	___	Wed Nov 6 00:29:16 2024 +0900	fix: typo						
+cf6f728	___	Wed Nov 6 00:26:42 2024 +0900	fix: server 수정 시 uid cnrk						
+20cf401	___	Tue Nov 5 23:31:10 2024 +0900	feat: baseUrl 수정						
+d4ff3d8	___	Tue Nov 5 18:07:45 2024 +0900	feat: ssr 사용안하는 것에 따른 설정						
+1554fb0	___	Tue Nov 5 14:53:39 2024 +0900	feat: api 주소 변경						
+e75afe9	___	Mon Nov 4 15:45:12 2024 +0900	feat: push => replace						
+86ca15c	___	Mon Nov 4 13:28:10 2024 +0900	feat: 분기						
+109092a	___	Mon Nov 4 13:09:34 2024 +0900	fix: typo						
+36b4f10	___	Mon Nov 4 13:07:46 2024 +0900	"feat: scuti, mqtt 서버 crud 완료"						
+1370149	___	Mon Nov 4 09:34:30 2024 +0900	feat: login						
+386cfee	___	Sun Nov 3 23:47:34 2024 +0900	feat: login setup						
+c969af3	___	Sun Nov 3 22:48:30 2024 +0900	feat: api setting						
+c3e1912	___	Tue Oct 15 02:46:42 2024 +0900	feat: reset tab when enter configuration		41_				
+2cef2f9	___	Tue Oct 15 02:40:47 2024 +0900	feat: routing						
+80ea6a4	___	Tue Oct 15 02:22:17 2024 +0900	feat: typescript build error ignore						
+ec9c782	___	Tue Oct 15 02:10:20 2024 +0900	feat: configuration 구조 변경						
+13a051b	___	Mon Oct 14 18:54:03 2024 +0900	feat: ignoreURLParametersMatching 옵션 추가						
+b09a4d0	___	Mon Oct 14 16:55:34 2024 +0900	feat: additional precache test						
+d057725	___	Mon Oct 14 16:22:17 2024 +0900	feat: precache 추가						
+9e8fb86	___	Mon Oct 14 16:21:13 2024 +0900	feat: cmd 별도 창으로 변경						
+20765a0	___	Mon Oct 14 12:52:34 2024 +0900	feat: cmd 별도창 스타일						
+a8bc5ad	___	Mon Oct 14 12:50:33 2024 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+35d8901	___	Mon Oct 14 12:50:26 2024 +0900	feat: cmd 별도 창						
+d6e149c	___	Mon Oct 14 11:04:28 2024 +0900	feat: 필요없는 콘솔 제거						
+0f414cb	___	Mon Oct 14 11:02:09 2024 +0900	feat: console 추가						
+b79b58b	___	Mon Oct 14 03:46:34 2024 +0900	fix: json package 터짐 이슈						
+e2e02f6	___	Mon Oct 14 02:22:07 2024 +0900	feat: service worker 설저						
+4bd881e	___	Mon Oct 14 01:36:11 2024 +0900	feat: fetch api cache						
+5b72484	___	Mon Oct 14 01:26:43 2024 +0900	feat: additional prefetch cache 변경						
+1814f0c	___	Mon Oct 14 01:01:34 2024 +0900	feat: test로 additional precache list 추가						
+9e41976	___	Mon Oct 14 00:56:29 2024 +0900	feat: postbuild 파일 추가						
+4bf8eb0	___	Mon Oct 14 00:54:36 2024 +0900	feat: package script 추가						
+6259785	___	Mon Oct 14 00:48:54 2024 +0900	feat: test						
+8e84b69	___	Fri Oct 11 17:32:16 2024 +0900	fix: 무한 리로딩						
+7bc7a5a	___	Fri Oct 11 17:23:29 2024 +0900	fix: pwa						
+be22ed9	___	Fri Oct 11 16:57:42 2024 +0900	feat: test						
+99641c9	___	Thu Oct 10 17:59:20 2024 +0900	add: serwist 설치						
+ada71d1	___	Wed Oct 9 04:46:37 2024 +0900	feat: App Title 변경						
+a052ec1	___	Wed Oct 9 04:39:16 2024 +0900	feat: skeleton ui 추가						
+fb1d4ba	___	Wed Oct 9 00:55:38 2024 +0900	"feat: window, linux에서 buffer 잘리는 이슈"						
+01d0418	___	Tue Oct 8 17:51:58 2024 +0900	feat: build error						
+d8983cd	___	Tue Oct 8 17:39:32 2024 +0900	fix: 불필요한 코드 제거						
+42ee324	___	Tue Oct 8 11:56:38 2024 +0900	Merge branch 'master' into feature/cmd-task						
+0b163be	___	Tue Oct 8 11:53:09 2024 +0900	feat: 문구 변경						
+0b15013	___	Tue Oct 8 03:52:52 2024 +0900	"fix: polygon point가 0개일때, 프로파일 다운로드 멈춤 이슈"						
+248c0c8	___	Mon Oct 7 15:44:27 2024 +0900	feat: command log						
+7dee2d2	___	Mon Oct 7 02:01:10 2024 +0900	feat: toast type 변경						
+d94328b	___	Mon Oct 7 02:01:00 2024 +0900	feat: toast type 변경						
+c9d7694	___	Sun Oct 6 22:56:26 2024 +0900	feat: USP 분기 제외						
+26f85be	___	Fri Oct 4 18:29:24 2024 +0900	feat: api client 설정						
+6834d33	___	Fri Oct 4 15:57:00 2024 +0900	add: axios 설치						
+28e98bf	___	Fri Oct 4 15:31:38 2024 +0900	feat: indexeddb 작업						
+1a55f00	___	Wed Oct 2 15:23:25 2024 +0900	feat: google maps key 변경						
+99f70ba	___	Mon Sep 30 02:18:03 2024 +0900	feat: edit시도 적용		45_				
+d05b8d7	___	Mon Sep 30 02:14:54 2024 +0900	feat: circle add 할 때 output actvie 분기						
+ff9153c	___	Sun Sep 29 02:10:28 2024 +0900	feat: percentage 작업						
+ffd36da	___	Sun Sep 29 02:09:43 2024 +0900	feat: hook 내 percentage 작업						
+40be9db	___	Sun Sep 29 02:09:13 2024 +0900	feat: full loading bar 추가						
+7e57a1f	___	Sat Sep 28 14:11:38 2024 +0900	feat: disconnect 후 reload						
+2.72E+79	___	Sat Sep 28 14:08:23 2024 +0900	feat: toast alert 추가						
+f32dbd1	___	Sat Sep 28 14:06:56 2024 +0900	fix: get geofenc live 데이터						
+482d521	___	Sat Sep 28 04:19:01 2024 +0900	fix: profile 다운로드 시 polygon prefix 추가 및 profile apply 시 마지막 행 미적용 버그 수정						
+c648674	___	Sat Sep 28 04:00:29 2024 +0900	fix: chunk split 파라미터 추가						
+7eb9229	___	Sat Sep 28 04:00:06 2024 +0900	feat: 리로딩 시 grpNo 할당						
+4a9e017	___	Sat Sep 28 03:59:30 2024 +0900	style: 맵 Drawing Manager 스타일 설정						
+0bc8a99	___	Sat Sep 28 03:58:55 2024 +0900	feat: util 함수 description 추가						
+b6f3062	___	Sat Sep 28 03:58:38 2024 +0900	feat: 20개 이상의 폴리곤 포인트 페칭 시 지도 마킹 처리 및 rouer.push 로 클라이언트 네비게이션 처리						
+6034d62	___	Sat Sep 28 03:57:29 2024 +0900	chore: 문구 변경						
+9f0826f	___	Sat Sep 28 03:57:14 2024 +0900	feat: 리로딩 후 version 페칭 전 serial 객체 없을 때 로딩 처리						
+e5ad7ad	___	Fri Sep 27 18:28:26 2024 +0900	feat: profile upload 후 리페칭						
+5a79280	___	Fri Sep 27 17:36:20 2024 +0900	feat: profile 파일 업로드 및 다운로드						
+140e880	___	Thu Sep 26 01:40:27 2024 +0900	feat: lint 설정						
+ce73692	___	Thu Sep 26 00:59:20 2024 +0900	feat: coordinate 음수 처리						
+37c2803	___	Thu Sep 26 00:58:02 2024 +0900	feat: polygon speed limit disabled 일 때 분기 요청						
+e78021e	___	Thu Sep 26 00:56:53 2024 +0900	feat: console 제거						
+031610b	___	Wed Sep 25 22:58:10 2024 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+df4db36	___	Wed Sep 25 22:57:55 2024 +0900	feat: geofence 작업						
+04deb6d	sonic-slogup	Wed Sep 25 20:56:25 2024 +0900	fix: configuration 페이지 sideMenu blacklist 노출 이슈 해결						
+4dc46ca	sonic-slogup	Wed Sep 25 09:21:22 2024 +0900	feat: write 20개씩 나누어 보내는 로직 추가(TODO 처리)						
+8c1428e	___	Wed Sep 25 02:18:53 2024 +0900	done: geofence 수정						
+ffaeb21	___	Tue Sep 24 03:43:02 2024 +0900	feat: geofence						
+c3b2b7d	___	Mon Sep 23 03:52:40 2024 +0900	ing: geofence polygon 추가 중						
+e2141e2	___	Sun Sep 22 22:25:05 2024 +0900	ing: geofence 개발 중						
+9ce5c6a	___	Sun Sep 22 02:44:30 2024 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master						
+58a6d5d	___	Sun Sep 22 02:42:40 2024 +0900	ing: 개발						
+6d23197	sonic-slogup	Sun Sep 22 01:28:57 2024 +0900	fix: 탭 변경시에도 save버튼 리렌더						
+4f42c57	sonic-slogup	Sun Sep 22 01:25:20 2024 +0900	fix: configuration 수정시 serial store json값 수정						
+7499155	sonic-slogup	Sat Sep 21 22:58:05 2024 +0900	fix: edit+button 타입 데이터 저장시 빈 문자열 들어가고 있던 이슈 해결						
+2bc015a	___	Sat Sep 21 22:27:29 2024 +0900	Merge branch 'feature/configuration'						
+117fe35	___	Sat Sep 21 22:27:21 2024 +0900	feat: callback ref 추가						
+69b46b9	___	Sat Sep 21 21:52:26 2024 +0900	add: toastify 설치						
+d0232bc	___	Sat Sep 21 21:30:34 2024 +0900	add: dummy data 추가						
+3e9ac35	sonic-slogup	Sat Sep 21 19:02:20 2024 +0900	feat: 타입별 edit 데이터 맵핑						
+072e6f9	sonic-slogup	Sat Sep 21 18:39:00 2024 +0900	Merge branch 'master' of https://github.com/ben031/stsunlab-sync-master into feature/configuration						
+9c453ce	sonic-slogup	Sat Sep 21 18:34:09 2024 +0900	ing: 저장 데이터 string화 작업 진행중						
+c561d3a	___	Sat Sep 21 18:31:14 2024 +0900	fix: 에러						
+02dee75	___	Sat Sep 21 16:16:39 2024 +0900	ing: USB 개발						
+0ad670d	___	Thu Sep 19 12:52:58 2024 +0900	feat: first commit						
