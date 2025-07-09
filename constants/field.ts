@@ -18139,9 +18139,9 @@ export const FIELD_VALIDATIONS = {
       {
         value: "19",
         label: {
-          en: "Reserve",
-          es: "Reserve",
-          pt: "Reserve",
+          en: "Teltonika",
+          es: "Teltonika",
+          pt: "Teltonika",
         },
       },
       {
