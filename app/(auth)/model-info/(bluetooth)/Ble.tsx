@@ -24,9 +24,10 @@ interface Props {
   };
   onChange: (id: string, value: string, selectValue?: string) => void;
   setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
+  originData: any;
 }
 
-const Ble = ({ formData, onChange, setFormData }: Props) => {
+const Ble = ({ formData, onChange, setFormData, originData }: Props) => {
   const t = useTranslations();
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
@@ -72,6 +73,26 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
 
     return true;
   };
+
+  // 4020 동적 min/max/tooltip 추출
+  let bleDeviceMin = 1;
+  let bleDeviceMax = 5;
+  let bleDeviceTooltip = undefined;
+  if (originData) {
+    try {
+      const infoFields = originData.map(
+        (item) => Object.values(item)[0][0].info?.[0]
+      );
+      const bleDeviceInfo = infoFields.find(
+        (item) => item?.id === "40" && item?.tab_id === "41"
+      );
+      if (bleDeviceInfo) {
+        bleDeviceMin = Number(bleDeviceInfo.min) || 1;
+        bleDeviceMax = Number(bleDeviceInfo.max) || 5;
+        bleDeviceTooltip = `The settings for the maximum number of dedicated BLE devices.\n• Range(On) : ${bleDeviceMin}~${bleDeviceMax}\n• Default : ${bleDeviceMax}`;
+      }
+    } catch (e) {}
+  }
 
   return (
     <Form
@@ -119,6 +140,9 @@ const Ble = ({ formData, onChange, setFormData }: Props) => {
             isSwitch
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("4020")}
+            min={bleDeviceMin}
+            max={bleDeviceMax}
+            tooltip={bleDeviceTooltip}
           />
           <SwitchField
             id="4021"

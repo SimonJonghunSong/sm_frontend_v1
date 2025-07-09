@@ -462,7 +462,7 @@ export default function DeviceInfoPage() {
       case "Tracking":
         return <TrackingTab formData={formData} setFormData={setFormData} />;
       case "Bluetooth":
-        return <BluetoothTab formData={formData} setFormData={setFormData} />;
+        return <BluetoothTab formData={formData} setFormData={setFormData} originData={originData} />;
       case "Accessories":
         return <AccessoriesTab formData={formData} setFormData={setFormData} />;
       case "RF":

@@ -14,18 +14,14 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
-  // isReady: boolean;
-  // write: any;
-  // port: SerialPortState;
+  originData: any;
 }
 
 export default function BluetoothTab({
   formData,
   setFormData,
-}: // isReady,
-// write,
-// port,
-Props) {
+  originData,
+}: Props) {
   const handleValueChange = (name, value, selectValue = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -44,6 +40,7 @@ Props) {
         formData={formData}
         onChange={handleValueChange}
         setFormData={setFormData}
+        originData={originData}
       />
 
       {/* <BleRegistration

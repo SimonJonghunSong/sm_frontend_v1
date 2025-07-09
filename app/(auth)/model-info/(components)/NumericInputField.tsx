@@ -12,7 +12,7 @@ interface InputFieldProps {
   formData: {
     [key: string]: FormField;
   };
-  onChange: (id: string, value: string) => void;
+  onChange: (id: string, value: string, selectValue?: string) => void;
   style?: React.CSSProperties;
   isRequired?: boolean;
   isSwitch?: boolean;
@@ -22,6 +22,9 @@ interface InputFieldProps {
   isUnderbarId?: boolean; // 1670 같은 중복으로 인해서 추가된 속성
   isDirty?: boolean;
   isForceRender?: boolean;
+  min?: number;
+  max?: number;
+  tooltip?: string;
 }
 
 const NumericInputField = ({
@@ -37,6 +40,9 @@ const NumericInputField = ({
   isUnderbarId,
   isDirty = false,
   isForceRender = false,
+  min,
+  max,
+  tooltip,
 }: InputFieldProps) => {
   const lang = useLangStore((state) => state.lang);
   const [isChecked, setIsChecked] = useState(
@@ -48,12 +54,14 @@ const NumericInputField = ({
   if (!isForceRender && !formData[id]) return null;
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
-
+  const minValue = typeof min === "number" ? min : FIELD_VALIDATIONS[realId].min;
+  const maxValue = typeof max === "number" ? max : FIELD_VALIDATIONS[realId].max;
+  const tooltipText = tooltip ?? FIELD_VALIDATIONS[realId].tooltip?.[lang];
   const isMinMaxError =
-    typeof FIELD_VALIDATIONS[realId].min === "number" &&
-    typeof FIELD_VALIDATIONS[realId].max === "number" &&
-    (Number(formData?.[id]?.realValue) < FIELD_VALIDATIONS[realId].min ||
-      Number(formData?.[id]?.realValue) > FIELD_VALIDATIONS[realId].max);
+    typeof minValue === "number" &&
+    typeof maxValue === "number" &&
+    (Number(formData?.[id]?.realValue) < minValue ||
+      Number(formData?.[id]?.realValue) > maxValue);
 
   const isRequiredError = isRequired && !formData?.[id]?.realValue;
 
@@ -66,8 +74,8 @@ const NumericInputField = ({
     : isMinMaxError
     ? getMinMaxErrorMessage(
         lang,
-        FIELD_VALIDATIONS[realId].min,
-        FIELD_VALIDATIONS[realId].max
+        minValue,
+        maxValue
       )
     : undefined;
 
@@ -84,12 +92,10 @@ const NumericInputField = ({
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
           )}
         </InputBox.Title>
-        {FIELD_VALIDATIONS[realId].tooltip?.[lang] && (
+        {tooltipText && (
           <InputBox.Info
             tooltipText={
-              <span style={{ whiteSpace: "pre-wrap" }}>
-                {FIELD_VALIDATIONS[realId].tooltip[lang]}
-              </span>
+              <span style={{ whiteSpace: "pre-wrap" }}>{tooltipText}</span>
             }
           />
         )}
@@ -129,11 +135,10 @@ const NumericInputField = ({
             error={hasError}
             helperText={errorMessage}
             inputProps={
-              typeof FIELD_VALIDATIONS[realId].min === "number" &&
-              typeof FIELD_VALIDATIONS[realId].max === "number"
+              typeof minValue === "number" && typeof maxValue === "number"
                 ? {
-                    min: FIELD_VALIDATIONS[realId].min,
-                    max: FIELD_VALIDATIONS[realId].max,
+                    min: minValue,
+                    max: maxValue,
                     inputMode: "numeric",
                     step: "any",
                   }
