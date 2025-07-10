@@ -28,9 +28,9 @@ export default function BluetoothTab({
   port,
   originData,
 }: Props) {
-  const infoFields = originData.map(
+  const infoFields = originData?.map(
     (shit) => Object.values(shit)[0][0].info?.[0]
-  );
+  ) || [];
 
   const bleRegistrationMax =
     infoFields.find((shit) => shit?.tab_id === "41")?.max * 1 || 0;

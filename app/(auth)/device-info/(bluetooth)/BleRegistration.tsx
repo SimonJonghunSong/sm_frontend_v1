@@ -475,6 +475,7 @@ function DetailModal({
     const min = context.getValues("temperatureMin");
     const max = context.getValues("temperatureMax");
     if (min === "" || max === "") return true;
+    if (Number(min) === 0 && Number(max) === 0) return true;
     if (Number(min) >= Number(max)) {
       return FIELD_ERRORS.temperatureRange[lang]; // "최소값은 최대값보다 작아야 합니다" 등
     }
@@ -485,6 +486,7 @@ function DetailModal({
     const min = context.getValues("humidityMin");
     const max = context.getValues("humidityMax");
     if (min === "" || max === "") return true;
+    if (Number(min) === 0 && Number(max) === 0) return true;
     if (Number(min) >= Number(max)) {
       return FIELD_ERRORS.humidityRange[lang];
     }
@@ -500,23 +502,60 @@ function DetailModal({
     const id = values.id.padEnd(12, "0");
     const enterAlert = values.enterAlert ? "01" : "00";
     const exitAlert = values.exitAlert ? "01" : "00";
-    const highTemperature = Number(values.temperatureMax)
-      .toString(16)
-      .padStart(4, "0")
-      .toUpperCase();
-    const lowTemperature = Number(values.temperatureMin)
-      .toString(16)
-      .padStart(4, "0")
-      .toUpperCase();
-    const highHumidity = (Number(values.humidityMax) * 10)
-      .toString(16)
-      .padStart(4, "0")
-      .toUpperCase();
-    const lowHumidity = (Number(values.humidityMin) * 10)
-      .toString(16)
-      .padStart(4, "0")
-      .toUpperCase();
 
+    console.log("type :::", type);
+    console.log("temperatureMax :::", values.temperatureMax);
+    console.log("temperatureMin :::", values.temperatureMin);
+    console.log("humidityMax :::", values.humidityMax);
+    console.log("humidityMin :::", values.humidityMin);
+
+    if(values.temperatureMax === "" || values.temperatureMin === "") {
+      values.temperatureMax = 1;
+      values.temperatureMin = 0;
+      console.log("temperatureMax____", values.temperatureMax);
+    }
+
+    if(values.humidityMax === "" || values.humidityMin === "") {
+      values.humidityMax = 1;
+      values.humidityMin = 0;
+    }
+
+    //ST4955LCBW는 이렇게 해야 들어감.
+    // if(type === "02") { // ELA COIN T 
+    //   console.log("type:", type);
+    //   values.temperatureMax = 1;
+    //   values.temperatureMin = 0;
+    //   values.humidityMax = 1;
+    //   values.humidityMin = 0;
+    // }
+
+    //4315B는 아래 처럼 해야 들어감. 
+    // if(type === "02") { // ELA COIN T 
+    //   console.log("type:", type);
+    //   values.temperatureMax = 1;
+    //   values.temperatureMin = 0;
+    //   values.humidityMax = 0;
+    //   values.humidityMin = 0;
+    // }
+
+
+
+    const highTemperature = Number(values.temperatureMax)
+      .toString(16).padStart(4, "0").toUpperCase();
+    const lowTemperature = Number(values.temperatureMin)
+      .toString(16).padStart(4, "0").toUpperCase();
+    const highHumidity = (Number(values.humidityMax) * 10)
+      .toString(16).padStart(4, "0").toUpperCase();
+    const lowHumidity = (Number(values.humidityMin) * 10)
+      .toString(16).padStart(4, "0").toUpperCase();
+
+
+    console.log("highTemperature:", highTemperature);
+    console.log("lowTemperature:", lowTemperature);
+    console.log("highHumidity:", highHumidity);
+    console.log("lowHumidity:", lowHumidity);
+
+    
     const data = `41;${point}#${type}${active}${id}${enterAlert}${exitAlert}${highTemperature}${lowTemperature}${highHumidity}${lowHumidity}`;
 
     handleConfirm(data);
@@ -565,6 +604,7 @@ function DetailModal({
                       placeholder={t("configuration.ble.select")}
                       error={!!error}
                       helperText={error?.message}
+                      disabled={!!defaultValues}
                     >
                       {Array.from({ length: bleRegistrationMax }, (_, i) => (
                         <MenuItem key={i} value={i.toString().padStart(2, "0")}>
@@ -754,7 +794,7 @@ function DetailModal({
             <InputBox.Head>
               <InputBox.Title>
                 {t("configuration.ble.temperature_threshold_(°c)")}
-                <i>*</i>
+                {/* <i>*</i> */}
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -764,12 +804,12 @@ function DetailModal({
                     name={"temperatureMin"}
                     control={form.control}
                     rules={{
-                      required: {
-                        value: true,
-                        message: FIELD_ERRORS.required(
-                          t("configuration.ble.temperature")
-                        )[lang],
-                      },
+                      // required: {
+                      //   value: true,
+                      //   message: FIELD_ERRORS.required(
+                      //     t("configuration.ble.temperature")
+                      //   )[lang],
+                      // },
                       min: {
                         value: -55,
                         message: FIELD_ERRORS.minMax(-55, 125)[lang],
@@ -800,12 +840,12 @@ function DetailModal({
                     name={"temperatureMax"}
                     control={form.control}
                     rules={{
-                      required: {
-                        value: true,
-                        message: FIELD_ERRORS.required(
-                          t("configuration.ble.temperature")
-                        )[lang],
-                      },
+                      // required: {
+                      //   value: true,
+                      //   message: FIELD_ERRORS.required(
+                      //     t("configuration.ble.temperature")
+                      //   )[lang],
+                      // },
                       min: {
                         value: -55,
                         message: FIELD_ERRORS.minMax(-55, 125)[lang],
@@ -849,7 +889,7 @@ function DetailModal({
             <InputBox.Head>
               <InputBox.Title>
                 {t("configuration.ble.humidity_threshold_(%)")}
-                <i>*</i>
+                {/* <i>*</i> */}
               </InputBox.Title>
             </InputBox.Head>
             <InputBox.Body>
@@ -859,12 +899,12 @@ function DetailModal({
                     name={"humidityMin"}
                     control={form.control}
                     rules={{
-                      required: {
-                        value: true,
-                        message: FIELD_ERRORS.required(
-                          t("configuration.ble.humidity")
-                        )[lang],
-                      },
+                      // required: {
+                      //   value: true,
+                      //   message: FIELD_ERRORS.required(
+                      //     t("configuration.ble.humidity")
+                      //   )[lang],
+                      // },
                       min: {
                         value: 0,
                         message: FIELD_ERRORS.minMax(0, 100)[lang],
@@ -894,12 +934,12 @@ function DetailModal({
                     name={"humidityMax"}
                     control={form.control}
                     rules={{
-                      required: {
-                        value: true,
-                        message: FIELD_ERRORS.required(
-                          t("configuration.ble.humidity")
-                        )[lang],
-                      },
+                      // required: {
+                      //   value: true,
+                      //   message: FIELD_ERRORS.required(
+                      //     t("configuration.ble.humidity")
+                      //   )[lang],
+                      // },
                       min: {
                         value: 0,
                         message: FIELD_ERRORS.minMax(0, 100)[lang],
