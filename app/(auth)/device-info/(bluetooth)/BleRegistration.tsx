@@ -527,7 +527,7 @@ function DetailModal({
     <Modal
       open
       toggleOpen={onClose}
-      title={t("configuration.ble.add_ble")}
+      title={defaultValues ? t("configuration.ble.edit_ble") : t("configuration.ble.add_ble")}
       confirm={form.handleSubmit(handleModalConfirm)}
       confirmButtonText={
         defaultValues ? t("configuration.ble.edit") : t("configuration.ble.add")
@@ -567,7 +567,7 @@ function DetailModal({
                       helperText={error?.message}
                     >
                       {Array.from({ length: bleRegistrationMax }, (_, i) => (
-                        <MenuItem value={i.toString().padStart(2, "0")}>
+                        <MenuItem key={i} value={i.toString().padStart(2, "0")}>
                           {i + 1}
                         </MenuItem>
                       ))}
@@ -838,8 +838,8 @@ function DetailModal({
                   marginTop="3px"
                   marginLeft="14px"
                 >
-                  {Array.from(temperatureErrors).map((item) => (
-                    <ErrorText>{item}</ErrorText>
+                  {Array.from(temperatureErrors).map((item, index) => (
+                    <ErrorText key={index}>{item}</ErrorText>
                   ))}
                 </Stack>
               )}
@@ -931,8 +931,8 @@ function DetailModal({
                   marginTop="3px"
                   marginLeft="14px"
                 >
-                  {Array.from(humidityErrors).map((item) => (
-                    <ErrorText>{item}</ErrorText>
+                  {Array.from(humidityErrors).map((item, index) => (
+                    <ErrorText key={index}>{item}</ErrorText>
                   ))}
                 </Stack>
               )}

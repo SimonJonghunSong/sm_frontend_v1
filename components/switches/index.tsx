@@ -1,4 +1,5 @@
 import { Switch, styled } from "@mui/material";
+import React from "react";
 
 const commonStyle = {
   padding: 0,
@@ -41,14 +42,17 @@ const commonStyle = {
   },
 };
 
-export const SwitchPrimary = styled((props: any) => (
-  <Switch
-    focusVisibleClassName=".Mui-focusVisible"
-    disableRipple
-    checked={props.checked}
-    {...props}
-  />
-))(() => ({
+export const SwitchPrimary = styled(
+  React.forwardRef<HTMLButtonElement, any>((props, ref) => (
+    <Switch
+      ref={ref}
+      focusVisibleClassName=".Mui-focusVisible"
+      disableRipple
+      checked={props.checked}
+      {...props}
+    />
+  ))
+)(() => ({
   ...commonStyle,
   width: 40,
   height: 22,
@@ -87,14 +91,17 @@ export const SwitchPrimary = styled((props: any) => (
   },
 }));
 
-export const SwitchSecondary = styled((props: any) => (
-  <Switch
-    focusVisibleClassName=".Mui-focusVisible"
-    disableRipple
-    checked={props.checked}
-    {...props}
-  />
-))(() => ({
+export const SwitchSecondary = styled(
+  React.forwardRef<HTMLButtonElement, any>((props, ref) => (
+    <Switch
+      ref={ref}
+      focusVisibleClassName=".Mui-focusVisible"
+      disableRipple
+      checked={props.checked}
+      {...props}
+    />
+  ))
+)(() => ({
   ...commonStyle,
   width: 40,
   height: 22,

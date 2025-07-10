@@ -92,7 +92,7 @@ export default function ModelInfoController({
           {
             model_name: modelName,
             model_version: fw_ver,
-            nickname: `profile_${Date.now()}`,
+            // nickname: `profile_${Date.now()}`,
           },
         ],
       })
