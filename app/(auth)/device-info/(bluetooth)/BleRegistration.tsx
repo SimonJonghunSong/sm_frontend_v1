@@ -931,7 +931,7 @@ function DetailModal({
 
 
         </Stack>
-        <Stack direction="column" gap="8px" flex={1} justifyContent="flex-start">
+        <Stack direction="column" gap="24px" flex={1} justifyContent="flex-start">
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1127,7 +1127,7 @@ function DetailModal({
                 flex: 1,
                 display: "flex",
                 flexDirection: "row",
-                alignItems: "center",
+                alignItems: "flex-start",
                 justifyContent: "space-between",
               }}
             >
