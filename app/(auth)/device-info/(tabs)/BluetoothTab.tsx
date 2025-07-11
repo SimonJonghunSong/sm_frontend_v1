@@ -73,7 +73,7 @@ export default function BluetoothTab({
         // 모델명 추출
         const modelInfo = originData?.[0]?.info?.[0];
         const modelName = modelInfo?.S;
-        if (modelName === "ST4315B") {
+        if (modelName === "ST4315") {
           return (
             <BdaRegistration
               formData={formData}

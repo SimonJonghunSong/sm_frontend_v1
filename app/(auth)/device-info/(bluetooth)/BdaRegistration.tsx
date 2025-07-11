@@ -149,6 +149,9 @@ const BdaRegistration = ({
 
   const handleAddItem = (addData: string) => {
     console.log("handleAddItem/addData------", addData);
+    console.log("port:", port);
+    console.log("port.port:", port.port);
+    console.log("port.port.writable:", port.port?.writable);
     setIsLoading(true);
     write({
       data: `${AT_EDIT_PREFIX}${port.imei};${addData}`,
@@ -197,62 +200,101 @@ const BdaRegistration = ({
 
   const range = generateRegistrationRange(maxCount);
 
-  const fetch = () => {
-    // BDA Registration fetch 함수 주석처리
-    /*
-    port.port.onbuffervalue = (data) => {
-      bdaRegistrationRef.current += data;
+  const fetch = async () => {
+    console.log("=== BDA Registration Fetch Start ===");
+    setIsLoading(true);
+    const total = 100;
+    const batchSize = 20;
+    let allResults: any[] = [];
 
-      if (data.includes(CR)) {
-        const bdaRegistrationData = bdaRegistrationRef.current;
+    const sendBatch = (start: number) => {
+      return new Promise<void>((resolve) => {
+        const indices = Array.from({ length: batchSize }, (_, i) => (start + i).toString().padStart(2, "0"))
+          .filter(idx => parseInt(idx) < total)
+          .join(",");
+        const command = `${AT_REQ}${port.imei};43;${indices}`;
+        
+        console.log(`[SEND] Batch ${start}-${start + batchSize - 1}: ${command}`);
 
-        const parts = bdaRegistrationData.split(";");
-        const dataParts = parts.slice(3);
-        const targetKeys = range.split(",");
+        let responseTimeout: NodeJS.Timeout | null = null;
 
-        const result = {};
+        port.port.onbuffervalue = (data: string) => {
+          bdaRegistrationRef.current += data;
+          if (!data.includes('\r')) return;
 
-        for (const item of dataParts) {
-          const [key, value] = item.split("#");
-          if (targetKeys.includes(key)) {
-            result[key] = value.trim();
+          const fullData = bdaRegistrationRef.current;
+          bdaRegistrationRef.current = "";
+
+          if (!fullData.startsWith("RRE")) {
+            port.port.onbuffervalue = null;
+            setTimeout(() => resolve(), 50);
+            if (responseTimeout) {
+              clearTimeout(responseTimeout);
+              responseTimeout = null;
+            }
+            return;
           }
-        }
 
-        const bdaData = Object.entries(result)
-          .sort(([keyA], [keyB]) => parseInt(keyA) - parseInt(keyB))
-          .reduce(
-            (acc, [key, bda]: [string, string]) => {
-              if (bda === "NoData") return acc;
+          const parts = fullData.split(";");
+          const dataParts = parts.slice(3);
 
-              // BDA Registration 데이터 구조에 맞게 파싱
-              // BDA 데이터는 다른 구조를 가질 수 있음
-              (acc as Array<any>).push({
-                id: parseInt(key) + 1,
-                col1: parseInt(key) + 1,
-                col2: bda.slice(0, 2) === "01" ? "On" : "Off", // Active
-                col3: bda.slice(2, 14), // MAC Address (12 characters)
-                col4: bda.slice(14, 16) === "01" ? "On" : "Off", // Enable Data
-              });
-              return acc;
-            },
-            []
-          );
+          for (const item of dataParts) {
+            const [key, value] = item.split("#");
+            if (!value || value.trim() === "" || value === "NoData" || value.includes('\r')) {
+              continue;
+            }
+            const parsedData = {
+              id: parseInt(key) + 1,
+              col1: parseInt(key) + 1,
+              col2: value.slice(0, 2) === "01" ? "On" : "Off", // Active
+              col3: value.slice(2, 14), // MAC Address
+              col4: value.slice(14, 16) === "01" ? "On" : "Off", // Enable Data
+            };
+            allResults.push(parsedData);
+          }
 
-        bdaRegistrationRef.current = "";
-        console.log("bdaData :::", bdaData);
-        setRows(bdaData as any);
-        setIsLoading(false);
-        port.port.onbuffervalue = null;
-      }
+          // 타임아웃 해제
+          if (responseTimeout) {
+            clearTimeout(responseTimeout);
+            responseTimeout = null;
+          }
+          port.port.onbuffervalue = null;
+          setTimeout(() => resolve(), 50);
+        };
+
+        write({
+          data: command,
+          port: port.port,
+          writer: port.writer,
+        });
+
+        responseTimeout = setTimeout(() => {
+          if (responseTimeout) {
+            console.log(`[TIMEOUT] Batch ${start}-${start + batchSize - 1} timeout`);
+            port.port.onbuffervalue = null;
+            resolve();
+            responseTimeout = null;
+          }
+        }, 15000);
+      });
     };
 
-    write({
-      data: `${AT_REQ}${port.imei};43;${range}`,
-      port: port.port,
-      writer: port.writer,
-    });
-    */
+    for (let i = 0; i < total; i += batchSize) {
+      console.log(`[PROCESS] Starting batch ${i}-${i + batchSize - 1}`);
+      
+      // 명령어 간 delay 50ms
+      if (i > 0) {
+        await delayPromise(50);
+      }
+      
+      await sendBatch(i);
+      console.log(`[PROCESS] Completed batch ${i}-${i + batchSize - 1}`);
+    }
+
+    console.log(`[FINAL] All results:`, allResults);
+    setRows(allResults);
+    setIsLoading(false);
+    console.log("=== BDA Registration Fetch End ===");
   };
 
   useEffect(() => {
