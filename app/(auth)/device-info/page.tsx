@@ -657,7 +657,8 @@ export default function DeviceInfoPage() {
       resetTab();
       deleteSerialPort({ imei });
 
-      throw new Error("No origin data");
+      // 에러를 던지지 않고 early return으로 처리
+      return;
     }
   }, [originData]);
 

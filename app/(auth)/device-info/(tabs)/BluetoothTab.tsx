@@ -64,6 +64,7 @@ export default function BluetoothTab({
         write={write}
         port={port}
         bleRegistrationMax={bleRegistrationMax}
+        originData={originData}
       />
 
       <Sensor

@@ -38,6 +38,7 @@ interface Props {
   port: SerialPortState;
   isReady: boolean;
   bleRegistrationMax: number;
+  originData: any;
 }
 
 const BleRegistration = ({
@@ -47,6 +48,7 @@ const BleRegistration = ({
   port,
   isReady,
   bleRegistrationMax,
+  originData,
 }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -83,6 +85,50 @@ const BleRegistration = ({
       col10: string;
     }[]
   >([]);
+
+  // Extract Type options from originData for display
+  const getTypeDisplayOptions = () => {
+    try {
+      const bleRegistrationData = originData?.find(item => {
+        const key = Object.keys(item)[0];
+        return key === "Register BLE";
+      });
+      
+      if (bleRegistrationData) {
+        const registerBLEArr = bleRegistrationData["Register BLE"];
+        const sensorTypeObj = registerBLEArr.find(obj =>
+          Object.keys(obj)[0].toLowerCase().replace(/ /g, "") === "sensortype"
+        );
+        
+        const sensorTypeArr = sensorTypeObj ? sensorTypeObj[Object.keys(sensorTypeObj)[0]] : undefined;
+        const sensorTypeData = Array.isArray(sensorTypeArr) ? sensorTypeArr[0] : undefined;
+        const typeList = sensorTypeData?.list?.[0];
+
+        if (typeList) {
+          const options = {};
+          Object.entries(typeList).forEach(([key, value]) => {
+            const valueStr = String(value);
+            const parts = valueStr.split(';');
+            const typeValue = parts[0].padStart(2, "0");
+            const typeLabel = parts[1];
+            options[typeValue] = typeLabel;
+          });
+          return options;
+        }
+      }
+    } catch (error) {
+      console.error("Error extracting type display options:", error);
+    }
+    
+    // Fallback to default options
+    return {
+      "00": "-",
+      "01": "ELA PUCK RHT2",
+      "02": "ELA COIN T"
+    };
+  };
+
+  const typeDisplayOptions = getTypeDisplayOptions();
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -105,11 +151,7 @@ const BleRegistration = ({
       headerAlign: "center",
       align: "center",
       renderCell: ({ row }) => {
-        return row.col3 === "00"
-          ? "-"
-          : row.col3 === "01"
-          ? "ELA PUCK RHT"
-          : "ELA COIN T";
+        return typeDisplayOptions[row.col3] || row.col3;
       },
     },
     {
@@ -166,7 +208,7 @@ const BleRegistration = ({
             setEditRow({
               point: row.col1,
               active: row.col2 === "On",
-              type: row.type,
+              type: row.col3,
               id: row.col4,
               enterAlert: row.col5 === "On",
               exitAlert: row.col6 === "On",
@@ -205,6 +247,7 @@ const BleRegistration = ({
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleAddItem = (addData: string) => {
+    console.log("handleAddItem/addData------", addData);
     setIsLoading(true);
     write({
       data: `${AT_EDIT_PREFIX}${port.imei};${addData}`,
@@ -217,17 +260,38 @@ const BleRegistration = ({
   };
 
   const handleDeleteItem = (id: number) => {
+    console.log("handleDeleteItem/id------", id);
     setIsLoading(true);
+
+    // 모델명 추출
+    const modelInfo = originData?.[0]?.info?.[0];
+    const modelName = modelInfo?.S;
+
+    // 모델별로 0의 길이 다르게 처리
+    const zeroLength = modelName === "ST4315B" ? 38 : 36;
+    const zeroString = "0".repeat(zeroLength);
+
+    // 전송할 데이터 구성
+    const deleteData = `${AT_EDIT_PREFIX}${port.imei};41;${(id - 1)
+      .toString()
+      .padStart(2, "0")}#${zeroString}`;
+
+      console.log("=== BLE Delete Command ===");
+      console.log("Model:", modelName);
+      console.log("ID:", id);
+      console.log("Zero Length:", zeroLength);
+      console.log("Delete Data:", deleteData);
+      console.log("========================");      
+
     write({
-      data: `${AT_EDIT_PREFIX}${port.imei};41;${(id - 1)
-        .toString()
-        .padStart(2, "0")}#000000000000000000000000000000000000`,
+      data: deleteData,
       port: port.port,
       writer: port.writer,
     });
     delayPromise(100).then(() => {
       fetch();
     });
+  
   };
 
   const generateRegistrationRange = (maxCount: number) => {
@@ -262,28 +326,30 @@ const BleRegistration = ({
           }
         }
 
-        const bleData = Object.values(result).reduce(
-          (acc, ble: string, idx) => {
-            if (ble === "NoData") return acc;
+        const bleData = Object.entries(result)
+          .sort(([keyA], [keyB]) => parseInt(keyA) - parseInt(keyB))
+          .reduce(
+            (acc, [key, ble]: [string, string]) => {
+              if (ble === "NoData") return acc;
 
-            (acc as Array<any>).push({
-              id: idx + 1,
-              type: "1",
-              col1: idx + 1,
-              col2: ble.slice(2, 4) === "01" ? "On" : "Off",
-              col3: ble.slice(0, 2),
-              col4: ble.slice(4, 16),
-              col5: ble.slice(16, 18) === "01" ? "On" : "Off",
-              col6: ble.slice(18, 20) === "01" ? "On" : "Off",
-              col7: ble.slice(24, 28),
-              col8: ble.slice(20, 24),
-              col9: ble.slice(32, 36),
-              col10: ble.slice(28, 32),
-            });
-            return acc;
-          },
-          []
-        );
+              (acc as Array<any>).push({
+                id: parseInt(key) + 1,
+                type: "1",
+                col1: parseInt(key) + 1,
+                col2: ble.slice(2, 4) === "01" ? "On" : "Off",
+                col3: ble.slice(0, 2),
+                col4: ble.slice(4, 16),
+                col5: ble.slice(16, 18) === "01" ? "On" : "Off",
+                col6: ble.slice(18, 20) === "01" ? "On" : "Off",
+                col7: ble.slice(24, 28),
+                col8: ble.slice(20, 24),
+                col9: ble.slice(32, 36),
+                col10: ble.slice(28, 32),
+              });
+              return acc;
+            },
+            []
+          );
 
         bleRegistrationRef.current = "";
         console.log("bleData :::", bleData);
@@ -301,6 +367,12 @@ const BleRegistration = ({
   };
 
   useEffect(() => {
+    if (!originData) {
+      // throw new Error("No origin data");
+      // 안내 메시지로 대체
+      console.error("기기 연결이 해제되었습니다. USB 연결을 확인하세요.");
+      return;
+    }
     fetch();
   }, [isReady]);
 
@@ -356,6 +428,7 @@ const BleRegistration = ({
           handleConfirm={handleAddItem}
           filterNumbers={rows.map((row) => row.col1)}
           defaultValues={editRow}
+          originData={originData}
         />
       )}
     </>
@@ -384,6 +457,7 @@ function DetailModal({
   filterNumbers,
   defaultValues,
   bleRegistrationMax,
+  originData,
 }: {
   onClose: () => void;
   openErrorPopup: (
@@ -400,21 +474,75 @@ function DetailModal({
     id: string;
     enterAlert: boolean;
     exitAlert: boolean;
+    panicAlert?: boolean;
     temperatureMin: string;
     temperatureMax: string;
     humidityMin: string;
     humidityMax: string;
   };
+  originData: any;
 }) {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
+  
+  // Extract model name and firmware version at the component level
+  const modelInfo = originData?.[0]?.info?.[0];
+  const fwVersion = modelInfo?.V; // F/W Version
+  const modelName = modelInfo?.S;    // Model Name
+
+  // Extract Type options from originData
+  const getTypeOptions = () => {
+    try {
+      const bleRegistrationData = originData?.find(item => {
+        const key = Object.keys(item)[0];
+        return key === "Register BLE";
+      });
+      
+      if (bleRegistrationData) {
+        const registerBLEArr = bleRegistrationData["Register BLE"];
+        const sensorTypeObj = registerBLEArr.find(obj =>
+          Object.keys(obj)[0].toLowerCase().replace(/ /g, "") === "sensortype"
+        );
+        
+        const sensorTypeArr = sensorTypeObj ? sensorTypeObj[Object.keys(sensorTypeObj)[0]] : undefined;
+        const sensorTypeData = Array.isArray(sensorTypeArr) ? sensorTypeArr[0] : undefined;
+        
+        if (sensorTypeData) {
+          const typeList = sensorTypeData?.list?.[0];
+          
+          if (typeList) {
+            const options = Object.entries(typeList).map(([key, value]) => {
+              const valueStr = String(value);
+              const parts = valueStr.split(';');
+              return {
+                value: parts[0].padStart(2, "0"),
+                label: parts[1]
+              };
+            });
+            return options;
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error extracting type options:", error);
+    }
+    
+    // Fallback to default options
+    return [
+      { value: "00", label: t("configuration.ble.select") },
+      { value: "01", label: "ELA PUCK RHT" },
+      { value: "02", label: "ELA COIN T" }
+    ];
+  };
+
+  const typeOptions = getTypeOptions();
   const form = useForm({
     mode: "onSubmit",
     defaultValues: defaultValues
       ? {
           point: (defaultValues.point - 1).toString().padStart(2, "0"),
           active: defaultValues.active,
-          type: defaultValues.type.padStart(2, "0"),
+          type: defaultValues.type.length === 1 ? defaultValues.type.padStart(2, "0") : defaultValues.type,
           id: defaultValues.id,
           enterAlert: defaultValues.enterAlert,
           exitAlert: defaultValues.exitAlert,
@@ -422,6 +550,7 @@ function DetailModal({
           temperatureMax: parseInt(defaultValues.temperatureMax, 16),
           humidityMin: parseInt(defaultValues.humidityMin, 16) / 10,
           humidityMax: parseInt(defaultValues.humidityMax, 16) / 10,
+          panicAlert: defaultValues?.panicAlert, // 기본값
         }
       : {
           point: "00",
@@ -434,6 +563,7 @@ function DetailModal({
           temperatureMax: "",
           humidityMin: "",
           humidityMax: "",
+          panicAlert: false, // 기본값
         },
   });
 
@@ -496,23 +626,33 @@ function DetailModal({
   const handleModalConfirm = () => {
     const values = form.getValues();
 
+    // panicAlert 값이 undefined면 false로 보정
+    const panicAlert = typeof values.panicAlert === "undefined" ? false : values.panicAlert;
+
+    console.log("modelName :::", modelName);
+    console.log("fwVersion :::", fwVersion);
+
+    // console.log("panicAlert------", values.panicAlert);
+
+
     const point = values.point;
     const active = values.active ? "01" : "00";
     const type = values.type;
     const id = values.id.padEnd(12, "0");
     const enterAlert = values.enterAlert ? "01" : "00";
     const exitAlert = values.exitAlert ? "01" : "00";
+    const panicAlertHex = panicAlert ? "01" : "00";
 
     console.log("type :::", type);
     console.log("temperatureMax :::", values.temperatureMax);
     console.log("temperatureMin :::", values.temperatureMin);
     console.log("humidityMax :::", values.humidityMax);
     console.log("humidityMin :::", values.humidityMin);
+    console.log("panicAlert :::", values?.panicAlert);
 
     if(values.temperatureMax === "" || values.temperatureMin === "") {
       values.temperatureMax = 1;
       values.temperatureMin = 0;
-      console.log("temperatureMax____", values.temperatureMax);
     }
 
     if(values.humidityMax === "" || values.humidityMin === "") {
@@ -520,25 +660,21 @@ function DetailModal({
       values.humidityMin = 0;
     }
 
-    //ST4955LCBW는 이렇게 해야 들어감.
-    // if(type === "02") { // ELA COIN T 
-    //   console.log("type:", type);
-    //   values.temperatureMax = 1;
-    //   values.temperatureMin = 0;
-    //   values.humidityMax = 1;
-    //   values.humidityMin = 0;
-    // }
-
-    //4315B는 아래 처럼 해야 들어감. 
-    // if(type === "02") { // ELA COIN T 
-    //   console.log("type:", type);
-    //   values.temperatureMax = 1;
-    //   values.temperatureMin = 0;
-    //   values.humidityMax = 0;
-    //   values.humidityMin = 0;
-    // }
-
-
+    if(modelName === "ST4315B") {
+      if(type === "02") { // ELA COIN T 
+        values.temperatureMax = 1;
+        values.temperatureMin = 0;
+        values.humidityMax = 0;
+        values.humidityMin = 0;
+      }
+    }else {//ST4955LCBW
+      if(type === "02") { // ELA COIN T 
+        values.temperatureMax = 0;
+        values.temperatureMin = 0;
+        values.humidityMax = 0;
+        values.humidityMin = 0;
+      }
+    }
 
     const highTemperature = Number(values.temperatureMax)
       .toString(16).padStart(4, "0").toUpperCase();
@@ -549,15 +685,16 @@ function DetailModal({
     const lowHumidity = (Number(values.humidityMin) * 10)
       .toString(16).padStart(4, "0").toUpperCase();
 
-
-    console.log("highTemperature:", highTemperature);
-    console.log("lowTemperature:", lowTemperature);
-    console.log("highHumidity:", highHumidity);
-    console.log("lowHumidity:", lowHumidity);
-
+  
+    let data = undefined;
+    if(modelName === "ST4315B") {
+      data = `41;${point}#${type}${active}${id}${enterAlert}${exitAlert}${highTemperature}${lowTemperature}${highHumidity}${lowHumidity}${panicAlertHex}`;
+      console.log("data_ST4315B", data);
+    } else {
+      data = `41;${point}#${type}${active}${id}${enterAlert}${exitAlert}${highTemperature}${lowTemperature}${highHumidity}${lowHumidity}`;
+      console.log("data_ST4955LCBW", data);
+    }
     
-    const data = `41;${point}#${type}${active}${id}${enterAlert}${exitAlert}${highTemperature}${lowTemperature}${highHumidity}${lowHumidity}`;
-
     handleConfirm(data);
     onClose();
   };
@@ -675,11 +812,11 @@ function DetailModal({
                       error={!!error}
                       helperText={error?.message}
                     >
-                      <MenuItem value={"00"}>
-                        {t("configuration.ble.select")}
-                      </MenuItem>
-                      <MenuItem value={"01"}>ELA PUCK RHT</MenuItem>
-                      <MenuItem value={"02"}>ELA COIN T</MenuItem>
+                      {typeOptions.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 />
@@ -757,6 +894,7 @@ function DetailModal({
               </FormControl>
             </InputBox.Body>
           </InputBox>
+          
           <InputBox
             style={{
               flex: 1,
@@ -788,6 +926,42 @@ function DetailModal({
               </FormControl>
             </InputBox.Body>
           </InputBox>
+
+          {modelName === "ST4315B" && (
+            <InputBox
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <InputBox.Head>
+                <InputBox.Title>
+                  {t("configuration.ble.panic_alert")}
+                  {/* <i>*</i> */}
+                </InputBox.Title>
+              </InputBox.Head>
+              <InputBox.Body>
+                <FormControl sx={{ width: "100%" }} size="small">
+                  <Controller
+                    name={"panicAlert"}
+                    control={form.control}
+                    render={({ field }) => (
+                      <SwitchPrimary
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                </FormControl>
+              </InputBox.Body>
+            </InputBox>
+          )}
+
+
         </Stack>
         <Stack direction="column" gap="16px" flex={1}>
           <InputBox>
