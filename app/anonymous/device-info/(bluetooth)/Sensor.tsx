@@ -11,6 +11,7 @@ import SelectField from "../(components)/SelectField";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import RangeThresholdField from "../(components)/RangeThresholdField";
+import InputBox from "@/components/inputbox/InputBox";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Sensor.en];
 
@@ -97,7 +98,10 @@ const Sensor = ({ formData, onChange, setFormData }: Props) => {
         sendFormData(fieldValues, setFormData);
       }}
     >
-      <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
+      <Stack direction="row" alignItems="center" gap="16px">
+        <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
+        <InputBox.Number>26</InputBox.Number>
+      </Stack>
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

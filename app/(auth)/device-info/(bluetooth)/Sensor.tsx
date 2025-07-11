@@ -98,7 +98,10 @@ const Sensor = ({ formData, onChange, setFormData }: Props) => {
         sendFormData(fieldValues, setFormData);
       }}
     >
-      <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
+      <Stack direction="row" alignItems="center" gap="16px">
+        <h1 data-section-id={SECTIONS.Sensor.en}>{SECTIONS.Sensor[lang]}</h1>
+        <InputBox.Number>26</InputBox.Number>
+      </Stack>
 
       <Stack direction={"row"} gap={"24px"}>
         <Stack gap={"24px"} flex={1}>

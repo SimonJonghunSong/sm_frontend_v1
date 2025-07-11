@@ -125,6 +125,7 @@ const Ble = ({ formData, onChange, setFormData, originData }: Props) => {
           <h1 data-section-id={SECTIONS["Bluetooth"].en}>
             {t("configuration.ble.ble")}
           </h1>
+          <InputBox.Number>40</InputBox.Number>
         </Stack>
       </Stack>
 

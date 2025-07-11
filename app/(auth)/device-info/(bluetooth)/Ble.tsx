@@ -11,6 +11,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import SelectField from "../(components)/SelectField";
 import TextInputField from "../(components)/TextInputField";
+import InputBox from "@/components/inputbox/InputBox";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS["Bluetooth"].en];
 
@@ -121,6 +122,7 @@ const Ble = ({ formData, onChange, setFormData, originData }: Props) => {
           <h1 data-section-id={SECTIONS["Bluetooth"].en}>
             {t("configuration.ble.ble")}
           </h1>
+          <InputBox.Number>40</InputBox.Number>
         </Stack>
       </Stack>
 
