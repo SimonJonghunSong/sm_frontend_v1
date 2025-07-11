@@ -38,6 +38,7 @@ interface Props {
   port: SerialPortState;
   isReady: boolean;
   bleRegistrationMax: number;
+  originData: any;
 }
 
 const BleRegistration = ({
@@ -47,6 +48,7 @@ const BleRegistration = ({
   port,
   isReady,
   bleRegistrationMax,
+  originData,
 }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -83,6 +85,50 @@ const BleRegistration = ({
       col10: string;
     }[]
   >([]);
+
+  // Extract Type options from originData for display
+  const getTypeDisplayOptions = () => {
+    try {
+      const bleRegistrationData = originData?.find(item => {
+        const key = Object.keys(item)[0];
+        return key === "Register BLE";
+      });
+      
+      if (bleRegistrationData) {
+        const registerBLEArr = bleRegistrationData["Register BLE"];
+        const sensorTypeObj = registerBLEArr.find(obj =>
+          Object.keys(obj)[0].toLowerCase().replace(/ /g, "") === "sensortype"
+        );
+        
+        const sensorTypeArr = sensorTypeObj ? sensorTypeObj[Object.keys(sensorTypeObj)[0]] : undefined;
+        const sensorTypeData = Array.isArray(sensorTypeArr) ? sensorTypeArr[0] : undefined;
+        const typeList = sensorTypeData?.list?.[0];
+
+        if (typeList) {
+          const options = {};
+          Object.entries(typeList).forEach(([key, value]) => {
+            const valueStr = String(value);
+            const parts = valueStr.split(';');
+            const typeValue = parts[0].padStart(2, "0");
+            const typeLabel = parts[1];
+            options[typeValue] = typeLabel;
+          });
+          return options;
+        }
+      }
+    } catch (error) {
+      console.error("Error extracting type display options:", error);
+    }
+    
+    // Fallback to default options
+    return {
+      "00": "-",
+      "01": "ELA PUCK RHT2",
+      "02": "ELA COIN T"
+    };
+  };
+
+  const typeDisplayOptions = getTypeDisplayOptions();
   const columns: GridColDef[] = [
     {
       field: "col1",
@@ -105,11 +151,7 @@ const BleRegistration = ({
       headerAlign: "center",
       align: "center",
       renderCell: ({ row }) => {
-        return row.col3 === "00"
-          ? "-"
-          : row.col3 === "01"
-          ? "ELA PUCK RHT"
-          : "ELA COIN T";
+        return typeDisplayOptions[row.col3] || row.col3;
       },
     },
     {
@@ -356,6 +398,7 @@ const BleRegistration = ({
           handleConfirm={handleAddItem}
           filterNumbers={rows.map((row) => row.col1)}
           defaultValues={editRow}
+          originData={originData}
         />
       )}
     </>
@@ -384,6 +427,7 @@ function DetailModal({
   filterNumbers,
   defaultValues,
   bleRegistrationMax,
+  originData,
 }: {
   onClose: () => void;
   openErrorPopup: (
@@ -405,6 +449,7 @@ function DetailModal({
     humidityMin: string;
     humidityMax: string;
   };
+  originData: any;
 }) {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -489,6 +534,47 @@ function DetailModal({
       return FIELD_ERRORS.humidityRange[lang];
     }
     return true;
+  };
+
+  const getTypeOptions = () => {
+    try {
+      const bleRegistrationData = originData?.find(item => {
+        const key = Object.keys(item)[0];
+        return key === "Register BLE";
+      });
+      
+      if (bleRegistrationData) {
+        const registerBLEArr = bleRegistrationData["Register BLE"];
+        const sensorTypeObj = registerBLEArr.find(obj =>
+          Object.keys(obj)[0].toLowerCase().replace(/ /g, "") === "sensortype"
+        );
+        
+        const sensorTypeArr = sensorTypeObj ? sensorTypeObj[Object.keys(sensorTypeObj)[0]] : undefined;
+        const sensorTypeData = Array.isArray(sensorTypeArr) ? sensorTypeArr[0] : undefined;
+        const typeList = sensorTypeData?.list?.[0];
+
+        if (typeList) {
+          const options = [];
+          Object.entries(typeList).forEach(([key, value]) => {
+            const valueStr = String(value);
+            const parts = valueStr.split(';');
+            const typeValue = parts[0].padStart(2, "0");
+            const typeLabel = parts[1];
+            options.push({ value: typeValue, label: typeLabel });
+          });
+          return options;
+        }
+      }
+    } catch (error) {
+      console.error("Error extracting type options:", error);
+    }
+    
+    // Fallback to default options
+    return [
+      { value: "00", label: "-" },
+      { value: "01", label: "ELA PUCK RHT2" },
+      { value: "02", label: "ELA COIN T" }
+    ];
   };
 
   const handleModalConfirm = () => {
@@ -635,11 +721,11 @@ function DetailModal({
                       error={!!error}
                       helperText={error?.message}
                     >
-                      <MenuItem value={"00"}>
-                        {t("configuration.ble.select")}
-                      </MenuItem>
-                      <MenuItem value={"01"}>ELA PUCK RHT</MenuItem>
-                      <MenuItem value={"02"}>ELA COIN T</MenuItem>
+                      {getTypeOptions().map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
                     </TextField>
                   )}
                 />

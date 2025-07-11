@@ -171,6 +171,8 @@ const transformFieldData = (
 };
 
 const transformOriginData = (originData: any[]): FormData => {
+  if (!originData || !Array.isArray(originData)) return {};
+  
   return originData.reduce((acc: FormData, item) => {
     const key = Object.keys(item)[0];
     const fields = item[key];
