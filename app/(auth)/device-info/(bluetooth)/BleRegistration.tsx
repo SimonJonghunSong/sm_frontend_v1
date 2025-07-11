@@ -584,22 +584,14 @@ function DetailModal({
     name: "humidityMax",
   });
 
-  const temperatureErrors = new Set(
-    form.formState.isSubmitted
-      ? [
-          temperatureMinControl.fieldState.error?.message,
-          temperatureMaxControl.fieldState.error?.message,
-        ]
-      : []
-  );
-  const humidityErrors = new Set(
-    form.formState.isSubmitted
-      ? [
-          humidityMinControl.fieldState.error?.message,
-          humidityMaxControl.fieldState.error?.message,
-        ]
-      : []
-  );
+  const temperatureErrors = new Set([
+    temperatureMinControl.fieldState.error?.message,
+    temperatureMaxControl.fieldState.error?.message,
+  ].filter(Boolean));
+  const humidityErrors = new Set([
+    humidityMinControl.fieldState.error?.message,
+    humidityMaxControl.fieldState.error?.message,
+  ].filter(Boolean));
 
   const validateTemperatureRange = (value, context) => {
     const min = context.getValues("temperatureMin");
@@ -927,43 +919,19 @@ function DetailModal({
             </InputBox.Body>
           </InputBox>
 
-          {modelName === "ST4315B" && (
-            <InputBox
-              style={{
-                flex: 1,
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <InputBox.Head>
-                <InputBox.Title>
-                  {t("configuration.ble.panic_alert")}
-                  {/* <i>*</i> */}
-                </InputBox.Title>
-              </InputBox.Head>
-              <InputBox.Body>
-                <FormControl sx={{ width: "100%" }} size="small">
-                  <Controller
-                    name={"panicAlert"}
-                    control={form.control}
-                    render={({ field }) => (
-                      <SwitchPrimary
-                        {...field}
-                        checked={field.value}
-                        onChange={(e) => field.onChange(e.target.checked)}
-                      />
-                    )}
-                  />
-                </FormControl>
-              </InputBox.Body>
-            </InputBox>
-          )}
+
+
+
+
+
+
+
+
+
 
 
         </Stack>
-        <Stack direction="column" gap="16px" flex={1}>
+        <Stack direction="column" gap="8px" flex={1} justifyContent="flex-start">
           <InputBox>
             <InputBox.Head>
               <InputBox.Title>
@@ -1152,6 +1120,45 @@ function DetailModal({
               )}
             </InputBox.Body>
           </InputBox>
+
+          {modelName === "ST4315B" && (
+            <InputBox
+              style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <InputBox.Head>
+                <InputBox.Title>
+                  {t("configuration.ble.panic_alert")}
+                  {/* <i>*</i> */}
+                </InputBox.Title>
+              </InputBox.Head>
+              <InputBox.Body>
+                <FormControl sx={{ width: "100%" }} size="small">
+                  <Controller
+                    name={"panicAlert"}
+                    control={form.control}
+                    render={({ field }) => (
+                      <SwitchPrimary
+                        {...field}
+                        checked={field.value}
+                        onChange={(e) => field.onChange(e.target.checked)}
+                      />
+                    )}
+                  />
+                </FormControl>
+              </InputBox.Body>
+            </InputBox>
+          )}
+
+
+
+
+
         </Stack>
       </ModalForm>
     </Modal>
