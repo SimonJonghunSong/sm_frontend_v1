@@ -1337,7 +1337,8 @@
       "sensor_scan_power_saving": "Economia de Energia do Escaneamento do Sensor",
       "select": "Selecione",
       "enter_alert": "Digite alerta",
-      "exit_alert": "Alerta de saída"
+      "exit_alert": "Alerta de saída",
+      "mac_address": "Endereço MAC"
     },
     "accessories": {
       "1-wire_settings": "Configurações 1-Wire",

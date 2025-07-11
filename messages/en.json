@@ -1370,7 +1370,8 @@
       "sensor_report_interval_(minutes)": "Sensor Report Interval (minutes)",
       "sensor_scan_interval_in_driving_(minutes)": "Sensor Scan Interval in Driving (minutes)",
       "sensor_scan_interval_in_parking_(minutes)": "Sensor Scan Interval in Parking (minutes)",
-      "sensor_scan_power_saving": "Sensor Scan Power Saving"
+      "sensor_scan_power_saving": "Sensor Scan Power Saving", 
+      "mac_address": "MAC Address"
     },
     "accessories": {
       "1-wire_settings": "1-Wire Settings",
