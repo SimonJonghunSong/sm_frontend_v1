@@ -120,11 +120,9 @@ const BleRegistration = ({
       console.error("Error extracting type display options:", error);
     }
     
-    // Fallback to default options
+    // Fallback to empty options
     return {
-      "00": "-",
-      "01": "ELA PUCK RHT",
-      "02": "ELA COIN T"
+      "00": ""
     };
   };
 
@@ -598,12 +596,8 @@ function DetailModal({
       console.error("Error extracting type options:", error);
     }
     
-    // Fallback to default options
-    return [
-      { value: "00", label: "-" },
-      { value: "01", label: "ELA PUCK RHT" },
-      { value: "02", label: "ELA COIN T" }
-    ];
+    // Fallback to empty options
+    return [{ value: "00", label: "" }];
   };
 
   const handleModalConfirm = () => {
