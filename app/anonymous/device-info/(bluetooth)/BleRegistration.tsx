@@ -123,7 +123,7 @@ const BleRegistration = ({
     // Fallback to default options
     return {
       "00": "-",
-      "01": "ELA PUCK RHT2",
+      "01": "ELA PUCK RHT",
       "02": "ELA COIN T"
     };
   };
@@ -247,6 +247,7 @@ const BleRegistration = ({
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleAddItem = (addData: string) => {
+    // console.log("handleAddItem/addData------", addData);
     setIsLoading(true);
     write({
       data: `${AT_EDIT_PREFIX}${port.imei};${addData}`,
@@ -259,11 +260,31 @@ const BleRegistration = ({
   };
 
   const handleDeleteItem = (id: number) => {
+    // console.log("handleDeleteItem/id------", id);
     setIsLoading(true);
+
+    // 모델명 추출
+    const modelInfo = originData?.[0]?.info?.[0];
+    const modelName = modelInfo?.S;
+
+    // 모델별로 0의 길이 다르게 처리
+    const zeroLength = modelName === "ST4315B" ? 38 : 36;
+    const zeroString = "0".repeat(zeroLength);
+
+    // 전송할 데이터 구성
+    const deleteData = `${AT_EDIT_PREFIX}${port.imei};41;${(id - 1)
+      .toString()
+      .padStart(2, "0")}#${zeroString}`;
+
+      // console.log("=== BLE Delete Command ===");
+      // console.log("Model:", modelName);
+      // console.log("ID:", id);
+      // console.log("Zero Length:", zeroLength);
+      // console.log("Delete Data:", deleteData);
+      // console.log("========================");      
+
     write({
-      data: `${AT_EDIT_PREFIX}${port.imei};41;${(id - 1)
-        .toString()
-        .padStart(2, "0")}#000000000000000000000000000000000000`,
+      data: deleteData,
       port: port.port,
       writer: port.writer,
     });
@@ -304,28 +325,30 @@ const BleRegistration = ({
           }
         }
 
-        const bleData = Object.values(result).reduce(
-          (acc, ble: string, idx) => {
-            if (ble === "NoData") return acc;
+        const bleData = Object.entries(result)
+          .sort(([keyA], [keyB]) => parseInt(keyA) - parseInt(keyB))
+          .reduce(
+            (acc, [key, ble]: [string, string]) => {
+              if (ble === "NoData") return acc;
 
-            (acc as Array<any>).push({
-              id: idx + 1,
-              type: "1",
-              col1: idx + 1,
-              col2: ble.slice(2, 4) === "01" ? "On" : "Off",
-              col3: ble.slice(0, 2),
-              col4: ble.slice(4, 16),
-              col5: ble.slice(16, 18) === "01" ? "On" : "Off",
-              col6: ble.slice(18, 20) === "01" ? "On" : "Off",
-              col7: ble.slice(24, 28),
-              col8: ble.slice(20, 24),
-              col9: ble.slice(32, 36),
-              col10: ble.slice(28, 32),
-            });
-            return acc;
-          },
-          []
-        );
+              (acc as Array<any>).push({
+                id: parseInt(key) + 1,
+                type: "1",
+                col1: parseInt(key) + 1,
+                col2: ble.slice(2, 4) === "01" ? "On" : "Off",
+                col3: ble.slice(0, 2),
+                col4: ble.slice(4, 16),
+                col5: ble.slice(16, 18) === "01" ? "On" : "Off",
+                col6: ble.slice(18, 20) === "01" ? "On" : "Off",
+                col7: ble.slice(24, 28),
+                col8: ble.slice(20, 24),
+                col9: ble.slice(32, 36),
+                col10: ble.slice(28, 32),
+              });
+              return acc;
+            },
+            []
+          );
 
         bleRegistrationRef.current = "";
         console.log("bleData :::", bleData);
@@ -343,6 +366,12 @@ const BleRegistration = ({
   };
 
   useEffect(() => {
+    if (!originData) {
+      // throw new Error("No origin data");
+      // 안내 메시지로 대체
+      console.error("기기 연결이 해제되었습니다. USB 연결을 확인하세요.");
+      return;
+    }
     fetch();
   }, [isReady]);
 
@@ -572,7 +601,7 @@ function DetailModal({
     // Fallback to default options
     return [
       { value: "00", label: "-" },
-      { value: "01", label: "ELA PUCK RHT2" },
+      { value: "01", label: "ELA PUCK RHT" },
       { value: "02", label: "ELA COIN T" }
     ];
   };
