@@ -528,6 +528,11 @@ export default function DeviceInfoPage() {
   const [isLoadingModelImei, setIsLoadingModelImei] = useState(false);
   const [modelImei, setModelImei] = useState<string>("");
 
+  // 기기(포트) 변경 시 IMEI 상태 초기화
+  useEffect(() => {
+    setModelImei("");
+  }, [currentPort?.port?.imei]);
+
   // modelImei 초기화를 useEffect로 감싸기
   useEffect(() => {
     if (currentPort?.port?.loadedImei) {
