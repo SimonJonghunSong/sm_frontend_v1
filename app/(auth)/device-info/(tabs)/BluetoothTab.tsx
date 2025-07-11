@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 import { FormField } from "../page";
-import { Stack } from "@mui/material";
+import { Stack, Divider } from "@mui/material";
 import { Ble, Sensor } from "../(bluetooth)/@index";
 import BleRegistration from "app/(auth)/device-info/(bluetooth)/BleRegistration";
+import BdaRegistration from "../(bluetooth)/BdaRegistration";
 import { SerialPortState } from "@/src/stores/useSerialStore";
 
 interface Props {
@@ -66,6 +67,29 @@ export default function BluetoothTab({
         bleRegistrationMax={bleRegistrationMax}
         originData={originData}
       />
+
+      {/* BDA Registration: ST4315B 모델에서만 노출 */}
+      {(() => {
+        // 모델명 추출
+        const modelInfo = originData?.[0]?.info?.[0];
+        const modelName = modelInfo?.S;
+        if (modelName === "ST4315B") {
+          return (
+            <BdaRegistration
+              formData={formData}
+              onChange={handleValueChange}
+              isReady={isReady}
+              write={write}
+              port={port}
+              originData={originData}
+            />
+          );
+        }
+        return null;
+      })()}
+
+      {/* BDA와 Sensor 사이 구분선 */}
+      {/* <Divider /> */}
 
       <Sensor
         formData={formData}

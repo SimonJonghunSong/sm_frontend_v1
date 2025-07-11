@@ -153,7 +153,7 @@ export default function useDeviceVersions({
                 const wwan = [
                   "Connected With Server",
                   "Disconnected with Server",
-                  "Dieconnected GPRS Bearer",
+                  "Disconnected GPRS Bearer",
                   "No Network",
                   "Pin Lock",
                   "NW Error (Limited Service)",

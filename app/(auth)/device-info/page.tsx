@@ -391,6 +391,7 @@ export default function DeviceInfoPage() {
   }, [formData, originData, userRole, t]);
 
   const handleReboot = () => {
+    if (!currentPort?.port) return;
     write({
       data: `${AT_CMD}${imei};03;03`,
       port: currentPort.port,
@@ -399,6 +400,8 @@ export default function DeviceInfoPage() {
   };
 
   const handleLoadImei = () => {
+    if (!currentPort?.port) return;
+    
     setIsLoadingModelImei(true);
     imeiRef.current = "";
 
@@ -434,6 +437,10 @@ export default function DeviceInfoPage() {
   };
 
   const renderContent = () => {
+    if (!currentPort?.port) {
+      return <div>No device connected</div>;
+    }
+    
     switch (tab) {
       case "DeviceStatus":
         return (
@@ -442,7 +449,7 @@ export default function DeviceInfoPage() {
             formData={formData}
             modelImei={modelImei}
             isLoadingModelImei={isLoadingModelImei}
-            buyer={currentPort.port.modelinfo ? currentPort.port.modelinfo.split("_")[1] : undefined}
+            buyer={currentPort?.port?.modelinfo ? currentPort.port.modelinfo.split("_")[1] : undefined}
             deviceVersionsObject={deviceVersionsObject}
             handleReboot={handleReboot}
             handleLoadImei={handleLoadImei}
@@ -455,7 +462,7 @@ export default function DeviceInfoPage() {
           <SystemTab
             formData={formData}
             setFormData={setFormData}
-            port={currentPort.port}
+            port={currentPort?.port}
             originData={originData}
           />
         );
@@ -490,18 +497,18 @@ export default function DeviceInfoPage() {
             write={(command) =>
               write({
                 data: `${AT_REQ}${imei};${command}`,
-                port: currentPort.port,
-                writer: currentPort.writer,
+                port: currentPort?.port,
+                writer: currentPort?.writer,
               })
             }
             editWrite={(command) =>
               write({
                 data: `${AT_EDIT_PREFIX}${imei};${command}`,
-                port: currentPort.port,
-                writer: currentPort.writer,
+                port: currentPort?.port,
+                writer: currentPort?.writer,
               })
             }
-            port={currentPort.port}
+            port={currentPort?.port}
           />
         );
       case "Commands":
@@ -531,6 +538,8 @@ export default function DeviceInfoPage() {
   };
 
   const handleApply = async () => {
+    if (!currentPort?.port) return;
+    
     setIsLoading(true);
     const profileLines = profile.split("\n");
 
@@ -562,12 +571,16 @@ export default function DeviceInfoPage() {
   useEffect(() => {
     if (currentPort?.port?.readable && currentPort?.port?.writable) {
       setIsReady(true);
+    } else {
+      setIsReady(false);
     }
   }, [currentPort?.port?.readable, currentPort?.port?.writable]);
 
   const { setPackageFetchingStart, deleteSerialPort } = useSerialStore();
 
   const handleRefreshJsonPacket = async () => {
+    if (!currentPort?.port) return;
+    
     setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
     setPackageFetchingStart({ imei: currentPort.port.imei });
