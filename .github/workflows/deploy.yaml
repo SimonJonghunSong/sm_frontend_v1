@@ -29,9 +29,7 @@ jobs:
             fi
             npm install
             npm run build
-            cd /home/simon/SM_FRONTEND_RUN/sm_frontend_v1
-            stop.sh
-            start.sh
+            /home/simon/restart.sh
 
 
 
