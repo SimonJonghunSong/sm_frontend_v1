@@ -33,7 +33,7 @@ jobs:
             pkill -f "npm start" || true
             sleep 2
             cd /home/simon/SM_FRONTEND_RUN/sm_frontend_v1
-            nohup npm start > output.log 2>&1 &
+            nohup npm start > /home/simon/SM_FRONTEND_RUN/sm_frontend_v1/output.log 2>&1 &
 
 
 
