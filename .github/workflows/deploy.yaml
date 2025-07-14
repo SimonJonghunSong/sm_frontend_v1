@@ -19,7 +19,7 @@ jobs:
           script: |
             export PATH=$PATH:/usr/local/lib/nodejs/node-v22.11.0-linux-x64/bin
             npm cache clean --force
-            cd /home/simon/sm_frontend_v1
+            cd /home/simon/stsunlab-sync-master
             git pull https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/stsunlab-sync-master.git
             npm install
             npm run build
