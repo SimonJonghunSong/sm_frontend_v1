@@ -25,7 +25,7 @@ export default function useSendFormData() {
     updateJsonDataToIDB(modelName, fwVer, targetCountry, formData);
 
     if (setFormData) {
-      // toast.success(t("common.save_success"));
+      toast.success(t("common.save_success"));
       setFormData((prev) =>
         Object.entries(prev).reduce((acc, [key, value]) => {
           acc[key] = {

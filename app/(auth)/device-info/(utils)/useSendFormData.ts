@@ -140,7 +140,7 @@ export default function useSendFormData() {
     setTimeout(() => {
       if (setFormData) {
         if (!hasErrorRef.current) {
-          // toast.success(t("common.send_success"));
+          toast.success(t("common.send_success"));
           setFormData((prev) =>
             Object.entries(prev).reduce((acc, [key, value]) => {
               acc[key] = {
