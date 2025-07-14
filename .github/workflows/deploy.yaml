@@ -19,8 +19,14 @@ jobs:
           script: |
             export PATH=$PATH:/usr/local/lib/nodejs/node-v22.11.0-linux-x64/bin
             npm cache clean --force
-            cd /home/simon/sm_frontend_v1
-            git pull https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/sm_frontend_v1.git
+            cd /home/simon/SM_FRONTEND_RUN/
+            if [ ! -d "sm_frontend_v1/.git" ]; then
+              git clone https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/sm_frontend_v1.git
+              cd sm_frontend_v1
+            else
+              cd sm_frontend_v1
+              git pull https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.GH_USERNAME }}/sm_frontend_v1.git
+            fi
             npm install
             npm run build
             fuser -k 3000/tcp || true
