@@ -29,11 +29,8 @@ jobs:
             fi
             npm install
             npm run build
-            fuser -k 3000/tcp || true
-            pkill -f "npm start" || true
-            sleep 2
-            cd /home/simon/SM_FRONTEND_RUN/sm_frontend_v1
-            nohup npm start > /home/simon/SM_FRONTEND_RUN/sm_frontend_v1/output.log 2>&1 &
+            /home/simon/SM_FRONTEND_RUN/stop.sh
+            /home/simon/SM_FRONTEND_RUN/start.sh
 
 
 
