@@ -194,6 +194,22 @@ export const commands: Record<CommandsSection, Command[]> = {
       id: "0922",
       uiType: "select",
     },
+    {
+      id: "1020",
+      uiType: "text-input",
+    },
+    {
+      id: "1021",
+      uiType: "number-input",
+    },
+    {
+      id: "1022",
+      uiType: "number-input",
+    },
+    {
+      id: "1023",
+      uiType: "number-input",
+    },
   ],
   systemCommands: [
     // TODO: type 파악필요

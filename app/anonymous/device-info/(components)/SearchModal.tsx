@@ -5,6 +5,10 @@ import { useTranslations } from "next-intl";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { SearchField, SearchFields } from "constants/searchField";
+import useParameterStore from '@/utils/useParameterStore';
+import { commands } from '../(commands)/@index';
+import { FIELD_VALIDATIONS } from 'constants/field';
+import { hiddenParameterId } from '../(tabs)/CommandTab';
 
 type SearchResult = {
   key: string;
@@ -31,6 +35,7 @@ export default function SearchModal({
 
   // uitls
   const t = useTranslations();
+  const { hiddenParameter } = useParameterStore();
 
   // states
   const [searchTerm, setSearchTerm] = useState("");
@@ -174,6 +179,55 @@ export default function SearchModal({
           key: value.field,
           searchText: `${value.searchText} (${value.field})`,
           tab: value.tab,
+        });
+      });
+
+      // Maintenance Server 숨김 파라미터 강제 추가 (Show Hidden Parameters ON일 때만)
+      if (!hiddenParameter) {
+        const maintenanceIds = ["1020", "1021", "1022", "1023"];
+        maintenanceIds.forEach((id) => {
+          if (
+            id === searchTerm.trim() &&
+            !paramResults.some((r) => r.key === id) &&
+            !paramResultsEntries.some(([key]) => key === id)
+          ) {
+            paramResults.push({
+              key: id,
+              searchText: `Maintenance Server (${id}) [Hidden]`,
+              tab: "Network",
+            });
+          }
+        });
+      }
+
+      // Commands 검색 결과 추가 (1020~1023은 제외)
+      const normalizedSearchTerm = searchTerm.toLowerCase().trim();
+      Object.entries(commands).forEach(([sectionKey, commandList]) => {
+        const matchingCommands = commandList.filter((command) => {
+          if (["1020", "1021", "1022", "1023"].includes(command.id)) return false;
+          const fieldValidation = FIELD_VALIDATIONS[command.id];
+          if (command.id.toLowerCase().includes(normalizedSearchTerm)) {
+            return true;
+          }
+          if (!fieldValidation) {
+            return false;
+          }
+          const title = fieldValidation.title?.en || "";
+          return title.toLowerCase().includes(normalizedSearchTerm);
+        });
+        matchingCommands.forEach((command) => {
+          const fieldValidation = FIELD_VALIDATIONS[command.id];
+          if (fieldValidation) {
+            const isHidden = hiddenParameterId.includes(command.id);
+            if (isHidden && hiddenParameter) {
+              return;
+            }
+            paramResults.push({
+              key: command.id,
+              searchText: `${fieldValidation.title?.en || command.id} (${command.id})${isHidden ? ' [Hidden]' : ''}`,
+              tab: "Commands",
+            });
+          }
         });
       });
       setSearchParamResults(paramResults);

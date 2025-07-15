@@ -182,51 +182,46 @@ export default function SearchModal({
         });
       });
 
-      // Commands 검색 결과 추가
+      // Maintenance Server 숨김 파라미터 강제 추가 (Show Hidden Parameters ON일 때만)
+      if (!hiddenParameter) {
+        const maintenanceIds = ["1020", "1021", "1022", "1023"];
+        maintenanceIds.forEach((id) => {
+          if (
+            id === searchTerm.trim() &&
+            !paramResults.some((r) => r.key === id) &&
+            !paramResultsEntries.some(([key]) => key === id)
+          ) {
+            paramResults.push({
+              key: id,
+              searchText: `Maintenance Server (${id}) [Hidden]`,
+              tab: "Network",
+            });
+          }
+        });
+      }
+
+      // Commands 검색 결과 추가 (1020~1023은 제외)
       const normalizedSearchTerm = searchTerm.toLowerCase().trim();
-      console.log("Searching for commands with term:", normalizedSearchTerm);
-      console.log("Available commands:", commands);
-      
-      // 모든 commands 섹션을 순회하며 검색
       Object.entries(commands).forEach(([sectionKey, commandList]) => {
-        console.log(`Searching in section: ${sectionKey}`, commandList);
-        
         const matchingCommands = commandList.filter((command) => {
-          // FIELD_VALIDATIONS에서 제목 가져오기
+          if (["1020", "1021", "1022", "1023"].includes(command.id)) return false;
           const fieldValidation = FIELD_VALIDATIONS[command.id];
-          console.log(`Command ${command.id}:`, fieldValidation);
-          
-          // JSON ID로 검색
           if (command.id.toLowerCase().includes(normalizedSearchTerm)) {
-            console.log(`Command ${command.id} matches by ID`);
             return true;
           }
-          
           if (!fieldValidation) {
-            console.log(`No field validation for command ${command.id}`);
             return false;
           }
-          
           const title = fieldValidation.title?.en || "";
-          const matches = title.toLowerCase().includes(normalizedSearchTerm);
-          console.log(`Command ${command.id} title: "${title}", matches: ${matches}`);
-          return matches;
+          return title.toLowerCase().includes(normalizedSearchTerm);
         });
-
-        console.log(`Matching commands in ${sectionKey}:`, matchingCommands);
-
         matchingCommands.forEach((command) => {
           const fieldValidation = FIELD_VALIDATIONS[command.id];
           if (fieldValidation) {
-            // 숨겨진 파라미터인지 확인
             const isHidden = hiddenParameterId.includes(command.id);
-            
-            // Show Hidden Parameters가 비활성화되어 있고 숨겨진 파라미터라면 건너뛰기
             if (isHidden && hiddenParameter) {
-              console.log(`Skipping hidden command: ${command.id}`);
               return;
             }
-            
             paramResults.push({
               key: command.id,
               searchText: `${fieldValidation.title?.en || command.id} (${command.id})${isHidden ? ' [Hidden]' : ''}`,
