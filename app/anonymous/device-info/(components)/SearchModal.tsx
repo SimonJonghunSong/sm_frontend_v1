@@ -9,6 +9,7 @@ import useParameterStore from '@/utils/useParameterStore';
 import { commands } from '../(commands)/@index';
 import { FIELD_VALIDATIONS } from 'constants/field';
 import { hiddenParameterId } from '../(tabs)/CommandTab';
+import { MENUS, SECTIONS } from "constants/searchField";
 
 type SearchResult = {
   key: string;

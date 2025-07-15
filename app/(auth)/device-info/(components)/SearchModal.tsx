@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
-import { SearchField, SearchFields } from "constants/searchField";
+import { SearchField, SearchFields, MENUS, SECTIONS } from "constants/searchField";
 import { commands } from "app/(auth)/device-info/(commands)/@index";
 import { FIELD_VALIDATIONS } from "constants/field";
 import useParameterStore from "@/utils/useParameterStore";
@@ -191,9 +191,10 @@ export default function SearchModal({
             !paramResults.some((r) => r.key === id) &&
             !paramResultsEntries.some(([key]) => key === id)
           ) {
+            const paramTitle = FIELD_VALIDATIONS[id]?.title?.en || id;
             paramResults.push({
               key: id,
-              searchText: `Maintenance Server (${id}) [Hidden]`,
+              searchText: `${MENUS.Network.en} > ${SECTIONS.MaintenanceServer.en} > ${paramTitle} (${id}) [Hidden]`,
               tab: "Network",
             });
           }
