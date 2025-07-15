@@ -116,7 +116,7 @@ export default function DeviceInformation({
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
-            <FieldValue>N/A</FieldValue>
+            <FieldValue>{renderVersion("GNSS")}</FieldValue>
           </FieldItem>
           <FieldItem>
             <FieldLabel>{t("device_information.gnss_state")}</FieldLabel>

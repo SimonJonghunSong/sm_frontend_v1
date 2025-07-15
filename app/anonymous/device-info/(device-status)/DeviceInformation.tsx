@@ -116,6 +116,10 @@ export default function DeviceInformation({
             <FieldValue>{modelEsn}</FieldValue>
           </FieldItem>
           <FieldItem>
+            <FieldLabel>{t("device_information.gnss_version")}</FieldLabel>
+            <FieldValue>{renderVersion("GNSS")}</FieldValue>
+          </FieldItem>
+          <FieldItem>
             <FieldLabel>{t("device_information.gnss_state")}</FieldLabel>
             <FieldValue>{gnss}</FieldValue>
           </FieldItem>
