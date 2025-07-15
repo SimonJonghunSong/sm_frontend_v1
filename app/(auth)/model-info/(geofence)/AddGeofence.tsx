@@ -686,7 +686,10 @@ const AddGeofence = ({
               value={mapManager.circles?.[0]?.center?.lat.toFixed(5) || ""}
               inputProps={{
                 step: 0.001,
+                style: { pointerEvents: 'none' },
+                tabIndex: -1,
               }}
+              onKeyDown={e => e.preventDefault()}
               onChange={(e) => {
                 const lat = parseFloat(e.target.value);
                 mapManager.updateCircleCenter(
@@ -719,7 +722,10 @@ const AddGeofence = ({
               value={mapManager.circles?.[0]?.center?.lng.toFixed(5) || ""}
               inputProps={{
                 step: 0.001,
+                style: { pointerEvents: 'none' },
+                tabIndex: -1,
               }}
+              onKeyDown={e => e.preventDefault()}
               onChange={(e) => {
                 const lng = parseFloat(e.target.value);
                 mapManager.updateCircleCenter(
@@ -752,7 +758,10 @@ const AddGeofence = ({
               value={mapManager.circles?.[0]?.radius.toFixed(5) || ""}
               inputProps={{
                 step: 5,
+                style: { pointerEvents: 'none' },
+                tabIndex: -1,
               }}
+              onKeyDown={e => e.preventDefault()}
               onChange={(e) => {
                 mapManager.updateCircleRadius(0, parseFloat(e.target.value));
               }}
