@@ -223,9 +223,13 @@ export default function SearchModal({
             if (isHidden && hiddenParameter) {
               return;
             }
+            // sectionKey 예: 'geofenceCommands' → SECTIONS.GeofenceCommands.en
+            const sectionName = SECTIONS[
+              sectionKey.charAt(0).toUpperCase() + sectionKey.slice(1)
+            ]?.en || sectionKey;
             paramResults.push({
               key: command.id,
-              searchText: `${fieldValidation.title?.en || command.id} (${command.id})${isHidden ? ' [Hidden]' : ''}`,
+              searchText: `Commands > ${sectionName} > ${fieldValidation.title?.en || command.id} (${command.id})${isHidden ? ' [Hidden]' : ''}`,
               tab: "Commands",
             });
           }
