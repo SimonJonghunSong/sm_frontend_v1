@@ -97,7 +97,7 @@ export default function SideMenu({
       <aside className={styles.sideMenuWrap}>
         <ul className={styles.sideMenu}>
           {sideMenuItems.map((link) => {
-            if (link.name === "Show Hidden Parameters") {
+            if (link.name === t("configuration.side_bar.show_hidden_parameters")) {
               return (
                 <li key={link.name}>
                   <Stack
