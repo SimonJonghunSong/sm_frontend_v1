@@ -488,9 +488,9 @@ export default function Navbar() {
               {mounted && (
                 <div
                   className={
-                    isOnline
-                      ? `${styles.toggle} ${styles.active}`
-                      : `${styles.toggle} ${styles.offline}`
+                    lang === "es"
+                      ? `${styles.toggleExtended} ${isOnline ? styles.active : styles.offline}`
+                      : `${styles.toggle} ${isOnline ? styles.active : styles.offline}`
                   }
                 >
                   <div onClick={() => isOnline && handleToggleNetwork(false)}>
