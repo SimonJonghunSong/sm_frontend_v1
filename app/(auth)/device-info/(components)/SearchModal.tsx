@@ -262,6 +262,23 @@ export default function SearchModal({
         });
       });
 
+      // Geofence 메뉴에 9000~9002 강제 추가
+      const geofenceIds = ["9000", "9001", "9002"];
+      geofenceIds.forEach((id) => {
+        if (
+          id === searchTerm.trim()
+        ) {
+          const paramTitle = FIELD_VALIDATIONS[id]?.title?.en || id;
+          if (!paramResults.some((r) => r.key === id && r.tab === "Geofence")) {
+            paramResults.push({
+              key: id,
+              searchText: `${MENUS.Geofence.en} > ${paramTitle} (${id})`,
+              tab: "Geofence",
+            });
+          }
+        }
+      });
+
       console.log("Final param results:", paramResults);
       setSearchParamResults(paramResults);
     }
