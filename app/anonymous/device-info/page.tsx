@@ -250,13 +250,19 @@ export default function DeviceInfoPage() {
 
   const { lang } = useLangStore();
 
+  const navigate = useRouter();
   const currentPort = portList.find(({ port }) => port.imei === imei) || null;
+
+  // 연결 해제 시 anonymous device list로 이동
+  useEffect(() => {
+    if (!currentPort || currentPort.isDisconnected) {
+      navigate.replace("/anonymous/device/list");
+    }
+  }, [currentPort, navigate]);
 
   const originData = currentPort?.packageToJson?.synctrak;
 
   console.log("originData ::", originData);
-
-  const navigate = useRouter();
 
   const {
     deviceVersionsObject,

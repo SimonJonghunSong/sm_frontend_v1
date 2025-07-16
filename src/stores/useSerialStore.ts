@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ETX } from "../hooks/useSerial/constant";
+
+const ETX = "\x03";
 
 export type SerialPortState = {
   port: SerialPort;
@@ -80,6 +81,9 @@ type SerialPortAction = {
   setPassword: ({ imei, password }: { imei: string; password: string }) => void;
   setHasRefetching: ({ imei, value }: { imei: string; value: boolean }) => void;
   resetHasRefetching: () => void;
+  // JSON 파싱 에러 팝업 관련
+  setJsonParsingError: (error: boolean) => void;
+  getJsonParsingError: () => boolean;
 };
 
 export const parse = (str) => {
@@ -90,14 +94,18 @@ export const parse = (str) => {
     return parsedJson;
   } catch (e) {
     console.error("JSON 파싱 에러:", e.message);
+    // JSON 파싱 에러 발생 시 전역 에러 상태 설정
+    const store = useSerialStore.getState();
+    store.setJsonParsingError(true);
     return false;
   }
 };
 
 const useSerialStore = create(
-  persist<{ portList: SerialPortState[] } & SerialPortAction>(
+  persist<{ portList: SerialPortState[]; jsonParsingError: boolean } & SerialPortAction>(
     (set, get) => ({
       portList: [],
+      jsonParsingError: false,
       getPortList: () => get().portList,
       addSerialPort: (port) =>
         set(() => {
@@ -292,69 +300,70 @@ const useSerialStore = create(
           };
         }),
       getPolygonData: ({ imei }) => {
-        const currentPort = get().portList.find(
-          (item) => item.port.imei === imei
-        );
-        return currentPort.polygonGeofenceData;
+        const getState = get();
+        const port = getState.portList.find((p) => p.imei === imei);
+        return port?.polygonGeofenceData || [];
       },
       getCircularData: ({ imei }) => {
-        const currentPort = get().portList.find(
-          (item) => item.port.imei === imei
-        );
-        return currentPort.circularGeofenceData;
+        const getState = get();
+        const port = getState.portList.find((p) => p.imei === imei);
+        return port?.circularGeofenceData || [];
       },
       setIsDisconnected: ({ imei }) =>
         set(() => {
           return {
-            portList: get().portList.map((item) => {
-              return item.imei === imei
-                ? { ...item, isDisconnected: true }
-                : item;
-            }),
+            portList: get().portList.map((port) =>
+              port.port.imei === imei
+                ? { ...port, isDisconnected: true }
+                : port
+            ),
           };
         }),
       setIsConnected: ({ imei }) =>
         set(() => {
           return {
-            portList: get().portList.map((item) => {
-              return item.imei === imei
-                ? { ...item, isDisconnected: false }
-                : item;
-            }),
+            portList: get().portList.map((port) =>
+              port.port.imei === imei
+                ? { ...port, isDisconnected: false }
+                : port
+            ),
           };
         }),
       setIsAlreadyUnlock: ({ imei }) =>
         set(() => {
           return {
-            portList: get().portList.map((item) => {
-              return item.imei === imei
-                ? { ...item, isAlreadyUnlock: true }
-                : item;
-            }),
+            portList: get().portList.map((port) =>
+              port.port.imei === imei
+                ? { ...port, isAlreadyUnlock: true }
+                : port
+            ),
           };
         }),
       setPassword: ({ imei, password }) =>
         set(() => {
           return {
-            portList: get().portList.map((item) => {
-              return item.imei === imei
-                ? { ...item, password: password }
-                : item;
-            }),
+            portList: get().portList.map((port) =>
+              port.port.imei === imei
+                ? { ...port, password }
+                : port
+            ),
           };
         }),
-      resetHasRefetching: () => {
+      resetHasRefetching: () =>
         set(() => {
           return {
-            portList: get().portList.map((item) => {
-              return { ...item, hasRefetching: false };
-            }),
+            portList: get().portList.map((port) => ({
+              ...port,
+              hasRefetching: false,
+            })),
           };
-        });
-      },
+        }),
+      // JSON 파싱 에러 팝업 관련
+      setJsonParsingError: (error) => set(() => ({ jsonParsingError: error })),
+      getJsonParsingError: () => get().jsonParsingError,
     }),
     {
-      name: "serialStore",
+      name: "serial-store",
     }
   )
 );

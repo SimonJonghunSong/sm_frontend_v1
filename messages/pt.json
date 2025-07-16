@@ -1761,7 +1761,8 @@
         "the_device_has_not_been_detected": "O dispositivo não foi detectado.",
         "the_device_has_been_disconnected": "O dispositivo foi desconectado.",
         "are_you_sure_you_want_to_disconnect_this_device?": "Você tem certeza de que deseja desconectar este dispositivo?",
-        "connected_successfully!": "Conectado com sucesso!"
+        "connected_successfully!": "Conectado com sucesso!",
+        "json_parsing_error_due_to_abnormal_msg": "Erro de análise JSON devido a formato de mensagem anormal."
       },
       "load_profile_popup": {
         "are_you_sure_you_want_to_delete_this_profile?": "Você tem certeza de que deseja excluir este perfil?"

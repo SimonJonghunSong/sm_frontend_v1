@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import useErrorDialog from "@/src/hooks/useErrorDialog";
 import RefreshOutlinedIcon from "@mui/icons-material/RefreshOutlined";
 import { Button, IconButton, Skeleton, Stack, Tooltip } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
@@ -77,8 +78,22 @@ export default function DeviceList() {
   const { setImei, resetTab } = useSerialConfigurationStore();
   const { setModelName, setFwVer, setTargetCountry } = useModelInfoStore();
 
-  const { setPackageRefetchingStart, setPackageRefetchingEnd } =
+  const { setPackageRefetchingStart, setPackageRefetchingEnd, getJsonParsingError, setJsonParsingError } =
     useSerialStore();
+
+  // JSON 파싱 에러 팝업
+  const { renderErrorModal: renderJsonErrorModal, toggle: toggleJsonError } = useErrorDialog({
+    description: t("popup.configuration.device_refresh.json_parsing_error_due_to_abnormal_msg"),
+  });
+
+  // JSON 파싱 에러 감지 및 팝업 표시
+  useEffect(() => {
+    const hasJsonError = getJsonParsingError();
+    if (hasJsonError) {
+      toggleJsonError();
+      setJsonParsingError(false); // 팝업 표시 후 에러 상태 리셋
+    }
+  }, [getJsonParsingError, toggleJsonError, setJsonParsingError]);
 
   const handleRefreshJsonPacket = async (targetPort: SerialPortState) => {
     let isFechedPackageRef = false;
@@ -307,6 +322,26 @@ export default function DeviceList() {
               >
                 {t("device.device_list.configure")}
               </Button>
+              {/* Configure 버튼이 활성화되어도 refresh 버튼 표시 */}
+              {params.value.hasRefetching && (
+                <Button
+                  color="secondary"
+                  variant="outlined"
+                  sx={{
+                    padding: "7px",
+                  }}
+                  onClick={() => {
+                    handleRefreshJsonPacket(params.value.port);
+                  }}
+                  disabled={params.value.isPackageRefetching}
+                >
+                  {params.value.isPackageRefetching ? (
+                    <LoadingCircle />
+                  ) : (
+                    <RefreshOutlinedIcon />
+                  )}
+                </Button>
+              )}
             </Stack>
           );
         }
@@ -417,10 +452,11 @@ export default function DeviceList() {
         hasFooter={false}
         width="720px"
       >
-        <ProfileModal modalToggle={modalToggle} write={write} />
-      </Modal>
-    </div>
-  );
+                  <ProfileModal modalToggle={modalToggle} write={write} />
+        </Modal>
+        {renderJsonErrorModal()}
+      </div>
+    );
 }
 
 type Steps = "BEFORE" | "LOADED" | "APPLY";

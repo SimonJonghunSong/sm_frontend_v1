@@ -251,7 +251,15 @@ export default function DeviceInfoPage() {
 
   const { lang } = useLangStore();
 
+  const router = useRouter();
   const currentPort = portList.find(({ port }) => port.imei === imei);
+
+  // 연결 해제 시 device list로 이동
+  useEffect(() => {
+    if (!currentPort || currentPort.isDisconnected) {
+      router.replace("/device/list");
+    }
+  }, [currentPort, router]);
 
   const originData = portList.find(({ port }) => port.imei === imei)
     ?.packageToJson.synctrak;
@@ -725,8 +733,6 @@ export default function DeviceInfoPage() {
       }
     }
   }, [isReady, isPasswordReady]);
-
-  const router = useRouter();
 
   useEffect(() => {
     // 연결 해제 감지: currentPort가 없거나, 연결이 끊긴 상태
