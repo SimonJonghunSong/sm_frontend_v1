@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useRef } from "react";
+import { Dispatch, SetStateAction, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { useTranslations } from "next-intl";
 import { Button, Stack } from "@mui/material";
@@ -15,6 +15,8 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import hasFormDataFields from "app/(auth)/device-info/(utils)/hasFormDataFields";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import useParameterStore from "@/utils/useParameterStore";
+import useSerial from "@/src/hooks/useSerial";
+import useSerialStore from "@/src/stores/useSerialStore";
 
 interface Props {
   formData: {
@@ -38,6 +40,57 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const { sendFormData, isLoading } = useSendFormData();
   const { hiddenParameter } = useParameterStore();
+  const { state, func } = useSerial();
+  const { portList } = state;
+
+  useEffect(() => {
+    if (!hiddenParameter && portList.length > 0) {
+      const port = portList[0].port;
+      const writer = portList[0].writer;
+
+      port.onbuffervalue = (msg: string) => {
+        if (msg.startsWith("RRE;")) {
+          console.log("[MaintenanceServer] 수신된 응답:", msg);
+          // 예: RRE;2023000021;10;20#suntechscuti.com;21#9000;22#24;23#01:00
+          const parts = msg.split(";");
+          const paramMap: Record<string, string> = {};
+          for (let i = 3; i < parts.length; i++) {
+            const [at, value] = parts[i].split("#");
+            if (at && value) {
+              // 20~23을 1020~1023으로 매핑
+              const paramId = `102${parseInt(at, 10) - 20}`;
+              if (["1020","1021","1022","1023"].includes(paramId)) {
+                paramMap[paramId] = value;
+              }
+            }
+          }
+          setFormData((prev) => {
+            const next = { ...prev };
+            ["1020","1021","1022","1023"].forEach((id) => {
+              if (paramMap[id]) {
+                next[id] = {
+                  ...next[id],
+                  realValue: paramMap[id],
+                };
+              }
+            });
+            return next;
+          });
+        }
+      };
+
+      const command = "AT^REQ;;10;20,21,22,23";
+      console.log("[MaintenanceServer] 전송 명령:", command);
+      func.write({
+        data: command,
+        port,
+        writer,
+      });
+    }
+    return () => {
+      if (portList.length > 0) portList[0].port.onbuffervalue = undefined;
+    };
+  }, [hiddenParameter, portList, setFormData]);
 
   const isDirtyFields = Object.keys(formData).filter((key) => {
     return (
