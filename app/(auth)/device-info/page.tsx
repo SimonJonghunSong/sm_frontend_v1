@@ -712,6 +712,17 @@ export default function DeviceInfoPage() {
     }
   }, [isReady, isPasswordReady]);
 
+  const router = useRouter();
+
+  useEffect(() => {
+    // 연결 해제 감지: currentPort가 없거나, 연결이 끊긴 상태
+    if (!currentPort?.port) {
+      // 팝업 띄우는 로직이 있다면 같이 실행
+      // showLostPopup(); // 이미 있다면 생략
+      router.replace("/device/list");
+    }
+  }, [currentPort?.port]);
+
   useEffect(() => {
     if (!originData) {
       // navigate.replace("/device");
