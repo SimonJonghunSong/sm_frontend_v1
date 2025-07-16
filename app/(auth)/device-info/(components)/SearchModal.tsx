@@ -182,6 +182,32 @@ export default function SearchModal({
         });
       });
 
+      // Input/Output/Command 모두에 대해 1046~1049를 검색 결과에 추가
+      const ioAndCommandIds = ["1046", "1047", "1048", "1049"];
+      ioAndCommandIds.forEach((id) => {
+        if (
+          id === searchTerm.trim()
+        ) {
+          const paramTitle = FIELD_VALIDATIONS[id]?.title?.en || id;
+          // Input/Output(I/O) 메뉴 결과 추가
+          if (!paramResults.some((r) => r.key === id && r.tab === "Input/Output(I/O)")) {
+            paramResults.push({
+              key: id,
+              searchText: `${MENUS["Input/Output(I/O)"].en} > ${paramTitle} (${id})`,
+              tab: "Input/Output(I/O)",
+            });
+          }
+          // Command 메뉴 결과 추가
+          if (!paramResults.some((r) => r.key === id && r.tab === "Commands")) {
+            paramResults.push({
+              key: id,
+              searchText: `Commands > ${paramTitle} (${id})`,
+              tab: "Commands",
+            });
+          }
+        }
+      });
+
       // Maintenance Server 숨김 파라미터 강제 추가 (Show Hidden Parameters ON일 때만)
       if (!hiddenParameter) {
         const maintenanceIds = ["1020", "1021", "1022", "1023"];
@@ -201,11 +227,11 @@ export default function SearchModal({
         });
       }
 
-      // Commands 검색 결과 추가 (1020~1023은 제외)
+      // Commands 검색 결과 추가 (1020~1023, 1046~1049은 제외)
       const normalizedSearchTerm = searchTerm.toLowerCase().trim();
       Object.entries(commands).forEach(([sectionKey, commandList]) => {
         const matchingCommands = commandList.filter((command) => {
-          if (["1020", "1021", "1022", "1023"].includes(command.id)) return false;
+          if (["1020", "1021", "1022", "1023", "1046", "1047", "1048", "1049"].includes(command.id)) return false;
           const fieldValidation = FIELD_VALIDATIONS[command.id];
           if (command.id.toLowerCase().includes(normalizedSearchTerm)) {
             return true;
