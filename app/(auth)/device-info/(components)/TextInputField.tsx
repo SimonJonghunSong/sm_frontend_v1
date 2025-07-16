@@ -75,7 +75,7 @@ const TextInputField = ({
         {isDirty && <EditDot />}
       </Stack>
       <TextField
-        value={formData?.[id]?.realValue}
+        value={formData?.[id]?.realValue ?? ""}
         onChange={(e) => onChange(id, e.target.value)}
         error={error}
         helperText={helperText}
