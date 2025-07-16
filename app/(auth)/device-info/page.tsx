@@ -242,6 +242,7 @@ export default function DeviceInfoPage() {
   const isFechedPackageRef = useRef(false);
   const packageCountRef = useRef(0);
   const imeiRef = useRef("");
+  const imeiTimerRef = useRef<NodeJS.Timeout | null>(null);
   const { userRole } = useAuthStore();
   const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -414,25 +415,67 @@ export default function DeviceInfoPage() {
     currentPort.port.isLoadImei = true;
     currentPort.port.onLoadImei = (data) => {
       imeiRef.current += data;
+      // console.log('[IMEI] onLoadImei data:', data);
+      // console.log('[IMEI] imeiRef.current:', imeiRef.current);
 
-      setTimeout(() => {
-        if (imeiRef.current.includes("+EGMR")) {
-          const match = imeiRef.current.match(/"(\d{15})"/);
-          const number = match ? match[1] : "TIMEOUT ERROR";
-
-          currentPort.port.isLoadImei = false;
-          currentPort.port.onLoadImei = null;
-          currentPort.port.loadedImei = number;
-          setModelImei(number);
-        } else {
-          currentPort.port.isLoadImei = false;
-          currentPort.port.onLoadImei = null;
-          currentPort.port.loadedImei = "TIMEOUT ERROR";
-          setModelImei("TIMEOUT ERROR");
+      // 1. EGMR 명령에 대한 정상 응답 처리
+      if (imeiRef.current.includes("+EGMR")) {
+        const match = imeiRef.current.match(/"(\d{15})"/);
+        const number = match ? match[1] : "TIMEOUT ERROR";
+        if (imeiTimerRef.current) {
+          clearTimeout(imeiTimerRef.current);
         }
-
+        console.log('[IMEI] +EGMR 응답, 추출된 IMEI:', number);
+        currentPort.port.isLoadImei = false;
+        currentPort.port.onLoadImei = null;
+        currentPort.port.loadedImei = number;
+        setModelImei(number);
         setIsLoadingModelImei(false);
-      }, 2000);
+        return;
+      }
+
+      // 2. EGMR 명령에 대한 에러 처리 → CGSN 재시도
+      if (imeiRef.current.includes("CME ERROR")) {
+        if (imeiTimerRef.current) {
+          clearTimeout(imeiTimerRef.current);
+        }
+        // console.log('[IMEI] +CME ERROR: 100 감지, 1초 후 AT+CGSN 전송');
+        setTimeout(() => {
+          imeiRef.current = ""; // CGSN 시도 전 반드시 초기화!
+          // console.log('[IMEI] AT+CGSN 명령 전송');
+          write({
+            data: "AT+CGSN",
+            port: currentPort.port,
+            writer: currentPort.writer,
+          });
+          imeiTimerRef.current = setTimeout(() => {
+            // 2초 내 OK 응답이 없으면 타임아웃 처리
+            // console.log('[IMEI] CGSN 타임아웃, TIMEOUT ERROR');
+            currentPort.port.isLoadImei = false;
+            currentPort.port.onLoadImei = null;
+            currentPort.port.loadedImei = "TIMEOUT ERROR";
+            setModelImei("TIMEOUT ERROR");
+            setIsLoadingModelImei(false);
+          }, 2000);
+        }, 1000);
+        return;
+      }
+
+      // 3. CGSN 명령에 대한 OK 응답 처리
+      if (imeiRef.current.includes("OK")) {
+        const match = imeiRef.current.match(/(\d{15})/);
+        const number = match ? match[1] : "TIMEOUT ERROR";
+        if (imeiTimerRef.current) {
+          clearTimeout(imeiTimerRef.current);
+        }
+        console.log('[IMEI] CGSN OK 응답, 추출된 IMEI:', number);
+        currentPort.port.isLoadImei = false;
+        currentPort.port.onLoadImei = null;
+        currentPort.port.loadedImei = number;
+        setModelImei(number);
+        setIsLoadingModelImei(false);
+        return;
+      }
     };
 
     write({
@@ -789,70 +832,72 @@ export default function DeviceInfoPage() {
               toggleSearchModal();
               setTab(tab);
               setTimeout(() => {
-                if (type === "param" && tab === "Commands") {
-                  const targetElement = document.querySelector(`[data-command-id="${key}"]`) as HTMLElement | null;
-                  if (!targetElement) return;
+                // if (type === "param" && tab === "Commands") {
+                //   const targetElement = document.querySelector(`[data-command-id="${key}"]`) as HTMLElement | null;
+                //   if (!targetElement) return;
 
-                  // 부모를 타고 올라가며 className에 MuiDialog-paper가 포함된 div를 찾음
-                  let scrollParent = targetElement.parentElement as HTMLElement | null;
-                  while (scrollParent) {
-                    if (
-                      scrollParent.className &&
-                      typeof scrollParent.className === "string" &&
-                      scrollParent.className.includes("MuiDialog-paper")
-                    ) {
-                      break;
-                    }
-                    scrollParent = scrollParent.parentElement as HTMLElement | null;
-                  }
+                //   // 부모를 타고 올라가며 className에 MuiDialog-paper가 포함된 div를 찾음
+                //   let scrollParent = targetElement.parentElement as HTMLElement | null;
+                //   while (scrollParent) {
+                //     if (
+                //       scrollParent.className &&
+                //       typeof scrollParent.className === "string" &&
+                //       scrollParent.className.includes("MuiDialog-paper")
+                //     ) {
+                //       break;
+                //     }
+                //     scrollParent = scrollParent.parentElement as HTMLElement | null;
+                //   }
 
-                  if (scrollParent) {
-                    let offset = 0;
-                    let el: HTMLElement | null = targetElement;
-                    while (el && el !== scrollParent) {
-                      offset += el.offsetTop;
-                      el = el.offsetParent as HTMLElement | null;
-                    }
-                    scrollParent.scrollTo({
-                      top: offset - 40, // 필요시 조정
-                      behavior: "smooth",
-                    });
-                    return;
-                  }
+                //   if (scrollParent) {
+                //     let offset = 0;
+                //     let el: HTMLElement | null = targetElement;
+                //     while (el && el !== scrollParent) {
+                //       offset += el.offsetTop;
+                //       el = el.offsetParent as HTMLElement | null;
+                //     }
+                //     scrollParent.scrollTo({
+                //       top: offset - 40, // 필요시 조정
+                //       behavior: "smooth",
+                //     });
+                //     return;
+                //   }
 
-                  // Fallback: 섹션 헤더로 스크롤 (이전과 동일)
-                  const sectionMap: { [id: string]: string } = {
-                    // NetworkCommands
-                    "0101": "NetworkCommands", "0102": "NetworkCommands", "0103": "NetworkCommands", "0104": "NetworkCommands", "0901": "NetworkCommands", "0902": "NetworkCommands", "0903": "NetworkCommands", "0904": "NetworkCommands", "0905": "NetworkCommands", "0907": "NetworkCommands", "0105": "NetworkCommands", "0121": "NetworkCommands", "0121-01": "NetworkCommands", "0201": "NetworkCommands", "0202": "NetworkCommands", "0203": "NetworkCommands", "0107": "NetworkCommands", "0108": "NetworkCommands", "0109": "NetworkCommands", "0112": "NetworkCommands", "0113": "NetworkCommands", "0114": "NetworkCommands", "0115": "NetworkCommands", "0116": "NetworkCommands", "0117": "NetworkCommands", "0118": "NetworkCommands", "0119": "NetworkCommands", "0204": "NetworkCommands", "0205": "NetworkCommands", "0504": "NetworkCommands", "0714": "NetworkCommands", "0715": "NetworkCommands", "0122": "NetworkCommands", "0735": "NetworkCommands", "0736": "NetworkCommands", "0521": "NetworkCommands", "0522": "NetworkCommands", "0922": "NetworkCommands", "1020": "NetworkCommands", "1021": "NetworkCommands", "1022": "NetworkCommands", "1023": "NetworkCommands",
-                    // SystemCommands
-                    "0303": "SystemCommands", "0304": "SystemCommands", "0721": "SystemCommands", "0302": "SystemCommands", "0731": "SystemCommands", "0732": "SystemCommands", "0524": "SystemCommands", "0737": "SystemCommands", "0771": "SystemCommands", "0772": "SystemCommands", "0509": "SystemCommands", "0510": "SystemCommands", "0511": "SystemCommands", "0512": "SystemCommands", "0724": "SystemCommands", "0530": "SystemCommands", "0533": "SystemCommands", "0584": "SystemCommands", "0584-1": "SystemCommands", "0712": "SystemCommands", "0713": "SystemCommands", "0753": "SystemCommands", "0754": "SystemCommands", "0580": "SystemCommands", "0581": "SystemCommands", "0582": "SystemCommands", "0583": "SystemCommands", "0110": "SystemCommands", "0111": "SystemCommands", "0908": "SystemCommands", "0909": "SystemCommands", "0916": "SystemCommands", "0921": "SystemCommands",
-                    // GeofenceCommands (예시)
-                    "0506": "GeofenceCommands", "0515": "GeofenceCommands", "0517": "GeofenceCommands", "0519": "GeofenceCommands", "0518": "GeofenceCommands", "0725": "GeofenceCommands", "0726": "GeofenceCommands", "0526": "GeofenceCommands", "0727": "GeofenceCommands", "0734": "GeofenceCommands",
-                    // ... (다른 섹션도 필요시 추가)
-                  };
-                  const sectionKey = sectionMap[key];
-                  if (sectionKey) {
-                    const sectionHeader = document.querySelector(`[data-section-id="${sectionKey}"]`);
-                    if (sectionHeader) {
-                      const rect = sectionHeader.getBoundingClientRect();
-                      const scrollTop = document.documentElement.scrollTop;
-                      window.scrollTo({
-                        top: rect.top + scrollTop - SCROLL_TOP_OFFSET,
-                        behavior: "smooth",
-                      });
-                    }
-                  }
-                  return;
-                }
+                //   // Fallback: 섹션 헤더로 스크롤 (이전과 동일)
+                //   const sectionMap: { [id: string]: string } = {
+                //     // NetworkCommands
+                //     "0101": "NetworkCommands", "0102": "NetworkCommands", "0103": "NetworkCommands", "0104": "NetworkCommands", "0901": "NetworkCommands", "0902": "NetworkCommands", "0903": "NetworkCommands", "0904": "NetworkCommands", "0905": "NetworkCommands", "0907": "NetworkCommands", "0105": "NetworkCommands", "0121": "NetworkCommands", "0121-01": "NetworkCommands", "0201": "NetworkCommands", "0202": "NetworkCommands", "0203": "NetworkCommands", "0107": "NetworkCommands", "0108": "NetworkCommands", "0109": "NetworkCommands", "0112": "NetworkCommands", "0113": "NetworkCommands", "0114": "NetworkCommands", "0115": "NetworkCommands", "0116": "NetworkCommands", "0117": "NetworkCommands", "0118": "NetworkCommands", "0119": "NetworkCommands", "0204": "NetworkCommands", "0205": "NetworkCommands", "0504": "NetworkCommands", "0714": "NetworkCommands", "0715": "NetworkCommands", "0122": "NetworkCommands", "0735": "NetworkCommands", "0736": "NetworkCommands", "0521": "NetworkCommands", "0522": "NetworkCommands", "0922": "NetworkCommands", "1020": "NetworkCommands", "1021": "NetworkCommands", "1022": "NetworkCommands", "1023": "NetworkCommands",
+                //     // SystemCommands
+                //     "0303": "SystemCommands", "0304": "SystemCommands", "0721": "SystemCommands", "0302": "SystemCommands", "0731": "SystemCommands", "0732": "SystemCommands", "0524": "SystemCommands", "0737": "SystemCommands", "0771": "SystemCommands", "0772": "SystemCommands", "0509": "SystemCommands", "0510": "SystemCommands", "0511": "SystemCommands", "0512": "SystemCommands", "0724": "SystemCommands", "0530": "SystemCommands", "0533": "SystemCommands", "0584": "SystemCommands", "0584-1": "SystemCommands", "0712": "SystemCommands", "0713": "SystemCommands", "0753": "SystemCommands", "0754": "SystemCommands", "0580": "SystemCommands", "0581": "SystemCommands", "0582": "SystemCommands", "0583": "SystemCommands", "0110": "SystemCommands", "0111": "SystemCommands", "0908": "SystemCommands", "0909": "SystemCommands", "0916": "SystemCommands", "0921": "SystemCommands",
+                //     // GeofenceCommands (예시)
+                //     "0506": "GeofenceCommands", "0515": "GeofenceCommands", "0517": "GeofenceCommands", "0519": "GeofenceCommands", "0518": "GeofenceCommands", "0725": "GeofenceCommands", "0726": "GeofenceCommands", "0526": "GeofenceCommands", "0727": "GeofenceCommands", "0734": "GeofenceCommands",
+                //     // ... (다른 섹션도 필요시 추가)
+                //   };
+                //   const sectionKey = sectionMap[key];
+                //   if (sectionKey) {
+                //     const sectionHeader = document.querySelector(`[data-section-id="${sectionKey}"]`);
+                //     if (sectionHeader) {
+                //       const rect = sectionHeader.getBoundingClientRect();
+                //       const scrollTop = document.documentElement.scrollTop;
+                //       window.scrollTo({
+                //         top: rect.top + scrollTop - SCROLL_TOP_OFFSET,
+                //         behavior: "smooth",
+                //       });
+                //     }
+                //   }
+                //   return;
+                // }
                 let targetElement = document.querySelector(
                   `[data-section-id="${key}"]`
                 );
+
                 if (type === "param") {
                   const allDivs = document.querySelectorAll(".pageWrap div");
                   targetElement = Array.from(allDivs).find(
                     (div) => div.textContent === key
                   );
                 }
+
                 if (targetElement) {
                   const rect = targetElement.getBoundingClientRect();
                   const scrollTop = document.documentElement.scrollTop;

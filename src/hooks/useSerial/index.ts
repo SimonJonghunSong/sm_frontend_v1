@@ -1324,7 +1324,7 @@ const useSerial = () => {
           } else {
             const SUFFIX = '\n';
             // AT+EGMR=0,7 명령어에 대해서는 \r\n을 추가
-            if (data.startsWith('AT+EGMR=0,7')) {
+            if (data.startsWith('AT+EGMR=0,7') || data.startsWith('AT+CGSN')) {
               await writer.write(data + CR + SUFFIX); // Uint8Array 전송
             } else {
               await writer.write(data + SUFFIX); // Uint8Array 전송
