@@ -44,7 +44,7 @@ const MaintenanceServer = ({ formData, onChange, setFormData }: Props) => {
   const { portList } = state;
 
   useEffect(() => {
-    if (hiddenParameter && portList.length > 0) {
+    if (!hiddenParameter && portList.length > 0) {
       const port = portList[0].port;
       const writer = portList[0].writer;
 
