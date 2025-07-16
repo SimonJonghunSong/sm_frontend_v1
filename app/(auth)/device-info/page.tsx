@@ -243,6 +243,7 @@ export default function DeviceInfoPage() {
   const packageCountRef = useRef(0);
   const imeiRef = useRef("");
   const imeiTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const egmrTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const { userRole } = useAuthStore();
   const { getCurrentImei, resetImei, resetTab } = useSerialConfigurationStore();
   const { toggleOpen } = useCmdStore();
@@ -408,9 +409,20 @@ export default function DeviceInfoPage() {
 
   const handleLoadImei = () => {
     if (!currentPort?.port) return;
-    
+
     setIsLoadingModelImei(true);
     imeiRef.current = "";
+
+    // EGMR 타임아웃 타이머 시작
+    if (egmrTimeoutRef.current) clearTimeout(egmrTimeoutRef.current);
+    egmrTimeoutRef.current = setTimeout(() => {
+      // 2초 내 아무 응답이 없으면 TIMEOUT 처리
+      currentPort.port.isLoadImei = false;
+      currentPort.port.onLoadImei = null;
+      currentPort.port.loadedImei = "TIMEOUT ERROR";
+      setModelImei("TIMEOUT ERROR");
+      setIsLoadingModelImei(false);
+    }, 2000);
 
     currentPort.port.isLoadImei = true;
     currentPort.port.onLoadImei = (data) => {
@@ -420,6 +432,7 @@ export default function DeviceInfoPage() {
 
       // 1. EGMR 명령에 대한 정상 응답 처리
       if (imeiRef.current.includes("+EGMR")) {
+        if (egmrTimeoutRef.current) clearTimeout(egmrTimeoutRef.current);
         const match = imeiRef.current.match(/"(\d{15})"/);
         const number = match ? match[1] : "TIMEOUT ERROR";
         if (imeiTimerRef.current) {
@@ -436,6 +449,7 @@ export default function DeviceInfoPage() {
 
       // 2. EGMR 명령에 대한 에러 처리 → CGSN 재시도
       if (imeiRef.current.includes("CME ERROR")) {
+        if (egmrTimeoutRef.current) clearTimeout(egmrTimeoutRef.current);
         if (imeiTimerRef.current) {
           clearTimeout(imeiTimerRef.current);
         }
