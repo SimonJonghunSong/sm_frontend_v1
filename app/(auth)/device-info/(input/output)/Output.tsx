@@ -173,7 +173,7 @@ export default function Output({ formData, onChange }: Props) {
                 formData[value.id].list.includes(typeId.value)
               )
               ?.map((item) => (
-                <MenuItem value={item.value}>{item.label[lang]}</MenuItem>
+                <MenuItem key={item.value} value={item.value}>{item.label[lang]}</MenuItem>
               ))}
           </Select>
         </Stack>

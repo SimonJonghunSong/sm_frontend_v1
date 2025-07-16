@@ -154,7 +154,7 @@ export default function Input({ formData, onChange }: Props) {
           {(FIELD_VALIDATIONS?.[value.id].list || [])
             .filter((typeId) => formData[value.id].list.includes(typeId.value))
             .map((item) => (
-              <MenuItem value={item.value}>{item.label[lang]}</MenuItem>
+              <MenuItem key={item.value} value={item.value}>{item.label[lang]}</MenuItem>
             ))}
         </Select>
       ),
