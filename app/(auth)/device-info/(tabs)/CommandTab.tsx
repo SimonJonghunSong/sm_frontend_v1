@@ -409,12 +409,16 @@ export default function CommandTab({ imei, commandData }: Props) {
           renderCommand={renderCommand}
           commandData={commandData}
         />
-        <BleCommands renderCommand={renderCommand} commandData={commandData} />
+        <BleCommands 
+          renderCommand={renderCommand} 
+          commandData={commandData} />
         <AccessoryCommands
           renderCommand={renderCommand}
           commandData={commandData}
         />
-        <RfCommands renderCommand={renderCommand} commandData={commandData} />
+        <RfCommands 
+          renderCommand={renderCommand} 
+          commandData={commandData} />
       </div>
     </Stack>
   );

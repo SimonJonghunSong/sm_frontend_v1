@@ -39,14 +39,18 @@ const GeofenceCommands = ({ renderCommand, commandData }: Props) => {
           {comandList
             .slice(0, Math.ceil(comandList.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id}>{renderCommand(item)}</div>
+              ) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {comandList
             .slice(Math.ceil(comandList.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id}>{renderCommand(item)}</div>
+              ) : null
             )}
         </Stack>
       </Stack>
