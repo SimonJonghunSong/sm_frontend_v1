@@ -48,6 +48,8 @@ import { Stack } from "@mui/material";
 import EditProfileTab from "./(tabs)/EditProfileTab";
 import { useTranslations } from "next-intl";
 import useAuthStore from "@/utils/useAuthStore";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
+import { FIELD_VALIDATIONS } from "constants/field";
 const SCROLL_TOP_OFFSET = 140;
 
 // Type definitions
@@ -221,6 +223,26 @@ const extractCommandData = (originData: any[]) => {
     return [];
   }
 };
+
+// FormData를 모델명에 따라 patch하는 함수
+function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?: string) {
+  if (!modelName) return formData;
+  const patched = { ...formData };
+  // 1717 등 patch가 필요한 항목만 교체
+  Object.keys(formData).forEach((key) => {
+    // key가 1717로 끝나는 경우만 예시로 처리
+    if (key.endsWith("1717")) {
+      const fieldDef = getFieldDefinition("1717", modelName) || FIELD_VALIDATIONS["1717"];
+      patched[key] = {
+        ...patched[key],
+        list: fieldDef.list ?? null,
+        labelList: fieldDef.list ? fieldDef.list.map((item: any) => item.label) : null,
+        // title, tooltip 등도 필요시 추가
+      };
+    }
+  });
+  return patched;
+}
 
 export default function DeviceInfoPage() {
   const t = useTranslations();
@@ -629,10 +651,13 @@ export default function DeviceInfoPage() {
   useEffect(() => {
     if (originData) {
       const formDataValues = transformOriginData(originData);
-
-      setFormData(formDataValues);
-      setSearchSectionData(formDataToSearchSectionData(formDataValues, lang));
-      setSearchParamData(getSearchParamsData(formDataValues, lang));
+      const modelName = currentPort?.port?.modelinfo?.split('_')[0];
+      console.log("modelName=========================", modelName);
+      const patchedFormData = patchFormDataByModel(formDataValues, modelName);
+      console.log("patchedFormData=========================", patchedFormData);
+      setFormData(patchedFormData);
+      setSearchSectionData(formDataToSearchSectionData(patchedFormData, lang));
+      setSearchParamData(getSearchParamsData(patchedFormData, lang));
       setCommandData(extractCommandData(originData));
     }
   }, [originData]);

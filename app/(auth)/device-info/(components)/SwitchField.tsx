@@ -19,6 +19,8 @@ interface SwitchFieldProps {
   isDirty?: boolean;
   isUnderbarId?: boolean; // 1974 같은 중복으로 인해서 추가된 속성
   isForceRender?: boolean;
+  label?: string;
+  tooltip?: string;
 }
 
 const SwitchField = ({
@@ -30,6 +32,8 @@ const SwitchField = ({
   isDirty = false,
   isUnderbarId = false,
   isForceRender = false,
+  label,
+  tooltip,
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
@@ -58,13 +62,13 @@ const SwitchField = ({
         <InputBox.Title
           style={isHiddenParameter ? { color: "#FF0000" } : undefined}
         >
-          {FIELD_VALIDATIONS[realId].title[lang]}
+          {label || FIELD_VALIDATIONS[realId].title[lang]}
         </InputBox.Title>
-        {FIELD_VALIDATIONS[realId].tooltip?.[lang] && (
+        {(tooltip || FIELD_VALIDATIONS[realId].tooltip?.[lang]) && (
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
-                {FIELD_VALIDATIONS[realId].tooltip[lang]}
+                {tooltip || FIELD_VALIDATIONS[realId].tooltip[lang]}
               </span>
             }
           />
