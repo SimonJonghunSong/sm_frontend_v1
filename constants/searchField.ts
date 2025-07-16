@@ -891,7 +891,6 @@ const INCLUDE_FIELDS_ACCESSORIES = {
     "1996",
     "1997",
     "1998",
-    "2313",
     "2350",
   ],
 };
@@ -1134,6 +1133,7 @@ const INCLUDE_FIELDS_COMMANDS = {
   [SECTIONS.GeofenceCommands.en]: [],
   [SECTIONS.BleCommands.en]: [],
   [SECTIONS.AccessoryCommands.en]: [],
+  [SECTIONS.RfCommands.en]: [],
 };
 
 export const INCLUDE_FIELDS = {

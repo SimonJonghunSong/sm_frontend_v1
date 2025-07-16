@@ -330,24 +330,6 @@ const WireSettings = ({ formData, onChange, setFormData }: Props) => {
             isSwitch
             isDirty={isDirtyFields.includes("1998")}
           />
-
-          <DualCheckboxField
-            id="2313"
-            formData={formData}
-            onChange={handleChange}
-            style={{ width: "100%" }}
-            firstOptionLabel={{
-              en: "Falling Edge",
-              es: "Flanco de bajada",
-              pt: "Borda de descida",
-            }}
-            secondOptionLabel={{
-              en: "Rising Edge",
-              es: "Flanco de subida",
-              pt: "Borda de subida",
-            }}
-            isDirty={isDirtyFields.includes("2313")}
-          />
         </Stack>
       </Stack>
 
