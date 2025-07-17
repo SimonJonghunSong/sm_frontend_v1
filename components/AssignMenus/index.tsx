@@ -7,8 +7,9 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import useLangStore from "@/utils/useLangStore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import InputBox from "@/components/inputbox/InputBox";
 
 export interface AssignMenuItem {
@@ -53,6 +54,11 @@ export default function AssignMenus({
     useState<number[]>(defaultMediumIndexes);
   const [largeDataIndexes, setLargeDataIndexes] =
     useState<number[]>(defaultLargeIndexes);
+
+  // 드래그 앤 드롭 관련 상태
+  const [draggedItem, setDraggedItem] = useState<number | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<number | null>(null);
+  const dragItemRef = useRef<HTMLDivElement>(null);
 
   const handleAddIndex = (type: "small" | "medium" | "large", id: number) => {
     switch (type) {
@@ -113,6 +119,60 @@ export default function AssignMenus({
       handleAddIndex(type, id);
     } else {
       handleDeleteIndex(type, id);
+    }
+  };
+
+  // 드래그 앤 드롭 핸들러들
+  const handleDragStart = (e: React.DragEvent, itemId: number) => {
+    setDraggedItem(itemId);
+    e.dataTransfer.effectAllowed = "move";
+    if (dragItemRef.current) {
+      dragItemRef.current.style.opacity = "0.5";
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent, itemId: number) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverItem(itemId);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverItem(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropItemId: number) => {
+    e.preventDefault();
+    if (draggedItem === null || draggedItem === dropItemId) {
+      setDraggedItem(null);
+      setDragOverItem(null);
+      return;
+    }
+
+    // Small Data 순서 변경
+    const newSmallDataIndexes = [...smallDataIndexes];
+    const draggedIndex = newSmallDataIndexes.indexOf(draggedItem);
+    const dropIndex = newSmallDataIndexes.indexOf(dropItemId);
+
+    if (draggedIndex !== -1 && dropIndex !== -1) {
+      // 항목을 제거하고 새로운 위치에 삽입
+      newSmallDataIndexes.splice(draggedIndex, 1);
+      newSmallDataIndexes.splice(dropIndex, 0, draggedItem);
+      setSmallDataIndexes(newSmallDataIndexes);
+    }
+
+    setDraggedItem(null);
+    setDragOverItem(null);
+    if (dragItemRef.current) {
+      dragItemRef.current.style.opacity = "1";
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+    setDragOverItem(null);
+    if (dragItemRef.current) {
+      dragItemRef.current.style.opacity = "1";
     }
   };
 
@@ -262,18 +322,43 @@ export default function AssignMenus({
                 if (!target) return null;
 
                 const name = target.name;
+                const isDragging = draggedItem === item;
+                const isDragOver = dragOverItem === item;
 
                 return (
                   <Stack
                     key={item}
+                    ref={isDragging ? dragItemRef : null}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={(e) => handleDragOver(e, item)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, item)}
+                    onDragEnd={handleDragEnd}
                     sx={{
                       flexDirection: "row",
                       gap: "10px",
                       height: "24px",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      backgroundColor: isDragOver ? "rgba(0, 0, 0, 0.04)" : "transparent",
+                      borderTop: isDragOver ? "2px solid #1976d2" : "none",
+                      cursor: "grab",
+                      opacity: isDragging ? 0.5 : 1,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
+                    <DragIndicatorIcon 
+                      sx={{ 
+                        width: 16, 
+                        height: 16, 
+                        color: "var(--grey5)",
+                        cursor: "grab",
+                        flexShrink: 0
+                      }} 
+                    />
                     <span
                       style={{
                         flex: 1,
