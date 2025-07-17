@@ -16,6 +16,7 @@ interface Props {
   };
   onChange: (id: string, value: string, alertId?: string) => void;
   setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
+  originData?: any[];
 }
 
 // 형식 변환 유틸리티 함수
@@ -51,7 +52,7 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
+const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -59,6 +60,11 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
     "alert_config_1"
   );
   const { sendFormData, isLoading } = useSendFormData();
+
+  // 모델명 추출
+  const modelInfo = originData?.[0]?.info?.[0];
+  const modelName = modelInfo?.S;
+  const isST4315B = modelName === "ST4315B";
 
   const isDirtyFields = useMemo(() => {
     return Object.keys(formData).filter((key) => {

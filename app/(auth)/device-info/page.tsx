@@ -560,7 +560,7 @@ export default function DeviceInfoPage() {
           />
         );
       case "Report":
-        return <ReportTab formData={formData} setFormData={setFormData} />;
+        return <ReportTab formData={formData} setFormData={setFormData} originData={originData} />;
       case "Tracking":
         return <TrackingTab formData={formData} setFormData={setFormData} />;
       case "Bluetooth":

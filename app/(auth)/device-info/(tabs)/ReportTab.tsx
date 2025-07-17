@@ -23,9 +23,10 @@ interface Props {
       [key: string]: FormField;
     }>
   >;
+  originData?: any[];
 }
 
-export default function ReportTab({ formData, setFormData }: Props) {
+export default function ReportTab({ formData, setFormData, originData }: Props) {
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -75,6 +76,7 @@ export default function ReportTab({ formData, setFormData }: Props) {
         formData={formData}
         onChange={handleValueChange}
         setFormData={setFormData}
+        originData={originData}
       />
 
       <OBD

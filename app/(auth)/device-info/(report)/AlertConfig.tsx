@@ -17,6 +17,7 @@ interface Props {
   };
   onChange: (id: string, value: string, alertId?: string) => void;
   setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
+  originData?: any[];
 }
 
 // 형식 변환 유틸리티 함수
@@ -52,7 +53,7 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
+const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -62,6 +63,11 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
   const { sendFormData, isLoading } = useSendFormData();
 
   console.log("isLoading :::", isLoading);
+
+  // 모델명 추출
+  const modelInfo = originData?.[0]?.info?.[0];
+  const modelName = modelInfo?.S;
+  const isST4315B = modelName === "ST4315B";
 
   const isDirtyFields = Object.keys(formData).filter((key) => {
     const currentConfig = tab === "alert_config_1" ? ALERT_CONFIG_1 : 
@@ -125,11 +131,13 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
           value="alert_config_2"
           sx={{ flex: 1 }}
         />
-        <Tab
-          label={t("configuration.report.alert_config_3")}
-          value="alert_config_3"
-          sx={{ flex: 1 }}
-        />
+        {isST4315B && (
+          <Tab
+            label={t("configuration.report.alert_config_3")}
+            value="alert_config_3"
+            sx={{ flex: 1 }}
+          />
+        )}
       </StyledTabs>
 
       <TabContent>
@@ -147,7 +155,7 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
             isDirtyFields={isDirtyFields}
           />
         )}
-        {tab === "alert_config_3" && (
+        {tab === "alert_config_3" && isST4315B && (
           <AlertConfig3
             formData={formData}
             onChange={onChange}
