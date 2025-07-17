@@ -202,24 +202,7 @@ const BleRegistration = ({
       renderCell: ({ row }) => (
         <IconButton
           sx={{ width: 24, height: 24 }}
-          onClick={() => {
-            setEditRow({
-              point: row.col1,
-              active: row.col2 === "On",
-              type: row.col3,
-              id: row.col4,
-              enterAlert: row.col5 === "On",
-              exitAlert: row.col6 === "On",
-              temperatureMin: row.col7,
-              temperatureMax: row.col8,
-              humidityMin: row.col9,
-              humidityMax: row.col10,
-            });
-
-            setTimeout(() => {
-              detailModalToggle();
-            }, 0);
-          }}
+          onClick={() => handleEditBle(row)}
         >
           <EditOutlinedIcon sx={{ width: 22, height: 22 }} />
         </IconButton>
@@ -234,7 +217,7 @@ const BleRegistration = ({
       renderCell: ({ row }) => (
         <IconButton
           sx={{ width: 24, height: 24 }}
-          onClick={() => handleDeleteItem(row.id)}
+          onClick={() => handleDeleteBle(row.id)}
         >
           <DeleteForeverOutlinedIcon sx={{ width: 22, height: 22 }} />
         </IconButton>
@@ -244,8 +227,8 @@ const BleRegistration = ({
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleAddItem = (addData: string) => {
-    console.log("handleAddItem/addData------", addData);
+  const handleAddBle = (addData: string) => {
+    console.log("handleAddBle1/------", addData);
     setIsLoading(true);
     write({
       data: `${AT_EDIT_PREFIX}${port.imei};${addData}`,
@@ -257,8 +240,8 @@ const BleRegistration = ({
     });
   };
 
-  const handleDeleteItem = (id: number) => {
-    console.log("handleDeleteItem/id------", id);
+  const handleDeleteBle = (id: number) => {
+    console.log("handleDeleteBle1/id------", id);
     setIsLoading(true);
 
     // 모델명 추출
@@ -274,12 +257,12 @@ const BleRegistration = ({
       .toString()
       .padStart(2, "0")}#${zeroString}`;
 
-      console.log("=== BLE Delete Command ===");
-      console.log("Model:", modelName);
-      console.log("ID:", id);
-      console.log("Zero Length:", zeroLength);
-      console.log("Delete Data:", deleteData);
-      console.log("========================");      
+      // console.log("=== BLE Delete Command ===");
+      // console.log("Model:", modelName);
+      // console.log("ID:", id);
+      // console.log("Zero Length:", zeroLength);
+      // console.log("Delete Data:", deleteData);
+      // console.log("========================");      
 
     write({
       data: deleteData,
@@ -291,6 +274,26 @@ const BleRegistration = ({
     });
   
   };
+
+    // BLE Registration 용 수정 함수 (row 전체 받음)
+    const handleEditBle = (row: any) => {
+      console.log("handleEditBle1/row---", row);
+      setEditRow({
+        point: row.col1,
+        active: row.col2 === "On",
+        type: row.col3,
+        id: row.col4,
+        enterAlert: row.col5 === "On",
+        exitAlert: row.col6 === "On",
+        temperatureMin: row.col7,
+        temperatureMax: row.col8,
+        humidityMin: row.col9,
+        humidityMax: row.col10,
+      });
+      setTimeout(() => {
+        detailModalToggle();
+      }, 0);
+    };
 
   const generateRegistrationRange = (maxCount: number) => {
     // 00부터 maxCount-1까지의 범위 생성
@@ -423,7 +426,7 @@ const BleRegistration = ({
             detailModalToggle();
           }}
           openErrorPopup={() => {}}
-          handleConfirm={handleAddItem}
+          handleConfirm={handleAddBle}
           filterNumbers={rows.map((row) => row.col1)}
           defaultValues={editRow}
           originData={originData}

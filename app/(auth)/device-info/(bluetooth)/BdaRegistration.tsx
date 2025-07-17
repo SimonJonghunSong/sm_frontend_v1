@@ -97,24 +97,13 @@ const BdaRegistration = ({
         renderCell: ({ row }) => (
           <IconButton
             sx={{ width: 24, height: 24 }}
-            onClick={() => {
-              setEditRow({
-                point: row.col1,
-                active: row.col2 === "On",
-                type: row.col3,
-                id: row.col4,
-                enterAlert: row.col5 === "On",
-                exitAlert: row.col6 === "On",
-                temperatureMin: row.col7,
-                temperatureMax: row.col8,
-                humidityMin: row.col9,
-                humidityMax: row.col10,
-              });
-  
-              setTimeout(() => {
-                // detailModalToggle();
-              }, 0);
-            }}
+            // onClick={() => handleEditBle(row)}
+            onClick={() => handleEditBda({
+              col1: row.col1,
+              col2: row.col2,
+              col3: row.col3,
+              col4: row.col4,
+            })}
           >
             <EditOutlinedIcon sx={{ width: 22, height: 22 }} />
           </IconButton>
@@ -129,7 +118,8 @@ const BdaRegistration = ({
         renderCell: ({ row }) => (
           <IconButton
             sx={{ width: 24, height: 24 }}
-            onClick={() => handleDeleteItem(row.id)}
+            // onClick={() => handleDeleteBle(row.id)}
+            onClick={() => handleDeleteBda(row)}
           >
             <DeleteForeverOutlinedIcon sx={{ width: 22, height: 22 }} />
           </IconButton>
@@ -147,42 +137,65 @@ const BdaRegistration = ({
   
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
-  const handleAddItem = (addData: string) => {
-    console.log("handleAddItem/addData------", addData);
-    console.log("port:", port);
-    console.log("port.port:", port.port);
-    console.log("port.port.writable:", port.port?.writable);
+  const handleAddBda = (addData: string) => {
+    console.log("handleAddBda2/addData------", addData);
+    // console.log("port:", port);
+    // console.log("port.port:", port.port);
+    // console.log("port.port.writable:", port.port?.writable);
     setIsLoading(true);
     write({
       data: `${AT_EDIT_PREFIX}${port.imei};${addData}`,
       port: port.port,
       writer: port.writer,
     });
-    delayPromise(100).then(() => {
+    delayPromise(500).then(() => {
       fetch();
     });
   };
 
-  const handleDeleteItem = (id: number) => {
-    console.log("handleDeleteItem/id------", id);
-    return;
+  // // BLE Registration 용 삭제 함수 (id만 받음)
+  // const handleDeleteBle = (id: number) => {
+  //   console.log("handleDeleteItem/id------", id);
+  //   // return;
+  //   setIsLoading(true);
+
+  //   // 모델명 추출
+  //   const modelInfo = originData?.[0]?.info?.[0];
+  //   const modelName = modelInfo?.S;
+
+  //   // 모델별로 0의 길이 다르게 처리
+  //   const zeroLength = modelName === "ST4315B" ? 38 : 36;
+  //   const zeroString = "0".repeat(zeroLength);
+
+  //   // 전송할 데이터 구성
+  //   const deleteData = `${AT_EDIT_PREFIX}${port.imei};43;${(id - 1)
+  //     .toString()
+  //     .padStart(2, "0")}#${zeroString}`;
+
+  //   write({
+  //     data: deleteData,
+  //     port: port.port,
+  //     writer: port.writer,
+  //   });
+  //   delayPromise(100).then(() => {
+  //     fetch();
+  //   });
+  // }
+  // BDA Registration 용 삭제 함수 (row 전체 받음)
+  const handleDeleteBda = (row: any) => {
+    console.log("handleDeleteBda2/row----", row);
+    // row: { col1, col2, col3, col4 }
+    // active만 0(Off)로, 나머지는 그대로 사용
+    const point = (row.col1 - 1).toString().padStart(2, "0");
+    const active = "00"; // Off
+    const macAddress = row.col3.padEnd(12, "0");
+    const enableData = row.col4 === "On" ? "01" : "00";
+    const data = `43;${point}#${active}${macAddress}${enableData}`;
+    const cmd = `${AT_EDIT_PREFIX}${port.imei};${data}`;
+    console.log("[BDA DELETE CMD]", cmd);
     setIsLoading(true);
-
-    // 모델명 추출
-    const modelInfo = originData?.[0]?.info?.[0];
-    const modelName = modelInfo?.S;
-
-    // 모델별로 0의 길이 다르게 처리
-    const zeroLength = modelName === "ST4315B" ? 38 : 36;
-    const zeroString = "0".repeat(zeroLength);
-
-    // 전송할 데이터 구성
-    const deleteData = `${AT_EDIT_PREFIX}${port.imei};43;${(id - 1)
-      .toString()
-      .padStart(2, "0")}#${zeroString}`;
-
     write({
-      data: deleteData,
+      data: cmd,
       port: port.port,
       writer: port.writer,
     });
@@ -190,6 +203,24 @@ const BdaRegistration = ({
       fetch();
     });
   };
+
+  // // BLE Registration 용 수정 함수 (row 전체 받음)
+  // const handleEditBle = (row: any) => {
+  //   console.log("handleEditBle/row------1111111111111", row);
+  //   setEditRow({
+  //     point: row.col1,
+  //     active: row.col2 === "On",
+  //     type: row.col3,
+  //     id: row.col4,
+  //     enterAlert: row.col5 === "On",
+  //     exitAlert: row.col6 === "On",
+  //     temperatureMin: row.col7,
+  //     temperatureMax: row.col8,
+  //     humidityMin: row.col9,
+  //     humidityMax: row.col10,
+  //   });
+  //   setDetailModal(true);
+  // };
 
   const generateRegistrationRange = (maxCount: number) => {
     const range = Array.from({ length: maxCount }, (_, i) =>
@@ -305,13 +336,10 @@ const BdaRegistration = ({
     fetch();
   }, [isReady]);
 
-  const handleEdit = (row: any) => {
+  const handleEditBda = (row: any) => {
+    console.log("handleEditBda2/row------", row);
     setEditRow(row);
     setDetailModal(true);
-  };
-
-  const handleDelete = (row: any) => {
-    // 삭제 로직 구현
   };
 
   return (
@@ -344,7 +372,7 @@ const BdaRegistration = ({
       {detailModal && (
         <BdaDetailModal
           onClose={() => setDetailModal(false)}
-          handleConfirm={handleAddItem}
+          handleConfirm={handleAddBda}
           defaultValues={editRow}
           maxCount={maxCount}
           originData={originData}
