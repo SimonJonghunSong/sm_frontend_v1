@@ -21509,6 +21509,52 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "0630": {
+    title: {
+      en: "Start BLE Scan",
+      pt: "Iniciar Escaneo BLE (PT)",
+      es: "Iniciar Escaneo BLE (ES)",
+    },
+    tooltip: {
+      en: "Start BLE Scan (EN)",
+      es: "Iniciar Escaneo BLE (ES)",
+      pt: "Iniciar Escaneo BLE (PT)",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0631": {
+    title: {
+      en: "Stop BLE Scan",
+      pt: "Parar Escaneo BLE (PT)",
+      es: "Parar Escaneo BLE (ES)",
+    },
+    tooltip: {
+      en: "Stop BLE Scan (EN)",
+      es: "Parar Escaneo BLE (ES)",
+      pt: "Parar Escaneo BLE (PT)",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  "0634": {
+    title: {
+      en: "Reset Register BDA",
+      pt: "Redefinir Registro BDA",
+      es: "Restablecer Registro BDA",
+    },
+    tooltip: {
+      en: "Delete all registered BDA setting data.",
+      es: "Eliminar todos los datos de configuración BDA registrados.",
+      pt: "Excluir todos os dados de configuração BDA registrados.",
+    },
+    min: null,
+    max: null,
+    list: null,
+  },
+  
   "0758": {
     title: {
       en: "Safe Box message",

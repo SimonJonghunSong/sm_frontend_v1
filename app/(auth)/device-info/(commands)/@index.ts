@@ -341,7 +341,10 @@ export const commands: Record<CommandsSection, Command[]> = {
     { id: "0734", uiType: "Q-Type" },
   ],
   bleCommands: [
+    { id: "0630", uiType: "normal" },
+    { id: "0631", uiType: "normal" },
     { id: "0513", uiType: "normal" },
+    { id: "0634", uiType: "normal" },
     { id: "4021", uiType: "select" },
     { id: "4065", uiType: "select" },
   ],
