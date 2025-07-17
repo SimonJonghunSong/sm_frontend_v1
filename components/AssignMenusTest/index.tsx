@@ -7,7 +7,8 @@ import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import ArrowForwardIosOutlinedIcon from "@mui/icons-material/ArrowForwardIosOutlined";
-import { useState } from "react";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import { useState, useRef } from "react";
 import InputBox from "@/components/inputbox/InputBox";
 
 export interface AssignMenuItem {
@@ -29,6 +30,10 @@ interface Props {
     item: AssignMenuItem,
     value: boolean
   ) => void;
+  onReorder?: (
+    type: "small" | "medium" | "large",
+    newOrder: AssignMenuItem[]
+  ) => void;
 }
 
 const renderNumber = (index: number) => {
@@ -43,8 +48,134 @@ export default function AssignMenusWithDevice({
   seletedMediumItems = [],
   seletedLargeItems = [],
   onChange,
+  onReorder,
 }: Props) {
   const [dataType, setDataType] = useState<"small" | "medium" | "large" | "">("");
+
+  // 드래그 앤 드롭 관련 상태
+  const [draggedItem, setDraggedItem] = useState<string | null>(null);
+  const [dragOverItem, setDragOverItem] = useState<string | null>(null);
+  const dragItemRef = useRef<HTMLDivElement>(null);
+
+  // 드래그 앤 드롭 핸들러들
+  const handleDragStart = (e: React.DragEvent, itemId: string) => {
+    setDraggedItem(itemId);
+    e.dataTransfer.effectAllowed = "move";
+    if (dragItemRef.current) {
+      dragItemRef.current.style.opacity = "0.5";
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent, itemId: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDragOverItem(itemId);
+  };
+
+  const handleDragLeave = () => {
+    setDragOverItem(null);
+  };
+
+  const handleDrop = (e: React.DragEvent, dropItemId: string) => {
+    e.preventDefault();
+    if (draggedItem === null || draggedItem === dropItemId) {
+      setDraggedItem(null);
+      setDragOverItem(null);
+      return;
+    }
+
+    // Small Data 순서 변경
+    if (seletedSmallItems.find(item => item.id === draggedItem) && seletedSmallItems.find(item => item.id === dropItemId)) {
+      const newSmallItems = [...seletedSmallItems];
+      const draggedIndex = newSmallItems.findIndex(item => item.id === draggedItem);
+      const dropIndex = newSmallItems.findIndex(item => item.id === dropItemId);
+
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        // 항목을 제거하고 새로운 위치에 삽입
+        const [draggedItemData] = newSmallItems.splice(draggedIndex, 1);
+        newSmallItems.splice(dropIndex, 0, draggedItemData);
+        
+        // onReorder 콜백이 있으면 사용, 없으면 기존 방식 사용
+        if (onReorder) {
+          onReorder("small", newSmallItems);
+        } else {
+          // 기존 방식: 모든 항목을 제거하고 새로운 순서로 다시 추가
+          seletedSmallItems.forEach(item => {
+            onChange("small", item, false);
+          });
+          newSmallItems.forEach(item => {
+            onChange("small", item, true);
+          });
+        }
+      }
+    }
+
+    // Medium Data 순서 변경
+    if (seletedMediumItems.find(item => item.id === draggedItem) && seletedMediumItems.find(item => item.id === dropItemId)) {
+      const newMediumItems = [...seletedMediumItems];
+      const draggedIndex = newMediumItems.findIndex(item => item.id === draggedItem);
+      const dropIndex = newMediumItems.findIndex(item => item.id === dropItemId);
+
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        // 항목을 제거하고 새로운 위치에 삽입
+        const [draggedItemData] = newMediumItems.splice(draggedIndex, 1);
+        newMediumItems.splice(dropIndex, 0, draggedItemData);
+        
+        // onReorder 콜백이 있으면 사용, 없으면 기존 방식 사용
+        if (onReorder) {
+          onReorder("medium", newMediumItems);
+        } else {
+          // 기존 방식: 모든 항목을 제거하고 새로운 순서로 다시 추가
+          seletedMediumItems.forEach(item => {
+            onChange("medium", item, false);
+          });
+          newMediumItems.forEach(item => {
+            onChange("medium", item, true);
+          });
+        }
+      }
+    }
+
+    // Large Data 순서 변경
+    if (seletedLargeItems.find(item => item.id === draggedItem) && seletedLargeItems.find(item => item.id === dropItemId)) {
+      const newLargeItems = [...seletedLargeItems];
+      const draggedIndex = newLargeItems.findIndex(item => item.id === draggedItem);
+      const dropIndex = newLargeItems.findIndex(item => item.id === dropItemId);
+
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        // 항목을 제거하고 새로운 위치에 삽입
+        const [draggedItemData] = newLargeItems.splice(draggedIndex, 1);
+        newLargeItems.splice(dropIndex, 0, draggedItemData);
+        
+        // onReorder 콜백이 있으면 사용, 없으면 기존 방식 사용
+        if (onReorder) {
+          onReorder("large", newLargeItems);
+        } else {
+          // 기존 방식: 모든 항목을 제거하고 새로운 순서로 다시 추가
+          seletedLargeItems.forEach(item => {
+            onChange("large", item, false);
+          });
+          newLargeItems.forEach(item => {
+            onChange("large", item, true);
+          });
+        }
+      }
+    }
+
+    setDraggedItem(null);
+    setDragOverItem(null);
+    if (dragItemRef.current) {
+      dragItemRef.current.style.opacity = "1";
+    }
+  };
+
+  const handleDragEnd = () => {
+    setDraggedItem(null);
+    setDragOverItem(null);
+    if (dragItemRef.current) {
+      dragItemRef.current.style.opacity = "1";
+    }
+  };
 
   const renderDataTable = () => {
     let data = [];
@@ -160,18 +291,43 @@ export default function AssignMenusWithDevice({
                 if (!target) return null;
 
                 const name = target.name;
+                const isDragging = draggedItem === item.id;
+                const isDragOver = dragOverItem === item.id;
 
                 return (
                   <Stack
                     key={item.id}
+                    ref={isDragging ? dragItemRef : null}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item.id)}
+                    onDragOver={(e) => handleDragOver(e, item.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, item.id)}
+                    onDragEnd={handleDragEnd}
                     sx={{
                       flexDirection: "row",
                       gap: "10px",
                       height: "24px",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      backgroundColor: isDragOver ? "rgba(0, 0, 0, 0.04)" : "transparent",
+                      borderTop: isDragOver ? "2px solid #1976d2" : "none",
+                      cursor: "grab",
+                      opacity: isDragging ? 0.5 : 1,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
+                    <DragIndicatorIcon 
+                      sx={{ 
+                        width: 16, 
+                        height: 16, 
+                        color: "var(--grey5)",
+                        cursor: "grab",
+                        flexShrink: 0
+                      }} 
+                    />
                     <span
                       style={{
                         flex: 1,
@@ -212,18 +368,43 @@ export default function AssignMenusWithDevice({
                 if (!target) return null;
 
                 const name = target.name;
+                const isDragging = draggedItem === item.id;
+                const isDragOver = dragOverItem === item.id;
 
                 return (
                   <Stack
                     key={item.id}
+                    ref={isDragging ? dragItemRef : null}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item.id)}
+                    onDragOver={(e) => handleDragOver(e, item.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, item.id)}
+                    onDragEnd={handleDragEnd}
                     sx={{
                       flexDirection: "row",
                       gap: "10px",
                       height: "24px",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      backgroundColor: isDragOver ? "rgba(0, 0, 0, 0.04)" : "transparent",
+                      borderTop: isDragOver ? "2px solid #1976d2" : "none",
+                      cursor: "grab",
+                      opacity: isDragging ? 0.5 : 1,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
+                    <DragIndicatorIcon 
+                      sx={{ 
+                        width: 16, 
+                        height: 16, 
+                        color: "var(--grey5)",
+                        cursor: "grab",
+                        flexShrink: 0
+                      }} 
+                    />
                     <span
                       style={{
                         flex: 1,
@@ -263,18 +444,43 @@ export default function AssignMenusWithDevice({
                 if (!target) return null;
 
                 const name = target.name;
+                const isDragging = draggedItem === item.id;
+                const isDragOver = dragOverItem === item.id;
 
                 return (
                   <Stack
                     key={item.id}
+                    ref={isDragging ? dragItemRef : null}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item.id)}
+                    onDragOver={(e) => handleDragOver(e, item.id)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, item.id)}
+                    onDragEnd={handleDragEnd}
                     sx={{
                       flexDirection: "row",
                       gap: "10px",
                       height: "24px",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      backgroundColor: isDragOver ? "rgba(0, 0, 0, 0.04)" : "transparent",
+                      borderTop: isDragOver ? "2px solid #1976d2" : "none",
+                      cursor: "grab",
+                      opacity: isDragging ? 0.5 : 1,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
+                    <DragIndicatorIcon 
+                      sx={{ 
+                        width: 16, 
+                        height: 16, 
+                        color: "var(--grey5)",
+                        cursor: "grab",
+                        flexShrink: 0
+                      }} 
+                    />
                     <span
                       style={{
                         flex: 1,

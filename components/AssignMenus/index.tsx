@@ -491,18 +491,43 @@ export default function AssignMenus({
                 if (!target) return null;
 
                 const name = target.name;
+                const isDragging = draggedItem === item;
+                const isDragOver = dragOverItem === item;
 
                 return (
                   <Stack
                     key={item}
+                    ref={isDragging ? dragItemRef : null}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={(e) => handleDragOver(e, item)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, item)}
+                    onDragEnd={handleDragEnd}
                     sx={{
                       flexDirection: "row",
                       gap: "10px",
                       height: "24px",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      backgroundColor: isDragOver ? "rgba(0, 0, 0, 0.04)" : "transparent",
+                      borderTop: isDragOver ? "2px solid #1976d2" : "none",
+                      cursor: "grab",
+                      opacity: isDragging ? 0.5 : 1,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
+                    <DragIndicatorIcon 
+                      sx={{ 
+                        width: 16, 
+                        height: 16, 
+                        color: "var(--grey5)",
+                        cursor: "grab",
+                        flexShrink: 0
+                      }} 
+                    />
                     <span
                       style={{
                         flex: 1,

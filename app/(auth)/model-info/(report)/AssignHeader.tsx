@@ -16,7 +16,7 @@ import styled from "styled-components";
 import { FIELD_VALIDATIONS } from "constants/field";
 import { SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
-import AssignMenusWithDevice from "@/components/AssignMenusTest";
+import AssignMenusWithDevice, { AssignMenuItem as AssignMenuItemTest } from "@/components/AssignMenusTest";
 
 const sttSmallIds = [
   "1100",
@@ -683,6 +683,170 @@ export default function AssignHeader({
     }
   };
 
+  const handleSttReorder = (
+    type: "small" | "medium" | "large",
+    newOrder: AssignMenuItemTest[]
+  ) => {
+    // 새로운 순서로 formData 업데이트
+    const result = {
+      s_assigns: sttSmallIds.map((item, index) => {
+        const target = type === "small" ? newOrder[index] : selectedSttData.s_assigns[index];
+        const ID = item.slice(2);
+
+        if (target) {
+          return {
+            ...formData[item],
+            value: "1",
+            text_num: target.id,
+            ID,
+          };
+        }
+
+        return { ...formData[item], value: "0", text_num: "0", ID };
+      }),
+      m_assigns: sttMediumIds.map((item, index) => {
+        const target = type === "medium" ? newOrder[index] : selectedSttData.m_assigns[index];
+        const ID = item.slice(2);
+
+        if (target) {
+          return {
+            ...formData[item],
+            value: "1",
+            text_num: target.id,
+            ID,
+          };
+        }
+
+        return { ...formData[item], value: "0", text_num: "0", ID };
+      }),
+      l_assigns: sttLargeIds.map((item, index) => {
+        const target = type === "large" ? newOrder[index] : selectedSttData.l_assigns[index];
+        const ID = item.slice(2);
+
+        if (target) {
+          return {
+            ...formData[item],
+            value: "1",
+            realValue: "1",
+            text_num: target.id,
+            ID,
+          };
+        }
+
+        return {
+          ...formData[item],
+          value: "0",
+          realValue: "0",
+          text_num: "0",
+          ID,
+        };
+      }),
+    };
+
+    const tabId = "11";
+    const arr = [...result.s_assigns, ...result.m_assigns, ...result.l_assigns];
+
+    const updateData = arr.reduce((acc, item) => {
+      const jsonId = `${tabId}${
+        Number(item.ID) < 10 ? `0${Number(item.ID)}` : item.ID
+      }`;
+
+      return {
+        ...acc,
+        [jsonId]: {
+          ...formData[jsonId],
+          value: item.value,
+          realValue: item.value,
+          text_num: item.text_num,
+        },
+      };
+    }, {} as Record<string, string>);
+
+    setFormData((prev) => ({ ...prev, ...(updateData as any) }));
+  };
+
+  const handleAltReorder = (
+    type: "small" | "medium" | "large",
+    newOrder: AssignMenuItemTest[]
+  ) => {
+    // 새로운 순서로 formData 업데이트
+    const result = {
+      s_assigns: altSmallIds.map((item, index) => {
+        const target = type === "small" ? newOrder[index] : selectedAltData.s_assigns[index];
+        const ID = item.slice(2);
+
+        if (target) {
+          return {
+            ...formData[item],
+            value: "1",
+            text_num: target.id,
+            ID,
+          };
+        }
+
+        return { ...formData[item], value: "0", text_num: "0", ID };
+      }),
+      m_assigns: altMediumIds.map((item, index) => {
+        const target = type === "medium" ? newOrder[index] : selectedAltData.m_assigns[index];
+        const ID = item.slice(2);
+
+        if (target) {
+          return {
+            ...formData[item],
+            value: "1",
+            text_num: target.id,
+            ID,
+          };
+        }
+
+        return { ...formData[item], value: "0", text_num: "0", ID };
+      }),
+      l_assigns: altLargeIds.map((item, index) => {
+        const target = type === "large" ? newOrder[index] : selectedAltData.l_assigns[index];
+        const ID = item.slice(2);
+
+        if (target) {
+          return {
+            ...formData[item],
+            value: "1",
+            realValue: "1",
+            text_num: target.id,
+            ID,
+          };
+        }
+
+        return {
+          ...formData[item],
+          value: "0",
+          realValue: "0",
+          text_num: "0",
+          ID,
+        };
+      }),
+    };
+
+    const tabId = "12";
+    const arr = [...result.s_assigns, ...result.m_assigns, ...result.l_assigns];
+
+    const updateData = arr.reduce((acc, item) => {
+      const jsonId = `${tabId}${
+        Number(item.ID) < 10 ? `0${Number(item.ID)}` : item.ID
+      }`;
+
+      return {
+        ...acc,
+        [jsonId]: {
+          ...formData[jsonId],
+          value: item.value,
+          realValue: item.value,
+          text_num: item.text_num,
+        },
+      };
+    }, {} as Record<string, string>);
+
+    setFormData((prev) => ({ ...prev, ...(updateData as any) }));
+  };
+
   return (
     <Container>
       {isFullLoading && <FullLoading />}
@@ -732,6 +896,7 @@ export default function AssignHeader({
               seletedMediumItems={selectedSttData.m_assigns}
               seletedLargeItems={selectedSttData.l_assigns}
               onChange={handleSttChange}
+              onReorder={handleSttReorder}
             />
           </div>
         )}
@@ -760,6 +925,7 @@ export default function AssignHeader({
               seletedMediumItems={selectedAltData.m_assigns}
               seletedLargeItems={selectedAltData.l_assigns}
               onChange={handleAltChange}
+              onReorder={handleAltReorder}
             />
           </div>
         )}
