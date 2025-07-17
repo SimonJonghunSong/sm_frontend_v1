@@ -4811,6 +4811,162 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+
+  "1500": {
+    title: {
+      en: "D_BLE in Alert (119)",
+      pt: "Alerta D_BLE IN (119)",
+      es: "Alerta D_BLE IN (119)",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1501": {
+    title: {
+      en: "D_BLE OUT Alert (120)",
+      pt: "Alerta D_BLE OUT (120)",
+      es: "Alerta D_BLE OUT (120)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1502": {
+    title: {
+      en: "D_BLE Temp. High (121)",
+      pt: "Alta Temperatura D_BLE (121)",
+      es: "Alta Temperatura D_BLE (121)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1503": {
+    title: {
+      en: "D_BLE Temp. Low (122)",
+      pt: "Baixa Temperatura D_BLE (122)",
+      es: "Baja Temperatura D_BLE (122)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1504": {
+    title: {
+      en: "D_BLE Temp. Return (123)",
+      pt: "Retorno de Temperatura D_BLE (123)",
+      es: "Retorno de Temperatura D_BLE (123)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1505": {
+    title: {
+      en: "D_BLE Hum. High (124)",
+      pt: "Alta Umidade D_BLE (124)",
+      es: "Alta Humedad D_BLE (124)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1506": {
+    title: {
+      en: "D_BLE Hum. Low (125)",
+      pt: "Baixa Umidade D_BLE (125)",
+      es: "Baja Humedad D_BLE (125)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1507": {
+    title: {
+      en: "D_BLE Hum. Return (126)",
+      pt: "Retorno de Umidade D_BLE (126)",
+      es: "Retorno de Humedad D_BLE (126)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1508": {
+    title: {
+      en: "D_BLE Door State (135)",
+      pt: "Estado da Porta D_BLE (135)",
+      es: "Estado de la Puerta D_BLE (135)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1509": {
+    title: {
+      en: "D_BLE Panic State (136)",
+      pt: "Estado de Pânico D_BLE (136)",
+      es: "Estado de Pánico D_BLE (136)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1513": {
+    title: {
+      en: "Sensor RPT Mode/Interval Changed (134)",
+      pt: "Modo/Intervalo de Relatório de Sensor Alterado (134)",
+      es: "Modo/Intervalo de Informe del Sensor Cambiado (134)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1514": {
+    title: {
+      en: "D_BLE Fuel. Low (174)",
+      pt: "Baixa Combustible D_BLE (174)",
+      es: "Baja Combustível D_BLE (174)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1515": {
+    title: {
+      en: "D_BLE Fuel. High (175)",
+      pt: "Alta Combustible D_BLE (175)",
+      es: "Alta Combustível D_BLE (175)",      		
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1516": {
+    title: {
+      en: "D_BLE Fuel. Max (176)",
+      pt: "Máximo Combustible D_BLE (176)",
+      es: "Máximo Combustível D_BLE (176)",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+
   "1600": {
     title: {
       en: "Drive Mode",

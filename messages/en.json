@@ -1049,6 +1049,8 @@
       "medium_data_(4byte)": "Medium Data (4Byte)",
       "large_data_(8byte)": "Large Data (8Byte)",
       "alert_config": "Alert Config",
+
+
       "alert_config_1": "Alert Config 1",
       "ignition_on_(33)": "Ignition On (33)",
       "ignition_off_(34)": "Ignition Off (34)",
@@ -1090,6 +1092,8 @@
       "alert_input_goes_to_ground_(12)": "Alert Input goes to Ground (12)",
       "alert_enter_disconnect_mode_(144)": "Alert Enter Disconnect Mode (144)",
       "alert_enter_normal_mode_(3)": "Alert Enter Normal Mode (3)",
+
+
       "alert_config_2": "Alert Config 2",
       "temp_high_(75)": "Temp High (75)",
       "temp_low_(76)": "Temp Low (76)",
@@ -1133,6 +1137,26 @@
       "bank_trunk_active_by_polygon_(142)": "Bank Trunk Active by Polygon (142)",
       "bank_trunk_active_by_circular_(143)": "Bank Trunk Active by Circular (143)",
       "buzzer_active_by_overspeed_(152)": "Buzzer Active by overspeed (152)",
+
+
+      "alert_config_3": "Alert Config 3",
+      "d_ble_in_alert_(119)": "D_BLE in Alert (119)",
+      "d_ble_out_alert_(120)": "D_BLE out Alert (120)",
+      "d_ble_temp_high_(121)": "D_BLE Temp. High (121)",
+      "d_ble_temp_low_(122)": "D_BLE Temp. Low (122)",
+      "d_ble_temp_return_(123)": "D_BLE Temp. Return (123)",
+      "d_ble_hum_high_(124)": "D_BLE Hum. High (124)",
+      "d_ble_hum_low_(125)": "D_BLE Hum. Low (125)",
+      "d_ble_hum_return_(126)": "D_BLE Hum. Return (126)",
+      "sensor_report_mode_interval_changed_(134)": "Sensor Report Mode/Interval Changed (134)",
+      "d_ble_door_state_(135)": "D_BLE Door State (135)",
+      "d_ble_panic_state_(136)": "D_BLE Panic State (136)",
+      "d_ble_fuel_low_(174)": "D_BLE Fuel Low (174)",
+      "d_ble_fuel_high_(175)": "D_BLE Fuel High (175)",
+      "d_ble_fuel_max_(176)": "D_BLE Fuel Max (176)",
+
+
+
       "schedule_report": "Schedule Report",
       "daily_scheduled_report1_utc_time": "Daily Scheduled Report1 UTC time",
       "daily_scheduled_report2_utc_time": "Daily Scheduled Report2 UTC time",

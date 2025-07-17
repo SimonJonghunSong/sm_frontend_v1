@@ -1016,6 +1016,8 @@
       "medium_data_(4byte)": "Dados Médios (4Bytes)",
       "large_data_(8byte)": "Dados Grandes (8Bytes)",
       "alert_config": "Configuração de Alerta",
+
+
       "alert_config_1": "Configuração de Alerta 1",
       "ignition_on_(33)": "Ignição Ligada (33)",
       "ignition_off_(34)": "Ignição Desligada (34)",
@@ -1057,6 +1059,8 @@
       "alert_input_goes_to_ground_(12)": "Alerta: Entrada de Entrada vai para Terra (12)",
       "alert_enter_disconnect_mode_(144)": "Alerta: Entrar em Modo de Desconexão (144)",
       "alert_enter_normal_mode_(3)": "Alerta: Entrar em Modo Normal (3)",
+
+
       "alert_config_2": "Configuração de Alerta 2",
       "temp_high_(75)": "Temp Alta (75)",
       "temp_low_(76)": "Temp Baixa (76)",
@@ -1100,6 +1104,25 @@
       "bank_trunk_active_by_polygon_(142)": "Banco de Carga Ativo por Polígono (142)",
       "bank_trunk_active_by_circular_(143)": "Banco de Carga Ativo por Circular (143)",
       "buzzer_active_by_overspeed_(152)": "Alarme Ativo por Velocidade Excessiva (152)",
+
+
+      "alert_config_3": "Configuração de Alerta 3",
+      "d_ble_in_alert_(119)": "Alerta D_BLE IN (119)",
+      "d_ble_out_alert_(120)": "Alerta D_BLE OUT (120)",
+      "d_ble_temp_high_(121)": "Alta Temperatura D_BLE (121)",
+      "d_ble_temp_low_(122)": "Baixa Temperatura D_BLE (122)",
+      "d_ble_temp_return_(123)": "Retorno de Temperatura D_BLE (123)",
+      "d_ble_hum_high_(124)": "Alta Umidade D_BLE (124)",
+      "d_ble_hum_low_(125)": "Baixa Umidade D_BLE (125)",
+      "d_ble_hum_return_(126)": "Retorno de Umidade D_BLE (126)",
+      "sensor_report_mode_interval_changed_(134)": "Modo/Intervalo de Relatório de Sensor Alterado (134)",
+      "d_ble_door_state_(135)": "Estado da Porta D_BLE (135)",
+      "d_ble_panic_state_(136)": "Estado de Pânico D_BLE (136)",
+      "d_ble_fuel_low_(174)": "Baixa Combustible D_BLE (174)",
+      "d_ble_fuel_high_(175)": "Alta Combustible D_BLE (175)",
+      "d_ble_fuel_max_(176)": "Máximo Combustible D_BLE (176)",
+
+
       "schedule_report": "Relatório Programado",
       "daily_scheduled_report1_utc_time": "Relatório Diário Programado1 Hora UTC",
       "daily_scheduled_report2_utc_time": "Relatório Diário Programado2 Hora UTC",

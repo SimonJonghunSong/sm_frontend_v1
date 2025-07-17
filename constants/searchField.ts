@@ -154,6 +154,11 @@ export const SECTIONS = {
     es: "Configuración de Alertas 2",
     pt: "Configuração de Alertas 2",
   },
+  AlertConfig3: {
+    en: "Alert Config 3",
+    es: "Configuración de Alertas 3",
+    pt: "Configuração de Alertas 3",
+  },
   AntiTheft: {
     en: "Anti Theft",
     es: "Antiterrorismo",
@@ -517,6 +522,24 @@ const alertConfig2Fields = [
   "1478",
   "1481",
 ];
+
+const alertConfig3Fields = [
+  "1500",
+  "1501",
+  "1502",
+  "1503",
+  "1504",
+  "1505",
+  "1506",
+  "1507",
+  "1508",
+  "1509",
+  "1513",
+  "1514",
+  "1515",
+  "1516",
+];
+
 export const modeSettingsFieldsWithUnderbar = [
   "1670",
   "1673",
@@ -691,6 +714,7 @@ const INCLUDE_FIELDS_REPORT = {
   [SECTIONS.AssignHeader.en]: ["1100", "1075"],
   [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
   [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
+  [SECTIONS.AlertConfig3.en]: alertConfig3Fields,
   [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AntiTheft.en]: ["1050", "1051"],
   [SECTIONS.OBD.en]: [

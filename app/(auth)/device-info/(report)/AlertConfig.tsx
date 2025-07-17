@@ -3,9 +3,10 @@ import { FormField } from "../page";
 import { useTranslations } from "next-intl";
 import { Button, Stack, Tab as MuiTab, Tabs } from "@mui/material";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
-import { AlertConfig1, AlertConfig2 } from "./@index";
+import { AlertConfig1, AlertConfig2, AlertConfig3 } from "./@index";
 import { ALERT_CONFIG_1 } from "./AlertConfig1";
 import { ALERT_CONFIG_2 } from "./AlertConfig2";
+import { ALERT_CONFIG_3 } from "./AlertConfig3";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
@@ -55,7 +56,7 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
-  const [tab, setTab] = useState<"alert_config_1" | "alert_config_2">(
+  const [tab, setTab] = useState<"alert_config_1" | "alert_config_2" | "alert_config_3">(
     "alert_config_1"
   );
   const { sendFormData, isLoading } = useSendFormData();
@@ -63,10 +64,11 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
   console.log("isLoading :::", isLoading);
 
   const isDirtyFields = Object.keys(formData).filter((key) => {
+    const currentConfig = tab === "alert_config_1" ? ALERT_CONFIG_1 : 
+                         tab === "alert_config_2" ? ALERT_CONFIG_2 : 
+                         ALERT_CONFIG_3;
     return (
-      (tab === "alert_config_1" ? ALERT_CONFIG_1 : ALERT_CONFIG_2)
-        .map(String)
-        .includes(key) &&
+      currentConfig.map(String).includes(key) &&
       (formData[key].beforeValue !== formData[key].realValue ||
         formData[key].beforeAlertId !== formData[key].alert_id)
     );
@@ -78,10 +80,9 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
       onSubmit={(e) => {
         e.preventDefault();
 
-        const fields =
-          tab === "alert_config_1"
-            ? ALERT_CONFIG_1.map(String)
-            : ALERT_CONFIG_2.map(String);
+        const fields = tab === "alert_config_1" ? ALERT_CONFIG_1.map(String) :
+                      tab === "alert_config_2" ? ALERT_CONFIG_2.map(String) :
+                      ALERT_CONFIG_3.map(String);
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
@@ -124,6 +125,11 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
           value="alert_config_2"
           sx={{ flex: 1 }}
         />
+        <Tab
+          label={t("configuration.report.alert_config_3")}
+          value="alert_config_3"
+          sx={{ flex: 1 }}
+        />
       </StyledTabs>
 
       <TabContent>
@@ -136,6 +142,13 @@ const AlertConfig = ({ formData, onChange, setFormData }: Props) => {
         )}
         {tab === "alert_config_2" && (
           <AlertConfig2
+            formData={formData}
+            onChange={onChange}
+            isDirtyFields={isDirtyFields}
+          />
+        )}
+        {tab === "alert_config_3" && (
+          <AlertConfig3
             formData={formData}
             onChange={onChange}
             isDirtyFields={isDirtyFields}
