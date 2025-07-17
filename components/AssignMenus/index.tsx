@@ -150,15 +150,31 @@ export default function AssignMenus({
     }
 
     // Small Data 순서 변경
-    const newSmallDataIndexes = [...smallDataIndexes];
-    const draggedIndex = newSmallDataIndexes.indexOf(draggedItem);
-    const dropIndex = newSmallDataIndexes.indexOf(dropItemId);
+    if (smallDataIndexes.includes(draggedItem) && smallDataIndexes.includes(dropItemId)) {
+      const newSmallDataIndexes = [...smallDataIndexes];
+      const draggedIndex = newSmallDataIndexes.indexOf(draggedItem);
+      const dropIndex = newSmallDataIndexes.indexOf(dropItemId);
 
-    if (draggedIndex !== -1 && dropIndex !== -1) {
-      // 항목을 제거하고 새로운 위치에 삽입
-      newSmallDataIndexes.splice(draggedIndex, 1);
-      newSmallDataIndexes.splice(dropIndex, 0, draggedItem);
-      setSmallDataIndexes(newSmallDataIndexes);
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        // 항목을 제거하고 새로운 위치에 삽입
+        newSmallDataIndexes.splice(draggedIndex, 1);
+        newSmallDataIndexes.splice(dropIndex, 0, draggedItem);
+        setSmallDataIndexes(newSmallDataIndexes);
+      }
+    }
+
+    // Medium Data 순서 변경
+    if (mediumDataIndexes.includes(draggedItem) && mediumDataIndexes.includes(dropItemId)) {
+      const newMediumDataIndexes = [...mediumDataIndexes];
+      const draggedIndex = newMediumDataIndexes.indexOf(draggedItem);
+      const dropIndex = newMediumDataIndexes.indexOf(dropItemId);
+
+      if (draggedIndex !== -1 && dropIndex !== -1) {
+        // 항목을 제거하고 새로운 위치에 삽입
+        newMediumDataIndexes.splice(draggedIndex, 1);
+        newMediumDataIndexes.splice(dropIndex, 0, draggedItem);
+        setMediumDataIndexes(newMediumDataIndexes);
+      }
     }
 
     setDraggedItem(null);
@@ -399,18 +415,43 @@ export default function AssignMenus({
                 if (!target) return null;
 
                 const name = target.name;
+                const isDragging = draggedItem === item;
+                const isDragOver = dragOverItem === item;
 
                 return (
                   <Stack
                     key={item}
+                    ref={isDragging ? dragItemRef : null}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragOver={(e) => handleDragOver(e, item)}
+                    onDragLeave={handleDragLeave}
+                    onDrop={(e) => handleDrop(e, item)}
+                    onDragEnd={handleDragEnd}
                     sx={{
                       flexDirection: "row",
                       gap: "10px",
                       height: "24px",
                       alignItems: "center",
                       justifyContent: "space-between",
+                      backgroundColor: isDragOver ? "rgba(0, 0, 0, 0.04)" : "transparent",
+                      borderTop: isDragOver ? "2px solid #1976d2" : "none",
+                      cursor: "grab",
+                      opacity: isDragging ? 0.5 : 1,
+                      "&:hover": {
+                        backgroundColor: "rgba(0, 0, 0, 0.04)",
+                      },
                     }}
                   >
+                    <DragIndicatorIcon 
+                      sx={{ 
+                        width: 16, 
+                        height: 16, 
+                        color: "var(--grey5)",
+                        cursor: "grab",
+                        flexShrink: 0
+                      }} 
+                    />
                     <span
                       style={{
                         flex: 1,
