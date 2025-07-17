@@ -44,7 +44,7 @@ export default function AssignMenusWithDevice({
   seletedLargeItems = [],
   onChange,
 }: Props) {
-  const [dataType, setDataType] = useState<"small" | "medium" | "large">(null);
+  const [dataType, setDataType] = useState<"small" | "medium" | "large" | "">("");
 
   const renderDataTable = () => {
     let data = [];
@@ -131,7 +131,7 @@ export default function AssignMenusWithDevice({
               );
             }}
             onChange={(e) =>
-              setDataType(e.target.value as "small" | "medium" | "large")
+              setDataType(e.target.value as "small" | "medium" | "large" | "")
             }
           >
             <MenuItem value={"small"}>Small Data</MenuItem>

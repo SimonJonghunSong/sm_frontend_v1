@@ -46,7 +46,7 @@ export default function AssignMenus({
   onChange,
 }: Props) {
   const { lang } = useLangStore();
-  const [dataType, setDataType] = useState<"small" | "medium" | "large">(null);
+  const [dataType, setDataType] = useState<"small" | "medium" | "large" | "">("");
   const [smallDataIndexes, setSmallDataIndexes] =
     useState<number[]>(defaultSmallIndexes);
   const [mediumDataIndexes, setMediumDataIndexes] =
@@ -229,7 +229,7 @@ export default function AssignMenus({
               );
             }}
             onChange={(e) =>
-              setDataType(e.target.value as "small" | "medium" | "large")
+              setDataType(e.target.value as "small" | "medium" | "large" | "")
             }
           >
             <MenuItem value={"small"}>Small Data</MenuItem>
