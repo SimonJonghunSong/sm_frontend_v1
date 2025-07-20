@@ -48,7 +48,7 @@ ST SUNLAB에서 제작한 차량 추적기의 종합적인 관리와 설정을 �
 4. 로컬로 실행합니다.
 
    ```bash
-   npm run dev
+   npm run dev:clean
    ```
 
 5. 프로덕션 모드로 실행하기 위해서는 build 후 start 합니다.
