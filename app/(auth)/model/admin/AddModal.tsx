@@ -530,9 +530,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "RF",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.digital-inputs-outputs"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.digital-inputs-outputs"),
                   value: "Digital Inputs/Outputs",
                 },
                 {
@@ -548,9 +546,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "Voice Call",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.dead-reckoning"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.dead-reckoning"),
                   value: "Dead Reckoning",
                 },
                 {
@@ -562,9 +558,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "Jamming",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.motion-sensor"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.motion-sensor"),
                   value: "Motion Sensor",
                 },
                 {
@@ -572,15 +566,11 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "Ignition",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.low-power-consumption"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.low-power-consumption"),
                   value: "Low-power consumption (eDRX)",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.temperature-sensor"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.temperature-sensor"),
                   value: "Temperature Sensor",
                 },
                 {
@@ -588,9 +578,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "Waterproof",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.tamper-detection"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.tamper-detection"),
                   value: "Tamper Detection",
                 },
                 {
@@ -598,27 +586,19 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "Solar",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.j1939-support"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.j1939-support"),
                   value: "J1939 Support",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.engine-diagnostics"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.engine-diagnostics"),
                   value: "Engine Diagnostics",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.primary-battery"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.primary-battery"),
                   value: "Primary Battery",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.rechargeable-battery"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.rechargeable-battery"),
                   value: "Rechargeable Battery",
                 },
                 {
@@ -626,9 +606,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   value: "DPA",
                 },
                 {
-                  label: t(
-                    "model.add_model_pop_up.features-item.backup-battery"
-                  ),
+                  label: t("model.add_model_pop_up.features-item.backup-battery"),
                   value: "Backup Battery",
                 },
               ].map(({ label, value }) => {
