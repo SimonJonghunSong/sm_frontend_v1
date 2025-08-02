@@ -39,6 +39,7 @@ interface Props {
   isReady: boolean;
   bleRegistrationMax: number;
   originData: any;
+  onComplete?: () => void;
 }
 
 const BleRegistration = ({
@@ -49,6 +50,7 @@ const BleRegistration = ({
   isReady,
   bleRegistrationMax,
   originData,
+  onComplete,
 }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -353,6 +355,7 @@ const BleRegistration = ({
         setRows(bleData as any);
         setIsLoading(false);
         port.port.onbuffervalue = null;
+        onComplete?.(); // 완료 콜백 호출
       }
     };
 
