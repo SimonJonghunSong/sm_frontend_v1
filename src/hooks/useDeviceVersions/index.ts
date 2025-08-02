@@ -131,7 +131,7 @@ export default function useDeviceVersions({
           const index = i + 1;
           const command = `${AT_GET_DEVICE_VERSIONS}${index}`;
 
-          console.log("==================================command :::", command);
+          console.log("command :::", command);
           commands.push(command);
         }
 

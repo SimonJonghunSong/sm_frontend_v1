@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { FormField } from "../page";
 import { Stack, Divider } from "@mui/material";
 import { Ble, Sensor } from "../(bluetooth)/@index";
@@ -36,6 +36,9 @@ export default function BluetoothTab({
   const bleRegistrationMax =
     infoFields.find((shit) => shit?.tab_id === "41")?.max * 1 || 0;
 
+  // 순차 실행 상태 관리
+  const [bleComplete, setBleComplete] = useState(false);
+
   const handleValueChange = (name, value, alertId = undefined) => {
     setFormData((prev) => ({
       ...prev,
@@ -66,23 +69,26 @@ export default function BluetoothTab({
         port={port}
         bleRegistrationMax={bleRegistrationMax}
         originData={originData}
+        onComplete={() => setBleComplete(true)}
       />
+
 
       {/* BDA Registration: ST4315B 모델에서만 노출 */}
       {(() => {
         // 모델명 추출
         const modelInfo = originData?.[0]?.info?.[0];
         const modelName = modelInfo?.S;
-        if (modelName === "ST4315") {
+        if (modelName === "ST4315B") {
           return (
             <BdaRegistration
-              formData={formData}
-              onChange={handleValueChange}
-              isReady={isReady}
-              write={write}
-              port={port}
-              originData={originData}
-            />
+            formData={formData}
+            onChange={handleValueChange}
+            isReady={isReady}
+            write={write}
+            port={port}
+            originData={originData}
+            shouldStart={bleComplete}
+          />
           );
         }
         return null;

@@ -32,6 +32,7 @@ interface Props {
   write: any;
   port: any;
   originData: any;
+  shouldStart?: boolean;
 }
 
 const fieldIds = ["4300", "4301", "4302"]; // BDA 관련 필드들
@@ -43,6 +44,7 @@ const BdaRegistration = ({
   write,
   port,
   originData,
+  shouldStart = false,
 }: Props) => {
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -333,8 +335,10 @@ const BdaRegistration = ({
       console.error("기기 연결이 해제되었습니다. USB 연결을 확인하세요.");
       return;
     }
-    fetch();
-  }, [isReady]);
+    if (shouldStart) {
+      fetch();
+    }
+  }, [isReady, shouldStart]);
 
   const handleEditBda = (row: any) => {
     console.log("handleEditBda2/row------", row);
