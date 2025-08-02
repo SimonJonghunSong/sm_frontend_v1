@@ -131,7 +131,7 @@ export default function useDeviceVersions({
           const index = i + 1;
           const command = `${AT_GET_DEVICE_VERSIONS}${index}`;
 
-          console.log("command :::", command);
+          console.log("==================================command :::", command);
           commands.push(command);
         }
 
@@ -147,7 +147,7 @@ export default function useDeviceVersions({
               if (data.includes("DIAG")) {
                 const resSplit = data.trim().split(";");
 
-                const gnss = ["Fixed", "Not Fixed", "Chipset error"][
+                const gnssStatus = ["Fixed", "Not Fixed", "Chipset error"][
                   parseInt(resSplit[2], 10)
                 ];
                 const wwan = [
@@ -162,7 +162,7 @@ export default function useDeviceVersions({
                   "Jamming Detected",
                 ][parseInt(resSplit[3], 10)];
 
-                deviceVersionsObjectRef.current["GNSS"] = gnss;
+                deviceVersionsObjectRef.current["GNSS_STATUS"] = gnssStatus;
                 deviceVersionsObjectRef.current["WWAN"] = wwan;
                 deviceVersionsCount.current += 2;
               } else {
