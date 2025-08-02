@@ -364,35 +364,76 @@ export default function Model() {
         if (targetCountry === "europe") {
           return target_country.includes("Europe");
         }
-      }).filter(({ target_country }) => {
-        if (targetCountry === "usa") {
-          return target_country.includes("USA");
-        }
-
-        if (targetCountry === "brasil") {
-          return target_country.includes("Brazil");
-        }
-
-        if (targetCountry === "méxico") {
-          return target_country.includes("Mexico");
-        }
-
-        if (targetCountry === "europe") {
-          return target_country.includes("Europe");
-        }
       }) || [];
 
-    const tabs = records// text field search 필터 추가
+    const tabs = records
+    // text field search 필터 추가
     .filter((item) => {
-      return item.dev_name.toLowerCase().includes(searchValue .toLowerCase());
+      return item.dev_name.toLowerCase().includes(searchValue.toLowerCase());
     }).reduce((acc, cur) => {
       const supportedFeatures = cur.supported_features;
 
       supportedFeatures.forEach((item) => {
-        if (acc[featureTransition(lang, item)]) {
-          acc[featureTransition(lang, item)] += 1;
+        // feature 이름을 다국어 키로 변환하는 함수
+        const getFeatureTranslation = (feature: string) => {
+          const featureMap = {
+            "Basic": "model.add_model_pop_up.features-item.basic",
+            "Advanced": "model.add_model_pop_up.features-item.advanced",
+            "Wired": "model.add_model_pop_up.features-item.wired",
+            "BOT": "model.add_model_pop_up.features-item.bot",
+            "BoxTracker": "model.add_model_pop_up.features-item.box-tracker",
+            "OBD": "model.add_model_pop_up.features-item.obd",
+            "Wi-Fi": "model.add_model_pop_up.features-item.wi-fi",
+            "BLE": "model.add_model_pop_up.features-item.ble",
+            "RF": "model.add_model_pop_up.features-item.rf",
+            "Digital Inputs/Outputs": "model.add_model_pop_up.features-item.digital-inputs-outputs",
+            "RS232": "model.add_model_pop_up.features-item.rs232",
+            "1-Wire": "model.add_model_pop_up.features-item.one-wire",
+            "Voice Call": "model.add_model_pop_up.features-item.voice-call",
+            "Dead Reckoning": "model.add_model_pop_up.features-item.dead-reckoning",
+            "Geofence": "model.add_model_pop_up.features-item.geofence",
+            "Jamming": "model.add_model_pop_up.features-item.jamming",
+            "Motion Sensor": "model.add_model_pop_up.features-item.motion-sensor",
+            "Ignition": "model.add_model_pop_up.features-item.ignition",
+            "Low-power consumption (eDRX)": "model.add_model_pop_up.features-item.low-power-consumption",
+            "Temperature Sensor": "model.add_model_pop_up.features-item.temperature-sensor",
+            "Waterproof": "model.add_model_pop_up.features-item.waterproof",
+            "Tamper Detection": "model.add_model_pop_up.features-item.tamper-detection",
+            "Solar": "model.add_model_pop_up.features-item.solar",
+            "J1939 Support": "model.add_model_pop_up.features-item.j1939-support",
+            "Engine Diagnostics": "model.add_model_pop_up.features-item.engine-diagnostics",
+            "Primary Battery": "model.add_model_pop_up.features-item.primary-battery",
+            "Rechargeable Battery": "model.add_model_pop_up.features-item.rechargeable-battery",
+            "DPA": "model.add_model_pop_up.features-item.dpa",
+            "Backup Battery": "model.add_model_pop_up.features-item.backup-battery"
+          };
+          
+          // 정확한 매칭이 안 되면 부분 매칭 시도
+          const exactMatch = featureMap[feature];
+          if (exactMatch) {
+            return exactMatch;
+          }
+          
+          // 부분 매칭 시도 (대소문자 무시)
+          const normalizedFeature = feature.toLowerCase().trim();
+          for (const [key, value] of Object.entries(featureMap)) {
+            if (key.toLowerCase().trim() === normalizedFeature) {
+              return value;
+            }
+          }
+          
+          return feature;
+        };
+        
+        const translationKey = getFeatureTranslation(item.trim());
+        const translatedFeature = translationKey.startsWith("model.add_model_pop_up.features-item.") 
+          ? t(translationKey) 
+          : item;
+          
+        if (acc[translatedFeature]) {
+          acc[translatedFeature] += 1;
         } else {
-          acc[featureTransition(lang, item)] = 1;
+          acc[translatedFeature] = 1;
         }
       });
 
@@ -541,8 +582,49 @@ export default function Model() {
                   if (selectedTab) {
                     const features = item.col4.split(",");
 
+                    // feature 이름을 다국어 키로 변환하는 함수
+                    const getFeatureTranslation = (feature: string) => {
+                      const featureMap = {
+                        "Basic": "model.add_model_pop_up.features-item.basic",
+                        "Advanced": "model.add_model_pop_up.features-item.advanced",
+                        "Wired": "model.add_model_pop_up.features-item.wired",
+                        "BOT": "model.add_model_pop_up.features-item.bot",
+                        "BoxTracker": "model.add_model_pop_up.features-item.box-tracker",
+                        "OBD": "model.add_model_pop_up.features-item.obd",
+                        "Wi-Fi": "model.add_model_pop_up.features-item.wi-fi",
+                        "BLE": "model.add_model_pop_up.features-item.ble",
+                        "RF": "model.add_model_pop_up.features-item.rf",
+                        "Digital Inputs/Outputs": "model.add_model_pop_up.features-item.digital-inputs-outputs",
+                        "RS232": "model.add_model_pop_up.features-item.rs232",
+                        "1-Wire": "model.add_model_pop_up.features-item.one-wire",
+                        "Voice Call": "model.add_model_pop_up.features-item.voice-call",
+                        "Dead Reckoning": "model.add_model_pop_up.features-item.dead-reckoning",
+                        "Geofence": "model.add_model_pop_up.features-item.geofence",
+                        "Jamming": "model.add_model_pop_up.features-item.jamming",
+                        "Motion Sensor": "model.add_model_pop_up.features-item.motion-sensor",
+                        "Ignition": "model.add_model_pop_up.features-item.ignition",
+                        "Low-power consumption (eDRX)": "model.add_model_pop_up.features-item.low-power-consumption",
+                        "Temperature Sensor": "model.add_model_pop_up.features-item.temperature-sensor",
+                        "Waterproof": "model.add_model_pop_up.features-item.waterproof",
+                        "Tamper Detection": "model.add_model_pop_up.features-item.tamper-detection",
+                        "Solar": "model.add_model_pop_up.features-item.solar",
+                        "J1939 Support": "model.add_model_pop_up.features-item.j1939-support",
+                        "Engine Diagnostics": "model.add_model_pop_up.features-item.engine-diagnostics",
+                        "Primary Battery": "model.add_model_pop_up.features-item.primary-battery",
+                        "Rechargeable Battery": "model.add_model_pop_up.features-item.rechargeable-battery",
+                        "DPA": "model.add_model_pop_up.features-item.dpa",
+                        "Backup Battery": "model.add_model_pop_up.features-item.backup-battery"
+                      };
+                      return featureMap[feature] || feature;
+                    };
+
                     return features
-                      .map((ft) => featureTransition(lang, ft))
+                      .map((ft) => {
+                        const translationKey = getFeatureTranslation(ft.trim());
+                        return translationKey.startsWith("model.add_model_pop_up.features-item.") 
+                          ? t(translationKey) 
+                          : ft;
+                      })
                       .includes(selectedTab);
                   }
 
