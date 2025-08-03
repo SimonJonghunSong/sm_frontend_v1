@@ -1833,7 +1833,21 @@
     "latitude": "Latitude",
     "longitude": "Longitude",
     "angle": "Ângulo",
-    "speed": "Velocidade"
+    "speed": "Velocidade",
+    "light_sensor": {
+      "title": "Sensor de Luz",
+      "tooltip": "A detecção de luz é usada para alertar quando um dispositivo que está anexado e instalado em algum lugar é removido.",
+      "levels": {
+        "disable": "Desabilitar",
+        "level1": "Nível 1 (Parafusado)",
+        "level2": "Nível 2",
+        "level3": "Nível 3",
+        "level4": "Nível 4",
+        "level5": "Nível 5",
+        "level6": "Nível 6",
+        "level7": "Nível 7"
+      }
+    }
   },
   "error": {
     "invalid_email_format": "Formato de e-mail inválido.",

@@ -100,6 +100,31 @@ const formatFieldId = (id: string): string => {
 };
 
 const getRealValue = (field: FieldValue): string => {
+  // 2611에 대한 특별 처리
+  if (field.ID === "11") {
+    console.log("=== getRealValue for 2611 ===");
+    console.log("field.value:", field.value);
+    console.log("field.list:", field.list);
+    
+    if (!field.list) return "0"; // 기본값 Disable
+    
+    // JSON의 value 필드와 list의 라벨을 매칭하여 실제 값을 찾음
+    const listValues = Object.values(field.list[0]);
+    const matchingItem = listValues.find((item: string) => 
+      item.includes(`;${field.value};`) || item.endsWith(`;${field.value}`)
+    );
+    
+    if (matchingItem) {
+      const realValue = matchingItem.split(";")[0];
+      console.log("2611 realValue found:", realValue);
+      return realValue;
+    } else {
+      console.log("2611 no matching item found, using default: 0");
+      return "0"; // 기본값 Disable
+    }
+  }
+  
+  // 기존 로직 (다른 필드들)
   if (!field.list) return field.value;
 
   const realValueSource = Object.values(field.list[0])?.find((item: string) =>
@@ -125,12 +150,19 @@ const getList = (field: FieldValue): string[] => {
     );
   }
 
-  return Object.values(field.list[0]).map((item) =>
-    Number(item.split(";")[0]) < 10
-      ? `0${item.split(";")[0]}`
-      : item.split(";")[0]
-  );
+  const result = Object.values(field.list[0]).map((item) => {
+    const value = item.split(";")[0];
+    // 2611의 경우 한 자리 숫자를 그대로 사용
+    if (field.ID === "11") {
+      return value;
+    }
+    return Number(value) < 10 ? `0${value}` : value;
+  });
+
+  console.log("getList result for field", field.ID, ":", result);
+  return result;
 };
+
 const getLabelList = (field: FieldValue): string[] => {
   if (!field.list && !field.AssignList) return null;
 
@@ -138,7 +170,9 @@ const getLabelList = (field: FieldValue): string[] => {
     return Object.values(field.AssignList[0]).map((item) => item.split(";")[1]);
   }
 
-  return Object.values(field.list[0]).map((item) => item.split(";")[1]);
+  const result = Object.values(field.list[0]).map((item) => item.split(";")[1]);
+  console.log("getLabelList result for field", field.ID, ":", result);
+  return result;
 };
 
 const transformFieldData = (
@@ -155,6 +189,17 @@ const transformFieldData = (
   const realValue = getRealValue(fieldData);
   const optionsValueList = getList(fieldData);
   const optionLabelList = getLabelList(fieldData);
+
+  // 2611에 대한 상세 로그
+  if (fieldId === "2611") {
+    console.log("=== 2611 transformFieldData ===");
+    console.log("field:", field);
+    console.log("fieldData:", fieldData);
+    console.log("fieldId:", fieldId);
+    console.log("realValue:", realValue);
+    console.log("optionsValueList:", optionsValueList);
+    console.log("optionLabelList:", optionLabelList);
+  }
 
   return [
     `${tabId}${fieldId}`,
@@ -174,7 +219,10 @@ const transformFieldData = (
 };
 
 const transformOriginData = (originData: any[]): FormData => {
-  return originData.reduce((acc: FormData, item) => {
+  console.log("=== transformOriginData start ===");
+  console.log("originData:", originData);
+  
+  const formData = originData.reduce((acc: FormData, item) => {
     const key = Object.keys(item)[0];
     const fields = item[key];
     if (!fields || !Array.isArray(fields)) return acc;
@@ -193,11 +241,45 @@ const transformOriginData = (originData: any[]): FormData => {
       if (transformedField) {
         const [key, value] = transformedField;
         acc[key] = value;
+        
+        // 2611에 대한 디버깅 로그
+        if (key === "2611") {
+          console.log("=== 2611 in transformOriginData ===");
+          console.log("2611 transformed field:", value);
+          console.log("2611 list:", value.list);
+          console.log("2611 labelList:", value.labelList);
+        }
       }
     });
 
     return acc;
   }, {});
+
+  console.log("=== formData before 2611 check ===");
+  console.log("formData keys:", Object.keys(formData));
+  console.log("formData['2611']:", formData["2611"]);
+
+  // 2611이 항상 포함되도록 보장
+  if (!formData["2611"]) {
+    console.log("=== 2611 not found, adding default ===");
+    formData["2611"] = {
+      key: "Light Sensor",
+      value: "0",
+      realValue: "0",
+      list: ["0", "1", "2", "3", "4", "5", "6", "7"],
+      labelList: ["Disable", "Level 1 (Screw-fastened)", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7"],
+      alert_id: null,
+      text_num: null,
+      beforeValue: "0",
+      beforeAlertId: null,
+      beforeTextNum: null,
+    };
+  }
+
+  console.log("=== final formData ===");
+  console.log("formData['2611']:", formData["2611"]);
+  
+  return formData;
 };
 
 const extractCommandData = (originData: any[]) => {
@@ -226,6 +308,10 @@ const extractCommandData = (originData: any[]) => {
 
 // FormData를 모델명에 따라 patch하는 함수
 function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?: string) {
+  console.log("=== patchFormDataByModel start ===");
+  console.log("modelName:", modelName);
+  console.log("formData keys:", Object.keys(formData));
+  
   if (!modelName) return formData;
   const patched = { ...formData };
   // 1717 등 patch가 필요한 항목만 교체
@@ -240,7 +326,40 @@ function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?
         // title, tooltip 등도 필요시 추가
       };
     }
+    // 2611 처리 추가
+    if (key.endsWith("2611")) {
+      console.log("=== 2611 patch start ===");
+      const fieldDef = getFieldDefinition("2611", modelName) || FIELD_VALIDATIONS["2611"];
+      
+      // 기기에서 받은 데이터가 있으면 우선 사용, 없으면 groupFieldPatch 사용
+      const existingList = patched[key].list;
+      const existingLabelList = patched[key].labelList;
+      
+      console.log("2611 patch - existingList:", existingList);
+      console.log("2611 patch - existingLabelList:", existingLabelList);
+      console.log("2611 patch - fieldDef:", fieldDef);
+      
+      if (existingList && existingList.length > 0) {
+        // 기기에서 받은 데이터가 있으면 그대로 사용
+        console.log("Using device JSON data for 2611:", existingList);
+      } else if (fieldDef.list) {
+        // 기기에서 받은 데이터가 없으면 groupFieldPatch 사용
+        console.log("Using groupFieldPatch data for 2611");
+        patched[key] = {
+          ...patched[key],
+          list: fieldDef.list.map((item: any) => item.value),
+          labelList: fieldDef.list.map((item: any) => item.label),
+        };
+        console.log("Patched 2611 list:", patched[key].list);
+        console.log("Patched 2611 labelList:", patched[key].labelList);
+      }
+      console.log("=== 2611 patch end ===");
+    }
   });
+  
+  console.log("=== patchFormDataByModel end ===");
+  console.log("patched['2611']:", patched["2611"]);
+  
   return patched;
 }
 

@@ -1305,6 +1305,14 @@ const useSerial = () => {
     writer: WritableStreamDefaultWriter<string>;
     callback?: () => void;
   }) => {
+    console.log("Write attempt - Port state:", {
+      portExists: !!port,
+      portWritable: port?.writable,
+      portConnected: port?.connected,
+      portReadyState: port?.readyState,
+      imei: port?.imei
+    });
+
     if (port && port.writable) {
       try {
         if (callback) {
@@ -1337,7 +1345,20 @@ const useSerial = () => {
         return false;
       }
     } else {
-      console.error("Port is not writable or not available");
+      console.error("Port is not writable or not available", {
+        portExists: !!port,
+        portWritable: port?.writable,
+        portConnected: port?.connected,
+        portReadyState: port?.readyState,
+        imei: port?.imei
+      });
+      
+      // 포트 상태가 좋지 않으면 포트를 재연결 시도
+      if (port?.imei) {
+        console.log("Attempting to reconnect port:", port.imei);
+        setHasRefetching({ imei: port.imei, value: true });
+      }
+      
       return false;
     }
   };

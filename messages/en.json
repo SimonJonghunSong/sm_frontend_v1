@@ -1864,7 +1864,21 @@
     "latitude": "Latitude",
     "longitude": "Longitude",
     "angle": "Angle",
-    "speed": "Speed"
+    "speed": "Speed",
+    "light_sensor": {
+      "title": "Light Sensor",
+      "tooltip": "Light detection is used to alert when a device that is attached and installed somewhere is removed.",
+      "levels": {
+        "disable": "Disable",
+        "level1": "Level 1 (Screw-fastened)",
+        "level2": "Level 2",
+        "level3": "Level 3",
+        "level4": "Level 4",
+        "level5": "Level 5",
+        "level6": "Level 6",
+        "level7": "Level 7"
+      }
+    }
   },
   "error": {
     "invalid_email_format": "Invalid email format.",

@@ -11,10 +11,12 @@ import { FIELD_VALIDATIONS } from "constants/field";
 import InputBox from "@/components/inputbox/InputBox";
 import useLangStore from "@/utils/useLangStore";
 import SelectField from "../(components)/SelectField";
+import useSerial from "@/src/hooks/useSerial";
 import { FIELD_ERRORS } from "constants/fieldErrorValidations";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
 import RangeThresholdField from "../(components)/RangeThresholdField";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 const fieldIds = INCLUDE_FIELDS[SECTIONS.Sensor.en];
 
@@ -31,6 +33,17 @@ const Sensor = ({ formData, onChange, setFormData }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const lang = useLangStore((state) => state.lang);
   const { sendFormData, isLoading } = useSendFormData();
+  const { state: { portList } } = useSerial ? useSerial() : { state: { portList: [] } };
+  const { getCurrentImei } = useSerialConfigurationStore ? useSerialConfigurationStore() : { getCurrentImei: () => undefined };
+  const imei = getCurrentImei ? getCurrentImei() : undefined;
+  const currentPort = portList.find(({ port }) => port.imei === imei);
+  const modelName = currentPort?.port?.modelinfo?.split('_')[0] ?? "";
+
+  console.log("=== Sensor component ===");
+  console.log("modelName:", modelName);
+  console.log("formData['2611']:", formData["2611"]);
+  console.log("formData keys:", Object.keys(formData));
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const isDirtyFields = Object.keys(formData).filter((key) => {
@@ -113,13 +126,25 @@ const Sensor = ({ formData, onChange, setFormData }: Props) => {
             isSwitch
             isDirty={isDirtyFields.includes("2610")}
           />
-          <SwitchField
-            id="2611"
-            formData={formData}
-            onChange={handleChange}
-            style={{ width: "100%" }}
-            isDirty={isDirtyFields.includes("2611")}
-          />
+          {/* 2611 SelectField with switch for ST4932/ST4930, SwitchField for others */}
+          {(modelName === "ST4932" || modelName === "ST4930") ? (
+            <SelectField
+              id="2611"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isSwitch
+              isDirty={isDirtyFields.includes("2611")}
+            />
+          ) : (
+            <SwitchField
+              id="2611"
+              formData={formData}
+              onChange={handleChange}
+              style={{ width: "100%" }}
+              isDirty={isDirtyFields.includes("2611")}
+            />
+          )}
           <SwitchField
             id="2612"
             formData={formData}
