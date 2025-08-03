@@ -3,10 +3,12 @@ import useLangStore from "@/utils/useLangStore";
 import { FormField } from "../page";
 import InputBox from "@/components/inputbox/InputBox";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
 import { SwitchPrimary } from "@/components/switches";
 import EditDot from "./EditDot";
 import { hiddenParameterId } from "app/(auth)/device-info/(tabs)/CommandTab";
 import useParameterStore from "@/utils/useParameterStore";
+import useSerial from "@/src/hooks/useSerial";
 
 interface SwitchFieldProps {
   id: string;
@@ -35,6 +37,12 @@ const SwitchField = ({
 
   const realId = isUnderbarId ? `${id}_${1}` : id;
 
+  // 모델명 가져오기
+  const { state: { portList } } = useSerial ? useSerial() : { state: { portList: [] } };
+  const currentPort = portList && portList.length > 0 ? portList[0] : undefined;
+  const modelName = currentPort?.port?.modelinfo?.split('_')[0] ?? "";
+  const fieldDef = getFieldDefinition(realId, modelName);
+
   const { hiddenParameter } = useParameterStore();
 
   const isHiddenParameter = hiddenParameterId.includes(id);
@@ -58,13 +66,13 @@ const SwitchField = ({
         <InputBox.Title
           style={isHiddenParameter ? { color: "#FF0000" } : undefined}
         >
-          {FIELD_VALIDATIONS[realId].title[lang]}
+          {fieldDef?.title?.[lang] || FIELD_VALIDATIONS[realId].title[lang]}
         </InputBox.Title>
-        {FIELD_VALIDATIONS[realId].tooltip?.[lang] && (
+        {(fieldDef?.tooltip?.[lang] || FIELD_VALIDATIONS[realId].tooltip?.[lang]) && (
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
-                {FIELD_VALIDATIONS[realId].tooltip[lang]}
+                {fieldDef?.tooltip?.[lang] || FIELD_VALIDATIONS[realId].tooltip[lang]}
               </span>
             }
           />

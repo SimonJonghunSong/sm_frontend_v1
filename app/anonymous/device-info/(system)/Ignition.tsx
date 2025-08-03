@@ -11,6 +11,8 @@ import SwitchField from "../(components)/SwitchField";
 import { SwitchPrimary } from "@/components/switches";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "../(utils)/useSendFormData";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
+import useSerial from "@/src/hooks/useSerial";
 
 interface Props {
   formData: {
@@ -47,6 +49,12 @@ const Ignition = ({ formData, onChange, setFormData }: Props) => {
   const lang = useLangStore((state) => state.lang);
   const formRef = useRef<HTMLFormElement>(null);
   const [isChecked, setIsChecked] = useState(true);
+
+  // 모델명 가져오기
+  const { state: { portList } } = useSerial ? useSerial() : { state: { portList: [] } };
+  const currentPort = portList && portList.length > 0 ? portList[0] : undefined;
+  const modelName = currentPort?.port?.modelinfo?.split('_')[0] ?? "";
+  const fieldDef1717 = getFieldDefinition("1717", modelName);
 
   const isDirtyFields = useMemo(() => {
     return Object.keys(formData).filter((key) => {
