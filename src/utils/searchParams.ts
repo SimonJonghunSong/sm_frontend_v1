@@ -1,6 +1,7 @@
 import { Lang } from "@/utils/useLangStore";
 import { FormField } from "app/(auth)/device-info/page";
 import { FIELD_VALIDATIONS } from "constants/field";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
 import {
   INCLUDE_FIELDS,
   SEARCH_SECTION,
@@ -12,7 +13,8 @@ export const getSearchParamsData = (
   formData: {
     [key: string]: FormField;
   },
-  lang: Lang
+  lang: Lang,
+  modelName?: string
 ) => {
   const fieldIdToSection = {};
   Object.entries(INCLUDE_FIELDS).forEach(([section, fieldIds]) => {
@@ -21,7 +23,7 @@ export const getSearchParamsData = (
     });
   });
 
-  // 2. title별로 key, section을 매핑
+  // 2. title별로 key, section을 매핑 (getFieldDefinition 사용)
   return Object.entries(FIELD_VALIDATIONS)
     .filter(([key]) => !!formData?.[key])
     .reduce((acc, [key, value]) => {
@@ -30,9 +32,13 @@ export const getSearchParamsData = (
       const searchSection = SEARCH_SECTION?.[lang]?.[section];
 
       if (searchSection) {
-        acc[(value.title as any)?.[lang]] = {
+        // getFieldDefinition을 사용하여 모델별 정의 가져오기
+        const fieldDef = getFieldDefinition(key, modelName);
+        const title = fieldDef?.title?.[lang] || value.title[lang];
+        
+        acc[title] = {
           field: key,
-          searchText: `${searchSection?.searchText} > ${value.title[lang]}`,
+          searchText: `${searchSection?.searchText} > ${title}`,
           tab: searchSection?.tab,
         };
       }

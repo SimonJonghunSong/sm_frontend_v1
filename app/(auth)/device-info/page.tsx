@@ -657,7 +657,7 @@ export default function DeviceInfoPage() {
       console.log("patchedFormData=========================", patchedFormData);
       setFormData(patchedFormData);
       setSearchSectionData(formDataToSearchSectionData(patchedFormData, lang));
-      setSearchParamData(getSearchParamsData(patchedFormData, lang));
+      setSearchParamData(getSearchParamsData(patchedFormData, lang, modelName));
       setCommandData(extractCommandData(originData));
     }
   }, [originData]);

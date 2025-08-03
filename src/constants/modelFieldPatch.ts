@@ -1,20 +1,4 @@
 export const modelFieldPatch = {
-  ST4955LCBW: {
-    "1717": {
-      title: {
-        en: "GPS Pinning at Parking",
-        pt: "Fixação de GPS em Estacionamento",
-        es: "Fijación del GPS en Estacionamiento",
-      },
-      tooltip: {
-        en: "GPS Pinning at Parking (EN)",
-        pt: "Fixação de GPS em Estacionamento (PT)",
-        es: "Fijación del GPS en Estacionamiento (ES)",
-      },
-      list: [
-        { value: "00", label: { en: "Disable", pt: "Disable", es: "Disable" } },
-        { value: "01", label: { en: "Enable",  pt: "Enable",  es: "Enable" } },
-      ],
-    },
-  },
+  // 개별 모델에만 적용되는 특별한 패치들만 여기에 정의
+  // ST4955LCBW는 그룹으로 이동했으므로 제거됨
 }; 
