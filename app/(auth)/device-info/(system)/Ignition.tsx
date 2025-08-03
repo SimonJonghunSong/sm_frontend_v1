@@ -13,6 +13,7 @@ import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
 import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
 import useSerial from "@/src/hooks/useSerial";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 interface Props {
   formData: {
@@ -52,9 +53,11 @@ const Ignition = ({ formData, onChange, setFormData }: Props) => {
   // currentPort는 상위에서 prop으로 받거나, useSerial 등에서 가져와야 함
   // 여기서는 window 접근 대신 prop이나 context에서 받아야 함
   // 예시: 상위에서 modelName을 prop으로 내려주거나, useSerial에서 가져오기
-  // 아래는 예시로 context에서 가져오는 코드 (실제 프로젝트 구조에 맞게 조정 필요)
+  // 현재 선택된 기기 찾기
   const { state: { portList } } = useSerial ? useSerial() : { state: { portList: [] } };
-  const currentPort = portList && portList.length > 0 ? portList[0] : undefined;
+  const { getCurrentImei } = useSerialConfigurationStore();
+  const imei = getCurrentImei();
+  const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort?.port?.modelinfo?.split('_')[0] ?? "";
   const fieldDef1717 = getFieldDefinition("1717", modelName);
 
