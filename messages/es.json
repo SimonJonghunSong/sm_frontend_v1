@@ -30,9 +30,9 @@
   "login": {
     "login": {
       "sign_in_to_your_syncmaster_account!": "¡Inicia sesión en tu cuenta de SyncMaster!",
-      "you_can_log_in_with_your_scuti_id!_don’t_have_an_account_yet?_contact_us": "¡Puedes iniciar sesión con tu ID de Scuti!\n¿Aún no tienes una cuenta? Contáctanos",
+      "you_can_log_in_with_your_scuti_id!_don't_have_an_account_yet?_contact_us": "¡Puedes iniciar sesión con tu ID de Scuti!\n¿Aún no tienes una cuenta? Contáctanos",
       "you_can_log_in_with_your_scuti_id!": "¡Puedes iniciar sesión con tu ID de Scuti!",
-      "don’t_have_an_account_yet?": "¿Aún no tienes una cuenta?",
+      "don't_have_an_account_yet?": "¿Aún no tienes una cuenta?",
       "contact_us": "Contáctanos",
       "country": "País",
       "select,_나라명": "Seleccionar, nombre del país",
@@ -70,7 +70,7 @@
       "check_your_email!": "¡Revisa tu correo electrónico!",
       "password_reset_link_has_been_sent_to_your_email!": "¡El enlace para restablecer la contraseña ha sido enviado a tu correo electrónico!",
       "login": "Iniciar sesión",
-      "didn’t_receive_the_link?": "¿No recibiste el enlace?",
+      "didn't_receive_the_link?": "¿No recibiste el enlace?",
       "resend": "Reenviar"
     },
     "pw_settings": {
@@ -785,10 +785,10 @@
       "shock": "Choque",
       "collision": "Colisión",
       "reserved": "Reservado",
-      "motion_threshold_(g’s)": "Umbral de movimiento (G’s)",
+      "motion_threshold_(g's)": "Umbral de movimiento (G's)",
       "shock_detection_delay_(seconds)": "Retraso de detección de choque (segundos)",
-      "shock_threshold_(g’s)": "Umbral de choque (G’s)",
-      "collision_threshold_(g’s)": "Umbral de colisión (G’s)",
+      "shock_threshold_(g's)": "Umbral de choque (G's)",
+      "collision_threshold_(g's)": "Umbral de colisión (G's)",
       "driver_pattern_function": "Función de patrón de conductor",
       "dp_–_base_speed_(km/h)": "DP – Velocidad base (km/h)",
       "dp_–_fast_accel_(1/256g)": "DP – Aceleración rápida (1/256G)",
@@ -932,7 +932,7 @@
       "ble_sensor_id": "ID del sensor BLE",
       "temp/hum/pres": "Temp/Hum/Pres",
       "ble_data_report_map": "Mapa de informe de datos BLE",
-      "ble_sensor’s_scan_status": "Estado de escaneo del sensor BLE",
+      "ble_sensor's_scan_status": "Estado de escaneo del sensor BLE",
       "total_ble_data": "Datos totales de BLE",
       "current_ble_data": "Datos actuales de BLE",
       "ble_sensor": "Sensor BLE",
@@ -1781,7 +1781,14 @@
         "show_changes": "Mostrar cambios",
         "saved_successfully!": "¡Guardado exitosamente!",
         "are_you_sure_you_want_to_delete_this_profile?": "¿Está seguro de que desea eliminar este perfil?",
-        "to_upload_a_profile_to_scuti,_log_in_with_the_same_account_as_syncmaster": "Para cargar un perfil en Scuti, inicie sesión con la misma cuenta que SyncMaster."
+        "to_upload_a_profile_to_scuti,_log_in_with_the_same_account_as_syncmaster": "Para cargar un perfil en Scuti, inicie sesión con la misma cuenta que SyncMaster.",
+        "confirm": "Confirmar",
+        "are_you_sure_you_want_to_upload_the_profile_to_scuti?": "¿Está seguro de que desea cargar el perfil en Scuti?",
+        "filename": "Nombre del archivo",
+        "cancel": "Cancelar",
+        "yes": "Sí",
+        "upload_confirm_message": "¿Está seguro de que desea cargar el perfil en Scuti?",
+        "upload_filename": "Nombre del archivo"
       },
       "device_refresh": {
         "the_device_has_not_been_detected": "El dispositivo no ha sido detectado.",

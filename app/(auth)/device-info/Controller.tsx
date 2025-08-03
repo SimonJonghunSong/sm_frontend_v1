@@ -99,6 +99,23 @@ export default function ModelInfoController({
     description: t("error.Passwords_do_not_match"),
   });
 
+  // Upload filename 관련 상태
+  const [uploadFilename, setUploadFilename] = useState("");
+
+  // 기본 파일명 생성 함수
+  const generateDefaultFilename = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    const milliseconds = String(now.getMilliseconds()).padStart(2, '0');
+    
+    return `${modelName}_${year}${month}${day}${hours}${minutes}${seconds}_${fw_ver}_${Math.random().toString(16).substr(2, 4).toUpperCase()}.profile`;
+  };
+
   const uploadProfileMutation = useMutation({
     mutationFn: uploadProfile,
   });
@@ -116,6 +133,7 @@ export default function ModelInfoController({
     loadModalToggle();
   };
   const handleUpload = () => {
+    setUploadFilename(generateDefaultFilename());
     uploadModalToggle();
   };
 
@@ -327,7 +345,7 @@ export default function ModelInfoController({
     const profileData = await getProfileAllData(false);
     const mockFile = new File(
       [profileData.join("\n")],
-      `${modelName}_${fw_ver}.profile`,
+      uploadFilename || generateDefaultFilename(),
       {
         type: "text/plain",
       }
@@ -630,13 +648,24 @@ export default function ModelInfoController({
         <Modal
           open={uploadModal}
           toggleOpen={uploadModalToggle}
-          title="Confirm"
+          title={t("popup.configuration.profile_menu.confirm")}
           confirm={handleUploadProfileConfirm}
-          confirmButtonText="Yes"
+          confirmButtonText={t("common.popup.yes")}
+          cancelButtonText={t("common.popup.cancel")}
           width="360px"
         >
-          <Stack>
-            <span>Are you sure you want to upload the profile to Scuti?</span>
+          <Stack gap="16px">
+            <span>{t("popup.configuration.profile_menu.upload_confirm_message")}</span>
+            <Stack gap="8px">
+              <span style={{ fontSize: "14px", fontWeight: 500 }}>{t("popup.configuration.profile_menu.upload_filename")}:</span>
+              <TextField
+                value={uploadFilename}
+                onChange={(e) => setUploadFilename(e.target.value)}
+                placeholder="Enter filename"
+                size="small"
+                fullWidth
+              />
+            </Stack>
           </Stack>
         </Modal>
       </Stack>
