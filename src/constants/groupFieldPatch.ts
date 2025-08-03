@@ -16,6 +16,24 @@ export const groupFieldPatch = {
         { value: "01", label: { en: "Enable", pt: "Enable", es: "Enable" } },
       ],
     },
+
+    //1973 중복 됨. 
+    "1973": {
+      title: {
+        en: "Turn On by Charger",
+        pt: "Ligar por Carregador",
+        es: "Encender por Cargador",
+      },
+      tooltip: {
+        en: "This is for ST4950_Series and ST4932. Determined whether the device turns on automatically or not when the charger is connected",
+        pt: "Isto é para ST4950_Series e ST4932. Determina se o dispositivo liga automaticamente ou não quando o carregador está conectado",
+        es: "Esto es para ST4950_Series y ST4932. Determina si el dispositivo se enciende automáticamente o no cuando el cargador está conectado",
+      },
+      list: [
+        { value: "00", label: { en: "Disable", pt: "Desabilitar", es: "Deshabilitar" } },
+        { value: "01", label: { en: "Enable", pt: "Habilitar", es: "Habilitar" } },
+      ],
+    },
   },
   ST4930_Series: {
     "2611": {
@@ -38,6 +56,24 @@ export const groupFieldPatch = {
         { value: "5", label: { en: "Level 5", pt: "Nível 5", es: "Nivel 5" } },
         { value: "6", label: { en: "Level 6", pt: "Nível 6", es: "Nivel 6" } },
         { value: "7", label: { en: "Level 7", pt: "Nível 7", es: "Nivel 7" } },
+      ],
+    },
+
+    //1973 중복 됨. 
+    "1973": {
+      title: {
+        en: "Turn On by Charger",
+        pt: "Ligar por Carregador",
+        es: "Encender por Cargador",
+      },
+      tooltip: {
+        en: "This is for ST4950_Series and ST4932. Determined whether the device turns on automatically or not when the charger is connected",
+        pt: "Isto é para ST4950_Series e ST4932. Determina se o dispositivo liga automaticamente ou não quando o carregador está conectado",
+        es: "Esto es para ST4950_Series y ST4932. Determina si el dispositivo se enciende automáticamente o no cuando el cargador está conectado",
+      },
+      list: [
+        { value: "00", label: { en: "Disable", pt: "Desabilitar", es: "Deshabilitar" } },
+        { value: "01", label: { en: "Enable", pt: "Habilitar", es: "Habilitar" } },
       ],
     },
   },

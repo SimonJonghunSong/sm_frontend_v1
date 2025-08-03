@@ -191,15 +191,15 @@ const transformFieldData = (
   const optionLabelList = getLabelList(fieldData);
 
   // 2611에 대한 상세 로그
-  if (fieldId === "2611") {
-    console.log("=== 2611 transformFieldData ===");
-    console.log("field:", field);
-    console.log("fieldData:", fieldData);
-    console.log("fieldId:", fieldId);
-    console.log("realValue:", realValue);
-    console.log("optionsValueList:", optionsValueList);
-    console.log("optionLabelList:", optionLabelList);
-  }
+  // if (fieldId === "2611") {
+  //   console.log("=== 2611 transformFieldData ===");
+  //   console.log("field:", field);
+  //   console.log("fieldData:", fieldData);
+  //   console.log("fieldId:", fieldId);
+  //   console.log("realValue:", realValue);
+  //   console.log("optionsValueList:", optionsValueList);
+  //   console.log("optionLabelList:", optionLabelList);
+  // }
 
   return [
     `${tabId}${fieldId}`,
@@ -219,8 +219,8 @@ const transformFieldData = (
 };
 
 const transformOriginData = (originData: any[]): FormData => {
-  console.log("=== transformOriginData start ===");
-  console.log("originData:", originData);
+  // console.log("=== transformOriginData start ===");
+  // console.log("originData:", originData);
   
   const formData = originData.reduce((acc: FormData, item) => {
     const key = Object.keys(item)[0];
@@ -243,21 +243,21 @@ const transformOriginData = (originData: any[]): FormData => {
         acc[key] = value;
         
         // 2611에 대한 디버깅 로그
-        if (key === "2611") {
-          console.log("=== 2611 in transformOriginData ===");
-          console.log("2611 transformed field:", value);
-          console.log("2611 list:", value.list);
-          console.log("2611 labelList:", value.labelList);
-        }
+        // if (key === "2611") {
+        //   console.log("=== 2611 in transformOriginData ===");
+        //   console.log("2611 transformed field:", value);
+        //   console.log("2611 list:", value.list);
+        //   console.log("2611 labelList:", value.labelList);
+        // }
       }
     });
 
     return acc;
   }, {});
 
-  console.log("=== formData before 2611 check ===");
-  console.log("formData keys:", Object.keys(formData));
-  console.log("formData['2611']:", formData["2611"]);
+  // console.log("=== formData before 2611 check ===");
+  // console.log("formData keys:", Object.keys(formData));
+  // console.log("formData['2611']:", formData["2611"]);
 
   // 2611이 항상 포함되도록 보장
   if (!formData["2611"]) {
@@ -328,16 +328,16 @@ function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?
     }
     // 2611 처리 추가
     if (key.endsWith("2611")) {
-      console.log("=== 2611 patch start ===");
+      // console.log("=== 2611 patch start ===");
       const fieldDef = getFieldDefinition("2611", modelName) || FIELD_VALIDATIONS["2611"];
       
       // 기기에서 받은 데이터가 있으면 우선 사용, 없으면 groupFieldPatch 사용
       const existingList = patched[key].list;
       const existingLabelList = patched[key].labelList;
       
-      console.log("2611 patch - existingList:", existingList);
-      console.log("2611 patch - existingLabelList:", existingLabelList);
-      console.log("2611 patch - fieldDef:", fieldDef);
+      // console.log("2611 patch - existingList:", existingList);
+      // console.log("2611 patch - existingLabelList:", existingLabelList);
+      // console.log("2611 patch - fieldDef:", fieldDef);
       
       if (existingList && existingList.length > 0) {
         // 기기에서 받은 데이터가 있으면 그대로 사용
@@ -353,12 +353,12 @@ function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?
         console.log("Patched 2611 list:", patched[key].list);
         console.log("Patched 2611 labelList:", patched[key].labelList);
       }
-      console.log("=== 2611 patch end ===");
+      // console.log("=== 2611 patch end ===");
     }
   });
   
-  console.log("=== patchFormDataByModel end ===");
-  console.log("patched['2611']:", patched["2611"]);
+  // console.log("=== patchFormDataByModel end ===");
+  // console.log("patched['2611']:", patched["2611"]);
   
   return patched;
 }

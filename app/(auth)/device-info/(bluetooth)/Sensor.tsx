@@ -39,10 +39,10 @@ const Sensor = ({ formData, onChange, setFormData }: Props) => {
   const currentPort = portList.find(({ port }) => port.imei === imei);
   const modelName = currentPort?.port?.modelinfo?.split('_')[0] ?? "";
 
-  console.log("=== Sensor component ===");
-  console.log("modelName:", modelName);
-  console.log("formData['2611']:", formData["2611"]);
-  console.log("formData keys:", Object.keys(formData));
+  // console.log("=== Sensor component ===");
+  // console.log("modelName:", modelName);
+  // console.log("formData['2611']:", formData["2611"]);
+  // console.log("formData keys:", Object.keys(formData));
 
   if (!hasFormDataFields(formData, fieldIds)) return null;
 

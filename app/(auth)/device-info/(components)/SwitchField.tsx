@@ -7,6 +7,9 @@ import { SwitchPrimary } from "@/components/switches";
 import EditDot from "./EditDot";
 import { hiddenParameterId } from "app/(auth)/device-info/(tabs)/CommandTab";
 import useParameterStore from "@/utils/useParameterStore";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
+import useSerial from "@/src/hooks/useSerial";
+import useSerialConfigurationStore from "@/src/stores/useSerialConfigurationStore";
 
 interface SwitchFieldProps {
   id: string;
@@ -37,7 +40,19 @@ const SwitchField = ({
 }: SwitchFieldProps) => {
   const lang = useLangStore((state) => state.lang);
 
+  // 현재 연결된 기기의 모델명 가져오기
+  const { state: { portList } } = useSerial ? useSerial() : { state: { portList: [] } };
+  const { getCurrentImei } = useSerialConfigurationStore ? useSerialConfigurationStore() : { getCurrentImei: () => undefined };
+  const imei = getCurrentImei ? getCurrentImei() : undefined;
+  const currentPort = portList.find(({ port }) => port.imei === imei);
+  const modelName = currentPort?.port?.modelinfo?.split('_')[0] ?? "";
+
   const realId = isUnderbarId ? `${id}_${1}` : id;
+
+  // groupFieldPatch에서 정의 가져오기
+  const fieldDef = getFieldDefinition(id, modelName);
+  const title = fieldDef?.title?.[lang] || FIELD_VALIDATIONS[realId]?.title?.[lang];
+  const fieldTooltip = fieldDef?.tooltip?.[lang] || FIELD_VALIDATIONS[realId]?.tooltip?.[lang];
 
   const { hiddenParameter } = useParameterStore();
 
@@ -62,13 +77,13 @@ const SwitchField = ({
         <InputBox.Title
           style={isHiddenParameter ? { color: "#FF0000" } : undefined}
         >
-          {label || FIELD_VALIDATIONS[realId].title[lang]}
+          {label || title}
         </InputBox.Title>
-        {(tooltip || FIELD_VALIDATIONS[realId].tooltip?.[lang]) && (
+        {(tooltip || fieldTooltip) && (
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
-                {tooltip || FIELD_VALIDATIONS[realId].tooltip[lang]}
+                {tooltip || fieldTooltip}
               </span>
             }
           />
