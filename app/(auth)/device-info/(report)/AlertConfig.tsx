@@ -4,9 +4,6 @@ import { useTranslations } from "next-intl";
 import { Button, Stack, Tab as MuiTab, Tabs } from "@mui/material";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { AlertConfig1, AlertConfig2, AlertConfig3 } from "./@index";
-import { ALERT_CONFIG_1 } from "./AlertConfig1";
-import { ALERT_CONFIG_2 } from "./AlertConfig2";
-import { ALERT_CONFIG_3 } from "./AlertConfig3";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import useLangStore from "@/utils/useLangStore";
 import useSendFormData from "app/(auth)/device-info/(utils)/useSendFormData";
@@ -18,6 +15,11 @@ interface Props {
   onChange: (id: string, value: string, alertId?: string) => void;
   setFormData: Dispatch<SetStateAction<{ [key: string]: FormField }>>;
   originData?: any[];
+  alertConfigFields?: {
+    alertConfig1: string[];
+    alertConfig2: string[];
+    alertConfig3: string[];
+  };
 }
 
 // 형식 변환 유틸리티 함수
@@ -53,7 +55,7 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => {
+const AlertConfig = ({ formData, onChange, setFormData, originData, alertConfigFields }: Props) => {
   const formRef = useRef<HTMLFormElement>(null);
   const t = useTranslations();
   const lang = useLangStore((state) => state.lang);
@@ -69,12 +71,23 @@ const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => 
   const modelName = modelInfo?.S;
   const isST4315B = modelName === "ST4315B";
 
+  // device-info에서는 항상 동적 필드 사용 (기기에서 JSON 읽어옴)
+  const fields = alertConfigFields || {
+    alertConfig1: [],
+    alertConfig2: [],
+    alertConfig3: []
+  };
+  
+  console.log("=== AlertConfig component ===");
+  console.log("alertConfigFields:", alertConfigFields);
+  console.log("fields:", fields);
+
   const isDirtyFields = Object.keys(formData).filter((key) => {
-    const currentConfig = tab === "alert_config_1" ? ALERT_CONFIG_1 : 
-                         tab === "alert_config_2" ? ALERT_CONFIG_2 : 
-                         ALERT_CONFIG_3;
+    const currentConfig = tab === "alert_config_1" ? fields.alertConfig1 : 
+                         tab === "alert_config_2" ? fields.alertConfig2 : 
+                         fields.alertConfig3;
     return (
-      currentConfig.map(String).includes(key) &&
+      currentConfig.includes(key) &&
       (formData[key].beforeValue !== formData[key].realValue ||
         formData[key].beforeAlertId !== formData[key].alert_id)
     );
@@ -86,13 +99,13 @@ const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => 
       onSubmit={(e) => {
         e.preventDefault();
 
-        const fields = tab === "alert_config_1" ? ALERT_CONFIG_1.map(String) :
-                      tab === "alert_config_2" ? ALERT_CONFIG_2.map(String) :
-                      ALERT_CONFIG_3.map(String);
+        const currentFields = tab === "alert_config_1" ? fields.alertConfig1 :
+                             tab === "alert_config_2" ? fields.alertConfig2 :
+                             fields.alertConfig3;
 
         // 모든 필드 값을 포함한 객체 생성
         const fieldValues = Object.keys(formData).reduce((acc, key) => {
-          if (fields.map(String).includes(key)) {
+          if (currentFields.includes(key)) {
             const { realValue, alert_id } = formData[key];
 
             // 파라미터 구조로 변환
@@ -146,6 +159,7 @@ const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => 
             formData={formData}
             onChange={onChange}
             isDirtyFields={isDirtyFields}
+            alertFields={fields.alertConfig1}
           />
         )}
         {tab === "alert_config_2" && (
@@ -153,6 +167,7 @@ const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => 
             formData={formData}
             onChange={onChange}
             isDirtyFields={isDirtyFields}
+            alertFields={fields.alertConfig2}
           />
         )}
         {tab === "alert_config_3" && isST4315B && (
@@ -160,6 +175,7 @@ const AlertConfig = ({ formData, onChange, setFormData, originData }: Props) => 
             formData={formData}
             onChange={onChange}
             isDirtyFields={isDirtyFields}
+            alertFields={fields.alertConfig3}
           />
         )}
       </TabContent>

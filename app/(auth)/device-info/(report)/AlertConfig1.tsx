@@ -15,6 +15,7 @@ interface Props {
   };
   onChange: (id: string, value: string, alertId?: string) => void;
   isDirtyFields: string[];
+  alertFields?: string[];
 }
 
 export const ALERT_CONFIG_1 = INCLUDE_FIELDS[SECTIONS.AlertConfig1.en];
@@ -23,12 +24,13 @@ export default function AlertConfig1({
   formData,
   onChange,
   isDirtyFields,
+  alertFields,
 }: Props) {
   const { lang } = useLangStore();
 
   const existingFields = filterFormDataFields(
     formData,
-    ALERT_CONFIG_1.map(String)
+    alertFields || []
   );
 
   const allFieldsChecked = existingFields.every(
