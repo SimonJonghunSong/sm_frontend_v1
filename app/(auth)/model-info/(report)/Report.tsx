@@ -118,21 +118,12 @@ const Report = ({ formData, onChange, setFormData }: Props) => {
             style={{ width: "100%" }}
             isDirty={isDirtyFields.includes("1055")}
           />
-          <DualCheckboxField
+          <SelectField
             id="1058"
             formData={formData}
             onChange={handleChange}
             style={{ width: "100%" }}
-            firstOptionLabel={{
-              en: t("configuration.report.server"),
-              es: t("configuration.report.server"),
-              pt: t("configuration.report.server"),
-            }}
-            secondOptionLabel={{
-              en: t("configuration.report.sms"),
-              es: t("configuration.report.sms"),
-              pt: t("configuration.report.sms"),
-            }}
+            isDirty={isDirtyFields.includes("1058")}
           />
           <SwitchField
             id="1064"
