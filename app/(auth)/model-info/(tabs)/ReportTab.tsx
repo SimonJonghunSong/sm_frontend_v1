@@ -33,9 +33,14 @@ interface Props {
     p8: string;
     p9: string;
   }[];
+  alertConfigFields?: {
+    alertConfig1: string[];
+    alertConfig2: string[];
+    alertConfig3: string[];
+  };
 }
 
-export default function ReportTab({ formData, setFormData, csvData }: Props) {
+export default function ReportTab({ formData, setFormData, csvData, alertConfigFields }: Props) {
   const handleValueChange = (
     name,
     value,
@@ -91,6 +96,7 @@ export default function ReportTab({ formData, setFormData, csvData }: Props) {
         formData={formData}
         onChange={handleValueChange}
         setFormData={setFormData}
+        alertConfigFields={alertConfigFields}
       />
 
       <OBD

@@ -3735,9 +3735,9 @@ export const FIELD_VALIDATIONS = {
   },
   "1321": {
     title: {
-      en: "Enter Speeding Mode (36)",
-      pt: "Entrar no Modo de Excesso de Velocidade (36)",
-      es: "Entrar en Modo de Exceso de Velocidad (36)",
+      en: "Enter Towing Mode (58)",
+      pt: "Entrar no Modo de Reboque (58)",
+      es: "Entrar en Modo de Remolque (58)",
     },
     tooltip: null,
     min: null,
@@ -3900,9 +3900,9 @@ export const FIELD_VALIDATIONS = {
   },
   "1340": {
     title: {
-      en: "Mode Change (18)",
-      pt: "Mudança de Modo (18)",
-      es: "Cambio de Modo (18)",
+      en: "Jamming Detected (50)",
+      pt: "Bloqueio Detectado (50)",
+      es: "Interferencia Detectada (50)",
     },
     tooltip: null,
     min: null,
@@ -3975,11 +3975,23 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  // "1355": {
+  //   title: {
+  //     en: "Power Key Pressed from low-battery (55)",
+  //     pt: "Tecla de Energia Pressionada com Bateria Baixa (55)",
+  //     es: "Tecla de Activado Presionada con Batería Baja (55)",
+  //   },
+  //   tooltip: null,
+  //   min: null,
+  //   max: null,
+  //   list: null,
+  // },
+
   "1355": {
     title: {
-      en: "Power Key Pressed from low-battery (55)",
-      pt: "Tecla de Energia Pressionada com Bateria Baixa (55)",
-      es: "Tecla de Activado Presionada con Batería Baja (55)",
+      en: "Alert of Harsh Brake: Driver Pattern (47)",
+      pt: "Alerta de Freada Brusca: Padrão de Condução (47)",
+      es: "Alerta de Freno Brusco: Patrón de Conducción (47)",
     },
     tooltip: null,
     min: null,
@@ -4712,6 +4724,17 @@ export const FIELD_VALIDATIONS = {
     max: null,
     list: null,
   },
+  "1470": {
+    title: {
+      en: "Door Open Protection(132)",
+      pt: "Proteção de Porta Aberta (132)",
+      es: "Protección de Puerta Abierta (132)",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
   "1471": {
     title: {
       en: "Lose Network Connection (141)",
@@ -4725,9 +4748,9 @@ export const FIELD_VALIDATIONS = {
   },
   "1472": {
     title: {
-      en: "Sensor RPT Mode/Interval Changed (134)",
-      pt: "Modo/Intervalo de Relatório de Sensor Alterado (134)",
-      es: "Modo/Intervalo de Informe del Sensor Cambiado (134)",
+      en: "Bank Trunk Active by Polygon (142)",
+      pt: "Ativação do Porta-Malas por Polígono (142)",
+      es: "Activación del Maletero por Polígono (142)",
     },
     tooltip: null,
     min: null,
@@ -4736,15 +4759,38 @@ export const FIELD_VALIDATIONS = {
   },
   "1473": {
     title: {
-      en: "D_BLE Door State (135)",
-      pt: "Estado da Porta D_BLE (135)",
-      es: "Estado de la Puerta D_BLE (135)",
+      en: "Bank Trunk Active by Circular (143)",
+      pt: "Ativação do Porta-Malas por Circular (143)",
+      es: "Activación del Maletero por Circular (143)",
     },
     tooltip: null,
     min: null,
     max: null,
     list: null,
   },
+
+  // "1472": {
+  //   title: {
+  //     en: "Sensor RPT Mode/Interval Changed (134)",
+  //     pt: "Modo/Intervalo de Relatório de Sensor Alterado (134)",
+  //     es: "Modo/Intervalo de Informe del Sensor Cambiado (134)",
+  //   },
+  //   tooltip: null,
+  //   min: null,
+  //   max: null,
+  //   list: null,
+  // },
+  // "1473": {
+  //   title: {
+  //     en: "D_BLE Door State (135)",
+  //     pt: "Estado da Porta D_BLE (135)",
+  //     es: "Estado de la Puerta D_BLE (135)",
+  //   },
+  //   tooltip: null,
+  //   min: null,
+  //   max: null,
+  //   list: null,
+  // },
   "1474": {
     title: {
       en: "D_BLE Panic State (136)",
@@ -4805,6 +4851,28 @@ export const FIELD_VALIDATIONS = {
       en: "Buzzer Active by overspeed (152)",
       pt: "Buzzer Ativo por Excesso de Velocidade (152)",
       es: "Zumbido Activo por Exceso de Velocidad (152)",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1483": {
+    title: {
+      en: "Secure Immoblizer(146)",
+      pt: "Imobilizador Seguro (146)",
+      es: "Inmovilizador Seguro (146)",
+    },
+    tooltip: null,
+    min: null,
+    max: null,
+    list: null,
+  },
+  "1490": {
+    title: {
+      en: "Immobilizer Disable by keyboard(159)",
+      pt: "Desativar Imobilizador pelo Teclado (159)",
+      es: "Desactivar Inmovilizador por Teclado (159)",
     },
     tooltip: null,
     min: null,

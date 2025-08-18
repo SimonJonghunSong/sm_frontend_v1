@@ -242,6 +242,7 @@ export function useTransformConfigDataWithOutDevice({
   const [isDirty, setIsDirty] = useState(false);
   const [originData, setOriginData] = useState(data || []);
 
+  console.log("useTransformConfigDataWithOutDevice==========");
   console.log("originData :::", originData);
 
   const formData = useMemo(

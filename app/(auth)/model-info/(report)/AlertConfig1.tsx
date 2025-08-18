@@ -8,6 +8,8 @@ import useLangStore from "@/utils/useLangStore";
 import { filterFormDataFields } from "../(utils)/@index";
 import { INCLUDE_FIELDS, SECTIONS } from "constants/searchField";
 import EditDot from "../(components)/EditDot";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 interface Props {
   formData: {
@@ -15,21 +17,27 @@ interface Props {
   };
   onChange: (id: string, value: string, alertId?: string) => void;
   isDirtyFields: string[];
+  alertFields?: string[];
 }
-
-export const ALERT_CONFIG_1 = INCLUDE_FIELDS[SECTIONS.AlertConfig1.en];
 
 export default function AlertConfig1({
   formData,
   onChange,
   isDirtyFields,
+  alertFields,
 }: Props) {
   const { lang } = useLangStore();
+  const { getModelName } = useModelInfoStore();
+  const modelName = getModelName();
 
   const existingFields = filterFormDataFields(
     formData,
-    ALERT_CONFIG_1.map(String)
+    alertFields || []
   );
+  
+  console.log("=== AlertConfig1 component ===");
+  console.log("alertFields:", alertFields);
+  console.log("existingFields:", existingFields);
 
   const allFieldsChecked = existingFields.every(
     (field) => formData[field].realValue === "1"
@@ -97,7 +105,7 @@ export default function AlertConfig1({
             </Stack>
             <Stack direction="row" alignItems="center" gap="8px">
               <InputBox.Title>
-                {FIELD_VALIDATIONS[field].title[lang]}
+                {getFieldDefinition(field, modelName)?.title?.[lang] || FIELD_VALIDATIONS[field]?.title?.[lang] || field}
               </InputBox.Title>
 
               <InputBox.Number>{field}</InputBox.Number>

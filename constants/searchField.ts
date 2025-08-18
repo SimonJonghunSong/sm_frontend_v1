@@ -409,136 +409,11 @@ export const SECTIONS = {
   },
 };
 
-const alertConfig1Fields = [
-  "1300",
-  "1301",
-  "1302",
-  "1304",
-  "1306",
-  "1308",
-  "1311",
-  "1313",
-  "1314",
-  "1321",
-  "1325",
-  "1326",
-  "1328",
-  "1329",
-  "1330",
-  "1331",
-  "1332",
-  "1333",
-  "1334",
-  "1335",
-  "1336",
-  "1337",
-  "1338",
-  "1339",
-  "1340",
-  // "1340",
-  "1341",
-  "1342",
-  "1350",
-  "1351",
-  "1352",
-  "1354",
-  "1355",
-  "1356",
-  "1357",
-  "1360",
-  "1365",
-  "1366",
-  "1367",
-  "1368",
-  "1371",
-  "1372",
-  "1373",
-  "1377",
-];
 
-const alertConfig2Fields = [
-  "1400",
-  "1401",
-  "1402",
-  "1403",
-  "1404",
-  "1405",
-  "1406",
-  "1407",
-  "1413",
-  "1414",
-  "1415",
-  "1416",
-  "1417",
-  "1418",
-  "1419",
-  "1420",
-  "1421",
-  "1422",
-  "1423",
-  "1424",
-  "1425",
-  "1426",
-  "1427",
-  "1428",
-  "1429",
-  "1430",
-  "1431",
-  "1432",
-  "1433",
-  "1434",
-  "1435",
-  "1437",
-  "1438",
-  "1443",
-  "1444",
-  "1445",
-  "1446",
-  "1447",
-  "1453",
-  "1454",
-  "1455",
-  "1456",
-  "1457",
-  "1458",
-  "1459",
-  "1460",
-  "1461",
-  "1462",
-  "1463",
-  "1464",
-  "1465",
-  "1466",
-  "1467",
-  "1468",
-  "1469",
-  "1471",
-  "1472",
-  "1473",
-  "1474",
-  "1475",
-  "1476",
-  "1477",
-  "1478",
-  "1481",
-];
 
-const alertConfig3Fields = [
-  "1500",
-  "1501",
-  "1502",
-  "1503",
-  "1504",
-  "1505",
-  "1506",
-  "1507",
-  "1508",
-  "1509",
-  "1513",
-  "1514",
-  "1515",
-  "1516",
-];
+
+
+
 
 export const modeSettingsFieldsWithUnderbar = [
   "1670",
@@ -712,10 +587,6 @@ const INCLUDE_FIELDS_SYSTEM = {
 
 const INCLUDE_FIELDS_REPORT = {
   [SECTIONS.AssignHeader.en]: ["1100", "1075"],
-  [SECTIONS.AlertConfig1.en]: alertConfig1Fields,
-  [SECTIONS.AlertConfig2.en]: alertConfig2Fields,
-  [SECTIONS.AlertConfig3.en]: alertConfig3Fields,
-  [SECTIONS.AlertConfig.en]: [...alertConfig1Fields, ...alertConfig2Fields],
   [SECTIONS.AntiTheft.en]: ["1050", "1051"],
   [SECTIONS.OBD.en]: [
     "2000",
@@ -1650,7 +1521,7 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchFields>> = {
       key: SECTIONS.AssignHeader.en,
     },
     [SECTIONS.AlertConfig.en]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
+      fields: [], // 동적으로 생성되므로 빈 배열로 설정
       searchText: `${MENUS.Report.en} > ${SECTIONS.AlertConfig.en}`,
       tab: "Report",
       key: SECTIONS.AlertConfig.en,
@@ -1706,7 +1577,7 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchFields>> = {
       key: SECTIONS.AssignHeader.en,
     },
     [SECTIONS.AlertConfig.es]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
+      fields: [], // 동적으로 생성되므로 빈 배열로 설정
       searchText: `${MENUS.Report.es} > ${SECTIONS.AlertConfig.es}`,
       tab: "Report",
       key: SECTIONS.AlertConfig.en,
@@ -1762,7 +1633,7 @@ export const REPORT_SECTION: Record<Lang, Record<string, SearchFields>> = {
       key: SECTIONS.AssignHeader.en,
     },
     [SECTIONS.AlertConfig.pt]: {
-      fields: INCLUDE_FIELDS[SECTIONS.AlertConfig.en],
+      fields: [], // 동적으로 생성되므로 빈 배열로 설정
       searchText: `${MENUS.Report.pt} > ${SECTIONS.AlertConfig.pt}`,
       tab: "Report",
       key: SECTIONS.AlertConfig.en,
@@ -2615,15 +2486,15 @@ export const formDataToSearchSectionData = (
   return Object.entries(
     withoutDevice ? SEARCH_SECTION_WITHOUT_DEVICE[lang] : SEARCH_SECTION[lang]
   ).reduce((acc, [key, value]) => {
-    const fields = value.fields;
+    const fields = value.fields || []; // fields가 undefined일 경우 빈 배열로 fallback
     const searchText = value.searchText;
     const tab = value.tab;
     const valueKey = value.key;
 
     acc[key] = {
-      fields: fields.filter(
+      fields: Array.isArray(fields) ? fields.filter(
         (f) => Object.keys(formData).includes(f) || f === "ALL_SEARCH"
-      ),
+      ) : [],
       searchText,
       tab,
       key: valueKey,

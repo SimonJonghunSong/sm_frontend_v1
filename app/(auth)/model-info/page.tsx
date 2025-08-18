@@ -287,6 +287,119 @@ const extractCommandData = (originData: any[]) => {
   }
 };
 
+// Alert Config 필드를 동적으로 생성하는 함수
+const generateAlertConfigFields = (originData: any[]) => {
+  const alertConfigs = {
+    alertConfig1: [] as string[],
+    alertConfig2: [] as string[],
+    alertConfig3: [] as string[]
+  };
+  
+  console.log("=== generateAlertConfigFields start ===");
+  console.log("originData type:", typeof originData);
+  console.log("originData:", originData);
+  console.log("originData length:", originData?.length);
+  
+  if (!originData || !Array.isArray(originData)) {
+    console.log("originData is not an array or is empty");
+    return alertConfigs;
+  }
+  
+  // originData의 구조를 더 자세히 분석 - 동적으로 ALERT_CONFIG 섹션 찾기
+  originData.forEach((section, sectionIndex) => {
+    console.log(`=== Section ${sectionIndex} ===`);
+    console.log("section type:", typeof section);
+    console.log("section:", section);
+    console.log("section keys:", Object.keys(section || {}));
+    
+    // section의 첫 번째 키를 가져옴
+    const sectionKey = Object.keys(section || {})[0];
+    console.log(`sectionKey: ${sectionKey}`);
+    
+    // ALERT_CONFIG1, ALERT_CONFIG2, ALERT_CONFIG3 중 하나인지 확인
+    if (sectionKey && sectionKey.startsWith("ALERT_CONFIG")) {
+      console.log(`=== ${sectionKey} found ===`);
+      const alertConfigData = section[sectionKey];
+      console.log(`${sectionKey} type:`, typeof alertConfigData);
+      console.log(`${sectionKey}:`, alertConfigData);
+      
+              if (Array.isArray(alertConfigData)) {
+          let tabId: string | null = null;
+          
+          // 먼저 info가 있는 첫 번째 항목에서 tab_id를 찾음
+          for (let i = 0; i < alertConfigData.length; i++) {
+            const item = alertConfigData[i];
+            if (item && item.info && Array.isArray(item.info) && item.info[0]) {
+              tabId = item.info[0].tab_id;
+              console.log(`Found tab_id: ${tabId} from item ${i}`);
+              break;
+            }
+          }
+          
+          if (!tabId) {
+            console.log(`No tab_id found in ${sectionKey}`);
+            return;
+          }
+          
+          // 이제 모든 항목을 처리
+          alertConfigData.forEach((item, itemIndex) => {
+            console.log(`${sectionKey} item ${itemIndex}:`, item);
+            console.log("item keys:", Object.keys(item || {}));
+            
+            // info가 없는 항목들도 처리 (실제 Alert 필드들)
+            if (item && !item.info) {
+              // Ignition On(33) 같은 항목들 처리
+              Object.keys(item).forEach(key => {
+                if (Array.isArray(item[key])) {
+                  console.log(`Processing key: ${key}`);
+                  const alertItem = item[key][0];
+                  console.log(`alertItem:`, alertItem);
+                  console.log(`alertItem.type:`, alertItem?.type);
+                  console.log(`alertItem.ID:`, alertItem?.ID);
+                  
+                  if (alertItem && alertItem.type === 'alert_id' && alertItem.ID) {
+                    const jsonId = `${tabId}${alertItem.ID.padStart(2, '0')}`;
+                    console.log(`Generated jsonId: ${jsonId}`);
+                    
+                    // sectionKey에 따라 적절한 배열에 추가
+                    if (sectionKey === "ALERT_CONFIG1") {
+                      alertConfigs.alertConfig1.push(jsonId);
+                      console.log(`Added to alertConfig1: ${jsonId} (from tab_id: ${tabId}, ID: ${alertItem.ID})`);
+                    } else if (sectionKey === "ALERT_CONFIG2") {
+                      alertConfigs.alertConfig2.push(jsonId);
+                      console.log(`Added to alertConfig2: ${jsonId} (from tab_id: ${tabId}, ID: ${alertItem.ID})`);
+                    } else if (sectionKey === "ALERT_CONFIG3") {
+                      alertConfigs.alertConfig3.push(jsonId);
+                      console.log(`Added to alertConfig3: ${jsonId} (from tab_id: ${tabId}, ID: ${alertItem.ID})`);
+                    }
+                  } else {
+                    console.log(`Skipped - conditions not met:`, {
+                      alertItemExists: !!alertItem,
+                      typeIsAlertId: alertItem?.type === 'alert_id',
+                      hasId: !!alertItem?.ID
+                    });
+                  }
+                }
+              });
+            } else {
+              console.log(`Skipped item ${itemIndex} - has info or invalid structure`);
+            }
+          });
+        }
+    } else {
+      console.log(`Section key "${sectionKey}" is not an Alert Config section`);
+    }
+  });
+  
+  console.log("=== Final alertConfigs ===");
+  console.log("alertConfig1:", alertConfigs.alertConfig1);
+  console.log("alertConfig2:", alertConfigs.alertConfig2);
+  console.log("alertConfig3:", alertConfigs.alertConfig3);
+  console.log("=== generateAlertConfigFields end ===");
+  
+  return alertConfigs;
+};
+
 
 
 export default function DeviceInfoPage() {
@@ -325,6 +438,15 @@ export default function DeviceInfoPage() {
   }>(null);
   const [profile, setProfile] = useState<string>("");
   const [commandData, setCommandData] = useState<string[]>([]);
+  const [alertConfigFields, setAlertConfigFields] = useState<{
+    alertConfig1: string[];
+    alertConfig2: string[];
+    alertConfig3: string[];
+  }>({
+    alertConfig1: [],
+    alertConfig2: [],
+    alertConfig3: []
+  });
 
   const handleTabChange = (tab: string) => {
     if (tab === "CMD Tool") {
@@ -459,6 +581,7 @@ export default function DeviceInfoPage() {
             csvData={csvData}
             formData={formData}
             setFormData={setFormData}
+            alertConfigFields={alertConfigFields}
           />
         );
       case "Tracking":
@@ -629,6 +752,11 @@ export default function DeviceInfoPage() {
   useEffect(() => {
     if (originData) {
       const formDataValues = transformOriginData(originData);
+      
+      // Alert Config 필드 동적 생성
+      const generatedAlertConfigFields = generateAlertConfigFields(originData);
+      console.log("=== useEffect - generatedAlertConfigFields ===");
+      console.log("generatedAlertConfigFields:", generatedAlertConfigFields);
 
       setFormData(formDataValues);
       setSearchSectionData(
@@ -636,6 +764,9 @@ export default function DeviceInfoPage() {
       );
       setSearchParamData(getSearchParamsData(formDataValues as any, lang, modelName));
       setCommandData(extractCommandData(originData));
+      
+      // Alert Config 필드를 state로 저장
+      setAlertConfigFields(generatedAlertConfigFields);
     }
   }, [originData]);
 
