@@ -27,16 +27,24 @@ const RfCommands = ({ renderCommand }: Props) => {
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.rfCommands
-            .slice(0, 9)
+            .slice(0, Math.ceil(commands.rfCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.rfCommands
-            .slice(9)
+            .slice(Math.ceil(commands.rfCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
       </Stack>

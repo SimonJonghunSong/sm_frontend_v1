@@ -27,16 +27,24 @@ const AccessoryCommands = ({ renderCommand }: Props) => {
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.accessoryCommands
-            .slice(0, 6)
+            .slice(0, Math.ceil(commands.accessoryCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.accessoryCommands
-            .slice(6)
+            .slice(Math.ceil(commands.accessoryCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
       </Stack>

@@ -27,16 +27,24 @@ const InputOutputCommands = ({ renderCommand }: Props) => {
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.ioCommands
-            .slice(0, 11)
+            .slice(0, Math.ceil(commands.ioCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.ioCommands
-            .slice(11)
+            .slice(Math.ceil(commands.ioCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
       </Stack>

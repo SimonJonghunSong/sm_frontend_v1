@@ -29,14 +29,22 @@ const SystemCommands = ({ renderCommand }: Props) => {
           {commands.systemCommands
             .slice(0, 17)
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.systemCommands
             .slice(17)
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
       </Stack>

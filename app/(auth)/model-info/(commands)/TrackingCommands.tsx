@@ -27,16 +27,24 @@ const TrackingCommands = ({ renderCommand }: Props) => {
       <Stack flexWrap="wrap" direction={"row"} gap={"32px"}>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.trackingCommands
-            .slice(0, 3)
+            .slice(0, Math.ceil(commands.trackingCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
         <Stack direction="column" gap={"24px"} flex={1}>
           {commands.trackingCommands
-            .slice(3)
+            .slice(Math.ceil(commands.trackingCommands.length / 2))
             .map((item) =>
-              FIELD_VALIDATIONS[item.id] ? renderCommand(item) : null
+              FIELD_VALIDATIONS[item.id] ? (
+                <div key={item.id} id={`command-${item.id}`}>
+                  {renderCommand(item)}
+                </div>
+              ) : null
             )}
         </Stack>
       </Stack>

@@ -42,9 +42,17 @@ export default function SearchModal({
   );
 
   const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowAllParamResult(false);
-    setShowAllSectionResult(false);
     setSearchTerm(e.target.value);
+  };
+
+  // Command ID로 스크롤하는 함수
+  const scrollToCommand = (commandId: string) => {
+    const searchChannel = new BroadcastChannel('search_navigation');
+    searchChannel.postMessage({
+      type: 'scrollToCommand',
+      commandId: commandId
+    });
+    searchChannel.close();
   };
 
   const renderSearchResults = () => {
@@ -236,11 +244,30 @@ export default function SearchModal({
 }
 
 // 검색 결과 아이템 컴포넌트
-const SearchResultItem = ({ result, onSelect }) => (
-  <li onClick={() => onSelect(result)}>
-    <div className={styles.subTitle}>{result.searchText}</div>
-  </li>
-);
+const SearchResultItem = ({ result, onSelect }) => {
+  const handleClick = () => {
+    // Command ID 추출 (예: "0304" 또는 "0304 (0304)")
+    const commandIdMatch = result.searchText.match(/^(\d{4})/);
+    if (commandIdMatch && result.tab === "Commands") {
+      // Command ID인 경우 스크롤
+      const searchChannel = new BroadcastChannel('search_navigation');
+      searchChannel.postMessage({
+        type: 'scrollToCommand',
+        commandId: commandIdMatch[1]
+      });
+      searchChannel.close();
+    } else {
+      // 일반적인 경우 onSelect 호출
+      onSelect(result);
+    }
+  };
+
+  return (
+    <li onClick={handleClick}>
+      <div className={styles.subTitle}>{result.searchText}</div>
+    </li>
+  );
+};
 
 // 빈 결과 컴포넌트
 const EmptyResults = () => {

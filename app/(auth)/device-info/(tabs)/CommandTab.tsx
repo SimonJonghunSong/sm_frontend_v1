@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import NetworkCommands from "app/(auth)/device-info/(commands)/NetworkCommands";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
 import styles from "app/(auth)/_cmd-tool/styles.module.scss";
 import useSerial from "@/src/hooks/useSerial";
 import { delayPromise } from "@/src/hooks/useSerial";
@@ -34,15 +34,38 @@ interface Props {
   commandData: string[];
 }
 
-export default function CommandTab({ imei, commandData }: Props) {
+export interface CommandTabRef {
+  scrollToCommand: (commandId: string) => void;
+}
+
+const CommandTab = forwardRef<CommandTabRef, Props>(({ imei, commandData }, ref) => {
   const t = useTranslations();
 
   const [logs, setLogs] = useState<any[]>([]);
   const logContainerRef = useRef<HTMLDivElement>(null);
+  const commandsContainerRef = useRef<HTMLDivElement>(null);
   const broadcastChannel = useRef<BroadcastChannel>(
     new BroadcastChannel("device_command_log")
   );
   const [isLoading, setIsLoading] = useState(false);
+
+  // 외부에서 호출할 수 있는 스크롤 함수
+  useImperativeHandle(ref, () => ({
+    scrollToCommand: (commandId: string) => {
+      const targetElement = document.getElementById(`command-${commandId}`);
+      if (targetElement && commandsContainerRef.current) {
+        const containerRect = commandsContainerRef.current.getBoundingClientRect();
+        const targetRect = targetElement.getBoundingClientRect();
+        const scrollTop = commandsContainerRef.current.scrollTop;
+        const targetPosition = targetRect.top - containerRect.top + scrollTop - 20; // 20px 여백
+        
+        commandsContainerRef.current.scrollTo({
+          top: targetPosition,
+          behavior: "smooth",
+        });
+      }
+    },
+  }));
 
   const {
     state: { portList },
@@ -90,142 +113,151 @@ export default function CommandTab({ imei, commandData }: Props) {
   };
 
   const renderCommand = (command: Command) => {
-    switch (command.uiType) {
-      case "normal":
-        return (
-          <DefaultCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "select":
-        return (
-          <SelectCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "text-input":
-        return (
-          <TextCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-            regex={command.regex}
-            helperText={command.helperText}
-          />
-        );
-      case "number-input":
-        return (
-          <NumberCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "time-range":
-        return (
-          <TimeRangeCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "Automati-APN-List":
-        return (
-          <AutomaticApnListCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "Delete-APN-List":
-        return (
-          <DeleteApnListField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "PIN-Lock":
-        return (
-          <PinLockCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "PIN-Unlock":
-        return (
-          <PinUnlockCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "LTE-Band":
-        return (
-          <LteBandCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "Main-Server":
-        return (
-          <MainServerCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "Detection-Control-Speed":
-        return (
-          <DetectionControlSpeedCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      case "Q-Type":
-        return (
-          <QTypeCommandField
-            id={command.id}
-            imei={imei}
-            handleSendCommand={handleSendCommand}
-            buttonText={t("configuration.commands.send")}
-            isLoading={isLoading}
-          />
-        );
-      default:
-        return null;
-    }
+    const commandElement = (() => {
+      switch (command.uiType) {
+        case "normal":
+          return (
+            <DefaultCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "select":
+          return (
+            <SelectCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "text-input":
+          return (
+            <TextCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+              regex={command.regex}
+              helperText={command.helperText}
+            />
+          );
+        case "number-input":
+          return (
+            <NumberCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "time-range":
+          return (
+            <TimeRangeCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "Automati-APN-List":
+          return (
+            <AutomaticApnListCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "Delete-APN-List":
+          return (
+            <DeleteApnListField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "PIN-Lock":
+          return (
+            <PinLockCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "PIN-Unlock":
+          return (
+            <PinUnlockCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "LTE-Band":
+          return (
+            <LteBandCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "Main-Server":
+          return (
+            <MainServerCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "Detection-Control-Speed":
+          return (
+            <DetectionControlSpeedCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        case "Q-Type":
+          return (
+            <QTypeCommandField
+              id={command.id}
+              imei={imei}
+              handleSendCommand={handleSendCommand}
+              buttonText={t("configuration.commands.send")}
+              isLoading={isLoading}
+            />
+          );
+        default:
+          return null;
+      }
+    })();
+
+    // 각 명령어를 고유 ID를 가진 div로 감싸기
+    return (
+      <div key={command.id} id={`command-${command.id}`}>
+        {commandElement}
+      </div>
+    );
   };
 
   useEffect(() => {
@@ -372,6 +404,7 @@ export default function CommandTab({ imei, commandData }: Props) {
         </div>
       </div>
       <div
+        ref={commandsContainerRef}
         style={{
           display: "flex",
           flex: 1,
@@ -422,7 +455,11 @@ export default function CommandTab({ imei, commandData }: Props) {
       </div>
     </Stack>
   );
-}
+});
+
+CommandTab.displayName = 'CommandTab';
+
+export default CommandTab;
 
 export const hiddenParameterId = [
   "0901",

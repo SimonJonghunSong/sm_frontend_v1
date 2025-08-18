@@ -38,6 +38,7 @@ export default function CommandTab({ imei }: Props) {
 
   const [logs, setLogs] = useState<any[]>([]);
   const logContainerRef = useRef<HTMLDivElement>(null);
+  const commandContainerRef = useRef<HTMLDivElement>(null);
   const broadcastChannel = useRef<BroadcastChannel>(
     new BroadcastChannel("device_command_log")
   );
@@ -48,6 +49,39 @@ export default function CommandTab({ imei }: Props) {
     func: { write },
   } = useSerial();
   const currentPort = portList[0];
+
+  // 검색 결과에서 특정 Command ID로 스크롤하는 함수
+  const scrollToCommand = (commandId: string) => {
+    const commandElement = document.getElementById(`command-${commandId}`);
+    if (commandElement && commandContainerRef.current) {
+      commandElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
+  // URL의 hash를 확인하여 Command ID로 스크롤
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#command-')) {
+      const commandId = hash.replace('#command-', '');
+      setTimeout(() => scrollToCommand(commandId), 500);
+    }
+  }, []);
+
+  // BroadcastChannel을 통해 검색 결과 클릭 이벤트 수신
+  useEffect(() => {
+    const handleSearchClick = (event: MessageEvent) => {
+      if (event.data.type === 'scrollToCommand' && event.data.commandId) {
+        scrollToCommand(event.data.commandId);
+      }
+    };
+
+    const searchChannel = new BroadcastChannel('search_navigation');
+    searchChannel.onmessage = handleSearchClick;
+
+    return () => {
+      searchChannel.close();
+    };
+  }, []);
 
   const handleCommandLogScroll = () => {
     // 로그가 업데이트되면 스크롤을 아래로 내립니다
@@ -372,11 +406,14 @@ export default function CommandTab({ imei }: Props) {
         </div>
       </div>
       <div
+        ref={commandContainerRef}
         style={{
           display: "flex",
+          flex: 1,
           gap: "24px",
           flexDirection: "column",
           padding: "20px",
+          overflowY: "scroll",
         }}
       >
         <NetworkCommands renderCommand={renderCommand} />
