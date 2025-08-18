@@ -287,6 +287,8 @@ const extractCommandData = (originData: any[]) => {
   }
 };
 
+
+
 export default function DeviceInfoPage() {
   const t = useTranslations();
   const [profileData, setProfileData] = useState<string>("");
@@ -632,7 +634,7 @@ export default function DeviceInfoPage() {
       setSearchSectionData(
         formDataToSearchSectionData(formDataValues as any, lang, true)
       );
-      setSearchParamData(getSearchParamsData(formDataValues as any, lang));
+      setSearchParamData(getSearchParamsData(formDataValues as any, lang, modelName));
       setCommandData(extractCommandData(originData));
     }
   }, [originData]);

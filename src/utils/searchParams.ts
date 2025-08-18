@@ -36,6 +36,15 @@ export const getSearchParamsData = (
         const fieldDef = getFieldDefinition(key, modelName);
         const title = fieldDef?.title?.[lang] || value.title[lang];
         
+        // 1973 필드 디버깅 로그
+        if (key === "1973") {
+          console.log("=== getSearchParamsData 1973 ===");
+          console.log("modelName:", modelName);
+          console.log("fieldDef:", fieldDef);
+          console.log("title:", title);
+          console.log("value.title[lang]:", value.title[lang]);
+        }
+        
         acc[title] = {
           field: key,
           searchText: `${searchSection?.searchText} > ${title}`,

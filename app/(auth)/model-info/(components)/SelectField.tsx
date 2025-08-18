@@ -6,6 +6,8 @@ import { FormField } from "../page";
 import { SwitchPrimary } from "@/components/switches";
 import { useState } from "react";
 import EditDot from "./EditDot";
+import { getFieldDefinition } from "@/src/constants/getFieldDefinition";
+import useModelInfoStore from "@/src/stores/useModelInfo";
 
 interface SelectFieldProps {
   id: string;
@@ -31,6 +33,10 @@ const SelectField = ({
   isUnderbarId = false,
 }: SelectFieldProps) => {
   const lang = useLangStore((state) => state.lang);
+  
+  // 현재 선택된 모델명 가져오기
+  const { getModelName } = useModelInfoStore();
+  const modelName = getModelName();
 
   const [isChecked, setIsChecked] = useState(
     formData[id]?.realValue !== "00" && formData[id]?.realValue !== "0"
@@ -56,16 +62,17 @@ const SelectField = ({
     >
       <Stack direction="row" gap="4px" alignItems="center">
         <InputBox.Title>
-          {FIELD_VALIDATIONS[realId].title[lang]}
+          {/* groupFieldPatch에서 정의 가져오기 */}
+          {getFieldDefinition(id, modelName)?.title?.[lang] || FIELD_VALIDATIONS[realId]?.title?.[lang]}
           {isRequired && (
             <span style={{ color: "#FF0000", paddingLeft: "4px" }}>*</span>
           )}
         </InputBox.Title>
-        {FIELD_VALIDATIONS[realId].tooltip?.[lang] && (
+        {(getFieldDefinition(id, modelName)?.tooltip?.[lang] || FIELD_VALIDATIONS[realId]?.tooltip?.[lang]) && (
           <InputBox.Info
             tooltipText={
               <span style={{ whiteSpace: "pre-wrap" }}>
-                {FIELD_VALIDATIONS[realId].tooltip[lang]}
+                {getFieldDefinition(id, modelName)?.tooltip?.[lang] || FIELD_VALIDATIONS[realId]?.tooltip?.[lang]}
               </span>
             }
           />
