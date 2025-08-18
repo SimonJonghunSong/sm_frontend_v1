@@ -1216,9 +1216,9 @@ export const FIELD_VALIDATIONS = {
       es: "Respuesta de Comando",
     },
     tooltip: {
-      en: "Where the device will send a response message when it receives a command from SMS or a server/platform.\r\n• Option(On)\r\n- Server\r\n- SMS\r\n• Default : Off",
-      es: "Dónde el dispositivo enviará un mensaje de respuesta cuando reciba un comando por SMS o desde un servidor/plataforma.\r\n• Opción (Activado)\r\n- Servidor\r\n- SMS\r\n• Predeterminado: Desactivado",
-      pt: "Onde o dispositivo enviará uma mensagem de resposta quando receber um comando por SMS ou de um servidor/plataforma.\r\n• Opção (Ativado)\r\n- Servidor\r\n- SMS\r\n• Padrão: Desativado",
+      en: "Where the device will send a response message when it receives a command from SMS or a server/platform.\r\n• Option(On)\r\n- Server\r\n- SMS\r\n- Both\r\n• Default : Off",
+      es: "Dónde el dispositivo enviará un mensaje de respuesta cuando reciba un comando por SMS o desde un servidor/plataforma.\r\n• Opción (Activado)\r\n- Servidor\r\n- SMS\r\n- Ambos\r\n• Predeterminado: Desactivado",
+      pt: "Onde o dispositivo enviará uma mensagem de resposta quando receber um comando por SMS ou de um servidor/plataforma.\r\n• Opção (Ativado)\r\n- Servidor\r\n- SMS\r\n- Ambos\r\n• Padrão: Desativado",
     },
     min: null,
     max: null,
@@ -1250,9 +1250,9 @@ export const FIELD_VALIDATIONS = {
       {
         value: "03",
         label: {
-          en: "Server + SMS",
-          es: "Servidor + SMS",
-          pt: "Servidor + SMS",
+          en: "Both",
+          es: "Ambos",
+          pt: "Ambos",
         },
       },
     ],

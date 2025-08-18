@@ -48,6 +48,14 @@ const WireSettings = ({ formData, onChange, setFormData }: Props) => {
     );
   });
 
+  // Temperature Sensors section visibility: hide label if none of the temp fields exist
+  const temperatureFieldIds = [
+    "1980", "1981", "1982", "1983", "1984", "1985", "1986", "1987",
+    "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995",
+    "1996", "1997", "1998",
+  ];
+  const hasTemperatureFields = temperatureFieldIds.some((id) => !!formData[id]);
+
   if (!hasFormDataFields(formData, fieldIds)) return null;
 
   const handleChange = (id: string, value: string) => {
@@ -222,7 +230,9 @@ const WireSettings = ({ formData, onChange, setFormData }: Props) => {
         </Stack>
 
         <Stack gap={"24px"} flex={1}>
-          <h2>{t("configuration.accessories.temperature_sensors")}</h2>
+          {hasTemperatureFields && (
+            <h2>{t("configuration.accessories.temperature_sensors")}</h2>
+          )}
 
           <RangeThresholdField
             id={["1981", "1980"]}

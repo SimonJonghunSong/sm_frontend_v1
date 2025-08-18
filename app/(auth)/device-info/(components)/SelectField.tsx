@@ -154,7 +154,17 @@ const SelectField = ({
             style={{ width: "100%" }}
             onChange={(e) => onChange(id, e.target.value)}
           >
-            {formData[id].list && formData[id].labelList ? (
+            {id === "1058" ? (
+              (FIELD_VALIDATIONS[realId]?.list || []).map((item) => {
+                const raw = item.label?.[lang] || item.value;
+                const display = raw === "Server + SMS" ? "Both" : raw;
+                return (
+                  <MenuItem key={item.value} value={item.value}>
+                    {display}
+                  </MenuItem>
+                );
+              })
+            ) : formData[id].list && formData[id].labelList ? (
               // formData의 list와 labelList를 직접 사용
               formData[id].list.map((value, index) => {
                 // 2611의 경우 "0" (Disable) 항목은 제외하고 1~7만 표시
@@ -185,7 +195,7 @@ const SelectField = ({
                 ?.filter((listItem) => hardwareList.includes(listItem.value))
                 .map((item) => (
                   <MenuItem key={item.value} value={item.value}>
-                    {item.label[lang]}
+                    {id === "1058" && item.label?.[lang] === "Server + SMS" ? "Both" : item.label[lang]}
                   </MenuItem>
                 ))
             )}
