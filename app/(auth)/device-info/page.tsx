@@ -99,31 +99,25 @@ const formatFieldId = (id: string): string => {
   return numId < 10 ? `0${id}` : id;
 };
 
-const getRealValue = (field: FieldValue): string => {
-  // 2611에 대한 특별 처리
-  if (field.ID === "11") {
-    console.log("=== getRealValue for 2611 ===");
-    console.log("field.value:", field.value);
-    console.log("field.list:", field.list);
-    
+const getRealValue = (field: FieldValue, composedFieldId?: string): string => {
+  // 2611에 대한 특별 처리: 합성 필드ID가 정확히 2611일 때만 적용
+  if (composedFieldId === "2611") {
     if (!field.list) return "0"; // 기본값 Disable
-    
+
     // JSON의 value 필드와 list의 라벨을 매칭하여 실제 값을 찾음
     const listValues = Object.values(field.list[0]);
-    const matchingItem = listValues.find((item: string) => 
+    const matchingItem = listValues.find((item: string) =>
       item.includes(`;${field.value};`) || item.endsWith(`;${field.value}`)
     );
-    
+
     if (matchingItem) {
       const realValue = matchingItem.split(";")[0];
       console.log("2611 realValue found:", realValue);
       return realValue;
-    } else {
-      console.log("2611 no matching item found, using default: 0");
-      return "0"; // 기본값 Disable
     }
+    return "0"; // 기본값 Disable
   }
-  
+
   // 기존 로직 (다른 필드들)
   if (!field.list) return field.value;
 
@@ -186,7 +180,8 @@ const transformFieldData = (
   if (!fieldData?.ID) return null;
 
   const fieldId = formatFieldId(fieldData.ID);
-  const realValue = getRealValue(fieldData);
+  const composedId = `${tabId}${fieldId}`;
+  const realValue = getRealValue(fieldData, composedId);
   const optionsValueList = getList(fieldData);
   const optionLabelList = getLabelList(fieldData);
 
