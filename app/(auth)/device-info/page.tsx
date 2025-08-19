@@ -213,10 +213,10 @@ const transformFieldData = (
   ];
 };
 
-const transformOriginData = (originData: any[]): FormData => {
+const transformOriginData = (originData: any[], modelName?: string): FormData => {
   // console.log("=== transformOriginData start ===");
   // console.log("originData:", originData);
-  
+
   const formData = originData.reduce((acc: FormData, item) => {
     const key = Object.keys(item)[0];
     const fields = item[key];
@@ -236,9 +236,9 @@ const transformOriginData = (originData: any[]): FormData => {
       if (transformedField) {
         const [key, value] = transformedField;
         acc[key] = value;
-        
 
-        
+
+
         // 2611에 대한 디버깅 로그
         // if (key === "2611") {
         //   console.log("=== 2611 in transformOriginData ===");
@@ -256,9 +256,42 @@ const transformOriginData = (originData: any[]): FormData => {
   // console.log("formData keys:", Object.keys(formData));
   // console.log("formData['2611']:", formData["2611"]);
 
-  // 2611이 항상 포함되도록 보장
-  if (!formData["2611"]) {
-    console.log("=== 2611 not found, adding default ===");
+  // 2611 Light Sensor 조건부 추가 로직
+  const should2611BeAdded = () => {
+    // 1차: 원본 JSON 데이터에서 2611(tab_id="26", field_id="11") 관련 데이터가 있는지 확인
+    const has2611InOriginalData = originData?.some(section => {
+      const sectionData = Object.values(section)[0];
+      if (Array.isArray(sectionData)) {
+        return sectionData.some(item => {
+          if (item && typeof item === 'object') {
+            return Object.keys(item).some(key => {
+              const fieldData = item[key];
+              return Array.isArray(fieldData) &&
+                fieldData[0]?.ID === "11" &&
+                fieldData[0]?.tab_id === "26";
+            });
+          }
+          return false;
+        });
+      }
+      return false;
+    });
+
+    if (has2611InOriginalData) {
+      return true;
+    }
+
+    // 2차: 모델명 기반으로 Light Sensor를 지원하는 모델인지 확인
+    const modelsWithLightSensor = ["ST4930", "ST4932"];
+    if (modelName && modelsWithLightSensor.includes(modelName)) {
+      return true;
+    }
+
+    return false;
+  };
+
+  // 2611이 formData에 없고, 추가 조건을 만족할 때만 추가
+  if (!formData["2611"] && should2611BeAdded()) {
     formData["2611"] = {
       key: "Light Sensor",
       value: "0",
@@ -275,7 +308,7 @@ const transformOriginData = (originData: any[]): FormData => {
 
   console.log("=== final formData ===");
   console.log("formData['2611']:", formData["2611"]);
-  
+
   return formData;
 };
 
@@ -310,38 +343,38 @@ const generateAlertConfigFields = (originData: any[]) => {
     alertConfig2: [] as string[],
     alertConfig3: [] as string[]
   };
-  
+
   console.log("=== generateAlertConfigFields start ===");
   console.log("originData type:", typeof originData);
   console.log("originData:", originData);
   console.log("originData length:", originData?.length);
-  
+
   if (!originData || !Array.isArray(originData)) {
     console.log("originData is not an array or is empty");
     return alertConfigs;
   }
-  
+
   // originData의 구조를 더 자세히 분석 - 동적으로 ALERT_CONFIG 섹션 찾기
   originData.forEach((section, sectionIndex) => {
     console.log(`=== Section ${sectionIndex} ===`);
     console.log("section type:", typeof section);
     console.log("section:", section);
     console.log("section keys:", Object.keys(section || {}));
-    
+
     // section의 첫 번째 키를 가져옴
     const sectionKey = Object.keys(section || {})[0];
     console.log(`sectionKey: ${sectionKey}`);
-    
+
     // ALERT_CONFIG1, ALERT_CONFIG2, ALERT_CONFIG3 중 하나인지 확인
     if (sectionKey && sectionKey.startsWith("ALERT_CONFIG")) {
       console.log(`=== ${sectionKey} found ===`);
       const alertConfigData = section[sectionKey];
       console.log(`${sectionKey} type:`, typeof alertConfigData);
       console.log(`${sectionKey}:`, alertConfigData);
-      
+
       if (Array.isArray(alertConfigData)) {
         let tabId: string | null = null;
-        
+
         // 먼저 info가 있는 첫 번째 항목에서 tab_id를 찾음
         for (let i = 0; i < alertConfigData.length; i++) {
           const item = alertConfigData[i];
@@ -351,17 +384,17 @@ const generateAlertConfigFields = (originData: any[]) => {
             break;
           }
         }
-        
+
         if (!tabId) {
           console.log(`No tab_id found in ${sectionKey}`);
           return;
         }
-        
+
         // 이제 모든 항목을 처리
         alertConfigData.forEach((item, itemIndex) => {
           console.log(`${sectionKey} item ${itemIndex}:`, item);
           console.log("item keys:", Object.keys(item || {}));
-          
+
           // info가 없는 항목들도 처리 (실제 Alert 필드들)
           if (item && !item.info) {
             // Ignition On(33) 같은 항목들 처리
@@ -372,12 +405,12 @@ const generateAlertConfigFields = (originData: any[]) => {
                 console.log(`alertItem:`, alertItem);
                 console.log(`alertItem.type:`, alertItem?.type);
                 console.log(`alertItem.ID:`, alertItem?.ID);
-                
+
                 if (alertItem && alertItem.type === 'alert_id' && alertItem.ID) {
                   const jsonId = `${tabId}${alertItem.ID.padStart(2, '0')}`;
                   console.log(`Generated jsonId: ${jsonId}`);
 
-                  
+
                   // sectionKey에 따라 적절한 배열에 추가
                   if (sectionKey === "ALERT_CONFIG1") {
                     alertConfigs.alertConfig1.push(jsonId);
@@ -407,13 +440,13 @@ const generateAlertConfigFields = (originData: any[]) => {
       }
     }
   });
-  
+
   console.log("=== Final alertConfigs ===");
   console.log("alertConfig1:", alertConfigs.alertConfig1);
   console.log("alertConfig2:", alertConfigs.alertConfig2);
   console.log("alertConfig3:", alertConfigs.alertConfig3);
   console.log("=== generateAlertConfigFields end ===");
-  
+
   return alertConfigs;
 };
 
@@ -422,7 +455,7 @@ function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?
   console.log("=== patchFormDataByModel start ===");
   console.log("modelName:", modelName);
   console.log("formData keys:", Object.keys(formData));
-  
+
   if (!modelName) return formData;
   const patched = { ...formData };
   // 1717 등 patch가 필요한 항목만 교체
@@ -441,15 +474,15 @@ function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?
     if (key.endsWith("2611")) {
       // console.log("=== 2611 patch start ===");
       const fieldDef = getFieldDefinition("2611", modelName) || FIELD_VALIDATIONS["2611"];
-      
+
       // 기기에서 받은 데이터가 있으면 우선 사용, 없으면 groupFieldPatch 사용
       const existingList = patched[key].list;
       const existingLabelList = patched[key].labelList;
-      
+
       // console.log("2611 patch - existingList:", existingList);
       // console.log("2611 patch - existingLabelList:", existingLabelList);
       // console.log("2611 patch - fieldDef:", fieldDef);
-      
+
       if (existingList && existingList.length > 0) {
         // 기기에서 받은 데이터가 있으면 그대로 사용
         console.log("Using device JSON data for 2611:", existingList);
@@ -467,10 +500,10 @@ function patchFormDataByModel(formData: { [key: string]: FormField }, modelName?
       // console.log("=== 2611 patch end ===");
     }
   });
-  
+
   // console.log("=== patchFormDataByModel end ===");
   // console.log("patched['2611']:", patched["2611"]);
-  
+
   return patched;
 }
 
@@ -773,7 +806,7 @@ export default function DeviceInfoPage() {
     if (!currentPort?.port) {
       return <div>No device connected</div>;
     }
-    
+
     switch (tab) {
       case "DeviceStatus":
         return (
@@ -872,7 +905,7 @@ export default function DeviceInfoPage() {
 
   const handleApply = async () => {
     if (!currentPort?.port) return;
-    
+
     setIsLoading(true);
     const profileLines = profile.split("\n");
 
@@ -890,22 +923,22 @@ export default function DeviceInfoPage() {
 
   useEffect(() => {
     if (originData) {
-      const formDataValues = transformOriginData(originData);
       const modelName = currentPort?.port?.modelinfo?.split('_')[0];
+      const formDataValues = transformOriginData(originData, modelName);
       console.log("modelName=========================", modelName);
       const patchedFormData = patchFormDataByModel(formDataValues, modelName);
       console.log("patchedFormData=========================", patchedFormData);
-      
+
       // Alert Config 필드 동적 생성
       const generatedAlertConfigFields = generateAlertConfigFields(originData);
       console.log("=== useEffect - generatedAlertConfigFields ===");
       console.log("generatedAlertConfigFields:", generatedAlertConfigFields);
-      
+
       setFormData(patchedFormData);
       setSearchSectionData(formDataToSearchSectionData(patchedFormData, lang));
       setSearchParamData(getSearchParamsData(patchedFormData, lang, modelName));
       setCommandData(extractCommandData(originData));
-      
+
       // Alert Config 필드를 state로 저장
       setAlertConfigFields(generatedAlertConfigFields);
     }
@@ -925,7 +958,7 @@ export default function DeviceInfoPage() {
 
   const handleRefreshJsonPacket = async () => {
     if (!currentPort?.port) return;
-    
+
     setIsLoading(true);
     currentPort.port.grpNo = currentPort.jsonPackageCount;
     setPackageFetchingStart({ imei: currentPort.port.imei });
@@ -1123,7 +1156,7 @@ export default function DeviceInfoPage() {
           closeButton
           open
           toggleOpen={toggleSearchModal}
-          confirm={() => {}}
+          confirm={() => { }}
           confirmButtonText="Add"
           width="720px"
           hasFooter={false}
