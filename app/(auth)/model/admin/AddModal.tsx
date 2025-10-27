@@ -234,6 +234,10 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
     }
   };
 
+  const handleLoadFromDevice = () => {
+    console.log("Load from Device Clicked");
+  };
+
   const handleAddConfirm = () => {
     const formData = new FormData();
 
@@ -285,7 +289,7 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
           </InputBox.Head>
           <InputBox.Body>
             <Stack gap="12px">
-              <Stack direction="row" gap="16px" alignItems="flex-end">
+              <Stack direction="row" gap="16px" alignItems="flex-end" sx={{ position: "relative" }}>
                 <div className={styles.thumbnail}>
                   {imagePreview ? (
                     <Image
@@ -310,6 +314,23 @@ export default function AddModal({ handleCloseModal, openErrorPopup }: Props) {
                   />
                   {t("model.add_model_pop_up.upload")}
                 </Button>
+
+                <Button 
+                  variant="contained" 
+                  color="secondary"                  
+                  onClick={handleLoadFromDevice}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    height: 72,
+                    minWidth: 140,
+                    fontSize: 14,
+                  }}
+                >
+                  Load from Device
+                </Button>
+               
               </Stack>
               <span className="text-grey-5">
                 {t(

@@ -30,9 +30,9 @@
   "login": {
     "login": {
       "sign_in_to_your_syncmaster_account!": "¡Inicia sesión en tu cuenta de SyncMaster!",
-      "you_can_log_in_with_your_scuti_id!_don't_have_an_account_yet?_contact_us": "¡Puedes iniciar sesión con tu ID de Scuti!\n¿Aún no tienes una cuenta? Contáctanos",
+      "you_can_log_in_with_your_scuti_id!_don’t_have_an_account_yet?_contact_us": "¡Puedes iniciar sesión con tu ID de Scuti!\n¿Aún no tienes una cuenta? Contáctanos",
       "you_can_log_in_with_your_scuti_id!": "¡Puedes iniciar sesión con tu ID de Scuti!",
-      "don't_have_an_account_yet?": "¿Aún no tienes una cuenta?",
+      "don’t_have_an_account_yet?": "¿Aún no tienes una cuenta?",
       "contact_us": "Contáctanos",
       "country": "País",
       "select,_나라명": "Seleccionar, nombre del país",
